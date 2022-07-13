@@ -11,7 +11,7 @@ public class DataMap extends DataElement {
     private final Map<String, DataContainer> value;
 
     public DataMap() {
-        this(0);
+        this(1);
     }
 
     public DataMap(int initialCapacity) {
