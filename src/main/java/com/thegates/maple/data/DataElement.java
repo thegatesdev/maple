@@ -2,7 +2,6 @@ package com.thegates.maple.data;
 
 import java.util.Objects;
 
-@SuppressWarnings("UnusedReturnValue")
 public abstract class DataElement {
 
     protected DataElement parent;
