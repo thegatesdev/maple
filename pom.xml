@@ -13,16 +13,34 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
                 <configuration>
                     <file>${project.build.directory}/${project.build.finalName}.jar</file>
                 </configuration>
+                <version>2.5.2</version>
                 <executions>
                     <execution>
                         <phase>install</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-file</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>${project.build.directory}/${project.build.finalName}.jar</sourceFile>
+                            <destinationFile>D:\Coding\Minecraft\SERVER\lib\maple-generated.jar</destinationFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
