@@ -1,14 +1,14 @@
 package com.thegates.maple.data;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import com.thegates.maple.exception.ReadException;
+
+import java.util.*;
 import java.util.function.Consumer;
 
 public class DataMap extends DataElement {
 
     private final Map<String, DataContainer> value;
+    private final List<String> keys;
 
     public DataMap() {
         this(1);
@@ -16,6 +16,7 @@ public class DataMap extends DataElement {
 
     public DataMap(int initialCapacity) {
         value = new HashMap<>(initialCapacity);
+        keys = new ArrayList<>(initialCapacity);
     }
 
     public static DataMap of(Map<?, ?> data) {
@@ -44,14 +45,29 @@ public class DataMap extends DataElement {
 
     public DataContainer get(String key) {
         if (key == null) {
-            return new DataContainer().setParent(this).setName("none");
+            return emptyContainer();
         }
         DataContainer container = getValue().get(key);
-        return container != null ? container : new DataContainer().setParent(this).setName(key);
+        return container != null ? container : emptyContainer().setName(key);
     }
 
-    public void put(String key, DataContainer value) {
-        getValue().put(key, value.setParent(this).setName(key));
+    public DataContainer get(DataList keys) {
+        List<String> strings = keys.getAsListOf(String.class);
+        if (strings.isEmpty()) return emptyContainer();
+        for (String string : strings) {
+            DataContainer c = get(string);
+            if (c.isPresent()) return c;
+        }
+        return emptyContainer();
+    }
+
+    private DataContainer emptyContainer() {
+        return new DataContainer().setParent(this).setName("none");
+    }
+
+    public synchronized void put(String key, DataContainer container) {
+        value.put(key, container.setParent(this).setName(key));
+        keys.add(key);
     }
 
     public synchronized void putAll(DataMap dataMap) {
@@ -73,11 +89,17 @@ public class DataMap extends DataElement {
     }
 
     public boolean has(String key) {
-        return getValue().containsKey(key);
+        return keys.contains(key);
     }
 
     public Map<String, DataContainer> getValue() {
         return Collections.unmodifiableMap(value);
+    }
+
+
+    public DataMap requireKey(String key) {
+        if (!keys.contains(key)) throw new ReadException(this, "map requires field of key " + key);
+        return this;
     }
 
 

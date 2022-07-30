@@ -1,5 +1,7 @@
 package com.thegates.maple.data;
 
+import com.thegates.maple.exception.ReadException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,11 +20,15 @@ public class DataList extends DataElement {
     }
 
     public synchronized static DataList of(List<?> list) {
-        DataList dataList = new DataList();
+        DataList dataList = new DataList(list.size());
         for (Object o : list) {
             dataList.add(DataContainer.of(o).setParent(dataList));
         }
         return dataList;
+    }
+
+    public static DataList of(Object... data) {
+        return of(List.of(data));
     }
 
     @Override
@@ -69,6 +75,36 @@ public class DataList extends DataElement {
 
     public List<DataContainer> getValues() {
         return Collections.unmodifiableList(values);
+    }
+
+
+    public DataList requireValuesOf(Class<?> clazz) {
+        if (!values.isEmpty()) {
+            for (DataContainer value : values) {
+                if (!value.isOf(clazz))
+                    throw new ReadException(this, "list requires items of type " + clazz.getSimpleName());
+            }
+        }
+        return this;
+    }
+
+    public DataList requireValueOf(Class<?> clazz) {
+        if (!values.isEmpty()) {
+            for (DataContainer value : values) {
+                if (value.isOf(clazz)) return this;
+            }
+        }
+        throw new ReadException(this, "list requires at least one item of type " + clazz.getSimpleName());
+    }
+
+    public DataList requireSize(int size) {
+        if (values.size() != size) throw new ReadException(this, "list requires size " + size);
+        return this;
+    }
+
+    public DataList requireSizeHigher(int size) {
+        if (values.size() <= size) throw new ReadException(this, "list requires size higher than " + size);
+        return this;
     }
 
 
