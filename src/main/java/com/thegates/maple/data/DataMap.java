@@ -73,31 +73,27 @@ public class DataMap extends DataElement {
         return new DataContainer().setParent(this).setName("none");
     }
 
-    public void put(String key, DataContainer container) {
-        put(key, container, true);
-        stateCheck();
-    }
 
-    private void put(String key, DataContainer container, boolean check) {
-        if (check && value == null) {
+    private void put(String key, DataContainer container) {
+        if (value == null) {
             initialise(1);
         }
         value.put(key, container.setParent(this).setName(key));
         keys.add(key);
-        stateCheck();
+        stateCheck((byte) 3);
     }
 
     public synchronized void putAll(DataMap dataMap) {
         if (value == null) initialise(dataMap.size());
-        dataMap.getValue().forEach((s, container) -> put(s, container, false));
-        stateCheck();
+        dataMap.getValue().forEach(this::put);
+        stateCheck((byte) 8);
     }
 
     public void doIfPresent(String key, Consumer<DataContainer> action) {
         if (has(key)) {
             action.accept(get(key));
         }
-        stateCheck();
+        stateCheck((byte) 16);
     }
 
     public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
@@ -106,7 +102,7 @@ public class DataMap extends DataElement {
             if (val != null)
                 action.accept(val);
         }
-        stateCheck();
+        stateCheck((byte) 16);
     }
 
     public boolean has(String key) {
@@ -123,7 +119,8 @@ public class DataMap extends DataElement {
         return value.size();
     }
 
-    private void stateCheck() {
+    private void stateCheck(byte prio) {
+        if (prio > stateCheck) return;
         if (stateCheck >= 50) {
             stateCheck = 0;
             if ((value == null && keys != null))
@@ -131,7 +128,7 @@ public class DataMap extends DataElement {
             if (keys != null && keys.size() != value.size())
                 throw new IllegalStateException("amount of keys unequal to map keys");
         } else
-            stateCheck++;
+            stateCheck += prio;
     }
 
 
