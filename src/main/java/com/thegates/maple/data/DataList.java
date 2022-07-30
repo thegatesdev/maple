@@ -35,7 +35,7 @@ public class DataList extends DataElement {
     }
 
     private void init(int initialCapacity) {
-        if (values != null)
+        if (values == null)
             values = new ArrayList<>(initialCapacity);
     }
 
@@ -83,7 +83,7 @@ public class DataList extends DataElement {
 
     @Override
     public String getDescription() {
-        return String.format(super.getDescription() + ": DataList size %s", values.size());
+        return String.format(super.getDescription() + ": DataList size %s", values == null ? 0 : values.size());
     }
 
     public void add(DataContainer element) {
@@ -96,6 +96,7 @@ public class DataList extends DataElement {
     }
 
     public List<DataContainer> getValues() {
+        if (values == null) return Collections.emptyList();
         return Collections.unmodifiableList(values);
     }
 
