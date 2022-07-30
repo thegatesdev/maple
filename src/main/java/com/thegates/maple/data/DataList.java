@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class DataList extends DataElement {
 
@@ -19,16 +20,18 @@ public class DataList extends DataElement {
         values = new ArrayList<>(initialCapacity);
     }
 
-    public synchronized static DataList of(List<?> list) {
+    public static synchronized DataList of(List<?> list) {
         DataList dataList = new DataList(list.size());
-        for (Object o : list) {
-            dataList.add(DataContainer.of(o).setParent(dataList));
-        }
+        list.forEach(o -> dataList.add(DataContainer.of(o).setParent(dataList)));
         return dataList;
     }
 
-    public static DataList of(Object... data) {
-        return of(List.of(data));
+    public static synchronized DataList of(Object... objects) {
+        DataList dataList = new DataList(objects.length);
+        for (Object o : objects) {
+            dataList.add(DataContainer.of(o).setParent(dataList));
+        }
+        return dataList;
     }
 
     @Override
@@ -43,20 +46,30 @@ public class DataList extends DataElement {
         return this;
     }
 
-    public synchronized <T> List<T> getAsListOf(Class<T> clazz) {
+    public <T> List<T> getAsListOf(Class<T> clazz) {
         final List<T> output = new ArrayList<>(values.size());
-        for (DataContainer value : values) {
-            if (value.isOf(clazz)) output.add(value.getOrThrow(clazz));
+        synchronized (this) {
+            values.forEach(value -> {
+                if (value.isOf(clazz)) output.add(value.getOrThrow(clazz));
+            });
         }
         return Collections.unmodifiableList(output);
     }
 
-    public synchronized <T> List<T> getValuesUnsafe() {
+    public <T> List<T> getValuesUnsafe() {
         final List<T> output = new ArrayList<>(values.size());
-        for (DataContainer value : values) {
-            output.add(value.getUnsafe());
+        synchronized (this) {
+            values.forEach(value -> output.add(value.getUnsafe()));
         }
         return output;
+    }
+
+    public Stream<DataContainer> stream(Class<?> clazz) {
+        return values.stream().filter(dataContainer -> dataContainer.isOf(clazz));
+    }
+
+    public Stream<DataContainer> stream() {
+        return values.stream();
     }
 
     @Override
@@ -65,8 +78,7 @@ public class DataList extends DataElement {
     }
 
     public void add(DataContainer element) {
-        final int size = values.size();
-        values.add(element.setParent(this).setName("[" + size + "]"));
+        values.add(element.setParent(this).setName("[" + values.size() + "]"));
     }
 
     public void add(Object o) {
@@ -80,10 +92,10 @@ public class DataList extends DataElement {
 
     public DataList requireValuesOf(Class<?> clazz) {
         if (!values.isEmpty()) {
-            for (DataContainer value : values) {
+            values.forEach(value -> {
                 if (!value.isOf(clazz))
                     throw new ReadException(this, "list requires items of type " + clazz.getSimpleName());
-            }
+            });
         }
         return this;
     }

@@ -2,7 +2,7 @@ package com.thegates.maple.data;
 
 import com.thegates.maple.exception.ReadException;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -153,13 +153,8 @@ public class DataContainer extends DataElement {
     }
 
     public List<String> getAsStringList() {
-        List<String> result = new ArrayList<>();
-        if (isList()) {
-            for (Object o : getAsList()) {
-                if (o instanceof String s) result.add(s);
-            }
-        }
-        return result;
+        if (!isDataList()) return Collections.emptyList();
+        return getAsDataList().getAsListOf(String.class);
     }
 
     @Override

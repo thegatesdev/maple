@@ -19,7 +19,7 @@ public class DataMap extends DataElement {
         keys = new ArrayList<>(initialCapacity);
     }
 
-    public static DataMap of(Map<?, ?> data) {
+    public static synchronized DataMap of(Map<?, ?> data) {
         DataMap output = new DataMap(data.size());
         for (Map.Entry<?, ?> entry : data.entrySet()) {
             if (entry.getKey() instanceof String key) {
@@ -65,7 +65,7 @@ public class DataMap extends DataElement {
         return new DataContainer().setParent(this).setName("none");
     }
 
-    public synchronized void put(String key, DataContainer container) {
+    public void put(String key, DataContainer container) {
         value.put(key, container.setParent(this).setName(key));
         keys.add(key);
     }

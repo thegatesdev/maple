@@ -5,8 +5,7 @@ import java.util.Objects;
 public abstract class DataElement {
 
     protected DataElement parent;
-    protected String name;
-    protected String path;
+    protected String name, path;
 
     DataElement() {
     }
@@ -29,6 +28,7 @@ public abstract class DataElement {
 
     private void updatePath() {
         if (parent == null) this.path = name;
+        else if (parent.path == null) this.path = parent.name + "." + name;
         else this.path = parent.path + "." + name;
     }
 
