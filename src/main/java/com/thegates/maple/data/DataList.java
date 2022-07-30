@@ -90,6 +90,17 @@ public class DataList extends DataElement {
     }
 
 
+    public int size() {
+        if (values == null) return 0;
+        return values.size();
+    }
+
+    public boolean isEmpty() {
+        if (values == null) return true;
+        return values.isEmpty();
+    }
+
+
     public DataList requireValuesOf(Class<?> clazz) {
         if (!values.isEmpty()) {
             values.forEach(value -> {

@@ -7,16 +7,16 @@ import java.util.function.Consumer;
 
 public class DataMap extends DataElement {
 
-    private final Map<String, DataContainer> value;
-    private final List<String> keys;
+    private Map<String, DataContainer> value;
+    private List<String> keys;
+
+    private byte stateCheck = 0;
 
     public DataMap() {
-        this(1);
     }
 
     public DataMap(int initialCapacity) {
-        value = new HashMap<>(initialCapacity);
-        keys = new ArrayList<>(initialCapacity);
+        initialise(initialCapacity);
     }
 
     public static synchronized DataMap of(Map<?, ?> data) {
@@ -29,6 +29,13 @@ public class DataMap extends DataElement {
             }
         }
         return output;
+    }
+
+    private void initialise(int initialCapacity) {
+        if (value == null) {
+            value = new HashMap<>(initialCapacity);
+            keys = new ArrayList<>(initialCapacity);
+        }
     }
 
     @Override
@@ -44,19 +51,20 @@ public class DataMap extends DataElement {
     }
 
     public DataContainer get(String key) {
-        if (key == null) {
+        if (key == null || value == null) {
             return emptyContainer();
         }
-        DataContainer container = getValue().get(key);
+        DataContainer container = value.get(key);
         return container != null ? container : emptyContainer().setName(key);
     }
 
     public DataContainer get(DataList keys) {
-        List<String> strings = keys.getAsListOf(String.class);
-        if (strings.isEmpty()) return emptyContainer();
-        for (String string : strings) {
-            DataContainer c = get(string);
-            if (c.isPresent()) return c;
+        if (!(value == null || keys.isEmpty())) {
+            List<String> strings = keys.getAsListOf(String.class);
+            for (String string : strings) {
+                DataContainer c = get(string);
+                if (c.isPresent()) return c;
+            }
         }
         return emptyContainer();
     }
@@ -66,18 +74,30 @@ public class DataMap extends DataElement {
     }
 
     public void put(String key, DataContainer container) {
+        put(key, container, true);
+        stateCheck();
+    }
+
+    private void put(String key, DataContainer container, boolean check) {
+        if (check && value == null) {
+            initialise(1);
+        }
         value.put(key, container.setParent(this).setName(key));
         keys.add(key);
+        stateCheck();
     }
 
     public synchronized void putAll(DataMap dataMap) {
-        dataMap.getValue().forEach(this::put);
+        if (value == null) initialise(dataMap.size());
+        dataMap.getValue().forEach((s, container) -> put(s, container, false));
+        stateCheck();
     }
 
     public void doIfPresent(String key, Consumer<DataContainer> action) {
         if (has(key)) {
             action.accept(get(key));
         }
+        stateCheck();
     }
 
     public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
@@ -86,19 +106,47 @@ public class DataMap extends DataElement {
             if (val != null)
                 action.accept(val);
         }
+        stateCheck();
     }
 
     public boolean has(String key) {
+        if (keys == null) return false;
         return keys.contains(key);
     }
 
     public Map<String, DataContainer> getValue() {
+        if (value == null) return Collections.emptyMap();
         return Collections.unmodifiableMap(value);
+    }
+
+    public int size() {
+        return value.size();
+    }
+
+    private void stateCheck() {
+        if (stateCheck >= 50) {
+            stateCheck = 0;
+            if ((value == null && keys != null))
+                throw new IllegalStateException("map is null but keys aren't");
+            if (keys != null && keys.size() != value.size())
+                throw new IllegalStateException("amount of keys unequal to map keys");
+        } else
+            stateCheck++;
     }
 
 
     public DataMap requireKey(String key) {
         if (!keys.contains(key)) throw new ReadException(this, "map requires field of key " + key);
+        return this;
+    }
+
+    public DataMap requireSize(int size) {
+        if (value.size() != size) throw new ReadException(this, "map requires size " + size);
+        return this;
+    }
+
+    public DataMap requireSizeHigher(int size) {
+        if (value.size() <= size) throw new ReadException(this, "list requires size higher than " + size);
         return this;
     }
 
