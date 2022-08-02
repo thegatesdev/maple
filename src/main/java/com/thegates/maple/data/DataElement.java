@@ -5,46 +5,44 @@ import java.util.Objects;
 public abstract class DataElement {
 
     protected DataElement parent;
-    protected String name, path;
+    protected String name;
 
     DataElement() {
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public DataElement setName(String name) {
-        this.name = name;
-        updatePath();
-        return this;
+    DataElement(DataElement parent, String name) {
+        this.parent = parent;
+        this.name = name == null ? "" : name;
     }
 
     public DataElement setParent(DataElement parent) {
         this.parent = parent;
-        updatePath();
         return this;
     }
 
-    private void updatePath() {
-        if (parent == null) this.path = name;
-        else if (parent.path == null) this.path = parent.name + "." + name;
-        else this.path = parent.path + "." + name;
+    public DataElement setName(String name) {
+        this.name = name;
+        return this;
     }
 
-    public String getDescription() {
-        return "DataElement at " + path;
+    public abstract DataElement copy();
+
+
+    public String getPath() {
+        final String n = name == null ? "" : name;
+        return parent == null ? n : parent.getPath() + "." + n;
     }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DataElement that)) return false;
-        return Objects.equals(parent, that.parent) && Objects.equals(name, that.name) && Objects.equals(path, that.path);
+        return Objects.equals(parent, that.parent) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(parent, name, path);
+        return Objects.hash(parent, name);
     }
 }

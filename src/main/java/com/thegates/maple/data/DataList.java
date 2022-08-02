@@ -1,7 +1,5 @@
 package com.thegates.maple.data;
 
-import com.thegates.maple.exception.ReadException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,25 +11,30 @@ public class DataList extends DataElement {
     private List<DataContainer> values;
 
     public DataList() {
-
     }
 
     public DataList(int initialCapacity) {
         init(initialCapacity);
     }
 
-    public static synchronized DataList of(List<?> list) {
+
+    public static synchronized DataList read(List<?> list) {
         DataList dataList = new DataList(list.size());
-        list.forEach(o -> dataList.add(DataContainer.of(o).setParent(dataList)));
+        list.stream().map(DataContainer::read).forEach(dataList::add);
         return dataList;
     }
 
     public static synchronized DataList of(Object... objects) {
         DataList dataList = new DataList(objects.length);
         for (Object o : objects) {
-            dataList.add(DataContainer.of(o).setParent(dataList));
+            dataList.add(new DataContainer(o));
         }
         return dataList;
+    }
+
+    public DataList addAllFrom(DataList dataList) {
+        dataList.values.forEach(this::add);
+        return this;
     }
 
     private void init(int initialCapacity) {
@@ -40,14 +43,14 @@ public class DataList extends DataElement {
     }
 
     @Override
-    public DataList setParent(DataElement parent) {
-        super.setParent(parent);
+    public DataList setName(String name) {
+        super.setName(name);
         return this;
     }
 
     @Override
-    public DataList setName(String name) {
-        super.setName(name);
+    public DataElement setParent(DataElement parent) {
+        super.setParent(parent);
         return this;
     }
 
@@ -81,18 +84,13 @@ public class DataList extends DataElement {
         return values.stream();
     }
 
-    @Override
-    public String getDescription() {
-        return String.format(super.getDescription() + ": DataList size %s", values == null ? 0 : values.size());
-    }
-
-    public void add(DataContainer element) {
+    void add(DataContainer container) {
         if (values == null) init(1);
-        values.add(element.setParent(this).setName("[" + values.size() + "]"));
+        values.add(container.copy().setParent(this).setName("[" + values.size() + "]"));
     }
 
     public void add(Object o) {
-        add(DataContainer.of(o));
+        add(new DataContainer(o));
     }
 
     public List<DataContainer> getValues() {
@@ -112,34 +110,10 @@ public class DataList extends DataElement {
     }
 
 
-    public DataList requireValuesOf(Class<?> clazz) {
-        if (values == null || values.isEmpty())
-            throw new ReadException(this, "list requires items of type " + clazz.getSimpleName());
-        values.forEach(value -> {
-            if (!value.isOf(clazz))
-                throw new ReadException(this, "list requires items of type " + clazz.getSimpleName());
-        });
-        return this;
+    @Override
+    public DataElement copy() {
+        return new DataList().addAllFrom(this);
     }
-
-    public DataList requireValueOf(Class<?> clazz) {
-        if (values == null || values.isEmpty())
-            throw new ReadException(this, "list requires at least one item of type " + clazz.getSimpleName());
-        for (DataContainer value : values) if (value.isOf(clazz)) return this;
-        throw new ReadException(this, "list requires at least one item of type " + clazz.getSimpleName());
-    }
-
-    public DataList requireSize(int size) {
-        if (values == null || values.size() != size) throw new ReadException(this, "list requires size " + size);
-        return this;
-    }
-
-    public DataList requireSizeHigher(int size) {
-        if (values == null || values.size() <= size)
-            throw new ReadException(this, "list requires size higher than " + size);
-        return this;
-    }
-
 
     @Override
     public boolean equals(Object o) {

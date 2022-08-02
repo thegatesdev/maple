@@ -1,7 +1,5 @@
 package com.thegates.maple.data;
 
-import com.thegates.maple.exception.ReadException;
-
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -16,32 +14,19 @@ public class DataMap extends DataElement {
     }
 
     public DataMap(int initialCapacity) {
-        initialise(initialCapacity);
+        init(initialCapacity);
     }
 
-    public static synchronized DataMap of(Map<?, ?> data) {
-        DataMap output = new DataMap(data.size());
+    public static synchronized DataMap read(Map<?, ?> data) {
+        DataMap output = new DataMap();
         for (Map.Entry<?, ?> entry : data.entrySet()) {
             if (entry.getKey() instanceof String key) {
                 Object value = entry.getValue();
-                DataContainer dataContainer = DataContainer.of(value);
+                DataContainer dataContainer = DataContainer.read(value);
                 output.put(key, dataContainer);
             }
         }
         return output;
-    }
-
-    private void initialise(int initialCapacity) {
-        if (value == null) {
-            value = new HashMap<>(initialCapacity);
-            keys = new ArrayList<>(initialCapacity);
-        }
-    }
-
-    @Override
-    public DataMap setParent(DataElement parent) {
-        super.setParent(parent);
-        return this;
     }
 
     @Override
@@ -50,54 +35,87 @@ public class DataMap extends DataElement {
         return this;
     }
 
+    @Override
+    public DataMap setParent(DataElement parent) {
+        super.setParent(parent);
+        return this;
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null) {
+            value = new HashMap<>(initialCapacity);
+            keys = new ArrayList<>(initialCapacity);
+        }
+    }
+
+
+    public Map<String, DataContainer> getValue() {
+        if (value == null) return Collections.emptyMap();
+        return Collections.unmodifiableMap(value);
+    }
+
     public DataContainer get(String key) {
-        if (key == null || value == null) {
-            return emptyContainer();
+        if (value == null) {
+            return new DataContainer();
         }
         DataContainer container = value.get(key);
-        return container != null ? container : emptyContainer().setName(key);
+        return container != null ? container : new DataContainer();
     }
 
-    public DataContainer get(DataList keys) {
-        if (!(value == null || keys.isEmpty())) {
-            List<String> strings = keys.getAsListOf(String.class);
-            for (String string : strings) {
+    public DataContainer get(List<String> keys) {
+        if (!(value == null || this.keys.isEmpty())) {
+            for (String string : keys) {
                 DataContainer c = get(string);
-                if (c.isPresent()) return c;
+                if (c != null) return c;
             }
         }
-        return emptyContainer();
+        return new DataContainer();
     }
 
-    private DataContainer emptyContainer() {
-        return new DataContainer().setParent(this).setName("none");
+    public boolean hasKey(String key) {
+        if (keys == null) return false;
+        return keys.contains(key);
+    }
+
+    public int size() {
+        return value.size();
+    }
+
+    @Override
+    public DataElement copy() {
+        return new DataMap().putAll(this);
     }
 
 
-    private void put(String key, DataContainer container) {
+    void put(String key, DataContainer container) {
         if (value == null) {
-            initialise(1);
+            init(1);
         }
-        value.put(key, container.setParent(this).setName(key));
+        value.put(key, container.copy().setName(key).setParent(this));
         keys.add(key);
         stateCheck((byte) 3);
     }
 
-    public synchronized void putAll(DataMap dataMap) {
-        if (value == null) initialise(dataMap.size());
+    public void put(String key, Object object) {
+        put(key, new DataContainer(object));
+    }
+
+    public synchronized DataMap putAll(DataMap dataMap) {
+        if (value == null) init(dataMap.size());
         dataMap.getValue().forEach(this::put);
         stateCheck((byte) 8);
+        return this;
     }
 
     public void doIfPresent(String key, Consumer<DataContainer> action) {
-        if (has(key)) {
+        if (hasKey(key)) {
             action.accept(get(key));
         }
         stateCheck((byte) 16);
     }
 
     public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
-        if (has(key)) {
+        if (hasKey(key)) {
             T val = get(key).getOrNull(clazz);
             if (val != null)
                 action.accept(val);
@@ -105,19 +123,6 @@ public class DataMap extends DataElement {
         stateCheck((byte) 16);
     }
 
-    public boolean has(String key) {
-        if (keys == null) return false;
-        return keys.contains(key);
-    }
-
-    public Map<String, DataContainer> getValue() {
-        if (value == null) return Collections.emptyMap();
-        return Collections.unmodifiableMap(value);
-    }
-
-    public int size() {
-        return value.size();
-    }
 
     private void stateCheck(byte prio) {
         if (prio > stateCheck) return;
@@ -129,27 +134,6 @@ public class DataMap extends DataElement {
                 throw new IllegalStateException("amount of keys unequal to map keys");
         } else
             stateCheck += prio;
-    }
-
-
-    public DataMap requireKey(String key) {
-        if (!keys.contains(key)) throw new ReadException(this, "map requires field of key " + key);
-        return this;
-    }
-
-    public DataMap requireSize(int size) {
-        if (value.size() != size) throw new ReadException(this, "map requires size " + size);
-        return this;
-    }
-
-    public DataMap requireSizeHigher(int size) {
-        if (value.size() <= size) throw new ReadException(this, "list requires size higher than " + size);
-        return this;
-    }
-
-
-    public String getDescription() {
-        return String.format(super.getDescription() + ": DataMap size %s", getValue().size());
     }
 
     @Override
