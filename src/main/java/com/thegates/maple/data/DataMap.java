@@ -133,7 +133,7 @@ public class DataMap extends DataElement {
 
     public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
         if (hasKey(key)) {
-            T val = get(key).getOrNull(clazz);
+            T val = get(key).getValueOrNull(clazz);
             if (val != null)
                 action.accept(val);
         }

@@ -76,7 +76,7 @@ public class DataList extends DataElement {
         final List<T> output = new ArrayList<>(values.size());
         synchronized (this) {
             values.forEach(value -> {
-                if (value.isOf(clazz)) output.add(value.getOrThrow(clazz));
+                if (value.isValueOf(clazz)) output.add(value.getValueOrThrow(clazz));
             });
         }
         return Collections.unmodifiableList(output);
@@ -93,7 +93,7 @@ public class DataList extends DataElement {
 
     public Stream<DataContainer> stream(Class<?> clazz) {
         if (values == null || values.isEmpty()) return Stream.empty();
-        return values.stream().filter(dataContainer -> dataContainer.isOf(clazz));
+        return values.stream().filter(dataContainer -> dataContainer.isValueOf(clazz));
     }
 
     public Stream<DataContainer> stream() {

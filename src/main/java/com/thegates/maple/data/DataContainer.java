@@ -54,7 +54,7 @@ public class DataContainer extends DataElement {
     @Override
     public DataContainer setName(String name) {
         super.setName(name);
-        if (isDataElement()) getAsDataElement().setName("%s".formatted(name));
+        if (isValueOf(DataElement.class)) getValueOrNull(DataElement.class).setName("%s".formatted(name));
         return this;
     }
 
@@ -81,19 +81,18 @@ public class DataContainer extends DataElement {
 
     public DataContainer setValue(Object value) {
         this.value = value;
-        if (isDataElement()) getAsDataElement().setParent(this);
+        if (isValueOf(DataElement.class)) getValueOrNull(DataElement.class).setParent(this);
         return this;
     }
 
-    public <T> T getOrThrow(Class<T> clazz) {
-        if (isOf(clazz)) return clazz.cast(value);
+    public <T> T getValueOrThrow(Class<T> clazz) {
+        if (isValueOf(clazz)) return clazz.cast(value);
         else
             throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + value.getClass().getSimpleName());
     }
 
-
-    public <T> T getOrNull(Class<T> clazz) {
-        return isOf(clazz) ? clazz.cast(value) : null;
+    public <T> T getValueOrNull(Class<T> clazz) {
+        return isValueOf(clazz) ? clazz.cast(value) : null;
     }
 
     public boolean isPresent() {
@@ -101,34 +100,8 @@ public class DataContainer extends DataElement {
     }
 
 
-    public boolean isOf(Class<?> clazz) {
+    public boolean isValueOf(Class<?> clazz) {
         return clazz.isInstance(value);
-    }
-
-    public boolean isDataList() {
-        return value instanceof DataList;
-    }
-
-
-    public DataList getAsDataList() {
-        return isDataList() ? (DataList) value : null;
-    }
-
-    public boolean isDataMap() {
-        return value instanceof DataMap;
-    }
-
-
-    public DataMap getAsDataMap() {
-        return isDataMap() ? ((DataMap) value) : null;
-    }
-
-    boolean isDataElement() {
-        return value instanceof DataElement;
-    }
-
-    DataElement getAsDataElement() {
-        return isDataElement() ? (DataElement) value : null;
     }
 
 
@@ -171,12 +144,6 @@ public class DataContainer extends DataElement {
 
     public boolean isNumber() {
         return value instanceof Number;
-    }
-
-
-    public List<String> getAsStringList() {
-        if (!isDataList()) return null;
-        return getAsDataList().getAsListOf(String.class);
     }
 
     @Override
