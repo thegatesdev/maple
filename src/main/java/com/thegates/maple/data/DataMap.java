@@ -103,6 +103,36 @@ public class DataMap extends DataElement {
         return new DataMap().putAll(this);
     }
 
+    @Override
+    public boolean isDataContainer() {
+        return false;
+    }
+
+    @Override
+    public boolean isDataList() {
+        return false;
+    }
+
+    @Override
+    public boolean isDataMap() {
+        return true;
+    }
+
+    @Override
+    public DataContainer getAsDataContainer() {
+        return null;
+    }
+
+    @Override
+    public DataList getAsDataList() {
+        return null;
+    }
+
+    @Override
+    public DataMap getAsDataMap() {
+        return this;
+    }
+
 
     void put(String key, DataContainer container) {
         if (value == null) {

@@ -86,7 +86,7 @@ public class DataList extends DataElement {
         if (values == null || values.isEmpty()) return Collections.emptyList();
         final List<T> output = new ArrayList<>(values.size());
         synchronized (this) {
-            values.forEach(value -> output.add(value.getUnsafe()));
+            values.forEach(value -> output.add(value.getValueUnsafe()));
         }
         return output;
     }
@@ -130,6 +130,36 @@ public class DataList extends DataElement {
     @Override
     public DataElement copy() {
         return new DataList().addAllFrom(this);
+    }
+
+    @Override
+    public boolean isDataContainer() {
+        return false;
+    }
+
+    @Override
+    public boolean isDataList() {
+        return true;
+    }
+
+    @Override
+    public boolean isDataMap() {
+        return false;
+    }
+
+    @Override
+    public DataContainer getAsDataContainer() {
+        return null;
+    }
+
+    @Override
+    public DataList getAsDataList() {
+        return this;
+    }
+
+    @Override
+    public DataMap getAsDataMap() {
+        return null;
     }
 
     @Override

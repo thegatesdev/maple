@@ -44,30 +44,18 @@ public abstract class DataElement {
 
     public abstract DataElement copy();
 
-    public boolean isDataContainer() {
-        return this instanceof DataContainer;
-    }
+    public abstract boolean isDataContainer();
 
-    public boolean isDataList() {
-        return this instanceof DataList;
-    }
+    public abstract boolean isDataList();
 
-    public boolean isDataMap() {
-        return this instanceof DataMap;
-    }
+    public abstract boolean isDataMap();
 
 
-    public DataContainer getAsDataContainer() {
-        return isDataContainer() ? (DataContainer) this : null;
-    }
+    public abstract DataContainer getAsDataContainer();
 
-    public DataList getAsDataList() {
-        return isDataList() ? (DataList) this : null;
-    }
+    public abstract DataList getAsDataList();
 
-    public DataMap getAsDataMap() {
-        return isDataMap() ? (DataMap) this : null;
-    }
+    public abstract DataMap getAsDataMap();
 
 
     public String getPath() {

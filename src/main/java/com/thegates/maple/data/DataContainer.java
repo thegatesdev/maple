@@ -70,12 +70,42 @@ public class DataContainer extends DataElement {
     }
 
     @Override
+    public boolean isDataContainer() {
+        return true;
+    }
+
+    @Override
+    public boolean isDataList() {
+        return false;
+    }
+
+    @Override
+    public boolean isDataMap() {
+        return false;
+    }
+
+    @Override
+    public DataContainer getAsDataContainer() {
+        return this;
+    }
+
+    @Override
+    public DataList getAsDataList() {
+        return null;
+    }
+
+    @Override
+    public DataMap getAsDataMap() {
+        return null;
+    }
+
+    @Override
     public String getPath() {
         return parent == null ? "" : parent.getPath();
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getUnsafe() {
+    public <T> T getValueUnsafe() {
         return (T) value;
     }
 
@@ -105,45 +135,65 @@ public class DataContainer extends DataElement {
     }
 
 
-    public boolean isString() {
+    public boolean isStringValue() {
         return value instanceof String;
     }
 
 
-    public String getAsString() {
-        return isString() ? (String) value : null;
+    public String stringValue() {
+        return isStringValue() ? (String) value : null;
     }
 
-    public String getAsString(String def) {
-        return isString() ? (String) value : def;
+    public String stringValue(String def) {
+        return isStringValue() ? (String) value : def;
     }
 
-    public boolean isBoolean() {
+    public boolean isBooleanValue() {
         return value instanceof Boolean;
     }
 
-    public boolean getAsBoolean(boolean def) {
-        return isBoolean() ? (boolean) value : def;
+    public boolean booleanValue(boolean def) {
+        return isBooleanValue() ? (boolean) value : def;
     }
 
-    public int getAsInt(int def) {
-        return isNumber() ? ((Number) value).intValue() : def;
-    }
-
-    public double getAsDouble(double def) {
-        return isNumber() ? ((Number) value).doubleValue() : def;
-    }
-
-    public float getAsFloat(float def) {
-        return isNumber() ? ((Number) value).floatValue() : def;
-    }
-
-    public long getAsLong(long def) {
-        return isNumber() ? ((Number) value).longValue() : def;
-    }
-
-    public boolean isNumber() {
+    public boolean isNumberValue() {
         return value instanceof Number;
+    }
+
+    public int intValue(int def) {
+        return isNumberValue() ? ((Number) value).intValue() : def;
+    }
+
+    public double doubleValue(double def) {
+        return isNumberValue() ? ((Number) value).doubleValue() : def;
+    }
+
+    public float floatValue(float def) {
+        return isNumberValue() ? ((Number) value).floatValue() : def;
+    }
+
+    public long longValue(long def) {
+        return isNumberValue() ? ((Number) value).longValue() : def;
+    }
+
+    public boolean isDataElementValue() {
+        return value instanceof DataElement;
+    }
+
+    public boolean isDataMapValue() {
+        return value instanceof DataMap;
+    }
+
+    public boolean isDataListValue() {
+        return value instanceof DataList;
+    }
+
+    public DataMap dataMapValue() {
+        return value instanceof DataMap ? ((DataMap) value) : null;
+    }
+
+    public DataList dataListValue() {
+        return value instanceof DataList ? ((DataList) value) : null;
     }
 
     @Override
