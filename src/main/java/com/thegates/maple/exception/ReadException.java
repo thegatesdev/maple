@@ -5,6 +5,6 @@ import com.thegates.maple.data.DataElement;
 public class ReadException extends RuntimeException {
 
     public ReadException(DataElement data, String message) {
-        super(String.format("Error while data at %s, %s.", data.getPath(), message));
+        super(String.format("Error while reading data at %s, %s.", data.getPath(), message));
     }
 }
