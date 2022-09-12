@@ -147,6 +147,10 @@ public class DataContainer extends DataElement {
         return isBooleanValue() ? (boolean) value : def;
     }
 
+    public boolean booleanValue() {
+        return booleanValue(false);
+    }
+
     public boolean isNumberValue() {
         return value instanceof Number;
     }
@@ -155,16 +159,32 @@ public class DataContainer extends DataElement {
         return isNumberValue() ? ((Number) value).intValue() : def;
     }
 
+    public int intValue() {
+        return intValue(0);
+    }
+
     public double doubleValue(double def) {
         return isNumberValue() ? ((Number) value).doubleValue() : def;
+    }
+
+    public double doubleValue() {
+        return doubleValue(0.0d);
     }
 
     public float floatValue(float def) {
         return isNumberValue() ? ((Number) value).floatValue() : def;
     }
 
+    public float floatValue() {
+        return floatValue(0.0f);
+    }
+
     public long longValue(long def) {
         return isNumberValue() ? ((Number) value).longValue() : def;
+    }
+
+    public long longValue() {
+        return longValue(0L);
     }
 
     public boolean isDataElementValue() {
