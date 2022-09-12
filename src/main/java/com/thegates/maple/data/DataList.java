@@ -36,7 +36,7 @@ public class DataList extends DataElement {
 
 
     public static DataList read(List<?> list) {
-        DataList dataList = new DataList(list.size());
+        final DataList dataList = new DataList(list.size());
         synchronized (MODIFY_MUTEX) {
             list.forEach(o -> dataList.add(DataContainer.read(o)));
         }
@@ -44,11 +44,29 @@ public class DataList extends DataElement {
     }
 
     public static DataList read(Object... objects) {
-        DataList dataList = new DataList(objects.length);
+        final DataList dataList = new DataList(objects.length);
         synchronized (MODIFY_MUTEX) {
             for (Object o : objects) {
                 dataList.add(DataContainer.read(o));
             }
+        }
+        return dataList;
+    }
+
+    public static DataList of(Object... objects) {
+        final DataList dataList = new DataList(objects.length);
+        synchronized (MODIFY_MUTEX) {
+            for (Object o : objects) {
+                dataList.add(new DataContainer(o));
+            }
+        }
+        return dataList;
+    }
+
+    public static DataList of(List<?> list) {
+        final DataList dataList = new DataList(list.size());
+        synchronized (MODIFY_MUTEX) {
+            list.forEach(o -> dataList.add(new DataContainer(o)));
         }
         return dataList;
     }

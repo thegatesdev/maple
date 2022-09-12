@@ -29,7 +29,7 @@ public class DataContainer extends DataElement {
 
     final Object value;
 
-    private DataContainer(Object value) {
+    public DataContainer(Object value) {
         this.value = value;
     }
 
