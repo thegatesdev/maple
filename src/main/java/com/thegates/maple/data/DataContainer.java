@@ -25,36 +25,29 @@ Copyright (C) 2022  Timar Karels
 
 public class DataContainer extends DataElement {
 
-    Object value;
+    public static final DataContainer EMPTY = new DataContainer(null);
 
-    DataContainer() {
-    }
+    final Object value;
 
-    DataContainer(Object value) {
-        setValue(value);
+    private DataContainer(Object value) {
+        this.value = value;
     }
 
     static DataContainer read(Object data) {
+        if (data == null) return null;
         final Object input;
         if (data instanceof List<?> list) {
             input = DataList.read(list);
         } else if (data instanceof Map<?, ?> map) {
-            input = DataMap.read(map);
+            input = DataMap.readInternal(map);
         } else input = data;
-        return DataContainer.of(input);
-    }
-
-    public static DataContainer of(Object data) {
-        if (data instanceof DataContainer container) {
-            return new DataContainer(container.value);
-        }
-        return new DataContainer(data);
+        return new DataContainer(input);
     }
 
     @Override
     public DataContainer setName(String name) {
         super.setName(name);
-        if (isValueOf(DataElement.class)) getValueOrNull(DataElement.class).setName("%s".formatted(name));
+        if (isValueOf(DataElement.class)) getValueOrNull(DataElement.class).setName(name);
         return this;
     }
 
@@ -66,7 +59,7 @@ public class DataContainer extends DataElement {
 
     @Override
     public DataContainer copy() {
-        return new DataContainer().setValue(value);
+        return new DataContainer(value);
     }
 
     @Override
@@ -101,18 +94,12 @@ public class DataContainer extends DataElement {
 
     @Override
     public String getPath() {
-        return parent == null ? "" : parent.getPath();
+        return parent == null || parent.getPath() == null ? "" : parent.getPath();
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getValueUnsafe() {
         return (T) value;
-    }
-
-    public DataContainer setValue(Object value) {
-        this.value = value;
-        if (isValueOf(DataElement.class)) getValueOrNull(DataElement.class).setParent(this);
-        return this;
     }
 
     public <T> T getValueOrThrow(Class<T> clazz) {
@@ -207,5 +194,10 @@ public class DataContainer extends DataElement {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), value);
+    }
+
+    @Override
+    public String toString() {
+        return value == null ? "emptyContainer" : value.toString();
     }
 }

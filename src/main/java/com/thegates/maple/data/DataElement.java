@@ -21,6 +21,9 @@ Copyright (C) 2022  Timar Karels
 
 public abstract class DataElement {
 
+    static final Object MODIFY_MUTEX = new Object();
+    static final Object GET_MUTEX = new Object();
+
     protected DataElement parent;
     protected String name;
 

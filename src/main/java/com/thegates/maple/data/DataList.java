@@ -35,22 +35,28 @@ public class DataList extends DataElement {
     }
 
 
-    public static synchronized DataList read(List<?> list) {
+    public static DataList read(List<?> list) {
         DataList dataList = new DataList(list.size());
-        list.stream().map(DataContainer::read).forEach(dataList::add);
+        synchronized (MODIFY_MUTEX) {
+            list.forEach(o -> dataList.add(DataContainer.read(o)));
+        }
         return dataList;
     }
 
-    public static synchronized DataList of(Object... objects) {
+    public static DataList read(Object... objects) {
         DataList dataList = new DataList(objects.length);
-        for (Object o : objects) {
-            dataList.add(new DataContainer(o));
+        synchronized (MODIFY_MUTEX) {
+            for (Object o : objects) {
+                dataList.add(DataContainer.read(o));
+            }
         }
         return dataList;
     }
 
     public DataList addAllFrom(DataList dataList) {
-        dataList.values.forEach(this::add);
+        synchronized (MODIFY_MUTEX) {
+            dataList.values.forEach(this::add);
+        }
         return this;
     }
 
@@ -74,7 +80,7 @@ public class DataList extends DataElement {
     public <T> List<T> getAsListOf(Class<T> clazz) {
         if (values == null || values.isEmpty()) return Collections.emptyList();
         final List<T> output = new ArrayList<>(values.size());
-        synchronized (this) {
+        synchronized (GET_MUTEX) {
             values.forEach(value -> {
                 if (value.isValueOf(clazz)) output.add(value.getValueOrThrow(clazz));
             });
@@ -85,7 +91,7 @@ public class DataList extends DataElement {
     public <T> List<T> getValuesUnsafe() {
         if (values == null || values.isEmpty()) return Collections.emptyList();
         final List<T> output = new ArrayList<>(values.size());
-        synchronized (this) {
+        synchronized (GET_MUTEX) {
             values.forEach(value -> output.add(value.getValueUnsafe()));
         }
         return output;
@@ -93,7 +99,9 @@ public class DataList extends DataElement {
 
     public Stream<DataContainer> stream(Class<?> clazz) {
         if (values == null || values.isEmpty()) return Stream.empty();
-        return values.stream().filter(dataContainer -> dataContainer.isValueOf(clazz));
+        synchronized (GET_MUTEX) {
+            return values.stream().filter(dataContainer -> dataContainer.isValueOf(clazz));
+        }
     }
 
     public Stream<DataContainer> stream() {
@@ -104,10 +112,6 @@ public class DataList extends DataElement {
     void add(DataContainer container) {
         if (values == null) init(1);
         values.add(container.copy().setParent(this).setName("[" + values.size() + "]"));
-    }
-
-    public void add(Object o) {
-        add(new DataContainer(o));
     }
 
     public List<DataContainer> getValues() {
@@ -173,5 +177,10 @@ public class DataList extends DataElement {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), values);
+    }
+
+    @Override
+    public String toString() {
+        return values == null ? "emptyList" : String.join("\n", values.stream().map(DataContainer::toString).toList());
     }
 }

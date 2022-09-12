@@ -25,8 +25,6 @@ public class DataMap extends DataElement {
     private Map<String, DataContainer> value;
     private List<String> keys;
 
-    private byte stateCheck = 0;
-
     public DataMap() {
     }
 
@@ -34,14 +32,26 @@ public class DataMap extends DataElement {
         init(initialCapacity);
     }
 
-    public static synchronized DataMap read(Map<?, ?> data) {
+    static DataMap readInternal(Map<?, ?> data) {
         DataMap output = new DataMap();
-        for (Map.Entry<?, ?> entry : data.entrySet()) {
-            if (entry.getKey() instanceof String key) {
-                Object value = entry.getValue();
-                DataContainer dataContainer = DataContainer.read(value);
-                output.put(key, dataContainer);
+        synchronized (MODIFY_MUTEX) {
+            for (Map.Entry<?, ?> entry : data.entrySet()) {
+                if (entry.getKey() instanceof String key) {
+                    Object value = entry.getValue();
+                    if (value == null) continue;
+                    DataContainer c = DataContainer.read(value);
+                    if (c == null || !c.isPresent()) continue;
+                    output.put(key, c);
+                }
             }
+        }
+        return output;
+    }
+
+    public static DataMap read(Map<String, ?> data) {
+        final DataMap output = new DataMap();
+        synchronized (MODIFY_MUTEX) {
+            data.forEach((s, o) -> output.put(s, DataContainer.read(o)));
         }
         return output;
     }
@@ -73,20 +83,22 @@ public class DataMap extends DataElement {
 
     public DataContainer get(String key) {
         if (value == null) {
-            return new DataContainer();
+            return DataContainer.EMPTY;
         }
         DataContainer container = value.get(key);
-        return container != null ? container : new DataContainer();
+        return container != null ? container : DataContainer.EMPTY;
     }
 
     public DataContainer get(List<String> keys) {
         if (!(value == null || this.keys.isEmpty())) {
-            for (String string : keys) {
-                DataContainer c = get(string);
-                if (c != null) return c;
+            synchronized (GET_MUTEX) {
+                for (String string : keys) {
+                    DataContainer c = get(string);
+                    if (c != null) return c;
+                }
             }
         }
-        return new DataContainer();
+        return DataContainer.EMPTY;
     }
 
     public boolean hasKey(String key) {
@@ -135,22 +147,20 @@ public class DataMap extends DataElement {
 
 
     void put(String key, DataContainer container) {
+        if (key == null) throw new NullPointerException("key was null");
+        if (container == null) throw new NullPointerException("container was null");
         if (value == null) {
             init(1);
         }
         value.put(key, container.copy().setName(key).setParent(this));
         keys.add(key);
-        stateCheck((byte) 3);
     }
 
-    public void put(String key, Object object) {
-        put(key, new DataContainer(object));
-    }
-
-    public synchronized DataMap putAll(DataMap dataMap) {
+    public DataMap putAll(DataMap dataMap) {
         if (value == null) init(dataMap.size());
-        dataMap.getValue().forEach(this::put);
-        stateCheck((byte) 8);
+        synchronized (MODIFY_MUTEX) {
+            dataMap.getValue().forEach(this::put);
+        }
         return this;
     }
 
@@ -158,7 +168,6 @@ public class DataMap extends DataElement {
         if (hasKey(key)) {
             action.accept(get(key));
         }
-        stateCheck((byte) 16);
     }
 
     public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
@@ -167,20 +176,6 @@ public class DataMap extends DataElement {
             if (val != null)
                 action.accept(val);
         }
-        stateCheck((byte) 16);
-    }
-
-
-    private void stateCheck(byte prio) {
-        if (prio > stateCheck) return;
-        if (stateCheck >= 50) {
-            stateCheck = 0;
-            if ((value == null && keys != null))
-                throw new IllegalStateException("map is null but keys aren't");
-            if (keys != null && keys.size() != value.size())
-                throw new IllegalStateException("amount of keys unequal to map keys");
-        } else
-            stateCheck += prio;
     }
 
     @Override
@@ -194,5 +189,10 @@ public class DataMap extends DataElement {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), value);
+    }
+
+    @Override
+    public String toString() {
+        return value == null ? "emptyMap" : String.join("\n", value.entrySet().stream().map(e -> (e.getKey() + ": " + e.getValue().toString())).toList());
     }
 }
