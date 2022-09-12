@@ -89,7 +89,7 @@ public class DataMap extends DataElement {
         return container != null ? container : DataContainer.EMPTY;
     }
 
-    public DataContainer get(List<String> keys) {
+    public DataContainer getFirst(List<String> keys) {
         if (!(value == null || this.keys.isEmpty())) {
             synchronized (GET_MUTEX) {
                 for (String string : keys) {
@@ -99,6 +99,54 @@ public class DataMap extends DataElement {
             }
         }
         return DataContainer.EMPTY;
+    }
+
+    public String getString(String key, String def) {
+        return get(key).stringValue(def);
+    }
+
+    public String getString(String key) {
+        return get(key).stringValue();
+    }
+
+    public boolean getBoolean(String key, boolean def) {
+        return get(key).booleanValue(def);
+    }
+
+    public boolean getBoolean(String key) {
+        return get(key).booleanValue();
+    }
+
+    public int getInt(String key, int def) {
+        return get(key).intValue(def);
+    }
+
+    public int getInt(String key) {
+        return get(key).intValue();
+    }
+
+    public double getDouble(String key, double def) {
+        return get(key).doubleValue(def);
+    }
+
+    public double getDouble(String key) {
+        return get(key).doubleValue();
+    }
+
+    public float getFloat(String key, float def) {
+        return get(key).floatValue(def);
+    }
+
+    public float getFloat(String key) {
+        return get(key).floatValue();
+    }
+
+    public long getLong(String key, long def) {
+        return get(key).longValue(def);
+    }
+
+    public long getLong(String key) {
+        return get(key).longValue();
     }
 
     public boolean hasKey(String key) {
