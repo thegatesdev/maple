@@ -116,6 +116,10 @@ public class DataContainer extends DataElement {
         return value != null;
     }
 
+    public boolean isEmpty() {
+        return value == null;
+    }
+
 
     public boolean isValueOf(Class<?> clazz) {
         return clazz.isInstance(value);

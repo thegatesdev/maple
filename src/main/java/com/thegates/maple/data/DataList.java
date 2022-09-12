@@ -144,8 +144,11 @@ public class DataList extends DataElement {
     }
 
     public boolean isEmpty() {
-        if (values == null) return true;
-        return values.isEmpty();
+        return values == null || values.isEmpty();
+    }
+
+    public boolean isPresent() {
+        return values != null && !values.isEmpty();
     }
 
 

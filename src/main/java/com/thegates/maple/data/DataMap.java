@@ -107,7 +107,16 @@ public class DataMap extends DataElement {
     }
 
     public int size() {
+        if (value == null) return 0;
         return value.size();
+    }
+
+    public boolean isPresent() {
+        return value != null && !value.isEmpty();
+    }
+
+    public boolean isEmpty() {
+        return value == null || value.isEmpty();
     }
 
     @Override
