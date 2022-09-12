@@ -146,7 +146,7 @@ public class DataMap extends DataElement {
     }
 
 
-    void put(String key, DataContainer container) {
+    public void put(String key, DataContainer container) {
         if (key == null) throw new NullPointerException("key was null");
         if (container == null) throw new NullPointerException("container was null");
         if (value == null) {
