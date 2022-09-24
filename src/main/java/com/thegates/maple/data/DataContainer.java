@@ -31,6 +31,9 @@ public class DataContainer extends DataElement {
 
     public DataContainer(Object value) {
         this.value = value;
+        if (value instanceof DataElement e) {
+            e.setParent(this);
+        }
     }
 
     static DataContainer read(Object data) {
