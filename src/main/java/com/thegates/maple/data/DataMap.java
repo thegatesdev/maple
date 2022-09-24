@@ -23,7 +23,7 @@ Copyright (C) 2022  Timar Karels
 public class DataMap extends DataElement {
 
     private Map<String, DataContainer> value;
-    private List<String> keys;
+    private Set<String> keys;
 
     public DataMap() {
     }
@@ -71,7 +71,7 @@ public class DataMap extends DataElement {
     private void init(int initialCapacity) {
         if (value == null) {
             value = new HashMap<>(initialCapacity);
-            keys = new ArrayList<>(initialCapacity);
+            keys = new HashSet<>(initialCapacity);
         }
     }
 
