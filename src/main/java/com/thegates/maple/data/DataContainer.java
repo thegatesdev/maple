@@ -1,6 +1,7 @@
 package com.thegates.maple.data;
 
 import com.thegates.maple.exception.ReadException;
+import com.thegates.maple.exception.RequireTypeException;
 
 import java.util.List;
 import java.util.Map;
@@ -121,6 +122,12 @@ public class DataContainer extends DataElement {
 
     public boolean isEmpty() {
         return value == null;
+    }
+
+
+    public DataContainer requireOf(Class<?> clazz) throws RequireTypeException {
+        if (!isValueOf(clazz)) throw new RequireTypeException(this, clazz);
+        return this;
     }
 
 

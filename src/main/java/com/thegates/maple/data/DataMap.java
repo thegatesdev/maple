@@ -1,5 +1,8 @@
 package com.thegates.maple.data;
 
+import com.thegates.maple.exception.RequireFieldException;
+import com.thegates.maple.exception.RequireTypeException;
+
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -99,6 +102,23 @@ public class DataMap extends DataElement {
             }
         }
         return DataContainer.EMPTY;
+    }
+
+    public DataMap requireKey(String key) throws RequireFieldException {
+        if (!hasKey(key)) throw new RequireFieldException(this, key);
+        return this;
+    }
+
+    public DataMap requireKeys(List<String> keys) throws RequireFieldException {
+        keys.forEach(this::requireKey);
+        return this;
+    }
+
+    public DataMap requireOf(String key, Class<?> clazz) throws RequireTypeException {
+        requireKey(key);
+        final DataContainer container = get(key);
+        if (!container.isValueOf(clazz)) throw new RequireTypeException(container, clazz);
+        return this;
     }
 
     public String getString(String key, String def) {
