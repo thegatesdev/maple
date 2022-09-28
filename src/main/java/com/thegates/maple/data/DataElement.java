@@ -76,6 +76,8 @@ public abstract class DataElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(parent, name, super.hashCode());
+        int result = parent != null ? parent.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }

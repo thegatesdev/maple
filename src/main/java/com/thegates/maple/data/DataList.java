@@ -197,7 +197,9 @@ public class DataList extends DataElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), values);
+        int result = super.hashCode();
+        result = 31 * result + (values != null ? values.hashCode() : 0);
+        return result;
     }
 
     @Override

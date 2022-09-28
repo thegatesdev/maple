@@ -265,7 +265,10 @@ public class DataMap extends DataElement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), value);
+        int result = super.hashCode();
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (keys != null ? keys.hashCode() : 0);
+        return result;
     }
 
     @Override
