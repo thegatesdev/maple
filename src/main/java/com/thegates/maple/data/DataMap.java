@@ -273,6 +273,6 @@ public class DataMap extends DataElement {
 
     @Override
     public String toString() {
-        return value == null ? "emptyMap" : String.join("\n", value.entrySet().stream().map(e -> (e.getKey() + ": " + e.getValue().toString())).toList());
+        return value == null ? "emptyMap" : "dataMap with \n\t" + String.join("\n", value.entrySet().stream().map(e -> (e.getKey() + ": " + e.getValue().toString())).toList());
     }
 }

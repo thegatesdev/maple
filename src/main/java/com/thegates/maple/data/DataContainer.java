@@ -234,6 +234,6 @@ public class DataContainer extends DataElement {
 
     @Override
     public String toString() {
-        return value == null ? "emptyContainer" : value.toString();
+        return value == null ? "emptyContainer" : "dataContainer with " + value;
     }
 }

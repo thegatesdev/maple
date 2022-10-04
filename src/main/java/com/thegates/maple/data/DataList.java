@@ -204,6 +204,6 @@ public class DataList extends DataElement {
 
     @Override
     public String toString() {
-        return values == null ? "emptyList" : String.join("\n", values.stream().map(DataContainer::toString).toList());
+        return values == null ? "emptyList" : "dataMap with\n\t" + String.join("\n", values.stream().map(DataContainer::toString).toList());
     }
 }
