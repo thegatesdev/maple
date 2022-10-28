@@ -177,10 +177,9 @@ public class DataMap extends DataElement {
         if (el != null) action.accept(el);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends DataElement> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
-        final DataElement el = value.get(key);
-        if (clazz.isInstance(el)) action.accept((T) el);
+    public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
+        final T valueOrNull = getPrimitive(key).getValueOrNull(clazz);
+        if (valueOrNull != null) action.accept(valueOrNull);
     }
 
     public DataElement navigate(String[] keys) {
