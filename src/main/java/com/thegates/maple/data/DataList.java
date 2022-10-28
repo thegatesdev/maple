@@ -1,9 +1,6 @@
 package com.thegates.maple.data;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -53,6 +50,10 @@ public class DataList extends DataElement implements Iterable<DataElement> {
             this.value.addAll(elements);
         }
         return this;
+    }
+
+    public List<DataElement> getValue() {
+        return Collections.unmodifiableList(value);
     }
 
     private void init() {

@@ -33,6 +33,10 @@ public class DataPrimitive extends DataElement {
         }
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T getValueUnsafe() {
         return (T) value;
