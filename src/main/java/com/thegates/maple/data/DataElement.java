@@ -68,6 +68,11 @@ public abstract class DataElement {
     public abstract boolean isDataNull();
 
 
+    public boolean isOf(Class<? extends DataElement> elementClass) {
+        return elementClass.isInstance(this);
+    }
+
+
     @SuppressWarnings("unchecked")
     public <T extends DataElement> T requireOf(Class<T> elementClass) throws RequireTypeException {
         if (!elementClass.isInstance(this)) throw new RequireTypeException(this, elementClass);
