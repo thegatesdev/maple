@@ -32,7 +32,7 @@ public abstract class DataElement {
 
     DataElement(DataElement parent, String name) {
         this.parent = parent;
-        this.name = name == null ? "" : name;
+        this.name = name == null ? "root" : name;
     }
 
     public DataElement setParent(DataElement parent) {
