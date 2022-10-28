@@ -1,7 +1,7 @@
 package com.thegates.maple.data;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,18 +24,14 @@ Copyright (C) 2022  Timar Karels
 
 public class DataList extends DataElement implements Iterable<DataElement> {
 
-    private List<DataElement> values;
+    private List<DataElement> value;
 
     public DataList() {
     }
 
-    public DataList(int initialCapacity) {
-        init(initialCapacity);
-    }
-
 
     public static DataList read(List<?> list) {
-        final DataList dataList = new DataList(list.size());
+        final DataList dataList = new DataList();
         synchronized (MODIFY_MUTEX) {
             list.forEach(o -> dataList.add(DataElement.readOf(o)));
         }
@@ -43,7 +39,7 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     }
 
     public static DataList read(Object... objects) {
-        final DataList dataList = new DataList(objects.length);
+        final DataList dataList = new DataList();
         synchronized (MODIFY_MUTEX) {
             for (Object o : objects) {
                 dataList.add(DataElement.readOf(o));
@@ -54,43 +50,51 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
     public DataList addAllFrom(DataList dataList) {
         synchronized (MODIFY_MUTEX) {
-            dataList.values.forEach(this::add);
+            dataList.value.forEach(this::add);
         }
         return this;
     }
 
-    private void init(int initialCapacity) {
-        if (values == null)
-            values = new ArrayList<>(initialCapacity);
+    private void init() {
+        if (value == null)
+            value = new LinkedList<>();
     }
 
-    void add(DataElement element) {
-        if (values == null) init(1);
-        values.add(element.setParent(this).setName("[" + values.size() + "]"));
+    public void add(DataElement element) {
+        if (value == null) init();
+        value.add(element.setParent(this).setName("[" + value.size() + "]"));
     }
 
     @Override
     public Iterator<DataElement> iterator() {
-        return values.iterator();
+        return value.iterator();
+    }
+
+    public <T> List<T> listOf(Class<T> elementClass) {
+        final LinkedList<T> out = new LinkedList<>();
+        new ElementIterator<>(DataPrimitive.class).forEachRemaining(primitive -> {
+            if (primitive.isValueOf(elementClass)) out.add(primitive.getValueUnsafe());
+        });
+        return out;
     }
 
 
     public int size() {
-        if (values == null) return 0;
-        return values.size();
+        if (value == null) return 0;
+        return value.size();
     }
 
     public boolean isEmpty() {
-        return values == null || values.isEmpty();
+        return value == null || value.isEmpty();
     }
 
     public boolean isPresent() {
-        return values != null && !values.isEmpty();
+        return value != null && !value.isEmpty();
     }
 
 
     // --
-    
+
 
     @Override
     public DataElement copy() {
@@ -143,18 +147,46 @@ public class DataList extends DataElement implements Iterable<DataElement> {
         if (this == o) return true;
         if (!(o instanceof DataList dataList)) return false;
         if (!super.equals(o)) return false;
-        return Objects.equals(values, dataList.values);
+        return Objects.equals(value, dataList.value);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (values != null ? values.hashCode() : 0);
+        result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return values == null ? "emptyList" : "dataList with\n\t" + String.join("\n", values.stream().map(DataElement::toString).toList());
+        return value == null ? "emptyList" : "dataList with\n\t" + String.join("\n", value.stream().map(DataElement::toString).toList());
+    }
+
+    public class ElementIterator<E extends DataElement> implements Iterator<E> {
+        private final Class<E> elementClass;
+        private final Iterator<DataElement> iterator;
+        private E next;
+
+        public ElementIterator(Class<E> elementClass) {
+            this.elementClass = elementClass;
+            iterator = value.iterator();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public boolean hasNext() {
+            if (!iterator.hasNext()) return false;
+            final DataElement el = iterator.next();
+            if (el.isOf(elementClass)) {
+                next = (E) el;
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public E next() {
+            return next;
+        }
     }
 }
