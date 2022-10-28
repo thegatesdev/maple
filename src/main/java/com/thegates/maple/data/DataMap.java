@@ -48,7 +48,10 @@ public class DataMap extends DataElement {
     public static DataMap read(Map<String, ?> data) {
         final DataMap output = new DataMap();
         synchronized (MODIFY_MUTEX) {
-            data.forEach((s, o) -> output.put(s, DataElement.readOf(o)));
+            data.forEach((s, o) -> {
+                if (s != null)
+                    output.put(s, DataElement.readOf(o));
+            });
         }
         return output;
     }
@@ -126,7 +129,7 @@ public class DataMap extends DataElement {
 
     //--
 
-    public void put(String key, DataElement container) {
+    public void put(String key, DataElement container) throws NullPointerException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (container == null) throw new NullPointerException("element can't be null");
         if (value == null) {

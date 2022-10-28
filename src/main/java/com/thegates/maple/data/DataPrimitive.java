@@ -38,7 +38,7 @@ public class DataPrimitive extends DataElement {
         return (T) value;
     }
 
-    public <T> T getValueOrThrow(Class<T> clazz) {
+    public <T> T getValueOrThrow(Class<T> clazz) throws ReadException {
         if (isValueOf(clazz)) return clazz.cast(value);
         else
             throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + value.getClass().getSimpleName());
@@ -62,7 +62,7 @@ public class DataPrimitive extends DataElement {
         return getValueUnsafe();
     }
 
-    private <T> T throwRequire(String typeName) {
+    private <T> T throwRequire(String typeName) throws RequireTypeException {
         throw new RequireTypeException(this, typeName);
     }
 
@@ -83,7 +83,7 @@ public class DataPrimitive extends DataElement {
         return value instanceof Boolean;
     }
 
-    public boolean booleanValue() {
+    public boolean booleanValue() throws RequireTypeException {
         return isBooleanValue() ? (boolean) value : throwRequire("boolean");
     }
 
@@ -91,19 +91,19 @@ public class DataPrimitive extends DataElement {
         return value instanceof Number;
     }
 
-    public int intValue() {
+    public int intValue() throws RequireTypeException {
         return isNumberValue() ? ((Number) value).intValue() : throwRequire("number");
     }
 
-    public double doubleValue() {
+    public double doubleValue() throws RequireTypeException {
         return isNumberValue() ? ((Number) value).doubleValue() : throwRequire("number");
     }
 
-    public float floatValue() {
+    public float floatValue() throws RequireTypeException {
         return isNumberValue() ? ((Number) value).floatValue() : throwRequire("number");
     }
 
-    public long longValue() {
+    public long longValue() throws RequireTypeException {
         return isNumberValue() ? ((Number) value).longValue() : throwRequire("number");
     }
 

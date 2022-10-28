@@ -75,15 +75,15 @@ public abstract class DataElement {
     }
 
 
-    public DataPrimitive getAsDataPrimitive() {
+    public DataPrimitive getAsDataPrimitive() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a primitive!");
     }
 
-    public DataList getAsDataList() {
+    public DataList getAsDataList() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a list!");
     }
 
-    public DataMap getAsDataMap() {
+    public DataMap getAsDataMap() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a map!");
     }
 
