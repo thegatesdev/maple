@@ -31,11 +31,7 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
 
     public static DataList read(List<?> list) {
-        final DataList dataList = new DataList();
-        synchronized (MODIFY_MUTEX) {
-            list.forEach(o -> dataList.add(DataElement.readOf(o)));
-        }
-        return dataList;
+        return read(list.toArray());
     }
 
     public static DataList read(Object... objects) {
@@ -48,9 +44,13 @@ public class DataList extends DataElement implements Iterable<DataElement> {
         return dataList;
     }
 
-    public DataList addAllFrom(DataList dataList) {
+    public DataList addAll(DataList dataList) {
+        return addAll(dataList.value);
+    }
+
+    public DataList addAll(List<DataElement> elements) {
         synchronized (MODIFY_MUTEX) {
-            dataList.value.forEach(this::add);
+            this.value.addAll(elements);
         }
         return this;
     }
@@ -98,7 +98,7 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
     @Override
     public DataElement copy() {
-        return new DataList().addAllFrom(this);
+        return new DataList().addAll(this);
     }
 
     @Override
