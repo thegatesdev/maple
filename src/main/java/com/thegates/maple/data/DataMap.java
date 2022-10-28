@@ -80,62 +80,48 @@ public class DataMap extends DataElement {
     // --
 
     public <T> T getUnsafe(String key) {
-        final DataElement el = get(key);
-        return el.isDataPrimitive() ? el.getAsDataPrimitive().getValueUnsafe() : null;
+        return getPrimitive(key).getValueUnsafe();
     }
 
-    public String getString(String key, String def) {
-        final DataElement el = get(key);
-        return el.isDataPrimitive() ? el.getAsDataPrimitive().stringValue(def) : def;
+    public <T> T get(String key, Class<T> dataClass) {
+        return get(key).requireOf(DataPrimitive.class).requireValue(dataClass);
+    }
+
+
+    public DataPrimitive getPrimitive(String key) {
+        return get(key).requireOf(DataPrimitive.class);
+    }
+
+    public DataMap getMap(String key) {
+        return get(key).requireOf(DataMap.class);
+    }
+
+    public DataList getList(String key) {
+        return get(key).requireOf(DataList.class);
     }
 
     public String getString(String key) {
-        return getString(key, null);
-    }
-
-    public boolean getBoolean(String key, boolean def) {
-        final DataElement el = get(key);
-        return el.isDataPrimitive() ? el.getAsDataPrimitive().booleanValue(def) : def;
+        return getPrimitive(key).stringValue();
     }
 
     public boolean getBoolean(String key) {
-        return getBoolean(key, false);
-    }
-
-    public int getInt(String key, int def) {
-        final DataElement el = get(key);
-        return el.isDataPrimitive() ? el.getAsDataPrimitive().intValue(def) : def;
+        return getPrimitive(key).booleanValue();
     }
 
     public int getInt(String key) {
-        return getInt(key, 0);
-    }
-
-    public double getDouble(String key, double def) {
-        final DataElement el = get(key);
-        return el.isDataPrimitive() ? el.getAsDataPrimitive().doubleValue(def) : def;
+        return getPrimitive(key).intValue();
     }
 
     public double getDouble(String key) {
-        return getDouble(key, 0D);
-    }
-
-    public float getFloat(String key, float def) {
-        final DataElement el = get(key);
-        return el.isDataPrimitive() ? el.getAsDataPrimitive().floatValue(def) : def;
+        return getPrimitive(key).doubleValue();
     }
 
     public float getFloat(String key) {
-        return getFloat(key, 0F);
-    }
-
-    public long getLong(String key, long def) {
-        final DataElement el = get(key);
-        return el.isDataPrimitive() ? el.getAsDataPrimitive().longValue(def) : def;
+        return getPrimitive(key).floatValue();
     }
 
     public long getLong(String key) {
-        return getLong(key, 0L);
+        return getPrimitive(key).longValue();
     }
 
     //--

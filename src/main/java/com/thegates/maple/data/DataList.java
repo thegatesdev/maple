@@ -90,6 +90,12 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
 
     // --
+    
+
+    @Override
+    public DataElement copy() {
+        return new DataList().addAllFrom(this);
+    }
 
     @Override
     public DataList setName(String name) {
@@ -101,11 +107,6 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     public DataElement setParent(DataElement parent) {
         super.setParent(parent);
         return this;
-    }
-
-    @Override
-    public DataElement copy() {
-        return new DataList().addAllFrom(this);
     }
 
     @Override

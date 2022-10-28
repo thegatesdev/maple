@@ -1,5 +1,7 @@
 package com.thegates.maple.data;
 
+import com.thegates.maple.exception.RequireTypeException;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -64,6 +66,13 @@ public abstract class DataElement {
     public abstract boolean isDataMap();
 
     public abstract boolean isDataNull();
+
+
+    @SuppressWarnings("unchecked")
+    public <T extends DataElement> T requireOf(Class<T> elementClass) throws RequireTypeException {
+        if (!elementClass.isInstance(this)) throw new RequireTypeException(this, elementClass);
+        return ((T) this);
+    }
 
 
     public DataPrimitive getAsDataPrimitive() {

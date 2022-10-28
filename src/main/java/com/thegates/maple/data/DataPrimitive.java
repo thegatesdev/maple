@@ -33,6 +33,83 @@ public class DataPrimitive extends DataElement {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getValueUnsafe() {
+        return (T) value;
+    }
+
+    public <T> T getValueOrThrow(Class<T> clazz) {
+        if (isValueOf(clazz)) return clazz.cast(value);
+        else
+            throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + value.getClass().getSimpleName());
+    }
+
+    public <T> T getValueOrNull(Class<T> clazz) {
+        return isValueOf(clazz) ? clazz.cast(value) : null;
+    }
+
+    public boolean isPresent() {
+        return value != null;
+    }
+
+    public boolean isEmpty() {
+        return value == null;
+    }
+
+
+    public <T> T requireValue(Class<T> clazz) throws RequireTypeException {
+        if (!isValueOf(clazz)) throw new RequireTypeException(this, clazz);
+        return getValueUnsafe();
+    }
+
+    private <T> T throwRequire(String typeName) {
+        throw new RequireTypeException(this, typeName);
+    }
+
+    public boolean isValueOf(Class<?> clazz) {
+        return clazz.isInstance(value);
+    }
+
+
+    public boolean isStringValue() {
+        return value instanceof String;
+    }
+
+    public String stringValue() {
+        return requireValue(String.class);
+    }
+
+    public boolean isBooleanValue() {
+        return value instanceof Boolean;
+    }
+
+    public boolean booleanValue() {
+        return isBooleanValue() ? (boolean) value : throwRequire("boolean");
+    }
+
+    public boolean isNumberValue() {
+        return value instanceof Number;
+    }
+
+    public int intValue() {
+        return isNumberValue() ? ((Number) value).intValue() : throwRequire("number");
+    }
+
+    public double doubleValue() {
+        return isNumberValue() ? ((Number) value).doubleValue() : throwRequire("number");
+    }
+
+    public float floatValue() {
+        return isNumberValue() ? ((Number) value).floatValue() : throwRequire("number");
+    }
+
+    public long longValue() {
+        return isNumberValue() ? ((Number) value).longValue() : throwRequire("number");
+    }
+
+
+    // --
+
 
     @Override
     public DataPrimitive setName(String name) {
@@ -77,104 +154,8 @@ public class DataPrimitive extends DataElement {
     }
 
 
-    @Override
-    public String getPath() {
-        return parent == null || parent.getPath() == null ? "" : parent.getPath();
-    }
+    // --
 
-    @SuppressWarnings("unchecked")
-    public <T> T getValueUnsafe() {
-        return (T) value;
-    }
-
-    public <T> T getValueOrThrow(Class<T> clazz) {
-        if (isValueOf(clazz)) return clazz.cast(value);
-        else
-            throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + value.getClass().getSimpleName());
-    }
-
-    public <T> T getValueOrNull(Class<T> clazz) {
-        return isValueOf(clazz) ? clazz.cast(value) : null;
-    }
-
-    public boolean isPresent() {
-        return value != null;
-    }
-
-    public boolean isEmpty() {
-        return value == null;
-    }
-
-
-    public DataPrimitive requireOf(Class<?> clazz) throws RequireTypeException {
-        if (!isValueOf(clazz)) throw new RequireTypeException(this, clazz);
-        return this;
-    }
-
-    public boolean isValueOf(Class<?> clazz) {
-        return clazz.isInstance(value);
-    }
-
-
-    public boolean isStringValue() {
-        return value instanceof String;
-    }
-
-    public String stringValue() {
-        return isStringValue() ? (String) value : null;
-    }
-
-    public String stringValue(String def) {
-        return isStringValue() ? (String) value : def;
-    }
-
-    public boolean isBooleanValue() {
-        return value instanceof Boolean;
-    }
-
-    public boolean booleanValue(boolean def) {
-        return isBooleanValue() ? (boolean) value : def;
-    }
-
-    public boolean booleanValue() {
-        return booleanValue(false);
-    }
-
-    public boolean isNumberValue() {
-        return value instanceof Number;
-    }
-
-    public int intValue(int def) {
-        return isNumberValue() ? ((Number) value).intValue() : def;
-    }
-
-    public int intValue() {
-        return intValue(0);
-    }
-
-    public double doubleValue(double def) {
-        return isNumberValue() ? ((Number) value).doubleValue() : def;
-    }
-
-    public double doubleValue() {
-        return doubleValue(0.0d);
-    }
-
-    public float floatValue(float def) {
-        return isNumberValue() ? ((Number) value).floatValue() : def;
-    }
-
-    public float floatValue() {
-        return floatValue(0.0f);
-    }
-
-    public long longValue(long def) {
-        return isNumberValue() ? ((Number) value).longValue() : def;
-    }
-
-    public long longValue() {
-        return longValue(0L);
-    }
 
     @Override
     public boolean equals(Object o) {
