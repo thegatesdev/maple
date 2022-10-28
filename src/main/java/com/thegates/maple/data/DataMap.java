@@ -107,24 +107,48 @@ public class DataMap extends DataElement {
         return getPrimitive(key).stringValue();
     }
 
+    public String getString(String key, String def) {
+        return hasKey(key) ? getPrimitive(key).stringValue() : def;
+    }
+
     public boolean getBoolean(String key) {
         return getPrimitive(key).booleanValue();
+    }
+
+    public boolean getBoolean(String key, boolean def) {
+        return hasKey(key) ? getPrimitive(key).booleanValue() : def;
     }
 
     public int getInt(String key) {
         return getPrimitive(key).intValue();
     }
 
+    public int getInt(String key, int def) {
+        return hasKey(key) ? getPrimitive(key).intValue() : def;
+    }
+
     public double getDouble(String key) {
         return getPrimitive(key).doubleValue();
+    }
+
+    public double getDouble(String key, double def) {
+        return hasKey(key) ? getPrimitive(key).doubleValue() : def;
     }
 
     public float getFloat(String key) {
         return getPrimitive(key).floatValue();
     }
 
+    public float getFloat(String key, float def) {
+        return hasKey(key) ? getPrimitive(key).floatValue() : def;
+    }
+
     public long getLong(String key) {
         return getPrimitive(key).longValue();
+    }
+
+    public long getLong(String key, long def) {
+        return hasKey(key) ? getPrimitive(key).longValue() : def;
     }
 
     //--
