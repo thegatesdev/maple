@@ -173,13 +173,15 @@ public class DataMap extends DataElement {
     }
 
     public void doIfPresent(String key, Consumer<DataElement> action) {
-        final DataElement el = value.get(key);
-        if (el != null) action.accept(el);
+        if (hasKey(key)) action.accept(get(key));
     }
 
     public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
-        final T valueOrNull = getPrimitive(key).getValueOrNull(clazz);
-        if (valueOrNull != null) action.accept(valueOrNull);
+        final DataElement el = get(key);
+        if (!el.isDataNull() && el.isDataPrimitive()) {
+            T valueOrNull = el.getAsDataPrimitive().getValueOrNull(clazz);
+            if (valueOrNull != null) action.accept(valueOrNull);
+        }
     }
 
     public DataElement navigate(String[] keys) {
