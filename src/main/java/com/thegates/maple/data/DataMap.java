@@ -104,6 +104,13 @@ public class DataMap extends DataElement {
         return DataContainer.EMPTY;
     }
 
+    public DataContainer navigate(String[] keys) {
+        if (keys.length == 0) return DataContainer.EMPTY;
+        final DataContainer container = get(keys[0]);
+        if (!container.isDataMapValue()) return DataContainer.EMPTY;
+        return container.dataMapValue().navigate(Arrays.copyOfRange(keys, 1, keys.length));
+    }
+
     public DataMap requireKey(String key) throws RequireFieldException {
         if (!hasKey(key)) throw new RequireFieldException(this, key);
         return this;
