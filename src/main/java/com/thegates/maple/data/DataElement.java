@@ -1,5 +1,7 @@
 package com.thegates.maple.data;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /*
@@ -35,6 +37,14 @@ public abstract class DataElement {
         this.name = name == null ? "root" : name;
     }
 
+
+    public static DataElement readOf(Object o) {
+        if (o == null) return new DataNull();
+        if (o instanceof Map<?, ?> map) return DataMap.readInternal(map);
+        if (o instanceof List<?> list) return DataList.read(list);
+        return new DataPrimitive(o);
+    }
+
     public DataElement setParent(DataElement parent) {
         this.parent = parent;
         return this;
@@ -47,25 +57,32 @@ public abstract class DataElement {
 
     public abstract DataElement copy();
 
-    public abstract boolean isDataContainer();
+    public abstract boolean isDataPrimitive();
 
     public abstract boolean isDataList();
 
     public abstract boolean isDataMap();
 
+    public abstract boolean isDataNull();
 
-    public abstract DataContainer getAsDataContainer();
 
-    public abstract DataList getAsDataList();
+    public DataPrimitive getAsDataPrimitive() {
+        throw new UnsupportedOperationException("Not a primitive!");
+    }
 
-    public abstract DataMap getAsDataMap();
+    public DataList getAsDataList() {
+        throw new UnsupportedOperationException("Not a list!");
+    }
+
+    public DataMap getAsDataMap() {
+        throw new UnsupportedOperationException("Not a map!");
+    }
 
 
     public String getPath() {
         final String n = name == null ? "" : name;
         return parent == null ? n : parent.getPath() + "." + n;
     }
-
 
     @Override
     public boolean equals(Object o) {

@@ -25,7 +25,7 @@ Copyright (C) 2022  Timar Karels
 
 public class DataMap extends DataElement {
 
-    private Map<String, DataContainer> value;
+    private Map<String, DataElement> value;
     private Set<String> keys;
 
     public DataMap() {
@@ -36,17 +36,11 @@ public class DataMap extends DataElement {
     }
 
     static DataMap readInternal(Map<?, ?> data) {
-        DataMap output = new DataMap();
+        final DataMap output = new DataMap();
         synchronized (MODIFY_MUTEX) {
-            for (Map.Entry<?, ?> entry : data.entrySet()) {
-                if (entry.getKey() instanceof String key) {
-                    Object value = entry.getValue();
-                    if (value == null) continue;
-                    DataContainer c = DataContainer.read(value);
-                    if (c == null || !c.isPresent()) continue;
-                    output.put(key, c);
-                }
-            }
+            data.forEach((o, o2) -> {
+                if (o instanceof String key) output.put(key, DataElement.readOf(o2));
+            });
         }
         return output;
     }
@@ -54,9 +48,187 @@ public class DataMap extends DataElement {
     public static DataMap read(Map<String, ?> data) {
         final DataMap output = new DataMap();
         synchronized (MODIFY_MUTEX) {
-            data.forEach((s, o) -> output.put(s, DataContainer.read(o)));
+            data.forEach((s, o) -> output.put(s, DataElement.readOf(o)));
         }
         return output;
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null) {
+            value = new HashMap<>(initialCapacity);
+            keys = new HashSet<>(initialCapacity);
+        }
+    }
+
+
+    // --
+
+
+    public Map<String, DataElement> getValue() {
+        if (value == null) return Collections.emptyMap();
+        return Collections.unmodifiableMap(value);
+    }
+
+    public DataElement get(String key) {
+        if (value != null) {
+            final DataElement el = value.get(key);
+            if (el != null) return el;
+        }
+        return new DataNull(this, key);
+    }
+
+    // --
+
+    public <T> T getUnsafe(String key) {
+        final DataElement el = get(key);
+        return el.isDataPrimitive() ? el.getAsDataPrimitive().getValueUnsafe() : null;
+    }
+
+    public String getString(String key, String def) {
+        final DataElement el = get(key);
+        return el.isDataPrimitive() ? el.getAsDataPrimitive().stringValue(def) : def;
+    }
+
+    public String getString(String key) {
+        return getString(key, null);
+    }
+
+    public boolean getBoolean(String key, boolean def) {
+        final DataElement el = get(key);
+        return el.isDataPrimitive() ? el.getAsDataPrimitive().booleanValue(def) : def;
+    }
+
+    public boolean getBoolean(String key) {
+        return getBoolean(key, false);
+    }
+
+    public int getInt(String key, int def) {
+        final DataElement el = get(key);
+        return el.isDataPrimitive() ? el.getAsDataPrimitive().intValue(def) : def;
+    }
+
+    public int getInt(String key) {
+        return getInt(key, 0);
+    }
+
+    public double getDouble(String key, double def) {
+        final DataElement el = get(key);
+        return el.isDataPrimitive() ? el.getAsDataPrimitive().doubleValue(def) : def;
+    }
+
+    public double getDouble(String key) {
+        return getDouble(key, 0D);
+    }
+
+    public float getFloat(String key, float def) {
+        final DataElement el = get(key);
+        return el.isDataPrimitive() ? el.getAsDataPrimitive().floatValue(def) : def;
+    }
+
+    public float getFloat(String key) {
+        return getFloat(key, 0F);
+    }
+
+    public long getLong(String key, long def) {
+        final DataElement el = get(key);
+        return el.isDataPrimitive() ? el.getAsDataPrimitive().longValue(def) : def;
+    }
+
+    public long getLong(String key) {
+        return getLong(key, 0L);
+    }
+
+    //--
+
+    public void put(String key, DataElement container) {
+        if (key == null) throw new NullPointerException("key can't be null");
+        if (container == null) throw new NullPointerException("element can't be null");
+        if (value == null) {
+            init(1);
+        }
+        value.put(key, container.setName(key).setParent(this));
+        keys.add(key);
+    }
+
+    public DataMap putAll(DataMap dataMap) {
+        final var toAdd = dataMap.getValue();
+        if (value == null) init(toAdd.size());
+        synchronized (MODIFY_MUTEX) {
+            toAdd.forEach(this::put);
+        }
+        return this;
+    }
+
+    public void doIfPresent(String key, Consumer<DataElement> action) {
+        final DataElement el = value.get(key);
+        if (el != null) action.accept(el);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends DataElement> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
+        final DataElement el = value.get(key);
+        if (clazz.isInstance(el)) action.accept((T) el);
+    }
+
+    public DataElement navigate(String[] keys) {
+        if (keys.length == 0) return new DataNull(this, null);
+        final DataElement el = get(keys[0]);
+        if (!el.isDataMap()) return new DataNull(this, keys[0]);
+        return el.getAsDataMap().navigate(Arrays.copyOfRange(keys, 1, keys.length));
+    }
+
+
+    // --
+
+
+    public DataMap requireKey(String key) throws RequireFieldException {
+        if (!hasKey(key)) throw new RequireFieldException(this, key);
+        return this;
+    }
+
+    public DataMap requireKeys(Collection<String> keys) throws RequireFieldException {
+        if (!hasKeys(keys)) throw new RequireFieldException(this, String.join(" or ", keys));
+        return this;
+    }
+
+    public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws RequireTypeException {
+        requireKey(key);
+        final DataElement el = get(key);
+        if (!(clazz.isInstance(el))) throw new RequireTypeException(el, clazz);
+        return this;
+    }
+
+    public boolean hasKey(String key) {
+        if (keys == null) return false;
+        return keys.contains(key);
+    }
+
+    public boolean hasKeys(Collection<String> keys) {
+        if (this.keys == null) return false;
+        return this.keys.containsAll(keys);
+    }
+
+
+    public int size() {
+        if (value == null) return 0;
+        return value.size();
+    }
+
+    public boolean isPresent() {
+        return !isEmpty();
+    }
+
+    public boolean isEmpty() {
+        return value == null || value.isEmpty();
+    }
+
+
+    // --
+
+
+    @Override
+    public DataElement copy() {
+        return new DataMap().putAll(this);
     }
 
     @Override
@@ -71,136 +243,8 @@ public class DataMap extends DataElement {
         return this;
     }
 
-    private void init(int initialCapacity) {
-        if (value == null) {
-            value = new HashMap<>(initialCapacity);
-            keys = new HashSet<>(initialCapacity);
-        }
-    }
-
-
-    public Map<String, DataContainer> getValue() {
-        if (value == null) return Collections.emptyMap();
-        return Collections.unmodifiableMap(value);
-    }
-
-    public DataContainer get(String key) {
-        if (value == null) {
-            return DataContainer.EMPTY;
-        }
-        DataContainer container = value.get(key);
-        return container != null ? container : DataContainer.EMPTY;
-    }
-
-    public DataContainer getFirst(List<String> keys) {
-        if (!(value == null || this.keys.isEmpty())) {
-            synchronized (GET_MUTEX) {
-                for (String string : keys) {
-                    DataContainer c = get(string);
-                    if (c != null) return c;
-                }
-            }
-        }
-        return DataContainer.EMPTY;
-    }
-
-    public DataContainer navigate(String[] keys) {
-        if (keys.length == 0) return DataContainer.EMPTY;
-        final DataContainer container = get(keys[0]);
-        if (!container.isDataMapValue()) return DataContainer.EMPTY;
-        return container.dataMapValue().navigate(Arrays.copyOfRange(keys, 1, keys.length));
-    }
-
-    public DataMap requireKey(String key) throws RequireFieldException {
-        if (!hasKey(key)) throw new RequireFieldException(this, key);
-        return this;
-    }
-
-    public DataMap requireKeys(List<String> keys) throws RequireFieldException {
-        keys.forEach(this::requireKey);
-        return this;
-    }
-
-    public DataMap requireOf(String key, Class<?> clazz) throws RequireTypeException {
-        requireKey(key);
-        final DataContainer container = get(key);
-        if (!container.isValueOf(clazz)) throw new RequireTypeException(container, clazz);
-        return this;
-    }
-
-    public String getString(String key, String def) {
-        return get(key).stringValue(def);
-    }
-
-    public String getString(String key) {
-        return get(key).stringValue();
-    }
-
-    public boolean getBoolean(String key, boolean def) {
-        return get(key).booleanValue(def);
-    }
-
-    public boolean getBoolean(String key) {
-        return get(key).booleanValue();
-    }
-
-    public int getInt(String key, int def) {
-        return get(key).intValue(def);
-    }
-
-    public int getInt(String key) {
-        return get(key).intValue();
-    }
-
-    public double getDouble(String key, double def) {
-        return get(key).doubleValue(def);
-    }
-
-    public double getDouble(String key) {
-        return get(key).doubleValue();
-    }
-
-    public float getFloat(String key, float def) {
-        return get(key).floatValue(def);
-    }
-
-    public float getFloat(String key) {
-        return get(key).floatValue();
-    }
-
-    public long getLong(String key, long def) {
-        return get(key).longValue(def);
-    }
-
-    public long getLong(String key) {
-        return get(key).longValue();
-    }
-
-    public boolean hasKey(String key) {
-        if (keys == null) return false;
-        return keys.contains(key);
-    }
-
-    public int size() {
-        if (value == null) return 0;
-        return value.size();
-    }
-
-    public boolean isPresent() {
-        return value != null && !value.isEmpty();
-    }
-
-    public boolean isEmpty() {
-        return value == null || value.isEmpty();
-    }
-
     @Override
-    public DataElement copy() {
-        return new DataMap().putAll(this);
-    }
-
-    @Override
-    public boolean isDataContainer() {
+    public boolean isDataPrimitive() {
         return false;
     }
 
@@ -215,13 +259,8 @@ public class DataMap extends DataElement {
     }
 
     @Override
-    public DataContainer getAsDataContainer() {
-        return null;
-    }
-
-    @Override
-    public DataList getAsDataList() {
-        return null;
+    public boolean isDataNull() {
+        return false;
     }
 
     @Override
@@ -230,37 +269,8 @@ public class DataMap extends DataElement {
     }
 
 
-    public void put(String key, DataContainer container) {
-        if (key == null) throw new NullPointerException("key was null");
-        if (container == null) throw new NullPointerException("container was null");
-        if (value == null) {
-            init(1);
-        }
-        value.put(key, container.copy().setName(key).setParent(this));
-        keys.add(key);
-    }
+    // --
 
-    public DataMap putAll(DataMap dataMap) {
-        if (value == null) init(dataMap.size());
-        synchronized (MODIFY_MUTEX) {
-            dataMap.getValue().forEach(this::put);
-        }
-        return this;
-    }
-
-    public void doIfPresent(String key, Consumer<DataContainer> action) {
-        if (hasKey(key)) {
-            action.accept(get(key));
-        }
-    }
-
-    public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
-        if (hasKey(key)) {
-            T val = get(key).getValueOrNull(clazz);
-            if (val != null)
-                action.accept(val);
-        }
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -3,8 +3,6 @@ package com.thegates.maple.data;
 import com.thegates.maple.exception.ReadException;
 import com.thegates.maple.exception.RequireTypeException;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /*
@@ -24,50 +22,37 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class DataContainer extends DataElement {
-
-    public static final DataContainer EMPTY = new DataContainer(null);
+public class DataPrimitive extends DataElement {
 
     final Object value;
 
-    public DataContainer(Object value) {
+    public DataPrimitive(Object value) {
         this.value = value;
         if (value instanceof DataElement e) {
             e.setParent(this);
         }
     }
 
-    static DataContainer read(Object data) {
-        if (data == null) return null;
-        final Object input;
-        if (data instanceof List<?> list) {
-            input = DataList.read(list);
-        } else if (data instanceof Map<?, ?> map) {
-            input = DataMap.readInternal(map);
-        } else input = data;
-        return new DataContainer(input);
-    }
 
     @Override
-    public DataContainer setName(String name) {
+    public DataPrimitive setName(String name) {
         super.setName(name);
-        if (isValueOf(DataElement.class)) getValueOrNull(DataElement.class).setName(name);
         return this;
     }
 
     @Override
-    public DataContainer setParent(DataElement parent) {
+    public DataPrimitive setParent(DataElement parent) {
         super.setParent(parent);
         return this;
     }
 
     @Override
-    public DataContainer copy() {
-        return new DataContainer(value);
+    public DataPrimitive copy() {
+        return new DataPrimitive(value);
     }
 
     @Override
-    public boolean isDataContainer() {
+    public boolean isDataPrimitive() {
         return true;
     }
 
@@ -82,19 +67,15 @@ public class DataContainer extends DataElement {
     }
 
     @Override
-    public DataContainer getAsDataContainer() {
+    public boolean isDataNull() {
+        return false;
+    }
+
+    @Override
+    public DataPrimitive getAsDataPrimitive() {
         return this;
     }
 
-    @Override
-    public DataList getAsDataList() {
-        return null;
-    }
-
-    @Override
-    public DataMap getAsDataMap() {
-        return null;
-    }
 
     @Override
     public String getPath() {
@@ -125,11 +106,10 @@ public class DataContainer extends DataElement {
     }
 
 
-    public DataContainer requireOf(Class<?> clazz) throws RequireTypeException {
+    public DataPrimitive requireOf(Class<?> clazz) throws RequireTypeException {
         if (!isValueOf(clazz)) throw new RequireTypeException(this, clazz);
         return this;
     }
-
 
     public boolean isValueOf(Class<?> clazz) {
         return clazz.isInstance(value);
@@ -139,7 +119,6 @@ public class DataContainer extends DataElement {
     public boolean isStringValue() {
         return value instanceof String;
     }
-
 
     public String stringValue() {
         return isStringValue() ? (String) value : null;
@@ -197,30 +176,10 @@ public class DataContainer extends DataElement {
         return longValue(0L);
     }
 
-    public boolean isDataElementValue() {
-        return value instanceof DataElement;
-    }
-
-    public boolean isDataMapValue() {
-        return value instanceof DataMap;
-    }
-
-    public boolean isDataListValue() {
-        return value instanceof DataList;
-    }
-
-    public DataMap dataMapValue() {
-        return value instanceof DataMap ? ((DataMap) value) : null;
-    }
-
-    public DataList dataListValue() {
-        return value instanceof DataList ? ((DataList) value) : null;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DataContainer container)) return false;
+        if (!(o instanceof DataPrimitive container)) return false;
         if (!super.equals(o)) return false;
         return Objects.equals(value, container.value);
     }

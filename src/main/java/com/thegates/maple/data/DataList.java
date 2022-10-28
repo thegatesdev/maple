@@ -1,10 +1,9 @@
 package com.thegates.maple.data;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -23,9 +22,9 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class DataList extends DataElement {
+public class DataList extends DataElement implements Iterable<DataElement> {
 
-    private List<DataContainer> values;
+    private List<DataElement> values;
 
     public DataList() {
     }
@@ -38,7 +37,7 @@ public class DataList extends DataElement {
     public static DataList read(List<?> list) {
         final DataList dataList = new DataList(list.size());
         synchronized (MODIFY_MUTEX) {
-            list.forEach(o -> dataList.add(DataContainer.read(o)));
+            list.forEach(o -> dataList.add(DataElement.readOf(o)));
         }
         return dataList;
     }
@@ -47,26 +46,8 @@ public class DataList extends DataElement {
         final DataList dataList = new DataList(objects.length);
         synchronized (MODIFY_MUTEX) {
             for (Object o : objects) {
-                dataList.add(DataContainer.read(o));
+                dataList.add(DataElement.readOf(o));
             }
-        }
-        return dataList;
-    }
-
-    public static DataList of(Object... objects) {
-        final DataList dataList = new DataList(objects.length);
-        synchronized (MODIFY_MUTEX) {
-            for (Object o : objects) {
-                dataList.add(new DataContainer(o));
-            }
-        }
-        return dataList;
-    }
-
-    public static DataList of(List<?> list) {
-        final DataList dataList = new DataList(list.size());
-        synchronized (MODIFY_MUTEX) {
-            list.forEach(o -> dataList.add(new DataContainer(o)));
         }
         return dataList;
     }
@@ -83,58 +64,14 @@ public class DataList extends DataElement {
             values = new ArrayList<>(initialCapacity);
     }
 
-    @Override
-    public DataList setName(String name) {
-        super.setName(name);
-        return this;
-    }
-
-    @Override
-    public DataElement setParent(DataElement parent) {
-        super.setParent(parent);
-        return this;
-    }
-
-    public <T> List<T> getAsListOf(Class<T> clazz) {
-        if (values == null || values.isEmpty()) return Collections.emptyList();
-        final List<T> output = new ArrayList<>(values.size());
-        synchronized (GET_MUTEX) {
-            values.forEach(value -> {
-                if (value.isValueOf(clazz)) output.add(value.getValueOrThrow(clazz));
-            });
-        }
-        return Collections.unmodifiableList(output);
-    }
-
-    public <T> List<T> getValuesUnsafe() {
-        if (values == null || values.isEmpty()) return Collections.emptyList();
-        final List<T> output = new ArrayList<>(values.size());
-        synchronized (GET_MUTEX) {
-            values.forEach(value -> output.add(value.getValueUnsafe()));
-        }
-        return output;
-    }
-
-    public Stream<DataContainer> stream(Class<?> clazz) {
-        if (values == null || values.isEmpty()) return Stream.empty();
-        synchronized (GET_MUTEX) {
-            return values.stream().filter(dataContainer -> dataContainer.isValueOf(clazz));
-        }
-    }
-
-    public Stream<DataContainer> stream() {
-        if (values == null) return Stream.empty();
-        return values.stream();
-    }
-
-    void add(DataContainer container) {
+    void add(DataElement element) {
         if (values == null) init(1);
-        values.add(container.copy().setParent(this).setName("[" + values.size() + "]"));
+        values.add(element.setParent(this).setName("[" + values.size() + "]"));
     }
 
-    public List<DataContainer> getValues() {
-        if (values == null) return Collections.emptyList();
-        return Collections.unmodifiableList(values);
+    @Override
+    public Iterator<DataElement> iterator() {
+        return values.iterator();
     }
 
 
@@ -152,13 +89,27 @@ public class DataList extends DataElement {
     }
 
 
+    // --
+
+    @Override
+    public DataList setName(String name) {
+        super.setName(name);
+        return this;
+    }
+
+    @Override
+    public DataElement setParent(DataElement parent) {
+        super.setParent(parent);
+        return this;
+    }
+
     @Override
     public DataElement copy() {
         return new DataList().addAllFrom(this);
     }
 
     @Override
-    public boolean isDataContainer() {
+    public boolean isDataPrimitive() {
         return false;
     }
 
@@ -173,8 +124,8 @@ public class DataList extends DataElement {
     }
 
     @Override
-    public DataContainer getAsDataContainer() {
-        return null;
+    public boolean isDataNull() {
+        return false;
     }
 
     @Override
@@ -182,10 +133,9 @@ public class DataList extends DataElement {
         return this;
     }
 
-    @Override
-    public DataMap getAsDataMap() {
-        return null;
-    }
+
+    // --
+
 
     @Override
     public boolean equals(Object o) {
@@ -204,6 +154,6 @@ public class DataList extends DataElement {
 
     @Override
     public String toString() {
-        return values == null ? "emptyList" : "dataMap with\n\t" + String.join("\n", values.stream().map(DataContainer::toString).toList());
+        return values == null ? "emptyList" : "dataList with\n\t" + String.join("\n", values.stream().map(DataElement::toString).toList());
     }
 }
