@@ -26,6 +26,9 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     public DataList() {
     }
 
+    protected DataList(DataElement parent, String name) {
+        super(parent, name);
+    }
 
     public static DataList read(List<?> list) {
         return read(list.toArray());
@@ -61,9 +64,11 @@ public class DataList extends DataElement implements Iterable<DataElement> {
             value = new LinkedList<>();
     }
 
-    public void add(DataElement element) {
+    public DataList add(DataElement element) {
         if (value == null) init();
-        value.add(element.setParent(this).setName("[" + value.size() + "]"));
+        element.dataInitCheck();
+        value.add(element.setData(this, "[" + value.size() + "]"));
+        return this;
     }
 
     @Override
@@ -100,18 +105,6 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     @Override
     public DataElement copy() {
         return new DataList().addAll(this);
-    }
-
-    @Override
-    public DataList setName(String name) {
-        super.setName(name);
-        return this;
-    }
-
-    @Override
-    public DataElement setParent(DataElement parent) {
-        super.setParent(parent);
-        return this;
     }
 
     @Override

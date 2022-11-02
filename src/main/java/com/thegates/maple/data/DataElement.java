@@ -28,13 +28,14 @@ public abstract class DataElement {
     static final Object MODIFY_MUTEX = new Object();
     static final Object GET_MUTEX = new Object();
 
-    protected DataElement parent;
-    protected String name;
+    private DataElement parent;
+    private String name;
+    private boolean dataInitialized = false;
 
     DataElement() {
     }
 
-    DataElement(DataElement parent, String name) {
+    protected DataElement(DataElement parent, String name) {
         this.parent = parent;
         this.name = name == null ? "root" : name;
     }
@@ -47,17 +48,22 @@ public abstract class DataElement {
         return new DataPrimitive(o);
     }
 
-    public DataElement setParent(DataElement parent) {
+    public DataElement setData(DataElement parent, String name) {
+        dataInitCheck();
         this.parent = parent;
+        this.name = name;
+        dataInitialized = true;
         return this;
     }
 
-    public DataElement setName(String name) {
-        this.name = name;
-        return this;
+    protected void dataInitCheck() throws RuntimeException {
+        if (dataInitialized) throw new RuntimeException("This element has it's parent and name already set!");
     }
 
     public abstract DataElement copy();
+
+
+    public abstract Object getValue();
 
     public abstract boolean isDataPrimitive();
 

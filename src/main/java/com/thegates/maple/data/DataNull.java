@@ -4,13 +4,18 @@ public class DataNull extends DataElement {
     public DataNull() {
     }
 
-    public DataNull(DataElement parent, String name) {
+    protected DataNull(DataElement parent, String name) {
         super(parent, name);
     }
 
     @Override
     public DataNull copy() {
         return new DataNull();
+    }
+
+    @Override
+    public Object getValue() {
+        return null;
     }
 
     @Override

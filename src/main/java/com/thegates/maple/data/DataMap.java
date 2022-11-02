@@ -31,6 +31,15 @@ public class DataMap extends DataElement {
     public DataMap() {
     }
 
+    protected DataMap(DataElement parent, String name) {
+        super(parent, name);
+    }
+
+    protected DataMap(DataElement parent, String name, int initialCapacity) {
+        super(parent, name);
+        init(initialCapacity);
+    }
+
     public DataMap(int initialCapacity) {
         init(initialCapacity);
     }
@@ -153,13 +162,14 @@ public class DataMap extends DataElement {
 
     //--
 
-    public DataMap put(String key, DataElement container) throws NullPointerException {
+    public DataMap put(String key, DataElement container) throws RuntimeException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (container == null) throw new NullPointerException("element can't be null");
+        container.dataInitCheck();
         if (value == null) {
             init(1);
         }
-        value.put(key, container.setName(key).setParent(this));
+        value.put(key, container.setData(this, key));
         keys.add(key);
         return this;
     }
@@ -192,7 +202,7 @@ public class DataMap extends DataElement {
     private DataElement navigate(int current, String[] keys) {
         if (current == keys.length - 1) return get(keys[current]);
         DataElement element = get(keys[current]);
-        if (!element.isDataMap()) return new DataNull().setParent(this).setName(keys[current]);
+        if (!element.isDataMap()) return new DataNull(this, keys[current]);
         return element.getAsDataMap().navigate(++current, keys);
     }
 
@@ -206,8 +216,12 @@ public class DataMap extends DataElement {
     }
 
     public DataMap requireKeys(Collection<String> keys) throws RequireFieldException {
-        if (!hasKeys(keys)) throw new RequireFieldException(this, String.join(" or ", keys));
+        if (!hasKeys(keys)) throw new RequireFieldException(this, String.join(" and ", keys));
         return this;
+    }
+
+    public DataMap requireKeys(String... keys) throws RequireFieldException {
+        return requireKeys(Arrays.asList(keys));
     }
 
     public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws RequireTypeException {
@@ -225,6 +239,11 @@ public class DataMap extends DataElement {
     public boolean hasKeys(Collection<String> keys) {
         if (this.keys == null) return false;
         return this.keys.containsAll(keys);
+    }
+
+    public boolean hasKeys(String... keys) {
+        if (this.keys == null) return false;
+        return hasKeys(Arrays.asList(keys));
     }
 
 
@@ -248,18 +267,6 @@ public class DataMap extends DataElement {
     @Override
     public DataElement copy() {
         return new DataMap().putAll(this);
-    }
-
-    @Override
-    public DataMap setName(String name) {
-        super.setName(name);
-        return this;
-    }
-
-    @Override
-    public DataMap setParent(DataElement parent) {
-        super.setParent(parent);
-        return this;
     }
 
     @Override

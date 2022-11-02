@@ -28,9 +28,11 @@ public class DataPrimitive extends DataElement {
 
     public DataPrimitive(Object value) {
         this.value = value;
-        if (value instanceof DataElement e) {
-            e.setParent(this);
-        }
+    }
+
+    protected DataPrimitive(DataElement parent, String name, Object value) {
+        super(parent, name);
+        this.value = value;
     }
 
     public Object getValue() {
@@ -110,19 +112,6 @@ public class DataPrimitive extends DataElement {
 
 
     // --
-
-
-    @Override
-    public DataPrimitive setName(String name) {
-        super.setName(name);
-        return this;
-    }
-
-    @Override
-    public DataPrimitive setParent(DataElement parent) {
-        super.setParent(parent);
-        return this;
-    }
 
     @Override
     public DataPrimitive copy() {
