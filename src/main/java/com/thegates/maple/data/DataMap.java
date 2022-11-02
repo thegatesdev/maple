@@ -153,7 +153,7 @@ public class DataMap extends DataElement {
 
     //--
 
-    public void put(String key, DataElement container) throws NullPointerException {
+    public DataMap put(String key, DataElement container) throws NullPointerException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (container == null) throw new NullPointerException("element can't be null");
         if (value == null) {
@@ -161,6 +161,7 @@ public class DataMap extends DataElement {
         }
         value.put(key, container.setName(key).setParent(this));
         keys.add(key);
+        return this;
     }
 
     public DataMap putAll(DataMap dataMap) {
@@ -184,11 +185,15 @@ public class DataMap extends DataElement {
         }
     }
 
-    public DataElement navigate(String[] keys) {
-        if (keys.length == 0) return new DataNull(this, null);
-        final DataElement el = get(keys[0]);
-        if (!el.isDataMap()) return new DataNull(this, keys[0]);
-        return el.getAsDataMap().navigate(Arrays.copyOfRange(keys, 1, keys.length));
+    public DataElement navigate(String... keys) {
+        return navigate(0, keys);
+    }
+
+    private DataElement navigate(int current, String[] keys) {
+        if (current == keys.length - 1) return get(keys[current]);
+        DataElement element = get(keys[current]);
+        if (!element.isDataMap()) return new DataNull().setParent(this).setName(keys[current]);
+        return element.getAsDataMap().navigate(++current, keys);
     }
 
 
