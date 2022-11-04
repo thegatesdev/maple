@@ -99,6 +99,13 @@ public abstract class DataElement {
     }
 
 
+    @SuppressWarnings("unchecked")
+    public <T extends DataElement> T getAsOrNull(Class<T> elementClass) {
+        if (isOf(elementClass)) return (T) this;
+        return null;
+    }
+
+
     public String getPath() {
         final String n = name == null ? "" : name;
         return parent == null ? n : parent.getPath() + "." + n;
