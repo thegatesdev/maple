@@ -36,20 +36,33 @@ public abstract class DataElement {
     private final DataElement parent;
     private final String name;
 
+    /**
+     * Constructs a new DataElement with the parent set to {@code null} and the name set to {@code "root"}.
+     */
     protected DataElement() {
         this("root");
     }
 
+    /**
+     * Constructs a new DataElement with the parent set to {@code null}.
+     *
+     * @param name The name of this element.
+     */
     protected DataElement(String name) {
         this(null, name);
     }
 
+    /**
+     * Constructs a new DataElement.
+     *
+     * @param name   The name of this element.
+     * @param parent The parent of this element.
+     */
     protected DataElement(DataElement parent, String name) {
         this.parent = parent;
         if (name == null) throw new NullPointerException("'name' cannot be null");
         this.name = name;
     }
-
 
     public static DataElement readOf(Object o) {
         if (o == null) return new DataNull();
