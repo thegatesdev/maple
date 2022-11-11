@@ -40,7 +40,7 @@ class DataMapTest {
         DataMap read = DataMap.read(Map.of("1", 1, "2", new DataList()));
         assert read.hasKeys("1", "2");
         read.requireOf("1", DataPrimitive.class);
-        read.requireOf("1", DataList.class);
+        read.requireOf("2", DataList.class);
     }
 
     @AfterEach
