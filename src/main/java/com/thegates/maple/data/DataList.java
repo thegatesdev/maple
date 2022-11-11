@@ -53,7 +53,7 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     }
 
     public DataList addAll(List<DataElement> elements) {
-        if (!elements.isEmpty()) {
+        if (elements != null && !elements.isEmpty()) {
             if (value == null) init(elements);
             else {
                 synchronized (MODIFY_MUTEX) {
