@@ -64,11 +64,12 @@ public abstract class DataElement {
         this.name = name;
     }
 
-    public static DataElement readOf(Object o) {
-        if (o == null) return new DataNull();
-        if (o instanceof Map<?, ?> map) return DataMap.readInternal(map);
-        if (o instanceof List<?> list) return DataList.read(list);
-        return new DataPrimitive(o);
+    public static DataElement readOf(Object input) {
+        if (input == null) return new DataNull();
+        final Object reading = (input instanceof DataElement el) ? el.getValue() : input;
+        if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
+        if (reading instanceof List<?> list) return DataList.read(list);
+        return new DataPrimitive(reading);
     }
 
     public abstract DataElement copy(DataElement parent, String name);
