@@ -53,8 +53,11 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     }
 
     public DataList addAll(List<DataElement> elements) {
-        synchronized (MODIFY_MUTEX) {
-            this.value.addAll(elements);
+        if (value == null) init(elements);
+        else {
+            synchronized (MODIFY_MUTEX) {
+                this.value.addAll(elements);
+            }
         }
         return this;
     }
@@ -63,13 +66,16 @@ public class DataList extends DataElement implements Iterable<DataElement> {
         return Collections.unmodifiableList(value);
     }
 
-    private void init() {
+    private void init(Collection<DataElement> input) {
         if (value == null)
-            value = new LinkedList<>();
+            if (input == null)
+                value = new LinkedList<>();
+            else
+                value = new LinkedList<>(input);
     }
 
     public DataList add(DataElement element) {
-        if (value == null) init();
+        if (value == null) init(null);
         value.add(element.copy(this, "[" + value.size() + "]"));
         return this;
     }
