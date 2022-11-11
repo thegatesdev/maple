@@ -53,16 +53,19 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     }
 
     public DataList addAll(List<DataElement> elements) {
-        if (value == null) init(elements);
-        else {
-            synchronized (MODIFY_MUTEX) {
-                this.value.addAll(elements);
+        if (!elements.isEmpty()) {
+            if (value == null) init(elements);
+            else {
+                synchronized (MODIFY_MUTEX) {
+                    this.value.addAll(elements);
+                }
             }
         }
         return this;
     }
 
     public List<DataElement> getValue() {
+        if (value == null) return Collections.emptyList();
         return Collections.unmodifiableList(value);
     }
 
