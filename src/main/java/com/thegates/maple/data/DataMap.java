@@ -205,10 +205,11 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return element.getAsDataMap().navigate(++current, keys);
     }
 
+    @SuppressWarnings("unchecked")
     public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
         final LinkedList<Map.Entry<String, E>> entries = new LinkedList<>();
         for (Map.Entry<String, DataElement> e : this) {
-            if (e.getValue().isOf(elementClass)) //noinspection unchecked
+            if (e.getValue().isOf(elementClass))
                 entries.add((Map.Entry<String, E>) e);
         }
         final Map<String, E> out = new LinkedHashMap<>(entries.size(), 1);
