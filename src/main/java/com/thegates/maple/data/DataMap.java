@@ -23,7 +23,7 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class DataMap extends DataElement {
+public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>> {
 
     private Map<String, DataElement> value;
     private Set<String> keys;
@@ -67,8 +67,8 @@ public class DataMap extends DataElement {
 
     private void init(int initialCapacity) {
         if (value == null) {
-            value = new HashMap<>(initialCapacity);
-            keys = new HashSet<>(initialCapacity);
+            value = new LinkedHashMap<>(initialCapacity);
+            keys = new LinkedHashSet<>(initialCapacity);
         }
     }
 
@@ -165,11 +165,10 @@ public class DataMap extends DataElement {
     public DataMap put(String key, DataElement container) throws RuntimeException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (container == null) throw new NullPointerException("element can't be null");
-        container.dataInitCheck();
         if (value == null) {
             init(1);
         }
-        value.put(key, container.setData(this, key));
+        value.put(key, container.copy(this, key));
         keys.add(key);
         return this;
     }
@@ -178,7 +177,7 @@ public class DataMap extends DataElement {
         final var toAdd = dataMap.getValue();
         if (value == null) init(toAdd.size());
         synchronized (MODIFY_MUTEX) {
-            toAdd.forEach(this::put);
+            value.putAll(toAdd);
         }
         return this;
     }
@@ -200,10 +199,32 @@ public class DataMap extends DataElement {
     }
 
     private DataElement navigate(int current, String[] keys) {
-        if (current == keys.length - 1) return get(keys[current]);
-        DataElement element = get(keys[current]);
+        final DataElement element = get(keys[current]);
+        if (current == keys.length - 1) return element;
         if (!element.isDataMap()) return new DataNull(this, keys[current]);
         return element.getAsDataMap().navigate(++current, keys);
+    }
+
+    public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
+        final LinkedList<Map.Entry<String, E>> entries = new LinkedList<>();
+        for (Map.Entry<String, DataElement> e : this) {
+            if (e.getValue().isOf(elementClass)) //noinspection unchecked
+                entries.add((Map.Entry<String, E>) e);
+        }
+        final Map<String, E> out = new LinkedHashMap<>(entries.size(), 1);
+        out.entrySet().addAll(entries);
+        return out;
+    }
+
+    public <P> Map<String, P> collectPrimitive(Class<P> primitiveClass) {
+        final Map<String, P> out = new LinkedHashMap<>(size());
+        for (Map.Entry<String, DataElement> e : this) {
+            if (e.getValue().isOf(DataPrimitive.class)) {
+                final P valueOrNull = e.getValue().getAsDataPrimitive().getValueOrNull(primitiveClass);
+                if (valueOrNull != null) out.put(e.getKey(), valueOrNull);
+            }
+        }
+        return out;
     }
 
 
@@ -265,8 +286,8 @@ public class DataMap extends DataElement {
 
 
     @Override
-    public DataElement copy() {
-        return new DataMap().putAll(this);
+    public DataElement copy(DataElement parent, String name) {
+        return new DataMap(parent, name).putAll(this);
     }
 
     @Override
@@ -287,6 +308,11 @@ public class DataMap extends DataElement {
     @Override
     public boolean isDataNull() {
         return false;
+    }
+
+    @Override
+    public boolean isOf(Class<? extends DataElement> elementClass) {
+        return elementClass == DataMap.class;
     }
 
     @Override
@@ -317,5 +343,15 @@ public class DataMap extends DataElement {
     @Override
     public String toString() {
         return value == null ? "emptyMap" : "dataMap with \n\t" + String.join("\n", value.entrySet().stream().map(e -> (e.getKey() + ": " + e.getValue().toString())).toList());
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, DataElement>> iterator() {
+        return value.entrySet().iterator();
+    }
+
+    @Override
+    public Spliterator<Map.Entry<String, DataElement>> spliterator() {
+        return value.entrySet().spliterator();
     }
 }

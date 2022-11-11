@@ -24,10 +24,19 @@ Copyright (C) 2022  Timar Karels
 
 public class DataPrimitive extends DataElement {
 
-    final Object value;
+    Object value;
 
     public DataPrimitive(Object value) {
         this.value = value;
+    }
+
+    public DataPrimitive(String name, Object value) {
+        super(name);
+        this.value = value;
+    }
+
+    public DataPrimitive(String name) {
+        super(name);
     }
 
     protected DataPrimitive(DataElement parent, String name, Object value) {
@@ -37,6 +46,10 @@ public class DataPrimitive extends DataElement {
 
     public Object getValue() {
         return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 
     @SuppressWarnings("unchecked")
@@ -114,8 +127,8 @@ public class DataPrimitive extends DataElement {
     // --
 
     @Override
-    public DataPrimitive copy() {
-        return new DataPrimitive(value);
+    public DataPrimitive copy(DataElement parent, String name) {
+        return new DataPrimitive(parent, name, value);
     }
 
     @Override
@@ -136,6 +149,11 @@ public class DataPrimitive extends DataElement {
     @Override
     public boolean isDataNull() {
         return false;
+    }
+
+    @Override
+    public boolean isOf(Class<? extends DataElement> elementClass) {
+        return elementClass == DataPrimitive.class;
     }
 
     @Override

@@ -26,6 +26,10 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     public DataList() {
     }
 
+    public DataList(String name) {
+        super(name);
+    }
+
     protected DataList(DataElement parent, String name) {
         super(parent, name);
     }
@@ -66,14 +70,18 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
     public DataList add(DataElement element) {
         if (value == null) init();
-        element.dataInitCheck();
-        value.add(element.setData(this, "[" + value.size() + "]"));
+        value.add(element.copy(this, "[" + value.size() + "]"));
         return this;
     }
 
     @Override
     public Iterator<DataElement> iterator() {
         return value.iterator();
+    }
+
+    @Override
+    public Spliterator<DataElement> spliterator() {
+        return value.spliterator();
     }
 
     public <T> List<T> listOf(Class<T> elementClass) {
@@ -103,8 +111,8 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
 
     @Override
-    public DataElement copy() {
-        return new DataList().addAll(this);
+    public DataElement copy(DataElement parent, String name) {
+        return new DataList(parent, name).addAll(this);
     }
 
     @Override
@@ -125,6 +133,11 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     @Override
     public boolean isDataNull() {
         return false;
+    }
+
+    @Override
+    public boolean isOf(Class<? extends DataElement> elementClass) {
+        return elementClass == DataList.class;
     }
 
     @Override

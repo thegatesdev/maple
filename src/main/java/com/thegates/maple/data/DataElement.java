@@ -23,21 +23,31 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * A base class for any element of data.
+ * A DataElement has an immutable parent and name, and inserting in e.g. a DataList requires the element to be copied using {@link DataElement#copy(DataElement, String)}
+ */
+
 public abstract class DataElement {
 
-    static final Object MODIFY_MUTEX = new Object();
-    static final Object GET_MUTEX = new Object();
+    protected static final Object MODIFY_MUTEX = new Object();
+    protected static final Object GET_MUTEX = new Object();
 
-    private DataElement parent;
-    private String name;
-    private boolean dataInitialized = false;
+    private final DataElement parent;
+    private final String name;
 
-    DataElement() {
+    protected DataElement() {
+        this("root");
+    }
+
+    protected DataElement(String name) {
+        this(null, name);
     }
 
     protected DataElement(DataElement parent, String name) {
         this.parent = parent;
-        this.name = name == null ? "root" : name;
+        if (name == null) throw new NullPointerException("'name' cannot be null");
+        this.name = name;
     }
 
 
@@ -48,19 +58,7 @@ public abstract class DataElement {
         return new DataPrimitive(o);
     }
 
-    public DataElement setData(DataElement parent, String name) {
-        dataInitCheck();
-        this.parent = parent;
-        this.name = name;
-        dataInitialized = true;
-        return this;
-    }
-
-    protected void dataInitCheck() throws RuntimeException {
-        if (dataInitialized) throw new RuntimeException("This element has it's parent and name already set!");
-    }
-
-    public abstract DataElement copy();
+    public abstract DataElement copy(DataElement parent, String name);
 
 
     public abstract Object getValue();
@@ -74,14 +72,12 @@ public abstract class DataElement {
     public abstract boolean isDataNull();
 
 
-    public boolean isOf(Class<? extends DataElement> elementClass) {
-        return elementClass.isInstance(this);
-    }
+    public abstract boolean isOf(Class<? extends DataElement> elementClass);
 
 
     @SuppressWarnings("unchecked")
     public <T extends DataElement> T requireOf(Class<T> elementClass) throws RequireTypeException {
-        if (!elementClass.isInstance(this)) throw new RequireTypeException(this, elementClass);
+        if (!isOf(elementClass)) throw new RequireTypeException(this, elementClass);
         return ((T) this);
     }
 
@@ -122,6 +118,7 @@ public abstract class DataElement {
     public int hashCode() {
         int result = parent != null ? parent.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
         return result;
     }
 }
