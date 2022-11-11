@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 class DataMapTest {
 
     private DataMap testMap;
@@ -31,6 +33,14 @@ class DataMapTest {
     @Test
     void navigate() {
         assert testMap.navigate("map_entry", "nested_entry_1", "nested_entry_2").isDataPrimitive();
+    }
+
+    @Test
+    void read_hasKeys_requireOf() {
+        DataMap read = DataMap.read(Map.of("1", 1, "2", new DataList()));
+        assert read.hasKeys("1", "2");
+        read.requireOf("1", DataPrimitive.class);
+        read.requireOf("1", DataList.class);
     }
 
     @AfterEach
