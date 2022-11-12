@@ -25,7 +25,8 @@ Copyright (C) 2022  Timar Karels
 
 /**
  * A base class for any element of data.
- * A DataElement has an immutable parent and name, and inserting in e.g. a DataList requires the element to be copied using {@link DataElement#copy(DataElement, String)}
+ * A DataElement has a parent and name that can only be set once, in the constructor or using {@link DataElement#setData(DataElement, String)}.
+ * This is to reduce the amount of copying elements when for example inserting in a {@link DataMap}, where the name and parent have to be set by the parent.
  */
 
 public abstract class DataElement {
@@ -33,18 +34,18 @@ public abstract class DataElement {
     protected static final Object MODIFY_MUTEX = new Object();
     protected static final Object GET_MUTEX = new Object();
 
-    private final DataElement parent;
-    private final String name;
+    private DataElement parent;
+    private String name;
+    private boolean dataSet = false;
 
     /**
      * Constructs a new DataElement with the parent set to {@code null} and the name set to {@code "root"}.
      */
     protected DataElement() {
-        this("root");
     }
 
     /**
-     * Constructs a new DataElement with the parent set to {@code null}.
+     * Constructs a new DataElement with the parent defaulted to {@code null}.
      *
      * @param name The name of this element.
      */
@@ -59,9 +60,7 @@ public abstract class DataElement {
      * @param parent The parent of this element.
      */
     protected DataElement(DataElement parent, String name) {
-        this.parent = parent;
-        if (name == null) throw new NullPointerException("'name' cannot be null");
-        this.name = name;
+        setData(parent, name);
     }
 
     public static DataElement readOf(Object input) {
@@ -72,7 +71,19 @@ public abstract class DataElement {
         return new DataPrimitive(reading);
     }
 
-    public abstract DataElement copy(DataElement parent, String name);
+    DataElement setData(DataElement parent, String name) {
+        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
+        dataSet = true;
+        this.parent = parent;
+        this.name = name;
+        return this;
+    }
+
+    public boolean hasDataSet() {
+        return dataSet;
+    }
+
+    public abstract DataElement copy();
 
 
     public abstract Object getValue();
@@ -86,7 +97,9 @@ public abstract class DataElement {
     public abstract boolean isDataNull();
 
 
-    public abstract boolean isOf(Class<? extends DataElement> elementClass);
+    public boolean isOf(Class<? extends DataElement> elementClass) {
+        return getClass() == elementClass;
+    }
 
 
     @SuppressWarnings("unchecked")
@@ -116,9 +129,9 @@ public abstract class DataElement {
     }
 
 
-    public String getPath() {
-        final String n = name == null ? "" : name;
-        return parent == null ? n : parent.getPath() + "." + n;
+    public String path() {
+        final String n = name == null ? "root" : name;
+        return parent == null ? n : parent.path() + "." + n;
     }
 
     public DataElement parent() {
@@ -138,8 +151,7 @@ public abstract class DataElement {
 
     @Override
     public int hashCode() {
-        int result = parent != null ? parent.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
         return result;
     }
