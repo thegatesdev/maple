@@ -48,4 +48,9 @@ public class DataNull extends DataElement {
     public boolean isDataNull() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "dataNull";
+    }
 }

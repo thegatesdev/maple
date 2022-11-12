@@ -23,19 +23,20 @@ Copyright (C) 2022  Timar Karels
 public class DataPrimitive extends DataElement {
 
     Object value;
+    private String cachedSimpleName = null;
 
     public DataPrimitive(Object value) {
-        this.value = value;
+        setValue(value);
     }
 
     public DataPrimitive(String name, Object value) {
         super(name);
-        this.value = value;
+        setValue(value);
     }
 
     protected DataPrimitive(DataElement parent, String name, Object value) {
         super(parent, name);
-        this.value = value;
+        setValue(value);
     }
 
     public Object getValue() {
@@ -44,6 +45,7 @@ public class DataPrimitive extends DataElement {
 
     public void setValue(Object value) {
         this.value = value;
+        cachedSimpleName = value.getClass().getSimpleName();
     }
 
     @Override
@@ -168,6 +170,6 @@ public class DataPrimitive extends DataElement {
 
     @Override
     public String toString() {
-        return value == null ? "emptyContainer" : "dataContainer with " + value;
+        return value == null ? "nullPrimitive" : "dataPrimitive<" + cachedSimpleName + ">";
     }
 }

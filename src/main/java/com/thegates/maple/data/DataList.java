@@ -168,7 +168,16 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
     @Override
     public String toString() {
-        return value == null || value.isEmpty() ? "emptyList" : "dataList with\n\t" + String.join("\n", value.stream().map(DataElement::toString).toList());
+        if (value == null || value.isEmpty()) return "emptyList";
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dataList[");
+        int len = value.size();
+        for (DataElement element : value) {
+            stringBuilder.append(element.toString());
+            if (--len > 0) stringBuilder.append(", ");
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
     }
 
     public class ElementIterator<E extends DataElement> implements Iterator<E> {

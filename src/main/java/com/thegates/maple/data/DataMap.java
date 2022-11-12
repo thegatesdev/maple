@@ -360,7 +360,20 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
     @Override
     public String toString() {
-        return value == null || value.isEmpty() ? "emptyMap" : "dataMap with \n\t" + String.join("\n", value.entrySet().stream().map(e -> (e.getKey() + ": " + e.getValue().toString())).toList());
+        if (value == null || value.isEmpty()) return "emptyMap";
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dataMap{");
+        int len = value.size();
+        for (Map.Entry<String, DataElement> entry : value.entrySet()) {
+            stringBuilder.append("'");
+            stringBuilder.append(entry.getKey());
+            stringBuilder.append("'");
+            stringBuilder.append(": ");
+            stringBuilder.append(entry.getValue());
+            if (--len > 0) stringBuilder.append(", ");
+        }
+        stringBuilder.append("}");
+        return stringBuilder.toString();
     }
 
     @Override

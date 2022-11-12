@@ -20,6 +20,12 @@ class DataMapTest {
         testMap.put("primitive_entry", new DataPrimitive(new Object()));
     }
 
+
+    @Test
+    void string() {
+        System.out.println(testMap.toString());
+    }
+
     @Test
     void requireKeys_size() {
         assert testMap.hasKeys("map_entry", "list_entry", "null_entry", "primitive_entry");
