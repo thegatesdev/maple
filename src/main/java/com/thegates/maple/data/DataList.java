@@ -79,7 +79,8 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
     public DataList add(DataElement element) {
         if (value == null) init(null);
-        value.add(element.copy(this, "[" + value.size() + "]"));
+        if (element.hasDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
+        value.add(element.setData(this, "[" + value.size() + "]"));
         return this;
     }
 
@@ -120,8 +121,8 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
 
     @Override
-    public DataElement copy(DataElement parent, String name) {
-        return new DataList(parent, name).addAll(this);
+    public DataElement copy() {
+        return new DataList().addAll(this);
     }
 
     @Override
@@ -145,11 +146,6 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     }
 
     @Override
-    public boolean isOf(Class<? extends DataElement> elementClass) {
-        return elementClass == DataList.class;
-    }
-
-    @Override
     public DataList getAsDataList() {
         return this;
     }
@@ -167,15 +163,8 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
-        return value == null ? "emptyList" : "dataList with\n\t" + String.join("\n", value.stream().map(DataElement::toString).toList());
+        return value == null || value.isEmpty() ? "emptyList" : "dataList with\n\t" + String.join("\n", value.stream().map(DataElement::toString).toList());
     }
 
     public class ElementIterator<E extends DataElement> implements Iterator<E> {
