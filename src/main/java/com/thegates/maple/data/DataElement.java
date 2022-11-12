@@ -83,6 +83,12 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return dataSet;
     }
 
+    public abstract boolean isEmpty();
+
+    public boolean isPresent() {
+        return !isEmpty();
+    }
+
     public abstract DataElement clone();
 
     @Override

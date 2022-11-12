@@ -304,10 +304,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return value.size();
     }
 
-    public boolean isPresent() {
-        return !isEmpty();
-    }
-
+    @Override
     public boolean isEmpty() {
         return value == null || value.isEmpty();
     }

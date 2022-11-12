@@ -117,12 +117,9 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return value.size();
     }
 
+    @Override
     public boolean isEmpty() {
         return value == null || value.isEmpty();
-    }
-
-    public boolean isPresent() {
-        return value != null && !value.isEmpty();
     }
 
 

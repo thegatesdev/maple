@@ -15,6 +15,16 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     }
 
     @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public boolean isPresent() {
+        return true;
+    }
+
+    @Override
     public DataNull clone() {
         return new DataNull();
     }

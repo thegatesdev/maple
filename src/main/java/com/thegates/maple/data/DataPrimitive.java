@@ -68,12 +68,8 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return isValueOf(clazz) ? clazz.cast(value) : null;
     }
 
-    public boolean isPresent() {
-        return value != null;
-    }
-
     public boolean isEmpty() {
-        return !isPresent();
+        return value == null;
     }
 
 
