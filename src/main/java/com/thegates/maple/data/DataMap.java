@@ -36,7 +36,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     protected DataMap(DataElement parent, String name, int initialCapacity) {
-        super(parent, name);
+        this(parent, name);
         init(initialCapacity);
     }
 
@@ -89,14 +89,34 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return new DataNull(this, key);
     }
 
+    public DataElement getOrNull(String key) {
+        if (value != null) return value.get(key);
+        return null;
+    }
+
     // --
 
+    /**
+     * Primitive getter.
+     */
     public <T> T getUnsafe(String key) {
         return getPrimitive(key).getValueUnsafe();
     }
 
+    /**
+     * Primitive getter.
+     */
     public <T> T get(String key, Class<T> dataClass) {
         return get(key).requireOf(DataPrimitive.class).requireValue(dataClass);
+    }
+
+    /**
+     * Primitive getter.
+     */
+    public <T> T getOrNull(String key, Class<T> dataClass) {
+        final DataElement el = getOrNull(key);
+        if (el == null || !el.isDataPrimitive()) return null;
+        return el.getAsDataPrimitive().getValueOrNull(dataClass);
     }
 
 
@@ -160,15 +180,15 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return hasKey(key) ? getPrimitive(key).longValue() : def;
     }
 
+
     //--
 
-    public DataMap put(String key, DataElement container) throws RuntimeException {
+
+    public DataMap put(String key, DataElement element) throws RuntimeException {
         if (key == null) throw new NullPointerException("key can't be null");
-        if (container == null) throw new NullPointerException("element can't be null");
-        if (value == null) {
-            init(1);
-        }
-        value.put(key, container.copy(this, key));
+        if (element == null) throw new NullPointerException("element can't be null");
+        if (value == null) init(1);
+        value.put(key, element.copy(this, key));
         keys.add(key);
         return this;
     }
@@ -182,17 +202,19 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return this;
     }
 
+
     public void doIfPresent(String key, Consumer<DataElement> action) {
-        if (hasKey(key)) action.accept(get(key));
+        final DataElement element = getOrNull(key);
+        if (element != null) action.accept(element);
     }
 
-    public <T> void doIfPresent(String key, Class<T> clazz, Consumer<T> action) {
-        final DataElement el = get(key);
-        if (!el.isDataNull() && el.isDataPrimitive()) {
-            T valueOrNull = el.getAsDataPrimitive().getValueOrNull(clazz);
-            if (valueOrNull != null) action.accept(valueOrNull);
-        }
+    public <E extends DataElement> void doIfPresent(String key, Class<E> clazz, Consumer<E> action) {
+        final DataElement el = getOrNull(key);
+        if (el == null) return;
+        final E typed = el.getAsOrNull(clazz);
+        if (typed != null) action.accept(typed);
     }
+
 
     public DataElement navigate(String... keys) {
         return navigate(0, keys);
@@ -204,6 +226,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         if (!element.isDataMap()) return new DataNull(this, keys[current]);
         return element.getAsDataMap().navigate(++current, keys);
     }
+
 
     @SuppressWarnings("unchecked")
     public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
