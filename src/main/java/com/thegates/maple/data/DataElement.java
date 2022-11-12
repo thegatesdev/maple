@@ -32,7 +32,7 @@ Copyright (C) 2022  Timar Karels
 public abstract class DataElement implements Cloneable, Comparable<DataElement> {
 
     protected static final Object MODIFY_MUTEX = new Object();
-    protected static final Object GET_MUTEX = new Object();
+    protected static final Object READ_MUTEX = new Object();
 
     private DataElement parent;
     private String name;

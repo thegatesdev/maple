@@ -87,15 +87,15 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     public DataElement get(String key) {
-        if (value != null) {
-            final DataElement el = value.get(key);
-            if (el != null) return el;
-        }
+        final DataElement el = getOrNull(key);
+        if (el != null) return el;
         return new DataNull(this, key);
     }
 
     public DataElement getOrNull(String key) {
-        if (value != null) return value.get(key);
+        if (value != null) synchronized (READ_MUTEX) {
+            return value.get(key);
+        }
         return null;
     }
 
@@ -194,17 +194,16 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         if (element == null) throw new NullPointerException("element can't be null");
         if (element.hasDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
-        value.put(key, element.setData(this, key));
+        synchronized (MODIFY_MUTEX) {
+            value.put(key, element.setData(this, key));
+        }
         return this;
     }
 
     public DataMap putAll(DataMap dataMap) {
         final var toAdd = dataMap.getValue();
         if (value == null) init(toAdd.size());
-        synchronized (MODIFY_MUTEX) {
-            // Don't use addAll because parent will not be set properly.
-            toAdd.forEach(this::put);
-        }
+        toAdd.forEach(this::put);
         return this;
     }
 
@@ -235,26 +234,22 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    @SuppressWarnings("unchecked")
     public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
-        final LinkedList<Map.Entry<String, E>> entries = new LinkedList<>();
-        for (Map.Entry<String, DataElement> e : this) {
-            if (e.getValue().isOf(elementClass))
-                entries.add((Map.Entry<String, E>) e);
+        final LinkedList<Map.Entry<String, E>> collector = new LinkedList<>();
+        synchronized (READ_MUTEX) {
+            iterator(elementClass).forEachRemaining(collector::add);
         }
-        final Map<String, E> out = new LinkedHashMap<>(entries.size(), 1);
-        out.entrySet().addAll(entries);
+        final LinkedHashMap<String, E> out = new LinkedHashMap<>(collector.size(), 1f);
+        out.entrySet().addAll(collector);
         return out;
     }
 
     public <P> Map<String, P> collectPrimitive(Class<P> primitiveClass) {
         final Map<String, P> out = new LinkedHashMap<>(size());
-        for (Map.Entry<String, DataElement> e : this) {
-            if (e.getValue().isOf(DataPrimitive.class)) {
-                final P valueOrNull = e.getValue().getAsDataPrimitive().getValueOrNull(primitiveClass);
-                if (valueOrNull != null) out.put(e.getKey(), valueOrNull);
-            }
-        }
+        iterator(DataPrimitive.class).forEachRemaining(e -> {
+            final P val = e.getValue().getValueOrNull(primitiveClass);
+            if (val != null) out.put(e.getKey(), val);
+        });
         return out;
     }
 
@@ -361,7 +356,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dataMap{");
         int len = value.size();
-        for (Map.Entry<String, DataElement> entry : value.entrySet()) {
+        for (Map.Entry<String, DataElement> entry : this) {
             stringBuilder.append("'");
             stringBuilder.append(entry.getKey());
             stringBuilder.append("'");
@@ -378,8 +373,40 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return value.entrySet().iterator();
     }
 
+    public <E extends DataElement> Iterator<Map.Entry<String, E>> iterator(Class<E> elementClass) {
+        return new ClassedIterator<>(elementClass);
+    }
+
     @Override
     public Spliterator<Map.Entry<String, DataElement>> spliterator() {
         return value.entrySet().spliterator();
+    }
+
+    private class ClassedIterator<E extends DataElement> implements Iterator<Map.Entry<String, E>> {
+        private final Class<E> elementClass;
+        private final Iterator<Map.Entry<String, DataElement>> iterator;
+        private Map.Entry<String, E> next;
+
+        public ClassedIterator(Class<E> elementClass) {
+            this.elementClass = elementClass;
+            iterator = iterator();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public boolean hasNext() {
+            if (!iterator.hasNext()) return false;
+            final Map.Entry<String, DataElement> el = iterator.next();
+            if (el.getValue().isOf(elementClass)) {
+                next = ((Map.Entry<String, E>) el);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public Map.Entry<String, E> next() {
+            return next;
+        }
     }
 }

@@ -85,7 +85,9 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     public DataList add(DataElement element) {
         if (value == null) init(null);
         if (element.hasDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
-        value.add(element.setData(this, "[" + value.size() + "]"));
+        synchronized (MODIFY_MUTEX) {
+            value.add(element.setData(this, "[" + value.size() + "]"));
+        }
         return this;
     }
 
@@ -95,7 +97,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
-        return new ElementIterator<>(elementClass);
+        return new ClassedIterator<>(elementClass);
     }
 
     @Override
@@ -105,9 +107,11 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
     public <T> List<T> primitiveList(Class<T> elementClass) {
         final LinkedList<T> out = new LinkedList<>();
-        new ElementIterator<>(DataPrimitive.class).forEachRemaining(primitive -> {
-            if (primitive.isValueOf(elementClass)) out.add(primitive.getValueUnsafe());
-        });
+        synchronized (READ_MUTEX) {
+            new ClassedIterator<>(DataPrimitive.class).forEachRemaining(primitive -> {
+                if (primitive.isValueOf(elementClass)) out.add(primitive.getValueUnsafe());
+            });
+        }
         return out;
     }
 
@@ -181,21 +185,24 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return stringBuilder.toString();
     }
 
-    public class ElementIterator<E extends DataElement> implements Iterator<E> {
+    private class ClassedIterator<E extends DataElement> implements Iterator<E> {
         private final Class<E> elementClass;
         private final Iterator<DataElement> iterator;
         private E next;
 
-        public ElementIterator(Class<E> elementClass) {
+        public ClassedIterator(Class<E> elementClass) {
             this.elementClass = elementClass;
-            iterator = value.iterator();
+            iterator = iterator();
         }
 
         @SuppressWarnings("unchecked")
         @Override
         public boolean hasNext() {
             if (!iterator.hasNext()) return false;
-            final DataElement el = iterator.next();
+            final DataElement el;
+            synchronized (READ_MUTEX) {
+                el = iterator.next();
+            }
             if (el.isOf(elementClass)) {
                 next = (E) el;
                 return true;
