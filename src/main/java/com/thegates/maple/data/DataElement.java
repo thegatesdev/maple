@@ -121,6 +121,14 @@ public abstract class DataElement {
         return parent == null ? n : parent.getPath() + "." + n;
     }
 
+    public DataElement parent() {
+        return parent;
+    }
+
+    public String name() {
+        return name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
