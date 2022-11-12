@@ -94,12 +94,16 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return value.iterator();
     }
 
+    public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
+        return new ElementIterator<>(elementClass);
+    }
+
     @Override
     public Spliterator<DataElement> spliterator() {
         return value.spliterator();
     }
 
-    public <T> List<T> listOf(Class<T> elementClass) {
+    public <T> List<T> primitiveList(Class<T> elementClass) {
         final LinkedList<T> out = new LinkedList<>();
         new ElementIterator<>(DataPrimitive.class).forEachRemaining(primitive -> {
             if (primitive.isValueOf(elementClass)) out.add(primitive.getValueUnsafe());
