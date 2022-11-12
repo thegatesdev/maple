@@ -3,8 +3,6 @@ package com.thegates.maple.data;
 import com.thegates.maple.exception.ReadException;
 import com.thegates.maple.exception.RequireTypeException;
 
-import java.util.Objects;
-
 /*
 Copyright (C) 2022  Timar Karels
 
@@ -46,6 +44,11 @@ public class DataPrimitive extends DataElement {
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    @Override
+    protected Object value() {
+        return value;
     }
 
     @SuppressWarnings("unchecked")
@@ -159,9 +162,8 @@ public class DataPrimitive extends DataElement {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DataPrimitive container)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(value, container.value);
+        if (!(o instanceof DataPrimitive)) return false;
+        return super.equals(o);
     }
 
     @Override

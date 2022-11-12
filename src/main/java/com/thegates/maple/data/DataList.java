@@ -69,6 +69,11 @@ public class DataList extends DataElement implements Iterable<DataElement> {
         return Collections.unmodifiableList(value);
     }
 
+    @Override
+    protected Object value() {
+        return value;
+    }
+
     private void init(Collection<DataElement> input) {
         if (value == null)
             if (input == null)
@@ -157,9 +162,8 @@ public class DataList extends DataElement implements Iterable<DataElement> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DataList dataList)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(value, dataList.value);
+        if (!(o instanceof DataList)) return false;
+        return super.equals(o);
     }
 
     @Override

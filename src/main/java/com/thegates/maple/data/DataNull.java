@@ -25,6 +25,11 @@ public class DataNull extends DataElement {
     }
 
     @Override
+    protected Object value() {
+        return null;
+    }
+
+    @Override
     public boolean isDataPrimitive() {
         return false;
     }

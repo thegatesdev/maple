@@ -69,9 +69,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     private void init(int initialCapacity) {
-        if (value == null) {
-            value = new LinkedHashMap<>(initialCapacity);
-        }
+        if (value == null) value = new LinkedHashMap<>(initialCapacity);
     }
 
 
@@ -81,6 +79,11 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public Map<String, DataElement> getValue() {
         if (value == null) return Collections.emptyMap();
         return Collections.unmodifiableMap(value);
+    }
+
+    @Override
+    protected Object value() {
+        return value;
     }
 
     public DataElement get(String key) {
@@ -350,10 +353,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DataMap dataMap)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(value, dataMap.value);
+        if (!(o instanceof DataMap)) return false;
+        return super.equals(o);
     }
+
 
     @Override
     public String toString() {

@@ -88,6 +88,9 @@ public abstract class DataElement {
 
     public abstract Object getValue();
 
+
+    protected abstract Object value();
+
     public abstract boolean isDataPrimitive();
 
     public abstract boolean isDataList();
@@ -144,15 +147,14 @@ public abstract class DataElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (!(o instanceof DataElement that)) return false;
-        return Objects.equals(parent, that.parent) && Objects.equals(name, that.name);
+        return Objects.equals(name, that.name) && Objects.equals(value(), that.value());
     }
 
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
+        result = 31 * result + (value() != null ? value().hashCode() : 0);
         return result;
     }
 }
