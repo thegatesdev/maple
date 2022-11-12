@@ -22,6 +22,6 @@ Copyright (C) 2022  Timar Karels
 public class ReadException extends RuntimeException {
 
     public ReadException(DataElement data, String message) {
-        super("Error while reading data at %s, %s.".formatted(data.getPath(), message));
+        super("Error while reading data at %s, %s.".formatted(data.path(), message));
     }
 }
