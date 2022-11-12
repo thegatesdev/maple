@@ -26,13 +26,16 @@ Copyright (C) 2022  Timar Karels
 public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>> {
 
     private Map<String, DataElement> value;
-    private Set<String> keys;
 
     public DataMap() {
     }
 
     protected DataMap(DataElement parent, String name) {
         super(parent, name);
+    }
+
+    protected DataMap(String name) {
+        super(name);
     }
 
     protected DataMap(DataElement parent, String name, int initialCapacity) {
@@ -68,7 +71,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     private void init(int initialCapacity) {
         if (value == null) {
             value = new LinkedHashMap<>(initialCapacity);
-            keys = new LinkedHashSet<>(initialCapacity);
         }
     }
 
@@ -187,9 +189,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public DataMap put(String key, DataElement element) throws RuntimeException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (element == null) throw new NullPointerException("element can't be null");
+        if (element.hasDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
-        value.put(key, element.copy(this, key));
-        keys.add(key);
+        value.put(key, element.setData(this, key));
         return this;
     }
 
@@ -197,7 +199,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         final var toAdd = dataMap.getValue();
         if (value == null) init(toAdd.size());
         synchronized (MODIFY_MUTEX) {
-            value.putAll(toAdd);
+            // Don't use addAll because parent will not be set properly.
+            toAdd.forEach(this::put);
         }
         return this;
     }
@@ -221,9 +224,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     private DataElement navigate(int current, String[] keys) {
-        final DataElement element = get(keys[current]);
+        final String key = keys[current];
+        final DataElement element = get(key);
         if (current == keys.length - 1) return element;
-        if (!element.isDataMap()) return new DataNull(this, keys[current]);
+        if (!element.isDataMap()) return new DataNull(this, key);
         return element.getAsDataMap().navigate(++current, keys);
     }
 
@@ -277,17 +281,17 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     public boolean hasKey(String key) {
-        if (keys == null) return false;
-        return keys.contains(key);
+        if (value == null) return false;
+        return value.containsKey(key);
     }
 
     public boolean hasKeys(Collection<String> keys) {
-        if (this.keys == null) return false;
-        return this.keys.containsAll(keys);
+        if (value == null) return false;
+        return value.keySet().containsAll(keys);
     }
 
     public boolean hasKeys(String... keys) {
-        if (this.keys == null) return false;
+        if (value == null) return false;
         return hasKeys(Arrays.asList(keys));
     }
 
@@ -310,8 +314,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
 
     @Override
-    public DataElement copy(DataElement parent, String name) {
-        return new DataMap(parent, name).putAll(this);
+    public DataElement copy() {
+        return new DataMap().putAll(this);
     }
 
     @Override
@@ -335,11 +339,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
-    public boolean isOf(Class<? extends DataElement> elementClass) {
-        return elementClass == DataMap.class;
-    }
-
-    @Override
     public DataMap getAsDataMap() {
         return this;
     }
@@ -357,16 +356,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (keys != null ? keys.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
-        return value == null ? "emptyMap" : "dataMap with \n\t" + String.join("\n", value.entrySet().stream().map(e -> (e.getKey() + ": " + e.getValue().toString())).toList());
+        return value == null || value.isEmpty() ? "emptyMap" : "dataMap with \n\t" + String.join("\n", value.entrySet().stream().map(e -> (e.getKey() + ": " + e.getValue().toString())).toList());
     }
 
     @Override
