@@ -15,8 +15,8 @@ public class DataNull extends DataElement {
     }
 
     @Override
-    public DataNull copy(DataElement parent, String name) {
-        return new DataNull(parent, name);
+    public DataNull copy() {
+        return new DataNull();
     }
 
     @Override
@@ -42,10 +42,5 @@ public class DataNull extends DataElement {
     @Override
     public boolean isDataNull() {
         return true;
-    }
-
-    @Override
-    public boolean isOf(Class<? extends DataElement> elementClass) {
-        return elementClass == DataNull.class;
     }
 }

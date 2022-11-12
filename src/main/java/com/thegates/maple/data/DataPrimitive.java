@@ -35,10 +35,6 @@ public class DataPrimitive extends DataElement {
         this.value = value;
     }
 
-    public DataPrimitive(String name) {
-        super(name);
-    }
-
     protected DataPrimitive(DataElement parent, String name, Object value) {
         super(parent, name);
         this.value = value;
@@ -72,7 +68,7 @@ public class DataPrimitive extends DataElement {
     }
 
     public boolean isEmpty() {
-        return value == null;
+        return !isPresent();
     }
 
 
@@ -127,8 +123,8 @@ public class DataPrimitive extends DataElement {
     // --
 
     @Override
-    public DataPrimitive copy(DataElement parent, String name) {
-        return new DataPrimitive(parent, name, value);
+    public DataPrimitive copy() {
+        return new DataPrimitive(value);
     }
 
     @Override
@@ -152,11 +148,6 @@ public class DataPrimitive extends DataElement {
     }
 
     @Override
-    public boolean isOf(Class<? extends DataElement> elementClass) {
-        return elementClass == DataPrimitive.class;
-    }
-
-    @Override
     public DataPrimitive getAsDataPrimitive() {
         return this;
     }
@@ -171,13 +162,6 @@ public class DataPrimitive extends DataElement {
         if (!(o instanceof DataPrimitive container)) return false;
         if (!super.equals(o)) return false;
         return Objects.equals(value, container.value);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        return result;
     }
 
     @Override
