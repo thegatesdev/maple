@@ -29,7 +29,7 @@ Copyright (C) 2022  Timar Karels
  * This is to reduce the amount of copying elements when for example inserting in a {@link DataMap}, where the name and parent have to be set by the parent.
  */
 
-public abstract class DataElement {
+public abstract class DataElement implements Cloneable, Comparable<DataElement> {
 
     protected static final Object MODIFY_MUTEX = new Object();
     protected static final Object GET_MUTEX = new Object();
@@ -83,8 +83,20 @@ public abstract class DataElement {
         return dataSet;
     }
 
-    public abstract DataElement copy();
+    public abstract DataElement clone();
 
+    @Override
+    public int compareTo(DataElement o) {
+        if (this.hasParent(o)) return -1;
+        if (this == o.parent) return 1;
+        return 0;
+    }
+
+    public boolean hasParent(DataElement parent) {
+        if (this.parent == null) return false;
+        if (this.parent == parent) return true;
+        return this.parent.hasParent(parent);
+    }
 
     public abstract Object getValue();
 

@@ -23,7 +23,7 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>> {
+public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>>, Cloneable, Comparable<DataElement> {
 
     private Map<String, DataElement> value;
 
@@ -317,7 +317,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
 
     @Override
-    public DataElement copy() {
+    public DataElement clone() {
         return new DataMap().putAll(this);
     }
 

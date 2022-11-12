@@ -1,6 +1,6 @@
 package com.thegates.maple.data;
 
-public class DataNull extends DataElement {
+public class DataNull extends DataElement implements Cloneable, Comparable<DataElement> {
 
 
     public DataNull() {
@@ -15,7 +15,7 @@ public class DataNull extends DataElement {
     }
 
     @Override
-    public DataNull copy() {
+    public DataNull clone() {
         return new DataNull();
     }
 

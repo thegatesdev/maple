@@ -19,7 +19,7 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class DataList extends DataElement implements Iterable<DataElement> {
+public class DataList extends DataElement implements Iterable<DataElement>, Cloneable, Comparable<DataElement> {
 
     private List<DataElement> value;
 
@@ -126,7 +126,7 @@ public class DataList extends DataElement implements Iterable<DataElement> {
 
 
     @Override
-    public DataElement copy() {
+    public DataElement clone() {
         return new DataList().addAll(this);
     }
 

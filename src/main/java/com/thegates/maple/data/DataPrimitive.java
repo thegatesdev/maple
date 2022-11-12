@@ -20,7 +20,7 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class DataPrimitive extends DataElement {
+public class DataPrimitive extends DataElement implements Cloneable, Comparable<DataElement> {
 
     Object value;
     private String cachedSimpleName = null;
@@ -128,7 +128,7 @@ public class DataPrimitive extends DataElement {
     // --
 
     @Override
-    public DataPrimitive copy() {
+    public DataPrimitive clone() {
         return new DataPrimitive(value);
     }
 
