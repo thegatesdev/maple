@@ -35,6 +35,12 @@ class DataMapTest {
         assert testMap.navigate("map_entry", "nested_entry_1", "nested_entry_2").isDataPrimitive();
     }
 
+
+    @Test
+    void put() {
+        assert testMap.navigate("map_entry", "nested_entry_1", "nested_entry_2").parent() == testMap.navigate("map_entry", "nested_entry_1");
+    }
+
     @Test
     void read_hasKeys_requireOf() {
         DataMap read = DataMap.read(Map.of("1", 1, "2", new DataList()));
