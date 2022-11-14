@@ -24,7 +24,7 @@ Copyright (C) 2022  Timar Karels
 
 public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>>, Cloneable, Comparable<DataElement> {
 
-    private Map<String, DataElement> value;
+    private LinkedHashMap<String, DataElement> value;
 
     public DataMap() {
     }

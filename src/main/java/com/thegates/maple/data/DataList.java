@@ -21,7 +21,7 @@ Copyright (C) 2022  Timar Karels
 
 public class DataList extends DataElement implements Iterable<DataElement>, Cloneable, Comparable<DataElement> {
 
-    private List<DataElement> value;
+    private LinkedList<DataElement> value;
 
     public DataList() {
     }
