@@ -68,9 +68,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    // --
-
-
     public Map<String, DataElement> getValue() {
         if (value == null) return Collections.emptyMap();
         return Collections.unmodifiableMap(value);
@@ -94,25 +91,15 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return null;
     }
 
-    // --
 
-    /**
-     * Primitive getter.
-     */
     public <T> T getUnsafe(String key) {
         return getPrimitive(key).getValueUnsafe();
     }
 
-    /**
-     * Primitive getter.
-     */
     public <T> T get(String key, Class<T> dataClass) {
         return get(key).requireOf(DataPrimitive.class).requireValue(dataClass);
     }
 
-    /**
-     * Primitive getter.
-     */
     public <T> T getOrNull(String key, Class<T> dataClass) {
         final DataElement el = getOrNull(key);
         if (el == null || !el.isDataPrimitive()) return null;
@@ -181,9 +168,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    //--
-
-
     public DataMap put(String key, DataElement element) throws RuntimeException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (element == null) throw new NullPointerException("element can't be null");
@@ -249,9 +233,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    // --
-
-
     public DataMap requireKey(String key) throws ReadException {
         if (!hasKey(key)) throw ReadException.requireField(this, key);
         return this;
@@ -300,9 +281,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    // --
-
-
     @Override
     public DataElement clone() {
         return new DataMap().putAll(this);
@@ -332,9 +310,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public DataMap getAsDataMap() {
         return this;
     }
-
-
-    // --
 
 
     @Override

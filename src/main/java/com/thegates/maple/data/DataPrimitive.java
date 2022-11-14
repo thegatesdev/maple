@@ -118,8 +118,6 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
 
-    // --
-
     @Override
     public DataPrimitive clone() {
         return new DataPrimitive(value);
@@ -149,10 +147,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     public DataPrimitive getAsDataPrimitive() {
         return this;
     }
-
-
-    // --
-
+    
 
     @Override
     public boolean equals(Object o) {
