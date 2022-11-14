@@ -58,7 +58,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     public <T> T getValueOrThrow(Class<T> clazz) throws ReadException {
         if (isValueOf(clazz)) return clazz.cast(value);
         else
-            throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + value.getClass().getSimpleName());
+            throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + cachedSimpleName);
     }
 
     public <T> T getValueOrNull(Class<T> clazz) {
@@ -147,7 +147,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     public DataPrimitive getAsDataPrimitive() {
         return this;
     }
-    
+
 
     @Override
     public boolean equals(Object o) {
