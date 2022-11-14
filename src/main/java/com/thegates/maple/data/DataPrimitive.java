@@ -1,7 +1,6 @@
 package com.thegates.maple.data;
 
 import com.thegates.maple.exception.ReadException;
-import com.thegates.maple.exception.RequireTypeException;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -29,16 +28,6 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     public DataPrimitive(Object value) {
-        setValue(value);
-    }
-
-    public DataPrimitive(String name, Object value) {
-        super(name);
-        setValue(value);
-    }
-
-    protected DataPrimitive(DataElement parent, String name, Object value) {
-        super(parent, name);
         setValue(value);
     }
 
@@ -76,8 +65,8 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
 
-    public <T> T requireValue(Class<T> clazz) throws RequireTypeException {
-        if (!isValueOf(clazz)) throw new RequireTypeException(this, clazz);
+    public <T> T requireValue(Class<T> clazz) throws ReadException {
+        if (!isValueOf(clazz)) throw ReadException.requireType(this, clazz);
         return getValueUnsafe();
     }
 
@@ -91,7 +80,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return value instanceof String;
     }
 
-    public String stringValue() throws RequireTypeException {
+    public String stringValue() throws ReadException {
         return requireValue(String.class);
     }
 
@@ -99,7 +88,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return value instanceof Boolean;
     }
 
-    public boolean booleanValue() throws RequireTypeException {
+    public boolean booleanValue() throws ReadException {
         return requireValue(Boolean.class);
     }
 
@@ -107,19 +96,19 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return value instanceof Number;
     }
 
-    public int intValue() throws RequireTypeException {
+    public int intValue() throws ReadException {
         return requireValue(Number.class).intValue();
     }
 
-    public double doubleValue() throws RequireTypeException {
+    public double doubleValue() throws ReadException {
         return requireValue(Number.class).intValue();
     }
 
-    public float floatValue() throws RequireTypeException {
+    public float floatValue() throws ReadException {
         return requireValue(Number.class).floatValue();
     }
 
-    public long longValue() throws RequireTypeException {
+    public long longValue() throws ReadException {
         return requireValue(Number.class).longValue();
     }
 

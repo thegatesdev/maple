@@ -26,14 +26,6 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     public DataList() {
     }
 
-    public DataList(String name) {
-        this(null, name);
-    }
-
-    protected DataList(DataElement parent, String name) {
-        super(parent, name);
-    }
-
     public static DataList read(List<?> list) {
         return read(list.toArray());
     }

@@ -24,4 +24,16 @@ public class ReadException extends RuntimeException {
     public ReadException(DataElement data, String message) {
         super("Error while reading data at %s, %s.".formatted(data.path(), message));
     }
+
+    public static ReadException requireField(DataElement data, String field) {
+        return new ReadException(data, "missing required field '" + field + "'");
+    }
+
+    public static ReadException requireType(DataElement data, String typeName) {
+        return new ReadException(data, "should be of " + typeName);
+    }
+
+    public static ReadException requireType(DataElement data, Class<?> type) {
+        return requireType(data, type.getSimpleName());
+    }
 }

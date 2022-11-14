@@ -1,7 +1,6 @@
 package com.thegates.maple.data;
 
-import com.thegates.maple.exception.RequireFieldException;
-import com.thegates.maple.exception.RequireTypeException;
+import com.thegates.maple.exception.ReadException;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -28,19 +27,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     private Map<String, DataElement> value;
 
     public DataMap() {
-    }
-
-    protected DataMap(DataElement parent, String name) {
-        super(parent, name);
-    }
-
-    protected DataMap(String name) {
-        super(name);
-    }
-
-    protected DataMap(DataElement parent, String name, int initialCapacity) {
-        this(parent, name);
-        init(initialCapacity);
     }
 
     public DataMap(int initialCapacity) {
@@ -257,24 +243,24 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     // --
 
 
-    public DataMap requireKey(String key) throws RequireFieldException {
-        if (!hasKey(key)) throw new RequireFieldException(this, key);
+    public DataMap requireKey(String key) throws ReadException {
+        if (!hasKey(key)) throw ReadException.requireField(this, key);
         return this;
     }
 
-    public DataMap requireKeys(Collection<String> keys) throws RequireFieldException {
-        if (!hasKeys(keys)) throw new RequireFieldException(this, String.join(" and ", keys));
+    public DataMap requireKeys(Collection<String> keys) throws ReadException {
+        if (!hasKeys(keys)) throw ReadException.requireField(this, String.join(" and ", keys));
         return this;
     }
 
-    public DataMap requireKeys(String... keys) throws RequireFieldException {
+    public DataMap requireKeys(String... keys) throws ReadException {
         return requireKeys(Arrays.asList(keys));
     }
 
-    public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws RequireTypeException {
+    public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws ReadException {
         requireKey(key);
         final DataElement el = get(key);
-        if (!(clazz.isInstance(el))) throw new RequireTypeException(el, clazz);
+        if (!(clazz.isInstance(el))) throw ReadException.requireType(el, clazz);
         return this;
     }
 

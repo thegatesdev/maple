@@ -1,6 +1,6 @@
 package com.thegates.maple.data;
 
-import com.thegates.maple.exception.RequireTypeException;
+import com.thegates.maple.exception.ReadException;
 
 import java.util.List;
 import java.util.Map;
@@ -44,28 +44,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      * Constructs a new DataElement with the data not being set.
      */
     protected DataElement() {
-    }
-
-    /**
-     * Constructs a new DataElement.
-     * If the name is {@code null} the element data will not be set. Should've called {@link DataElement#DataElement()}.
-     *
-     * @param name The name of this element.
-     */
-    protected DataElement(String name) {
-        this(null, name);
-    }
-
-    /**
-     * Constructs a new DataElement.
-     * If both the name and parent are {@code null} the element data will not be set. Should've called {@link DataElement#DataElement()}.
-     *
-     * @param name   The name of this element.
-     * @param parent The parent of this element.
-     */
-    protected DataElement(DataElement parent, String name) {
-        if (parent != null || name != null)
-            setData(parent, name);
     }
 
     public static DataElement readOf(Object input) {
@@ -129,8 +107,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
 
     @SuppressWarnings("unchecked")
-    public <T extends DataElement> T requireOf(Class<T> elementClass) throws RequireTypeException {
-        if (!isOf(elementClass)) throw new RequireTypeException(this, elementClass);
+    public <T extends DataElement> T requireOf(Class<T> elementClass) throws ReadException {
+        if (!isOf(elementClass)) throw ReadException.requireType(this, elementClass);
         return ((T) this);
     }
 
