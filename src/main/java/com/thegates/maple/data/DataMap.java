@@ -92,24 +92,30 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    public <T> T get(String key, Class<T> dataClass) {
+    public <T> T getPrimitive(String key, Class<T> dataClass) {
         return get(key).requireOf(DataPrimitive.class).requireValue(dataClass);
     }
 
-    public <T> T getOrNull(String key, Class<T> dataClass) {
+    public <T> T getPrimitive(String key, Class<T> dataClass, T def) {
         final DataElement el = getOrNull(key);
-        if (el == null || !el.isDataPrimitive()) return null;
-        return el.getAsDataPrimitive().getValueOrNull(dataClass);
+        if (el == null || !el.isDataPrimitive()) return def;
+        if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
+            return el.getAsDataPrimitive().getValueOrNull(dataClass);
+        final T val = el.getAsDataPrimitive().getValueOrNull(dataClass);
+        return val == null ? def : val;
     }
 
-    public <T> T getUnsafe(String key) {
+    public <T> T getPrimitiveUnsafe(String key, T def) {
+        final DataElement el = getOrNull(key);
+        if (el == null || !el.isDataPrimitive()) return def;
+        if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
+            return el.getAsDataPrimitive().getValueUnsafe();
+        final T val = el.getAsDataPrimitive().getValueUnsafe();
+        return val == null ? def : val;
+    }
+
+    public <T> T getPrimitiveUnsafe(String key) {
         return getPrimitive(key).getValueUnsafe();
-    }
-
-    public <T> T getUnsafeOrNull(String key) {
-        final DataElement el = getOrNull(key);
-        if (el == null || !el.isDataPrimitive()) return null;
-        return el.getAsDataPrimitive().getValueUnsafe();
     }
 
 
