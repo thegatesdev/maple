@@ -27,7 +27,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     public DataList(String name) {
-        super(name);
+        this(null, name);
     }
 
     protected DataList(DataElement parent, String name) {
@@ -76,14 +76,20 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
     private void init(Collection<DataElement> input) {
         if (value == null)
-            if (input == null)
-                value = new LinkedList<>();
-            else
-                value = new LinkedList<>(input);
+            value = new LinkedList<>(input);
+    }
+
+    private void init() {
+        if (value == null)
+            value = new LinkedList<>();
+    }
+
+    public void sort(Comparator<? super DataElement> comparator) {
+        value.sort(comparator);
     }
 
     public DataList add(DataElement element) {
-        if (value == null) init(null);
+        if (value == null) init();
         if (element.hasDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         synchronized (MODIFY_MUTEX) {
             value.add(element.setData(this, "[" + value.size() + "]"));
