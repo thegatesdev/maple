@@ -23,12 +23,6 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-/**
- * A base class for any element of data.
- * A DataElement has a parent and name that can only be set once, in the constructor or using {@link DataElement#setData(DataElement, String)}.
- * This is to reduce the amount of copying elements when for example inserting in a {@link DataMap}, where the name and parent have to be set by the parent.
- */
-
 public abstract class DataElement implements Cloneable, Comparable<DataElement> {
 
     protected static final Object MODIFY_MUTEX = new Object();
@@ -40,9 +34,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     private String name;
     private boolean dataSet = false;
 
-    /**
-     * Constructs a new DataElement with the data not being set.
-     */
     protected DataElement() {
     }
 
