@@ -92,10 +92,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    public <T> T getUnsafe(String key) {
-        return getPrimitive(key).getValueUnsafe();
-    }
-
     public <T> T get(String key, Class<T> dataClass) {
         return get(key).requireOf(DataPrimitive.class).requireValue(dataClass);
     }
@@ -104,6 +100,16 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         final DataElement el = getOrNull(key);
         if (el == null || !el.isDataPrimitive()) return null;
         return el.getAsDataPrimitive().getValueOrNull(dataClass);
+    }
+
+    public <T> T getUnsafe(String key) {
+        return getPrimitive(key).getValueUnsafe();
+    }
+
+    public <T> T getUnsafeOrNull(String key) {
+        final DataElement el = getOrNull(key);
+        if (el == null || !el.isDataPrimitive()) return null;
+        return el.getAsDataPrimitive().getValueUnsafe();
     }
 
 
