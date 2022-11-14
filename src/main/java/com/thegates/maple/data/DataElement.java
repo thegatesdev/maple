@@ -28,7 +28,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     protected static final Object MODIFY_MUTEX = new Object();
     protected static final Object READ_MUTEX = new Object();
 
-    private final Class<? extends DataElement> type = getClass();
+    private final Class<? extends DataElement> cachedType = getClass();
 
     private DataElement parent;
     private String name;
@@ -71,9 +71,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     @Override
     public int compareTo(DataElement o) {
-        if (this.hasParent(o)) return -1;
-        if (this == o.parent) return 1;
-        return 0;
+        return name.compareTo(o.name);
     }
 
     public boolean hasParent(DataElement parent) {
@@ -97,7 +95,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
 
     public boolean isOf(Class<? extends DataElement> elementClass) {
-        return type == elementClass;
+        return cachedType == elementClass;
     }
 
 
