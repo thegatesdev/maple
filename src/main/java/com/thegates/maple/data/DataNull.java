@@ -6,11 +6,11 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     public DataNull() {
     }
 
-    protected DataNull(String name) {
-        setData(null, name);
+    public DataNull(String name) {
+        super(name);
     }
 
-    protected DataNull(DataElement parent, String name) {
+    public DataNull(DataElement parent, String name) {
         setData(parent, name);
     }
 

@@ -27,6 +27,11 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     public DataPrimitive() {
     }
 
+    public DataPrimitive(String name, Object value) {
+        super(name);
+        setValue(value);
+    }
+
     public DataPrimitive(Object value) {
         setValue(value);
     }

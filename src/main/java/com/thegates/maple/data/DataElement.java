@@ -46,6 +46,10 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     protected DataElement() {
     }
 
+    protected DataElement(String name) {
+        setData(null, name);
+    }
+
     public static DataElement readOf(Object input) {
         if (input == null) return new DataNull();
         final Object reading = (input instanceof DataElement el) ? el.getValue() : input;

@@ -29,6 +29,15 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public DataMap() {
     }
 
+    public DataMap(String name) {
+        setData(null, name);
+    }
+
+    public DataMap(String name, int initialCapacity) {
+        super(name);
+        init(initialCapacity);
+    }
+
     public DataMap(int initialCapacity) {
         init(initialCapacity);
     }
