@@ -84,6 +84,10 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         value.sort(comparator);
     }
 
+    public void sort() {
+        value.sort(DataElement::compareTo);
+    }
+
     public DataList add(DataElement element) {
         if (value == null) init();
         if (element.hasDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
