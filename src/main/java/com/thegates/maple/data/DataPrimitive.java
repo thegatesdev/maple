@@ -23,7 +23,10 @@ Copyright (C) 2022  Timar Karels
 public class DataPrimitive extends DataElement implements Cloneable, Comparable<DataElement> {
 
     Object value;
-    private String cachedSimpleName = null;
+    private String cachedSimpleName;
+
+    public DataPrimitive() {
+    }
 
     public DataPrimitive(Object value) {
         setValue(value);
