@@ -39,13 +39,14 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     private boolean dataSet = false;
 
     /**
-     * Constructs a new DataElement with the parent set to {@code null} and the name set to {@code "root"}.
+     * Constructs a new DataElement with the data not being set.
      */
     protected DataElement() {
     }
 
     /**
-     * Constructs a new DataElement with the parent defaulted to {@code null}.
+     * Constructs a new DataElement.
+     * If the name is {@code null} the element data will not be set. Should've called {@link DataElement#DataElement()}.
      *
      * @param name The name of this element.
      */
@@ -55,12 +56,14 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     /**
      * Constructs a new DataElement.
+     * If both the name and parent are {@code null} the element data will not be set. Should've called {@link DataElement#DataElement()}.
      *
      * @param name   The name of this element.
      * @param parent The parent of this element.
      */
     protected DataElement(DataElement parent, String name) {
-        setData(parent, name);
+        if (parent != null || name != null)
+            setData(parent, name);
     }
 
     public static DataElement readOf(Object input) {
@@ -149,6 +152,11 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return null;
     }
 
+
+    public DataElement findRoot() {
+        if (parent == null) return this;
+        return parent.findRoot();
+    }
 
     public String path() {
         final String n = name == null ? "root" : name;
