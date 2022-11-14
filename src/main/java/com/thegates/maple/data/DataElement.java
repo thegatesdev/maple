@@ -34,6 +34,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     protected static final Object MODIFY_MUTEX = new Object();
     protected static final Object READ_MUTEX = new Object();
 
+    private final Class<? extends DataElement> type = getClass();
+
     private DataElement parent;
     private String name;
     private boolean dataSet = false;
@@ -122,7 +124,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
 
     public boolean isOf(Class<? extends DataElement> elementClass) {
-        return getClass() == elementClass;
+        return type == elementClass;
     }
 
 
