@@ -25,6 +25,10 @@ public class ReadException extends RuntimeException {
         super("Error while reading data at %s, %s.".formatted(data.path(), message));
     }
 
+    public ReadException(DataElement data, String message, Throwable cause) {
+        super("Error while reading data at %s, %s.".formatted(data.path(), message), cause);
+    }
+
     public static ReadException requireField(DataElement data, String field) {
         return new ReadException(data, "missing required field '" + field + "'");
     }
