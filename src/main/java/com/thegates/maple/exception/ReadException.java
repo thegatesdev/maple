@@ -21,12 +21,16 @@ Copyright (C) 2022  Timar Karels
 
 public class ReadException extends RuntimeException {
 
+    private final DataElement element;
+
     public ReadException(DataElement data, String message) {
         super("Error while reading data at %s, %s.".formatted(data.path(), message));
+        this.element = data;
     }
 
     public ReadException(DataElement data, String message, Throwable cause) {
         super("Error while reading data at %s, %s.".formatted(data.path(), message), cause);
+        this.element = data;
     }
 
     public static ReadException requireField(DataElement data, String field) {
@@ -39,5 +43,9 @@ public class ReadException extends RuntimeException {
 
     public static ReadException requireType(DataElement data, Class<?> type) {
         return requireType(data, type.getSimpleName());
+    }
+
+    public DataElement getElement() {
+        return element;
     }
 }
