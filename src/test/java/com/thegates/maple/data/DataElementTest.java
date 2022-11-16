@@ -19,6 +19,11 @@ public class DataElementTest {
     }
 
     @Test
+    void hashCodeTest() {
+        assert new DataMap("named").put("test_element", new DataPrimitive("test_value")).hashCode() == testMap.hashCode();
+    }
+
+    @Test
     void isOf() {
         assert testMap.navigate("test_element").isOf(DataPrimitive.class);
     }

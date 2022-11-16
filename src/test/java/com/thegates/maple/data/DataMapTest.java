@@ -23,7 +23,7 @@ class DataMapTest {
 
     @Test
     void string() {
-        System.out.println(testMap.toString());
+        assert testMap.toString().equals("dataMap{'map_entry': dataMap{'nested_entry_1': dataMap{'nested_entry_2': dataPrimitive<String>}}, 'list_entry': dataList[dataPrimitive<Object>], 'null_entry': dataNull, 'primitive_entry': dataPrimitive<Object>}");
     }
 
     @Test
