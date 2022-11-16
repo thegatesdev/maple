@@ -198,14 +198,12 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         @SuppressWarnings("unchecked")
         @Override
         public boolean hasNext() {
-            if (!iterator.hasNext()) return false;
-            final DataElement el;
-            synchronized (READ_MUTEX) {
-                el = iterator.next();
-            }
-            if (el.isOf(elementClass)) {
-                next = (E) el;
-                return true;
+            while (iterator.hasNext()) {
+                final DataElement el = iterator.next();
+                if (el.isOf(elementClass)) {
+                    next = (E) el;
+                    return true;
+                }
             }
             return false;
         }
