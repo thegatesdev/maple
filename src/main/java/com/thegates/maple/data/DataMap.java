@@ -122,9 +122,14 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         if (el != null) action.accept(el);
     }
 
-    public <E extends DataElement> void ifPresent(String key, Class<E> elementClass, Consumer<E> consumer) {
+    public <E extends DataElement> void ifPresent(String key, Class<E> elementClass, Consumer<E> action) {
         final DataElement el = getOrNull(key);
-        if (el != null && el.isOf(elementClass)) consumer.accept(el.asUnsafe(elementClass));
+        if (el != null && el.isOf(elementClass)) action.accept(el.asUnsafe(elementClass));
+    }
+
+    public <P> void ifPrimitive(String key, Class<P> primitiveClass, Consumer<P> action) {
+        final P p = get(key, primitiveClass, null);
+        if (p != null) action.accept(p);
     }
 
 
