@@ -36,7 +36,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         setValue(value);
     }
 
-    public Object getValue() {
+    public Object value() {
         return value;
     }
 
@@ -46,7 +46,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     @Override
-    protected Object value() {
+    protected Object raw() {
         return value;
     }
 

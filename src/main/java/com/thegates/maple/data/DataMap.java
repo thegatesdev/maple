@@ -68,13 +68,13 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    public Map<String, DataElement> getValue() {
+    public Map<String, DataElement> value() {
         if (value == null) return Collections.emptyMap();
         return Collections.unmodifiableMap(value);
     }
 
     @Override
-    protected Object value() {
+    protected LinkedHashMap<String, DataElement> raw() {
         return value;
     }
 
@@ -92,11 +92,11 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    public <T> T getPrimitive(String key, Class<T> dataClass) {
-        return get(key).requireOf(DataPrimitive.class).requireValue(dataClass);
+    public <T> T get(String key, Class<T> dataClass) {
+        return getPrimitive(key).requireValue(dataClass);
     }
 
-    public <T> T getPrimitive(String key, Class<T> dataClass, T def) {
+    public <T> T get(String key, Class<T> dataClass, T def) {
         final DataElement el = getOrNull(key);
         if (el == null || !el.isDataPrimitive()) return def;
         if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
@@ -105,17 +105,16 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return val == null ? def : val;
     }
 
-    public <T> T getPrimitiveUnsafe(String key, T def) {
-        final DataElement el = getOrNull(key);
-        if (el == null || !el.isDataPrimitive()) return def;
-        if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
-            return el.getAsDataPrimitive().getValueUnsafe();
-        final T val = el.getAsDataPrimitive().getValueUnsafe();
-        return val == null ? def : val;
+    public <T> T getUnsafe(String key) {
+        return getPrimitive(key).getValueUnsafe();
     }
 
-    public <T> T getPrimitiveUnsafe(String key) {
-        return getPrimitive(key).getValueUnsafe();
+    public <T> T getUnsafe(String key, T def) {
+        final DataElement el = getOrNull(key);
+        if (el == null || !el.isDataPrimitive()) return def;
+        if (def == null) return el.getAsDataPrimitive().getValueUnsafe();
+        final T val = el.getAsDataPrimitive().getValueUnsafe();
+        return val == null ? def : val;
     }
 
 
@@ -183,7 +182,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public DataMap put(String key, DataElement element) throws RuntimeException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (element == null) throw new NullPointerException("element can't be null");
-        if (element.hasDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
+        if (element.isDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
         synchronized (MODIFY_MUTEX) {
             value.put(key, element.setData(this, key));
@@ -192,7 +191,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     public DataMap putAll(DataMap dataMap) {
-        final var toAdd = dataMap.getValue();
+        final var toAdd = dataMap.value();
         if (value == null) init(toAdd.size());
         toAdd.forEach(this::put);
         return this;

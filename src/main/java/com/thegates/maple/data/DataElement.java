@@ -43,7 +43,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     public static DataElement readOf(Object input) {
         if (input == null) return new DataNull();
-        final Object reading = (input instanceof DataElement el) ? el.getValue() : input;
+        final Object reading = (input instanceof DataElement el) ? el.value() : input;
         if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
         if (reading instanceof List<?> list) return DataList.read(list);
         return new DataPrimitive(reading);
@@ -57,7 +57,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return this;
     }
 
-    public boolean hasDataSet() {
+    public boolean isDataSet() {
         return dataSet;
     }
 
@@ -80,10 +80,10 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return this.parent.hasParent(parent);
     }
 
-    public abstract Object getValue();
+    public abstract Object value();
 
 
-    protected abstract Object value();
+    protected abstract Object raw();
 
     public abstract boolean isDataPrimitive();
 
@@ -147,13 +147,13 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DataElement that)) return false;
-        return Objects.equals(name, that.name) && Objects.equals(value(), that.value());
+        return Objects.equals(name, that.name) && Objects.equals(raw(), that.raw());
     }
 
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (value() != null ? value().hashCode() : 0);
+        result = 31 * result + (raw() != null ? raw().hashCode() : 0);
         return result;
     }
 }

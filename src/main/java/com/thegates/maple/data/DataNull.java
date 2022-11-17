@@ -45,12 +45,12 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     }
 
     @Override
-    public Object getValue() {
+    public Object value() {
         return null;
     }
 
     @Override
-    protected Object value() {
+    protected Object raw() {
         return null;
     }
 

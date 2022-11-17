@@ -60,13 +60,13 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return this;
     }
 
-    public List<DataElement> getValue() {
+    public List<DataElement> value() {
         if (value == null) return Collections.emptyList();
         return Collections.unmodifiableList(value);
     }
 
     @Override
-    protected Object value() {
+    protected LinkedList<DataElement> raw() {
         return value;
     }
 
@@ -90,7 +90,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
     public DataList add(DataElement element) {
         if (value == null) init();
-        if (element.hasDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
+        if (element.isDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         synchronized (MODIFY_MUTEX) {
             value.add(element.setData(this, "[" + value.size() + "]"));
         }
