@@ -30,8 +30,8 @@ public class DataElementTest {
 
     @Test
     void getAsOrNull() {
-        assert testMap.navigate("test_element").getAsOrNull(DataMap.class) == null;
-        assert testMap.navigate("test_element").getAsOrNull(DataPrimitive.class) != null;
+        assert testMap.navigate("test_element").asOrNull(DataMap.class) == null;
+        assert testMap.navigate("test_element").asOrNull(DataPrimitive.class) != null;
     }
 
     @AfterEach

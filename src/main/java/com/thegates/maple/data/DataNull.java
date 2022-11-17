@@ -55,22 +55,22 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     }
 
     @Override
-    public boolean isDataPrimitive() {
+    public boolean isPrimitive() {
         return false;
     }
 
     @Override
-    public boolean isDataList() {
+    public boolean isList() {
         return false;
     }
 
     @Override
-    public boolean isDataMap() {
+    public boolean isMap() {
         return false;
     }
 
     @Override
-    public boolean isDataNull() {
+    public boolean isNull() {
         return true;
     }
 

@@ -81,13 +81,13 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     protected abstract Object raw();
 
-    public abstract boolean isDataPrimitive();
+    public abstract boolean isPrimitive();
 
-    public abstract boolean isDataList();
+    public abstract boolean isList();
 
-    public abstract boolean isDataMap();
+    public abstract boolean isMap();
 
-    public abstract boolean isDataNull();
+    public abstract boolean isNull();
 
 
     public boolean isOf(Class<? extends DataElement> elementClass) {
@@ -102,29 +102,34 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
 
-    public DataPrimitive getAsDataPrimitive() throws UnsupportedOperationException {
+    public DataPrimitive asPrimitive() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a primitive!");
     }
 
-    public DataList getAsDataList() throws UnsupportedOperationException {
+    public DataList asList() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a list!");
     }
 
-    public DataMap getAsDataMap() throws UnsupportedOperationException {
+    public DataMap asMap() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a map!");
     }
 
 
     @SuppressWarnings("unchecked")
-    public <E extends DataElement> E getAsOrNull(Class<E> elementClass) {
+    public <E extends DataElement> E asOrNull(Class<E> elementClass) {
         if (isOf(elementClass)) return (E) this;
         return null;
     }
 
+    @SuppressWarnings("unchecked")
+    public <E extends DataElement> E asUnsafe(Class<E> elementClass) {
+        return (E) this;
+    }
 
-    public DataElement findRoot() {
+
+    public DataElement root() {
         if (parent == null) return this;
-        return parent.findRoot();
+        return parent.root();
     }
 
     public boolean hasParent(DataElement parent) {

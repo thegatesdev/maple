@@ -36,16 +36,16 @@ class DataMapTest {
 
     @Test
     void get_is() {
-        assert testMap.get("null_entry").isDataNull();
-        assert testMap.get("map_entry").isDataMap();
-        assert testMap.get("list_entry").isDataList();
-        assert testMap.get("primitive_entry").isDataPrimitive();
+        assert testMap.get("null_entry").isNull();
+        assert testMap.get("map_entry").isMap();
+        assert testMap.get("list_entry").isList();
+        assert testMap.get("primitive_entry").isPrimitive();
     }
 
     @Test
     void ifPresent() {
         final AtomicReference<String> test = new AtomicReference<>();
-        testMap.ifPresent("primitive_entry", String.class, test::set);
+        testMap.ifPresent("primitive_entry", DataPrimitive.class, primitive -> test.set(primitive.stringValue()));
         assert test.get().equals("test_2");
     }
 

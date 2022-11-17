@@ -51,17 +51,17 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getValueUnsafe() {
+    public <T> T valueUnsafe() {
         return (T) value;
     }
 
-    public <T> T getValueOrThrow(Class<T> clazz) throws ReadException {
+    public <T> T valueOrThrow(Class<T> clazz) throws ReadException {
         if (isValueOf(clazz)) return clazz.cast(value);
         else
             throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + cachedSimpleName);
     }
 
-    public <T> T getValueOrNull(Class<T> clazz) {
+    public <T> T valueOrNull(Class<T> clazz) {
         return isValueOf(clazz) ? clazz.cast(value) : null;
     }
 
@@ -72,7 +72,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
 
     public <T> T requireValue(Class<T> clazz) throws ReadException {
         if (!isValueOf(clazz)) throw ReadException.requireType(this, clazz);
-        return getValueUnsafe();
+        return valueUnsafe();
     }
 
     public boolean isValueOf(Class<?> clazz) {
@@ -124,27 +124,27 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     @Override
-    public boolean isDataPrimitive() {
+    public boolean isPrimitive() {
         return true;
     }
 
     @Override
-    public boolean isDataList() {
+    public boolean isList() {
         return false;
     }
 
     @Override
-    public boolean isDataMap() {
+    public boolean isMap() {
         return false;
     }
 
     @Override
-    public boolean isDataNull() {
+    public boolean isNull() {
         return false;
     }
 
     @Override
-    public DataPrimitive getAsDataPrimitive() {
+    public DataPrimitive asPrimitive() {
         return this;
     }
 

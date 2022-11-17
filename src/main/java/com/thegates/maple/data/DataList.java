@@ -115,7 +115,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         final LinkedList<T> out = new LinkedList<>();
         synchronized (READ_MUTEX) {
             new ClassedIterator<>(DataPrimitive.class).forEachRemaining(primitive -> {
-                if (primitive.isValueOf(elementClass)) out.add(primitive.getValueUnsafe());
+                if (primitive.isValueOf(elementClass)) out.add(primitive.valueUnsafe());
             });
         }
         return out;
@@ -139,27 +139,27 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     @Override
-    public boolean isDataPrimitive() {
+    public boolean isPrimitive() {
         return false;
     }
 
     @Override
-    public boolean isDataList() {
+    public boolean isList() {
         return true;
     }
 
     @Override
-    public boolean isDataMap() {
+    public boolean isMap() {
         return false;
     }
 
     @Override
-    public boolean isDataNull() {
+    public boolean isNull() {
         return false;
     }
 
     @Override
-    public DataList getAsDataList() {
+    public DataList asList() {
         return this;
     }
 
