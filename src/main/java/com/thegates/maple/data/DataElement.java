@@ -29,6 +29,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     protected static final Object READ_MUTEX = new Object();
 
     private final Class<? extends DataElement> cachedType = getClass();
+    private String cachedPath;
 
     private DataElement parent;
     private String name;
@@ -54,6 +55,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         dataSet = true;
         this.parent = parent;
         this.name = name;
+        cachedPath = calcPath();
         return this;
     }
 
@@ -72,12 +74,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     @Override
     public int compareTo(DataElement o) {
         return name.compareTo(o.name);
-    }
-
-    public boolean hasParent(DataElement parent) {
-        if (this.parent == null) return false;
-        if (this.parent == parent) return true;
-        return this.parent.hasParent(parent);
     }
 
     public abstract Object value();
@@ -120,8 +116,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
 
     @SuppressWarnings("unchecked")
-    public <T extends DataElement> T getAsOrNull(Class<T> elementClass) {
-        if (isOf(elementClass)) return (T) this;
+    public <E extends DataElement> E getAsOrNull(Class<E> elementClass) {
+        if (isOf(elementClass)) return (E) this;
         return null;
     }
 
@@ -131,7 +127,25 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return parent.findRoot();
     }
 
+    public boolean hasParent(DataElement parent) {
+        if (this.parent == null) return false;
+        if (this.parent == parent) return true;
+        return this.parent.hasParent(parent);
+    }
+
+    public boolean hasParent() {
+        return parent != null;
+    }
+
+    public boolean hasName() {
+        return name != null;
+    }
+
     public String path() {
+        return cachedPath;
+    }
+
+    private String calcPath() {
         final String n = name == null ? "root" : name;
         return parent == null ? n : parent.path() + "." + n;
     }
