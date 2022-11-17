@@ -21,7 +21,7 @@ Copyright (C) 2022  Timar Karels
 
 public class DataList extends DataElement implements Iterable<DataElement>, Cloneable, Comparable<DataElement> {
 
-    private LinkedList<DataElement> value;
+    private ArrayList<DataElement> value;
 
     public DataList() {
     }
@@ -66,18 +66,18 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     @Override
-    protected LinkedList<DataElement> raw() {
+    protected ArrayList<DataElement> raw() {
         return value;
     }
 
     private void init(Collection<DataElement> input) {
         if (value == null)
-            value = new LinkedList<>(input);
+            value = new ArrayList<>(input);
     }
 
     private void init() {
         if (value == null)
-            value = new LinkedList<>();
+            value = new ArrayList<>();
     }
 
     public void sort(Comparator<? super DataElement> comparator) {
@@ -111,8 +111,8 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return value.spliterator();
     }
 
-    public <T> List<T> primitiveList(Class<T> elementClass) {
-        final LinkedList<T> out = new LinkedList<>();
+    public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
+        final ArrayList<T> out = new ArrayList<>();
         synchronized (READ_MUTEX) {
             new ClassedIterator<>(DataPrimitive.class).forEachRemaining(primitive -> {
                 if (primitive.isValueOf(elementClass)) out.add(primitive.valueUnsafe());

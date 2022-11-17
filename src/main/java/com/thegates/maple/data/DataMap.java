@@ -227,7 +227,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
 
     public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
-        final LinkedList<Map.Entry<String, E>> collector = new LinkedList<>();
+        final ArrayList<Map.Entry<String, E>> collector = new ArrayList<>();
         synchronized (READ_MUTEX) {
             iterator(elementClass).forEachRemaining(collector::add);
         }
