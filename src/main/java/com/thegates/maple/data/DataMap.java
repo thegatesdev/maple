@@ -80,8 +80,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
     public DataElement get(String key) {
         final DataElement el = getOrNull(key);
-        if (el != null) return el;
-        return new DataNull(this, key);
+        return el == null ? new DataNull(this, key) : el;
     }
 
     public DataElement getOrNull(String key) {
@@ -92,29 +91,40 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    public <T> T get(String key, Class<T> dataClass) {
-        return getPrimitive(key).requireValue(dataClass);
+    public <P> P get(String key, Class<P> primitiveClass) {
+        return getPrimitive(key).requireValue(primitiveClass);
     }
 
-    public <T> T get(String key, Class<T> dataClass, T def) {
+    public <P> P get(String key, Class<P> primitiveClass, P def) {
         final DataElement el = getOrNull(key);
         if (el == null || !el.isDataPrimitive()) return def;
         if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
-            return el.getAsDataPrimitive().getValueOrNull(dataClass);
-        final T val = el.getAsDataPrimitive().getValueOrNull(dataClass);
+            return el.getAsDataPrimitive().getValueOrNull(primitiveClass);
+        final P val = el.getAsDataPrimitive().getValueOrNull(primitiveClass);
         return val == null ? def : val;
     }
 
-    public <T> T getUnsafe(String key) {
+    public <P> P getUnsafe(String key) {
         return getPrimitive(key).getValueUnsafe();
     }
 
-    public <T> T getUnsafe(String key, T def) {
+    public <P> P getUnsafe(String key, P def) {
         final DataElement el = getOrNull(key);
         if (el == null || !el.isDataPrimitive()) return def;
         if (def == null) return el.getAsDataPrimitive().getValueUnsafe();
-        final T val = el.getAsDataPrimitive().getValueUnsafe();
+        final P val = el.getAsDataPrimitive().getValueUnsafe();
         return val == null ? def : val;
+    }
+
+
+    public void ifPresent(String key, Consumer<DataElement> action) {
+        final DataElement el = getOrNull(key);
+        if (el != null) action.accept(el);
+    }
+
+    public <P> void ifPresent(String key, Class<P> primitiveClass, Consumer<P> consumer) {
+        final P p = get(key, primitiveClass, null);
+        if (p != null) consumer.accept(p);
     }
 
 
@@ -198,19 +208,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
 
-    public void doIfPresent(String key, Consumer<DataElement> action) {
-        final DataElement element = getOrNull(key);
-        if (element != null) action.accept(element);
-    }
-
-    public <E extends DataElement> void doIfPresent(String key, Class<E> clazz, Consumer<E> action) {
-        final DataElement el = getOrNull(key);
-        if (el == null) return;
-        final E typed = el.getAsOrNull(clazz);
-        if (typed != null) action.accept(typed);
-    }
-
-
     public DataElement navigate(String... keys) {
         return navigate(0, keys);
     }
@@ -259,8 +256,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws ReadException {
-        requireKey(key);
-        final DataElement el = get(key);
+        final DataElement el = getOrNull(key);
         if (!(clazz.isInstance(el))) throw ReadException.requireType(el, clazz);
         return this;
     }
