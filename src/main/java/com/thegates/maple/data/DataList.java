@@ -30,6 +30,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         super(name);
     }
 
+
     public static DataList read(List<?> list) {
         return read(list.toArray());
     }
@@ -44,31 +45,9 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return dataList;
     }
 
-    public List<DataElement> value() {
-        if (value == null) return Collections.emptyList();
-        return Collections.unmodifiableList(value);
-    }
-
-    @Override
-    protected ArrayList<DataElement> raw() {
-        return value;
-    }
-
-    private void init(int initialCapacity) {
-        if (value == null)
-            value = new ArrayList<>(initialCapacity);
-    }
-
-    public void sort(Comparator<? super DataElement> comparator) {
-        value.sort(comparator);
-    }
-
-    public void sort() {
-        value.sort(DataElement::compareTo);
-    }
-
     public DataList add(DataElement element) {
-        if (element.isDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
+        if (element.isDataSet())
+            throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
         synchronized (MODIFY_MUTEX) {
             value.add(element.setData(this, "[" + value.size() + "]"));
@@ -76,30 +55,13 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return this;
     }
 
-    public DataList cloneFrom(DataList dataList) {
-        return cloneFrom(dataList.value);
-    }
-
-    public DataList cloneFrom(List<DataElement> elements) {
-        if (elements != null && !elements.isEmpty()) {
-            if (value == null) init(elements.size());
-            elements.forEach(el -> add(el.clone()));
-        }
-        return this;
-    }
-
-    @Override
-    public Iterator<DataElement> iterator() {
-        return value.iterator();
+    private void init(int initialCapacity) {
+        if (value == null)
+            value = new ArrayList<>(initialCapacity);
     }
 
     public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
         return new ClassedIterator<>(elementClass);
-    }
-
-    @Override
-    public Spliterator<DataElement> spliterator() {
-        return value.spliterator();
     }
 
     public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
@@ -112,17 +74,54 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return out;
     }
 
-
     public int size() {
         if (value == null) return 0;
         return value.size();
     }
 
-    @Override
-    public boolean isEmpty() {
-        return value == null || value.isEmpty();
+    public void sort() {
+        value.sort(DataElement::compareTo);
     }
 
+    public void sort(Comparator<? super DataElement> comparator) {
+        value.sort(comparator);
+    }
+
+    @Override
+    public Iterator<DataElement> iterator() {
+        return value.iterator();
+    }
+
+    @Override
+    public Spliterator<DataElement> spliterator() {
+        return value.spliterator();
+    }
+
+    @Override
+    public String toString() {
+        if (value == null || value.isEmpty()) return "emptyList";
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dataList[");
+        int len = value.size();
+        for (DataElement element : value) {
+            stringBuilder.append(element.toString());
+            if (--len > 0) stringBuilder.append(", ");
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
+
+    public List<DataElement> value() {
+        if (value == null) return Collections.emptyList();
+        return Collections.unmodifiableList(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DataList)) return false;
+        return super.equals(o);
+    }
 
     @Override
     public DataList clone() {
@@ -130,8 +129,13 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     @Override
-    public boolean isPrimitive() {
-        return false;
+    protected ArrayList<DataElement> raw() {
+        return value;
+    }
+
+    @Override
+    public DataList asList() {
+        return this;
     }
 
     @Override
@@ -150,30 +154,25 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     @Override
-    public DataList asList() {
-        return this;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DataList)) return false;
-        return super.equals(o);
+    public boolean isEmpty() {
+        return value == null || value.isEmpty();
     }
 
     @Override
-    public String toString() {
-        if (value == null || value.isEmpty()) return "emptyList";
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("dataList[");
-        int len = value.size();
-        for (DataElement element : value) {
-            stringBuilder.append(element.toString());
-            if (--len > 0) stringBuilder.append(", ");
+    public boolean isPrimitive() {
+        return false;
+    }
+
+    public DataList cloneFrom(DataList dataList) {
+        return cloneFrom(dataList.value);
+    }
+
+    public DataList cloneFrom(List<DataElement> elements) {
+        if (elements != null && !elements.isEmpty()) {
+            if (value == null) init(elements.size());
+            elements.forEach(el -> add(el.clone()));
         }
-        stringBuilder.append("]");
-        return stringBuilder.toString();
+        return this;
     }
 
     private class ClassedIterator<E extends DataElement> implements Iterator<E> {

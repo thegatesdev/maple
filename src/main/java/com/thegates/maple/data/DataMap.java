@@ -38,6 +38,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         init(initialCapacity);
     }
 
+    private void init(int initialCapacity) {
+        if (value == null) value = new LinkedHashMap<>(initialCapacity);
+    }
+
     public DataMap(int initialCapacity) {
         init(initialCapacity);
     }
@@ -52,6 +56,18 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return output;
     }
 
+    public DataMap put(String key, DataElement element) throws RuntimeException {
+        if (key == null) throw new NullPointerException("key can't be null");
+        if (element == null) throw new NullPointerException("element can't be null");
+        if (element.isDataSet())
+            throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
+        if (value == null) init(1);
+        synchronized (MODIFY_MUTEX) {
+            value.put(key, element.setData(this, key));
+        }
+        return this;
+    }
+
     public static DataMap read(Map<String, ?> data) {
         final DataMap output = new DataMap();
         synchronized (MODIFY_MUTEX) {
@@ -63,19 +79,40 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return output;
     }
 
-    private void init(int initialCapacity) {
-        if (value == null) value = new LinkedHashMap<>(initialCapacity);
+    public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
+        final ArrayList<Map.Entry<String, E>> collector = new ArrayList<>();
+        synchronized (READ_MUTEX) {
+            iterator(elementClass).forEachRemaining(collector::add);
+        }
+        final LinkedHashMap<String, E> out = new LinkedHashMap<>(collector.size(), 1f);
+        out.entrySet().addAll(collector);
+        return out;
     }
 
-
-    public Map<String, DataElement> value() {
-        if (value == null) return Collections.emptyMap();
-        return Collections.unmodifiableMap(value);
+    public <E extends DataElement> Iterator<Map.Entry<String, E>> iterator(Class<E> elementClass) {
+        return new ClassedIterator<>(elementClass);
     }
 
-    @Override
-    protected LinkedHashMap<String, DataElement> raw() {
-        return value;
+    public <P> Map<String, P> collectPrimitive(Class<P> primitiveClass) {
+        final Map<String, P> out = new LinkedHashMap<>(size());
+        iterator(DataPrimitive.class).forEachRemaining(e -> {
+            final P val = e.getValue().valueOrNull(primitiveClass);
+            if (val != null) out.put(e.getKey(), val);
+        });
+        return out;
+    }
+
+    public int size() {
+        if (value == null) return 0;
+        return value.size();
+    }
+
+    public <P> P get(String key, Class<P> primitiveClass) {
+        return getPrimitive(key).requireValue(primitiveClass);
+    }
+
+    public DataPrimitive getPrimitive(String key) {
+        return get(key).requireOf(DataPrimitive.class);
     }
 
     public DataElement get(String key) {
@@ -90,69 +127,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return null;
     }
 
-
-    public <P> P get(String key, Class<P> primitiveClass) {
-        return getPrimitive(key).requireValue(primitiveClass);
-    }
-
-    public <P> P get(String key, Class<P> primitiveClass, P def) {
-        final DataElement el = getOrNull(key);
-        if (el == null || !el.isPrimitive()) return def;
-        if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
-            return el.asPrimitive().valueOrNull(primitiveClass);
-        final P val = el.asPrimitive().valueOrNull(primitiveClass);
-        return val == null ? def : val;
-    }
-
-    public <P> P getUnsafe(String key) {
-        return getPrimitive(key).valueUnsafe();
-    }
-
-    public <P> P getUnsafe(String key, P def) {
-        final DataElement el = getOrNull(key);
-        if (el == null || !el.isPrimitive()) return def;
-        if (def == null) return el.asPrimitive().valueUnsafe();
-        final P val = el.asPrimitive().valueUnsafe();
-        return val == null ? def : val;
-    }
-
-
-    public void ifPresent(String key, Consumer<DataElement> action) {
-        final DataElement el = getOrNull(key);
-        if (el != null) action.accept(el);
-    }
-
-    public <E extends DataElement> void ifPresent(String key, Class<E> elementClass, Consumer<E> action) {
-        final DataElement el = getOrNull(key);
-        if (el != null && el.isOf(elementClass)) action.accept(el.asUnsafe(elementClass));
-    }
-
-    public <P> void ifPrimitive(String key, Class<P> primitiveClass, Consumer<P> action) {
-        final P p = get(key, primitiveClass, null);
-        if (p != null) action.accept(p);
-    }
-
-
-    public DataPrimitive getPrimitive(String key) {
-        return get(key).requireOf(DataPrimitive.class);
-    }
-
-    public DataMap getMap(String key) {
-        return get(key).requireOf(DataMap.class);
-    }
-
-    public DataList getList(String key) {
-        return get(key).requireOf(DataList.class);
-    }
-
-    public String getString(String key) {
-        return getPrimitive(key).stringValue();
-    }
-
-    public String getString(String key, String def) {
-        return hasKey(key) ? getPrimitive(key).stringValue() : def;
-    }
-
     public boolean getBoolean(String key) {
         return getPrimitive(key).booleanValue();
     }
@@ -161,12 +135,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return hasKey(key) ? getPrimitive(key).booleanValue() : def;
     }
 
-    public int getInt(String key) {
-        return getPrimitive(key).intValue();
-    }
-
-    public int getInt(String key, int def) {
-        return hasKey(key) ? getPrimitive(key).intValue() : def;
+    public boolean hasKey(String key) {
+        if (value == null) return false;
+        return value.containsKey(key);
     }
 
     public double getDouble(String key) {
@@ -185,6 +156,18 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return hasKey(key) ? getPrimitive(key).floatValue() : def;
     }
 
+    public int getInt(String key) {
+        return getPrimitive(key).intValue();
+    }
+
+    public int getInt(String key, int def) {
+        return hasKey(key) ? getPrimitive(key).intValue() : def;
+    }
+
+    public DataList getList(String key) {
+        return get(key).requireOf(DataList.class);
+    }
+
     public long getLong(String key) {
         return getPrimitive(key).longValue();
     }
@@ -193,32 +176,63 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return hasKey(key) ? getPrimitive(key).longValue() : def;
     }
 
-
-    public DataMap put(String key, DataElement element) throws RuntimeException {
-        if (key == null) throw new NullPointerException("key can't be null");
-        if (element == null) throw new NullPointerException("element can't be null");
-        if (element.isDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
-        if (value == null) init(1);
-        synchronized (MODIFY_MUTEX) {
-            value.put(key, element.setData(this, key));
-        }
-        return this;
+    public DataMap getMap(String key) {
+        return get(key).requireOf(DataMap.class);
     }
 
-    public DataMap cloneFrom(DataMap toAdd){
-        return cloneFrom(toAdd.value);
+    public String getString(String key) {
+        return getPrimitive(key).stringValue();
     }
 
-    public DataMap cloneFrom(Map<String, DataElement> toAdd) {
-        if (value == null) init(toAdd.size());
-        toAdd.forEach((s, el) -> {
-            synchronized (MODIFY_MUTEX){
-                put(s, el.clone());
-            }
-        });
-        return this;
+    public String getString(String key, String def) {
+        return hasKey(key) ? getPrimitive(key).stringValue() : def;
     }
 
+    public <P> P getUnsafe(String key) {
+        return getPrimitive(key).valueUnsafe();
+    }
+
+    public <P> P getUnsafe(String key, P def) {
+        final DataElement el = getOrNull(key);
+        if (el == null || !el.isPrimitive()) return def;
+        if (def == null) return el.asPrimitive().valueUnsafe();
+        final P val = el.asPrimitive().valueUnsafe();
+        return val == null ? def : val;
+    }
+
+    public boolean hasKeys(String... keys) {
+        if (value == null) return false;
+        return hasKeys(Arrays.asList(keys));
+    }
+
+    public boolean hasKeys(Collection<String> keys) {
+        if (value == null) return false;
+        return value.keySet().containsAll(keys);
+    }
+
+    public void ifPresent(String key, Consumer<DataElement> action) {
+        final DataElement el = getOrNull(key);
+        if (el != null) action.accept(el);
+    }
+
+    public <E extends DataElement> void ifPresent(String key, Class<E> elementClass, Consumer<E> action) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isOf(elementClass)) action.accept(el.asUnsafe(elementClass));
+    }
+
+    public <P> void ifPrimitive(String key, Class<P> primitiveClass, Consumer<P> action) {
+        final P p = get(key, primitiveClass, null);
+        if (p != null) action.accept(p);
+    }
+
+    public <P> P get(String key, Class<P> primitiveClass, P def) {
+        final DataElement el = getOrNull(key);
+        if (el == null || !el.isPrimitive()) return def;
+        if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
+            return el.asPrimitive().valueOrNull(primitiveClass);
+        final P val = el.asPrimitive().valueOrNull(primitiveClass);
+        return val == null ? def : val;
+    }
 
     public DataElement navigate(String... keys) {
         return navigate(0, keys);
@@ -232,39 +246,18 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return element.asMap().navigate(++current, keys);
     }
 
-
-    public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
-        final ArrayList<Map.Entry<String, E>> collector = new ArrayList<>();
-        synchronized (READ_MUTEX) {
-            iterator(elementClass).forEachRemaining(collector::add);
-        }
-        final LinkedHashMap<String, E> out = new LinkedHashMap<>(collector.size(), 1f);
-        out.entrySet().addAll(collector);
-        return out;
-    }
-
-    public <P> Map<String, P> collectPrimitive(Class<P> primitiveClass) {
-        final Map<String, P> out = new LinkedHashMap<>(size());
-        iterator(DataPrimitive.class).forEachRemaining(e -> {
-            final P val = e.getValue().valueOrNull(primitiveClass);
-            if (val != null) out.put(e.getKey(), val);
-        });
-        return out;
-    }
-
-
     public DataMap requireKey(String key) throws ReadException {
         if (!hasKey(key)) throw ReadException.requireField(this, key);
         return this;
     }
 
+    public DataMap requireKeys(String... keys) throws ReadException {
+        return requireKeys(Arrays.asList(keys));
+    }
+
     public DataMap requireKeys(Collection<String> keys) throws ReadException {
         if (!hasKeys(keys)) throw ReadException.requireField(this, String.join(" and ", keys));
         return this;
-    }
-
-    public DataMap requireKeys(String... keys) throws ReadException {
-        return requireKeys(Arrays.asList(keys));
     }
 
     public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws ReadException {
@@ -273,71 +266,15 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return this;
     }
 
-    public boolean hasKey(String key) {
-        if (value == null) return false;
-        return value.containsKey(key);
-    }
-
-    public boolean hasKeys(Collection<String> keys) {
-        if (value == null) return false;
-        return value.keySet().containsAll(keys);
-    }
-
-    public boolean hasKeys(String... keys) {
-        if (value == null) return false;
-        return hasKeys(Arrays.asList(keys));
-    }
-
-
-    public int size() {
-        if (value == null) return 0;
-        return value.size();
+    @Override
+    public Iterator<Map.Entry<String, DataElement>> iterator() {
+        return value.entrySet().iterator();
     }
 
     @Override
-    public boolean isEmpty() {
-        return value == null || value.isEmpty();
+    public Spliterator<Map.Entry<String, DataElement>> spliterator() {
+        return value.entrySet().spliterator();
     }
-
-
-    @Override
-    public DataMap clone() {
-        return new DataMap().cloneFrom(this);
-    }
-
-    @Override
-    public boolean isPrimitive() {
-        return false;
-    }
-
-    @Override
-    public boolean isList() {
-        return false;
-    }
-
-    @Override
-    public boolean isMap() {
-        return true;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-    }
-
-    @Override
-    public DataMap asMap() {
-        return this;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DataMap)) return false;
-        return super.equals(o);
-    }
-
 
     @Override
     public String toString() {
@@ -357,18 +294,70 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return stringBuilder.toString();
     }
 
-    @Override
-    public Iterator<Map.Entry<String, DataElement>> iterator() {
-        return value.entrySet().iterator();
-    }
-
-    public <E extends DataElement> Iterator<Map.Entry<String, E>> iterator(Class<E> elementClass) {
-        return new ClassedIterator<>(elementClass);
+    public Map<String, DataElement> value() {
+        if (value == null) return Collections.emptyMap();
+        return Collections.unmodifiableMap(value);
     }
 
     @Override
-    public Spliterator<Map.Entry<String, DataElement>> spliterator() {
-        return value.entrySet().spliterator();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DataMap)) return false;
+        return super.equals(o);
+    }
+
+    @Override
+    public DataMap clone() {
+        return new DataMap().cloneFrom(this);
+    }
+
+    @Override
+    protected LinkedHashMap<String, DataElement> raw() {
+        return value;
+    }
+
+    @Override
+    public DataMap asMap() {
+        return this;
+    }
+
+    @Override
+    public boolean isList() {
+        return false;
+    }
+
+    @Override
+    public boolean isMap() {
+        return true;
+    }
+
+    @Override
+    public boolean isNull() {
+        return false;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return value == null || value.isEmpty();
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return false;
+    }
+
+    public DataMap cloneFrom(DataMap toAdd) {
+        return cloneFrom(toAdd.value);
+    }
+
+    public DataMap cloneFrom(Map<String, DataElement> toAdd) {
+        if (value == null) init(toAdd.size());
+        toAdd.forEach((s, el) -> {
+            synchronized (MODIFY_MUTEX) {
+                put(s, el.clone());
+            }
+        });
+        return this;
     }
 
     private class ClassedIterator<E extends DataElement> implements Iterator<Map.Entry<String, E>> {

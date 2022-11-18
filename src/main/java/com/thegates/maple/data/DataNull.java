@@ -30,18 +30,8 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     }
 
     @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public boolean isPresent() {
-        return true;
-    }
-
-    @Override
-    public DataNull clone() {
-        return new DataNull();
+    public String toString() {
+        return "dataNull";
     }
 
     @Override
@@ -50,13 +40,13 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     }
 
     @Override
-    protected Object raw() {
-        return null;
+    public DataNull clone() {
+        return new DataNull();
     }
 
     @Override
-    public boolean isPrimitive() {
-        return false;
+    protected Object raw() {
+        return null;
     }
 
     @Override
@@ -75,7 +65,17 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     }
 
     @Override
-    public String toString() {
-        return "dataNull";
+    public boolean isPresent() {
+        return true;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return false;
     }
 }

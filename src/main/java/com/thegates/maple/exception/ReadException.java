@@ -20,7 +20,6 @@ Copyright (C) 2022  Timar Karels
 */
 
 public class ReadException extends RuntimeException {
-
     private final DataElement element;
 
     public ReadException(DataElement data, String message) {
@@ -37,12 +36,12 @@ public class ReadException extends RuntimeException {
         return new ReadException(data, "missing required field '" + field + "'");
     }
 
-    public static ReadException requireType(DataElement data, String typeName) {
-        return new ReadException(data, "should be of " + typeName);
-    }
-
     public static ReadException requireType(DataElement data, Class<?> type) {
         return requireType(data, type.getSimpleName());
+    }
+
+    public static ReadException requireType(DataElement data, String typeName) {
+        return new ReadException(data, "should be of " + typeName);
     }
 
     public DataElement getElement() {

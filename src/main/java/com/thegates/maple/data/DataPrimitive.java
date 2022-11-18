@@ -32,43 +32,18 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         setValue(value);
     }
 
-    public DataPrimitive(Object value) {
-        setValue(value);
-    }
-
-    public Object value() {
-        return value;
-    }
-
     public void setValue(Object value) {
         this.value = value;
         cachedSimpleName = value.getClass().getSimpleName();
     }
 
-    @Override
-    protected Object raw() {
-        return value;
+    public DataPrimitive(Object value) {
+        setValue(value);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T valueUnsafe() {
-        return (T) value;
+    public boolean booleanValue() throws ReadException {
+        return requireValue(Boolean.class);
     }
-
-    public <T> T valueOrThrow(Class<T> clazz) throws ReadException {
-        if (isValueOf(clazz)) return clazz.cast(value);
-        else
-            throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + cachedSimpleName);
-    }
-
-    public <T> T valueOrNull(Class<T> clazz) {
-        return isValueOf(clazz) ? clazz.cast(value) : null;
-    }
-
-    public boolean isEmpty() {
-        return value == null;
-    }
-
 
     public <T> T requireValue(Class<T> clazz) throws ReadException {
         if (!isValueOf(clazz)) throw ReadException.requireType(this, clazz);
@@ -80,29 +55,9 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return clazz.isInstance(value);
     }
 
-
-    public boolean isStringValue() {
-        return value instanceof String;
-    }
-
-    public String stringValue() throws ReadException {
-        return requireValue(String.class);
-    }
-
-    public boolean isBooleanValue() {
-        return value instanceof Boolean;
-    }
-
-    public boolean booleanValue() throws ReadException {
-        return requireValue(Boolean.class);
-    }
-
-    public boolean isNumberValue() {
-        return value instanceof Number;
-    }
-
-    public int intValue() throws ReadException {
-        return requireValue(Number.class).intValue();
+    @SuppressWarnings("unchecked")
+    public <T> T valueUnsafe() {
+        return (T) value;
     }
 
     public double doubleValue() throws ReadException {
@@ -113,19 +68,52 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return requireValue(Number.class).floatValue();
     }
 
+    public int intValue() throws ReadException {
+        return requireValue(Number.class).intValue();
+    }
+
+    public boolean isBooleanValue() {
+        return value instanceof Boolean;
+    }
+
+    public boolean isNumberValue() {
+        return value instanceof Number;
+    }
+
+    public boolean isStringValue() {
+        return value instanceof String;
+    }
+
     public long longValue() throws ReadException {
         return requireValue(Number.class).longValue();
     }
 
+    public String stringValue() throws ReadException {
+        return requireValue(String.class);
+    }
 
-    @Override
-    public DataPrimitive clone() {
-        return new DataPrimitive(value);
+    public <T> T valueOrNull(Class<T> clazz) {
+        return isValueOf(clazz) ? clazz.cast(value) : null;
+    }
+
+    public <T> T valueOrThrow(Class<T> clazz) throws ReadException {
+        if (isValueOf(clazz)) return clazz.cast(value);
+        else
+            throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + cachedSimpleName);
     }
 
     @Override
-    public boolean isPrimitive() {
-        return true;
+    public String toString() {
+        return value == null ? "nullPrimitive" : "dataPrimitive<" + cachedSimpleName + ">";
+    }
+
+    public Object value() {
+        return value;
+    }
+
+    @Override
+    public DataPrimitive asPrimitive() {
+        return this;
     }
 
     @Override
@@ -143,11 +131,14 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return false;
     }
 
-    @Override
-    public DataPrimitive asPrimitive() {
-        return this;
+    public boolean isEmpty() {
+        return value == null;
     }
 
+    @Override
+    public boolean isPrimitive() {
+        return true;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -157,7 +148,12 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     @Override
-    public String toString() {
-        return value == null ? "nullPrimitive" : "dataPrimitive<" + cachedSimpleName + ">";
+    public DataPrimitive clone() {
+        return new DataPrimitive(value);
+    }
+
+    @Override
+    protected Object raw() {
+        return value;
     }
 }

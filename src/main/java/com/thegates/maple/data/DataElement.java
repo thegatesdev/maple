@@ -42,14 +42,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         setData(null, name);
     }
 
-    public static DataElement readOf(Object input) {
-        if (input == null) return new DataNull();
-        final Object reading = (input instanceof DataElement el) ? el.value() : input;
-        if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
-        if (reading instanceof List<?> list) return DataList.read(list);
-        return new DataPrimitive(reading);
-    }
-
     DataElement setData(DataElement parent, String name) {
         if (dataSet) throw new IllegalArgumentException("Parent and name already set");
         dataSet = true;
@@ -59,52 +51,24 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return this;
     }
 
-    public boolean isDataSet() {
-        return dataSet;
+    private String calcPath() {
+        final String n = name == null ? "root" : name;
+        return parent == null ? n : parent.path() + "." + n;
     }
 
-    public abstract boolean isEmpty();
-
-    public boolean isPresent() {
-        return !isEmpty();
+    public String path() {
+        return cachedPath;
     }
 
-    public abstract DataElement clone();
-
-    @Override
-    public int compareTo(DataElement o) {
-        return name.compareTo(o.name);
+    public static DataElement readOf(Object input) {
+        if (input == null) return new DataNull();
+        final Object reading = (input instanceof DataElement el) ? el.value() : input;
+        if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
+        if (reading instanceof List<?> list) return DataList.read(list);
+        return new DataPrimitive(reading);
     }
 
     public abstract Object value();
-
-
-    protected abstract Object raw();
-
-    public abstract boolean isPrimitive();
-
-    public abstract boolean isList();
-
-    public abstract boolean isMap();
-
-    public abstract boolean isNull();
-
-
-    public boolean isOf(Class<? extends DataElement> elementClass) {
-        return cachedType == elementClass;
-    }
-
-
-    @SuppressWarnings("unchecked")
-    public <T extends DataElement> T requireOf(Class<T> elementClass) throws ReadException {
-        if (!isOf(elementClass)) throw ReadException.requireType(this, elementClass);
-        return ((T) this);
-    }
-
-
-    public DataPrimitive asPrimitive() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Not a primitive!");
-    }
 
     public DataList asList() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a list!");
@@ -114,11 +78,18 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         throw new UnsupportedOperationException("Not a map!");
     }
 
-
     @SuppressWarnings("unchecked")
     public <E extends DataElement> E asOrNull(Class<E> elementClass) {
         if (isOf(elementClass)) return (E) this;
         return null;
+    }
+
+    public boolean isOf(Class<? extends DataElement> elementClass) {
+        return cachedType == elementClass;
+    }
+
+    public DataPrimitive asPrimitive() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not a primitive!");
     }
 
     @SuppressWarnings("unchecked")
@@ -126,10 +97,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return (E) this;
     }
 
-
-    public DataElement root() {
-        if (parent == null) return this;
-        return parent.root();
+    public boolean hasName() {
+        return name != null;
     }
 
     public boolean hasParent(DataElement parent) {
@@ -142,25 +111,53 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return parent != null;
     }
 
-    public boolean hasName() {
-        return name != null;
+    public boolean isDataSet() {
+        return dataSet;
     }
 
-    public String path() {
-        return cachedPath;
+    public abstract boolean isList();
+
+    public abstract boolean isMap();
+
+    public abstract boolean isNull();
+
+    public boolean isPresent() {
+        return !isEmpty();
     }
 
-    private String calcPath() {
-        final String n = name == null ? "root" : name;
-        return parent == null ? n : parent.path() + "." + n;
+    public abstract boolean isEmpty();
+
+    public abstract boolean isPrimitive();
+
+    public String name() {
+        return name;
     }
 
     public DataElement parent() {
         return parent;
     }
 
-    public String name() {
-        return name;
+    @SuppressWarnings("unchecked")
+    public <T extends DataElement> T requireOf(Class<T> elementClass) throws ReadException {
+        if (!isOf(elementClass)) throw ReadException.requireType(this, elementClass);
+        return ((T) this);
+    }
+
+    public DataElement root() {
+        if (parent == null) return this;
+        return parent.root();
+    }
+
+    @Override
+    public int compareTo(DataElement o) {
+        return name.compareTo(o.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (raw() != null ? raw().hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -170,10 +167,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return Objects.equals(name, that.name) && Objects.equals(raw(), that.raw());
     }
 
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (raw() != null ? raw().hashCode() : 0);
-        return result;
-    }
+    public abstract DataElement clone();
+
+    protected abstract Object raw();
 }
