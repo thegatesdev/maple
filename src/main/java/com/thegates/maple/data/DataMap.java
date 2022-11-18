@@ -26,13 +26,27 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
     private LinkedHashMap<String, DataElement> value;
 
+    /**
+     * Constructs an empty DataMap with its data unset.
+     */
     public DataMap() {
     }
 
+    /**
+     * Constructs an empty DataMap with its parent defaulted to {@code null}.
+     *
+     * @param name The name to initialize the data with.
+     */
     public DataMap(String name) {
         setData(null, name);
     }
 
+    /**
+     * Constructs an empty DataMap with its parent defaulted to {@code null}.
+     *
+     * @param name            The name to initialize the data with.
+     * @param initialCapacity The initial capacity.
+     */
     public DataMap(String name, int initialCapacity) {
         super(name);
         init(initialCapacity);
@@ -42,6 +56,11 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         if (value == null) value = new LinkedHashMap<>(initialCapacity);
     }
 
+    /**
+     * Constructs a DataMap with its data unset.
+     *
+     * @param initialCapacity The initial capacity.
+     */
     public DataMap(int initialCapacity) {
         init(initialCapacity);
     }
@@ -54,6 +73,15 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return output;
     }
 
+    /**
+     * Put an element into this map.
+     *
+     * @param key     Key with which the specified value is to be associated.
+     * @param element Element to be associated with the specified key.
+     * @return This same DataMap.
+     * @throws NullPointerException     If the element or key is null.
+     * @throws IllegalArgumentException When the data of the input element is already set.
+     */
     public DataMap put(String key, DataElement element) throws RuntimeException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (element == null) throw new NullPointerException("element can't be null");
@@ -66,6 +94,13 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return this;
     }
 
+    /**
+     * Read a Map to a DataMap.
+     *
+     * @param data The map to read from.
+     * @return @return A new DataMap containing all the keys and elements of the Map,
+     * read using {@link DataElement#readOf(Object)}
+     */
     public static DataMap read(Map<String, ?> data) {
         final DataMap output = new DataMap();
         for (Map.Entry<String, ?> entry : data.entrySet()) {
@@ -74,6 +109,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return output;
     }
 
+    /**
+     * @param elementClass The class of DataElements to
+     * @return A new Map containing all the key value pairs of the values that match {@code elementClass}.
+     */
     public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
         final ArrayList<Map.Entry<String, E>> collector = new ArrayList<>();
         iterator(elementClass).forEachRemaining(collector::add);
@@ -82,22 +121,11 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return out;
     }
 
+    /**
+     * Get the iterator for entries with values of this {@code elementClass}.
+     */
     public <E extends DataElement> Iterator<Map.Entry<String, E>> iterator(Class<E> elementClass) {
         return new ClassedIterator<>(elementClass);
-    }
-
-    public <P> Map<String, P> collectPrimitive(Class<P> primitiveClass) {
-        final Map<String, P> out = new LinkedHashMap<>(size());
-        iterator(DataPrimitive.class).forEachRemaining(e -> {
-            final P val = e.getValue().valueOrNull(primitiveClass);
-            if (val != null) out.put(e.getKey(), val);
-        });
-        return out;
-    }
-
-    public int size() {
-        if (value == null) return 0;
-        return value.size();
     }
 
     public <P> P get(String key, Class<P> primitiveClass) {
@@ -239,20 +267,53 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return element.asMap().navigate(++current, keys);
     }
 
+    /**
+     * @param primitiveClass The class the DataPrimitives values should be of.
+     * @return A new Map containing the key values pairs of the DataPrimitives in this DataMap conforming to {@code elementClass}.
+     */
+    public <P> Map<String, P> primitiveMap(Class<P> primitiveClass) {
+        final Map<String, P> out = new LinkedHashMap<>(size());
+        iterator(DataPrimitive.class).forEachRemaining(e -> {
+            final P val = e.getValue().valueOrNull(primitiveClass);
+            if (val != null) out.put(e.getKey(), val);
+        });
+        return out;
+    }
+
+    /**
+     * @return The size of this map, or {@code 0} if the map is not initialized.
+     */
+    public int size() {
+        if (value == null) return 0;
+        return value.size();
+    }
+
+    /**
+     * @throws ReadException When this key isn't present.
+     */
     public DataMap requireKey(String key) throws ReadException {
         if (!hasKey(key)) throw ReadException.requireField(this, key);
         return this;
     }
 
+    /**
+     * @throws ReadException When these keys aren't present.
+     */
     public DataMap requireKeys(String... keys) throws ReadException {
         return requireKeys(Arrays.asList(keys));
     }
 
+    /**
+     * @throws ReadException When these keys aren't present.
+     */
     public DataMap requireKeys(Collection<String> keys) throws ReadException {
         if (!hasKeys(keys)) throw ReadException.requireField(this, String.join(" and ", keys));
         return this;
     }
 
+    /**
+     * @throws ReadException When the element associated with this key is not of the required type.
+     */
     public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws ReadException {
         final DataElement el = getOrNull(key);
         if (!(clazz.isInstance(el))) throw ReadException.requireType(el, clazz);
@@ -339,10 +400,18 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return value;
     }
 
+    /**
+     * @see DataMap#cloneFrom(Map)
+     */
     public DataMap cloneFrom(DataMap toAdd) {
         return cloneFrom(toAdd.value);
     }
 
+    /**
+     * Clone the elements of the input map to this map.
+     *
+     * @return This DataMap.
+     */
     public DataMap cloneFrom(Map<String, DataElement> toAdd) {
         if (value == null) init(toAdd.size());
         for (Map.Entry<String, DataElement> entry : toAdd.entrySet()) {

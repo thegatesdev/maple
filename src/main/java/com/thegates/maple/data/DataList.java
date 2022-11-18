@@ -95,7 +95,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
     /**
      * @param elementClass The class the DataPrimitives values should be of.
-     * @return A new ArrayList containing the values of the DataPrimitives conforming to {@code elementClass}.
+     * @return A new ArrayList containing the values of the DataPrimitives in this DataList conforming to {@code elementClass}.
      */
     public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
         final ArrayList<T> out = new ArrayList<>();
@@ -216,7 +216,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     /**
-     * Add all the elements of the input list to this list.
+     * Clone the elements of the input list to this list.
      *
      * @return This DataList.
      */
