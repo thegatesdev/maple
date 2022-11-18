@@ -37,10 +37,8 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
     public static DataList read(Object... objects) {
         final DataList dataList = new DataList();
-        synchronized (MODIFY_MUTEX) {
-            for (Object o : objects) {
-                dataList.add(DataElement.readOf(o));
-            }
+        for (Object o : objects) {
+            dataList.add(DataElement.readOf(o));
         }
         return dataList;
     }
@@ -67,9 +65,10 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
         final ArrayList<T> out = new ArrayList<>();
         synchronized (READ_MUTEX) {
-            new ClassedIterator<>(DataPrimitive.class).forEachRemaining(primitive -> {
-                if (primitive.isValueOf(elementClass)) out.add(primitive.valueUnsafe());
-            });
+            for (final DataElement element : this) {
+                if (element.isPrimitive() && element.asPrimitive().isValueOf(elementClass))
+                    out.add(element.asPrimitive().valueUnsafe());
+            }
         }
         return out;
     }
@@ -117,23 +116,6 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DataList)) return false;
-        return super.equals(o);
-    }
-
-    @Override
-    public DataList clone() {
-        return new DataList().cloneFrom(this);
-    }
-
-    @Override
-    protected ArrayList<DataElement> raw() {
-        return value;
-    }
-
-    @Override
     public DataList asList() {
         return this;
     }
@@ -163,6 +145,23 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DataList)) return false;
+        return super.equals(o);
+    }
+
+    @Override
+    public DataList clone() {
+        return new DataList().cloneFrom(this);
+    }
+
+    @Override
+    protected ArrayList<DataElement> raw() {
+        return value;
+    }
+
     public DataList cloneFrom(DataList dataList) {
         return cloneFrom(dataList.value);
     }
@@ -170,7 +169,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     public DataList cloneFrom(List<DataElement> elements) {
         if (elements != null && !elements.isEmpty()) {
             if (value == null) init(elements.size());
-            elements.forEach(el -> add(el.clone()));
+            for (final DataElement element : elements) add(element.clone());
         }
         return this;
     }

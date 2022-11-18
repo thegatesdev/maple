@@ -48,10 +48,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
     static DataMap readInternal(Map<?, ?> data) {
         final DataMap output = new DataMap();
-        synchronized (MODIFY_MUTEX) {
-            data.forEach((o, o2) -> {
-                if (o instanceof String key) output.put(key, DataElement.readOf(o2));
-            });
+        for (Map.Entry<?, ?> entry : data.entrySet()) {
+            if (entry.getKey() instanceof String key) output.put(key, DataElement.readOf(entry.getValue()));
         }
         return output;
     }
@@ -70,20 +68,15 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
     public static DataMap read(Map<String, ?> data) {
         final DataMap output = new DataMap();
-        synchronized (MODIFY_MUTEX) {
-            data.forEach((s, o) -> {
-                if (s != null)
-                    output.put(s, DataElement.readOf(o));
-            });
+        for (Map.Entry<String, ?> entry : data.entrySet()) {
+            output.put(entry.getKey(), DataElement.readOf(entry.getValue()));
         }
         return output;
     }
 
     public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
         final ArrayList<Map.Entry<String, E>> collector = new ArrayList<>();
-        synchronized (READ_MUTEX) {
-            iterator(elementClass).forEachRemaining(collector::add);
-        }
+        iterator(elementClass).forEachRemaining(collector::add);
         final LinkedHashMap<String, E> out = new LinkedHashMap<>(collector.size(), 1f);
         out.entrySet().addAll(collector);
         return out;
@@ -300,23 +293,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DataMap)) return false;
-        return super.equals(o);
-    }
-
-    @Override
-    public DataMap clone() {
-        return new DataMap().cloneFrom(this);
-    }
-
-    @Override
-    protected LinkedHashMap<String, DataElement> raw() {
-        return value;
-    }
-
-    @Override
     public DataMap asMap() {
         return this;
     }
@@ -346,17 +322,34 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DataMap)) return false;
+        return super.equals(o);
+    }
+
+    @Override
+    public DataMap clone() {
+        return new DataMap().cloneFrom(this);
+    }
+
+    @Override
+    protected LinkedHashMap<String, DataElement> raw() {
+        return value;
+    }
+
     public DataMap cloneFrom(DataMap toAdd) {
         return cloneFrom(toAdd.value);
     }
 
     public DataMap cloneFrom(Map<String, DataElement> toAdd) {
         if (value == null) init(toAdd.size());
-        toAdd.forEach((s, el) -> {
+        for (Map.Entry<String, DataElement> entry : toAdd.entrySet()) {
             synchronized (MODIFY_MUTEX) {
-                put(s, el.clone());
+                put(entry.getKey(), entry.getValue().clone());
             }
-        });
+        }
         return this;
     }
 
@@ -374,7 +367,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         @Override
         public boolean hasNext() {
             if (!iterator.hasNext()) return false;
-            final Map.Entry<String, DataElement> el = iterator.next();
+            final Map.Entry<String, DataElement> el;
+            synchronized (READ_MUTEX) {
+                el = iterator.next();
+            }
             if (el.getValue().isOf(elementClass)) {
                 next = ((Map.Entry<String, E>) el);
                 return true;
