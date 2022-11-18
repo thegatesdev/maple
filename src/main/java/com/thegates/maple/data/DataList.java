@@ -31,7 +31,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
 
-    public static DataList read(List<?> list) {
+    public static DataList read(Collection<?> list) {
         return read(list.toArray());
     }
 
