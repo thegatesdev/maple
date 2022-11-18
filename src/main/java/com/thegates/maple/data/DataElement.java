@@ -120,7 +120,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         throw new UnsupportedOperationException("Not a map!");
     }
 
-
     /**
      * @param elementClass The class to get this DataElement as.
      * @return This element casted to E, or null if the element could not be casted.
@@ -254,6 +253,15 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     public DataElement root() {
         if (parent == null) return this;
         return parent.root();
+    }
+
+    /**
+     * Set the name of this element.
+     *
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    public DataElement setName(String name) throws IllegalArgumentException {
+        return setData(null, name);
     }
 
     @Override

@@ -24,19 +24,39 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     Object value;
     private String cachedSimpleName;
 
+    /**
+     * Constructs an empty DataList with its data unset.
+     */
     public DataPrimitive() {
     }
 
+    /**
+     * Constructs a DataPrimitive with its parent defaulted to {@code null}.
+     *
+     * @param name  The name to initialize the data with.
+     * @param value The value to hold.
+     */
     public DataPrimitive(String name, Object value) {
         super(name);
         setValue(value);
     }
 
+    /**
+     * Sets this primitives value.
+     *
+     * @param value The value to set to.
+     */
     public void setValue(Object value) {
         this.value = value;
         cachedSimpleName = value.getClass().getSimpleName();
     }
 
+    /**
+     * Constructs a DataPrimitive with its data unset.
+     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#setName(String)} to set the name instead.
+     *
+     * @param value The value to hold.
+     */
     public DataPrimitive(Object value) {
         setValue(value);
     }
@@ -49,7 +69,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         if (!isValueOf(clazz)) throw ReadException.requireType(this, clazz);
         return valueUnsafe();
     }
-
+    
     public boolean isValueOf(Class<?> clazz) {
         if (isEmpty()) return false;
         return clazz.isInstance(value);

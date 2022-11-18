@@ -30,7 +30,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     /**
-     * Constructs an empty DataLIst with its parent defaulted to {@code null}.
+     * Constructs an empty DataList with its parent defaulted to {@code null}.
      *
      * @param name The name to initialize the data with.
      */
