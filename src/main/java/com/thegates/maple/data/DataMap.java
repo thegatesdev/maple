@@ -298,7 +298,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
 
     @Override
-    public DataElement clone() {
+    public DataMap clone() {
         return new DataMap().cloneFrom(this);
     }
 

@@ -134,7 +134,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
 
     @Override
-    public DataElement clone() {
+    public DataList clone() {
         return new DataList().addAll(this);
     }
 
