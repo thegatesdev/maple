@@ -110,6 +110,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     /**
      * @return The value contained in this DataElement.
      */
+    
     public abstract Object value();
 
     /**

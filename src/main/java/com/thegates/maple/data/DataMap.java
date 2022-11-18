@@ -160,6 +160,11 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return hasKey(key) ? getPrimitive(key).booleanValue() : def;
     }
 
+    /**
+     * Check if this map contains this key.
+     *
+     * @param key The key to check for.
+     */
     public boolean hasKey(String key) {
         if (value == null) return false;
         return value.containsKey(key);
@@ -259,6 +264,12 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return val == null ? def : val;
     }
 
+    /**
+     * Navigate this map with the specified keys until the element is reached, or the next element is not a map.
+     *
+     * @param keys The keys to navigate the elements with.
+     * @return The found DataElement, or {@code null} if it was not found.
+     */
     public DataElement navigate(String... keys) {
         return navigate(0, keys);
     }
@@ -293,6 +304,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Check if this key is present, or else throw.
+     *
+     * @param key The key to check for.
      * @throws ElementException When this key isn't present.
      */
     public DataMap requireKey(String key) throws ElementException {
@@ -301,6 +315,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Check if all these keys are present, or else throw.
+     *
+     * @param keys The keys to check for.
      * @throws ElementException When these keys aren't present.
      */
     public DataMap requireKeys(String... keys) throws ElementException {
@@ -308,6 +325,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Check if all these keys are present, or else throw.
+     *
+     * @param keys The keys to check for.
      * @throws ElementException When these keys aren't present.
      */
     public DataMap requireKeys(Collection<String> keys) throws ElementException {
@@ -316,6 +336,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Check if the element associated with this key is an instance of {@code clazz}
+     *
+     * @param key   The key associated with the element.
+     * @param clazz The class the element should be of.
      * @throws ElementException When the element associated with this key is not of the required type.
      */
     public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws ElementException {
@@ -352,6 +376,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return stringBuilder.toString();
     }
 
+    @Override
     public Map<String, DataElement> value() {
         if (value == null) return Collections.emptyMap();
         return Collections.unmodifiableMap(value);

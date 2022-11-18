@@ -174,6 +174,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return value == null ? "nullPrimitive" : "dataPrimitive<" + cachedSimpleName + ">";
     }
 
+    @Override
     public Object value() {
         return value;
     }
@@ -198,6 +199,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
         return false;
     }
 
+    @Override
     public boolean isEmpty() {
         return value == null;
     }

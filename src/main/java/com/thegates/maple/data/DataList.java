@@ -85,6 +85,10 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return this;
     }
 
+
+    /**
+     * See {@link ArrayList#get(int)}
+     */
     public DataElement get(int index) throws IndexOutOfBoundsException {
         return value.get(index);
     }
@@ -133,6 +137,9 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         value.sort(DataElement::compareTo);
     }
 
+    /**
+     * See {@link ArrayList#sort(Comparator)}
+     */
     public void sort(Comparator<? super DataElement> comparator) {
         value.sort(comparator);
     }
@@ -161,6 +168,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return stringBuilder.toString();
     }
 
+    @Override
     public List<DataElement> value() {
         if (value == null) return Collections.emptyList();
         return Collections.unmodifiableList(value);
