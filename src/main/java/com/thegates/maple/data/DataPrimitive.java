@@ -42,6 +42,16 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     /**
+     * Constructs a DataPrimitive with its data unset.
+     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#setName(String)} to set the name instead.
+     *
+     * @param value The value to hold.
+     */
+    public DataPrimitive(Object value) {
+        setValue(value);
+    }
+
+    /**
      * Sets this primitives value.
      *
      * @param value The value to set to.
@@ -52,74 +62,107 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     /**
-     * Constructs a DataPrimitive with its data unset.
-     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#setName(String)} to set the name instead.
-     *
-     * @param value The value to hold.
+     * @return The boolean this primitive holds.
+     * @throws ReadException If the value this primitive holds is not a boolean.
      */
-    public DataPrimitive(Object value) {
-        setValue(value);
-    }
-
     public boolean booleanValue() throws ReadException {
         return requireValue(Boolean.class);
     }
 
+    /**
+     * @param clazz The class the value should be an instance of.
+     * @return The cast value.
+     * @throws ReadException If the value is not an instance of {@code clazz}.
+     */
     public <T> T requireValue(Class<T> clazz) throws ReadException {
         if (!isValueOf(clazz)) throw ReadException.requireType(this, clazz);
         return valueUnsafe();
     }
-    
+
+    /**
+     * Check if the value contained is an instance of {@code clazz}.
+     */
     public boolean isValueOf(Class<?> clazz) {
         if (isEmpty()) return false;
         return clazz.isInstance(value);
     }
 
+    /**
+     * @param <T> The type to cast the value to.
+     * @return The cast value.
+     */
     @SuppressWarnings("unchecked")
     public <T> T valueUnsafe() {
         return (T) value;
     }
 
+    /**
+     * @return The double this primitive holds.
+     * @throws ReadException If the value this primitive holds is not a number.
+     */
     public double doubleValue() throws ReadException {
         return requireValue(Number.class).intValue();
     }
 
+    /**
+     * @return The float this primitive holds.
+     * @throws ReadException If the value this primitive holds is not a number.
+     */
     public float floatValue() throws ReadException {
         return requireValue(Number.class).floatValue();
     }
 
+    /**
+     * @return The int this primitive holds.
+     * @throws ReadException If the value this primitive holds is not a number.
+     */
     public int intValue() throws ReadException {
         return requireValue(Number.class).intValue();
     }
 
+    /**
+     * Check if the value contained is a boolean.
+     */
     public boolean isBooleanValue() {
         return value instanceof Boolean;
     }
 
+    /**
+     * Check if the value contained is a number.
+     */
     public boolean isNumberValue() {
         return value instanceof Number;
     }
 
+    /**
+     * Check if the value contained is a String.
+     */
     public boolean isStringValue() {
         return value instanceof String;
     }
 
+    /**
+     * @return The long this primitive holds.
+     * @throws ReadException If the value this primitive holds is not a number.
+     */
     public long longValue() throws ReadException {
         return requireValue(Number.class).longValue();
     }
 
+    /**
+     * @return The String this primitive holds.
+     * @throws ReadException If the value this primitive holds is not a String.
+     */
     public String stringValue() throws ReadException {
         return requireValue(String.class);
     }
 
+    /**
+     * @param clazz The class the value should be an instance of.
+     * @return The cast value, or {@code null} if the value is not an instance of {@code clazz}.
+     */
     public <T> T valueOrNull(Class<T> clazz) {
         return isValueOf(clazz) ? clazz.cast(value) : null;
-    }
-
-    public <T> T valueOrThrow(Class<T> clazz) throws ReadException {
-        if (isValueOf(clazz)) return clazz.cast(value);
-        else
-            throw new ReadException(this, "unexpected value type, expected " + clazz.getSimpleName() + ", got " + cachedSimpleName);
     }
 
     @Override

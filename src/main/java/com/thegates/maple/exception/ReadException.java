@@ -44,6 +44,9 @@ public class ReadException extends RuntimeException {
         return new ReadException(data, "should be of " + typeName);
     }
 
+    /**
+     * @return The element this ReadException was thrown on.
+     */
     public DataElement getElement() {
         return element;
     }
