@@ -2,7 +2,7 @@ package com.thegates.maple.data;
 
 import com.thegates.maple.exception.ReadException;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -35,14 +35,30 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     private String name;
     private boolean dataSet = false;
 
+    /**
+     * Constructs a DataElement with its data unset.
+     */
     protected DataElement() {
     }
 
+    /**
+     * Constructs a DataElement with its data being set to {@code parent=null name=name}.
+     *
+     * @param name The name to initialize the data with.
+     */
     protected DataElement(String name) {
         setData(null, name);
     }
 
-    DataElement setData(DataElement parent, String name) {
+    /**
+     * Sets the data.
+     *
+     * @param parent The parent to initialize the data with.
+     * @param name   The name to initialize the data with.
+     * @return The same DataElement.
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
         if (dataSet) throw new IllegalArgumentException("Parent and name already set");
         dataSet = true;
         this.parent = parent;
@@ -56,93 +72,185 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return parent == null ? n : parent.path() + "." + n;
     }
 
+    /**
+     * Get the cached path of the element.
+     *
+     * @return The path of this element as a dot separated string.
+     */
     public String path() {
         return cachedPath;
     }
 
+    /**
+     * Read this object as a DataElement, so that when;<br>
+     * {@code input == null} -> {@link DataNull#DataNull()}.<br>
+     * {@code input instanceof Collection<?>} -> {@link DataList#read(Collection)}.<br>
+     * {@code input instanceof Map<?,?>} -> {@link DataMap#read(Map)}.<br>
+     * If none of the above apply -> {@link DataPrimitive#DataPrimitive(Object)}.
+     *
+     * @param input The Object to read from.
+     * @return The new DataNull, DataList, DataMap or DataPrimitive.
+     */
     public static DataElement readOf(Object input) {
         if (input == null) return new DataNull();
         final Object reading = (input instanceof DataElement el) ? el.value() : input;
         if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
-        if (reading instanceof List<?> list) return DataList.read(list);
+        if (reading instanceof Collection<?> collection) return DataList.read(collection);
         return new DataPrimitive(reading);
     }
 
+    /**
+     * @return The value contained in this DataElement.
+     */
     public abstract Object value();
 
+    /**
+     * @return This element as a DataList.
+     * @throws UnsupportedOperationException If this element is not a DataList.
+     */
     public DataList asList() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a list!");
     }
 
+    /**
+     * @return This element as a DataMap.
+     * @throws UnsupportedOperationException If this element is not a DataMap.
+     */
     public DataMap asMap() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a map!");
     }
 
+
+    /**
+     * @param elementClass The class to get this DataElement as.
+     * @return This element casted to E, or null if the element could not be casted.
+     */
     @SuppressWarnings("unchecked")
     public <E extends DataElement> E asOrNull(Class<E> elementClass) {
         if (isOf(elementClass)) return (E) this;
         return null;
     }
 
+    /**
+     * @param elementClass The class to check this DataElement for.
+     */
     public boolean isOf(Class<? extends DataElement> elementClass) {
         return cachedType == elementClass;
     }
 
+    /**
+     * @return This element as a DataPrimitive.
+     * @throws UnsupportedOperationException If this element is not a DataPrimitive.
+     */
     public DataPrimitive asPrimitive() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a primitive!");
     }
 
+    /**
+     * Cast to E
+     */
     @SuppressWarnings("unchecked")
     public <E extends DataElement> E asUnsafe(Class<E> elementClass) {
         return (E) this;
     }
 
+    /**
+     * @return {@code true} if this element's name is not {@code null}
+     */
     public boolean hasName() {
         return name != null;
     }
 
+    /**
+     * Check if {@code parent} is in the chain of parents of this DataElement.
+     *
+     * @param parent The parent to check for.
+     * @return {@code true} if the parent was found.
+     */
     public boolean hasParent(DataElement parent) {
         if (this.parent == null) return false;
         if (this.parent == parent) return true;
         return this.parent.hasParent(parent);
     }
 
+    /**
+     * Check if this elements parent is not equal to {@code null}.
+     */
     public boolean hasParent() {
         return parent != null;
     }
 
+    /**
+     * Check if the data (parent / name) is initialized.
+     * Initializing the data can be done through a constructor or {@link DataElement#setData(DataElement, String)}
+     */
     public boolean isDataSet() {
         return dataSet;
     }
 
+    /**
+     * Check if this DataElement is a DataList.
+     */
     public abstract boolean isList();
 
+    /**
+     * Check if this DataElement is a DataMap.
+     */
     public abstract boolean isMap();
 
+    /**
+     * Check if this DataElement is a DataNull.
+     */
     public abstract boolean isNull();
 
+    /**
+     * Check if this DataElement's value is not empty.
+     */
     public boolean isPresent() {
         return !isEmpty();
     }
 
+    /**
+     * Check if this DataElement's value empty. Implementation may differ.
+     */
     public abstract boolean isEmpty();
 
+    /**
+     * Check if this DataElement is a DataPrimitive.
+     */
     public abstract boolean isPrimitive();
 
+    /**
+     * @return The name of this element.
+     */
     public String name() {
         return name;
     }
 
+    /**
+     * @return The parent of this element.
+     */
     public DataElement parent() {
         return parent;
     }
 
+    /**
+     * @param elementClass The class this element is required to be.
+     * @param <T>          The type of {@code elementClass}.
+     * @return This element, casted to T.
+     * @throws ReadException If this element is not assignable to {@code elementClass}.
+     */
     @SuppressWarnings("unchecked")
     public <T extends DataElement> T requireOf(Class<T> elementClass) throws ReadException {
         if (!isOf(elementClass)) throw ReadException.requireType(this, elementClass);
         return ((T) this);
     }
 
+    /**
+     * Find the root parent of this element.
+     *
+     * @return The root parent. This may be the same as the element it is called on.
+     */
     public DataElement root() {
         if (parent == null) return this;
         return parent.root();
@@ -167,7 +275,15 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return Objects.equals(name, that.name) && Objects.equals(raw(), that.raw());
     }
 
+    /**
+     * Clone this element.
+     *
+     * @return A new DataElement of the original type, <b>without it's data set.</b>
+     */
     public abstract DataElement clone();
 
+    /**
+     * @return The raw value contained in this element.
+     */
     protected abstract Object raw();
 }
