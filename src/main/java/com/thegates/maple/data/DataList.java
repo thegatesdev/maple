@@ -23,18 +23,40 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
     private ArrayList<DataElement> value;
 
+    /**
+     * Constructs an empty DataList with its data unset.
+     */
     public DataList() {
     }
 
+    /**
+     * Constructs an empty DataLIst with its parent defaulted to {@code null}.
+     *
+     * @param name The name to initialize the data with.
+     */
     public DataList(String name) {
         super(name);
     }
 
 
+    /**
+     * Read a Collection to a DataList.
+     *
+     * @param list The list to read from.
+     * @return A new DataList containing all the elements of the Collection,
+     * read using {@link DataElement#readOf(Object)}
+     */
     public static DataList read(Collection<?> list) {
         return read(list.toArray());
     }
 
+    /**
+     * Read an Object array to a DataList.
+     *
+     * @param objects The array to read from.
+     * @return A new DataList containing all the elements of the array,
+     * read using {@link DataElement#readOf(Object)}
+     */
     public static DataList read(Object... objects) {
         final DataList dataList = new DataList();
         for (Object o : objects) {
@@ -43,7 +65,13 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return dataList;
     }
 
-    public DataList add(DataElement element) {
+
+    /**
+     * @param element The element to add to this DataList.
+     * @return This DataList.
+     * @throws IllegalArgumentException When the supplied DataElement already has its data set.
+     */
+    public DataList add(DataElement element) throws IllegalArgumentException {
         if (element.isDataSet())
             throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
@@ -58,10 +86,17 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
             value = new ArrayList<>(initialCapacity);
     }
 
+    /**
+     * Get the iterator for elements of this {@code elementClass}.
+     */
     public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
         return new ClassedIterator<>(elementClass);
     }
 
+    /**
+     * @param elementClass The class the DataPrimitives values should be of.
+     * @return A new ArrayList containing the values of the DataPrimitives conforming to {@code elementClass}.
+     */
     public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
         final ArrayList<T> out = new ArrayList<>();
         synchronized (READ_MUTEX) {
@@ -73,11 +108,19 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return out;
     }
 
+    /**
+     * @return The size of this list, or {@code 0} if the list is not initialized.
+     */
     public int size() {
         if (value == null) return 0;
         return value.size();
     }
 
+    /**
+     * Sort this list using the default sort method.
+     *
+     * @see DataElement#compareTo(DataElement)
+     */
     public void sort() {
         value.sort(DataElement::compareTo);
     }
@@ -135,6 +178,9 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return false;
     }
 
+    /**
+     * Check if this list is empty, or not initialized.
+     */
     @Override
     public boolean isEmpty() {
         return value == null || value.isEmpty();
@@ -162,11 +208,19 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return value;
     }
 
+    /**
+     * @see DataList#cloneFrom(Collection)
+     */
     public DataList cloneFrom(DataList dataList) {
         return cloneFrom(dataList.value);
     }
 
-    public DataList cloneFrom(List<DataElement> elements) {
+    /**
+     * Add all the elements of the input list to this list.
+     *
+     * @return This DataList.
+     */
+    public DataList cloneFrom(Collection<DataElement> elements) {
         if (elements != null && !elements.isEmpty()) {
             if (value == null) init(elements.size());
             for (final DataElement element : elements) add(element.clone());

@@ -42,7 +42,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Constructs a DataElement with its data being set to {@code parent=null name=name}.
+     * Constructs a DataElement with its parent defaulted to {@code null}.
      *
      * @param name The name to initialize the data with.
      */
