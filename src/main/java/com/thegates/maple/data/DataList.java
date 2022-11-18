@@ -44,22 +44,6 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return dataList;
     }
 
-    public DataList addAll(DataList dataList) {
-        return addAll(dataList.value);
-    }
-
-    public DataList addAll(List<DataElement> elements) {
-        if (elements != null && !elements.isEmpty()) {
-            if (value == null) init(elements);
-            else {
-                synchronized (MODIFY_MUTEX) {
-                    this.value.addAll(elements);
-                }
-            }
-        }
-        return this;
-    }
-
     public List<DataElement> value() {
         if (value == null) return Collections.emptyList();
         return Collections.unmodifiableList(value);
@@ -70,14 +54,9 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return value;
     }
 
-    private void init(Collection<DataElement> input) {
+    private void init(int initialCapacity) {
         if (value == null)
-            value = new ArrayList<>(input);
-    }
-
-    private void init() {
-        if (value == null)
-            value = new ArrayList<>();
+            value = new ArrayList<>(initialCapacity);
     }
 
     public void sort(Comparator<? super DataElement> comparator) {
@@ -89,10 +68,22 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     public DataList add(DataElement element) {
-        if (value == null) init();
         if (element.isDataSet()) throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
+        if (value == null) init(1);
         synchronized (MODIFY_MUTEX) {
             value.add(element.setData(this, "[" + value.size() + "]"));
+        }
+        return this;
+    }
+
+    public DataList cloneFrom(DataList dataList) {
+        return cloneFrom(dataList.value);
+    }
+
+    public DataList cloneFrom(List<DataElement> elements) {
+        if (elements != null && !elements.isEmpty()) {
+            if (value == null) init(elements.size());
+            elements.forEach(el -> add(el.clone()));
         }
         return this;
     }
@@ -135,7 +126,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
     @Override
     public DataList clone() {
-        return new DataList().addAll(this);
+        return new DataList().cloneFrom(this);
     }
 
     @Override
