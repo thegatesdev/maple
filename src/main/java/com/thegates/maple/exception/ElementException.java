@@ -19,33 +19,33 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class ReadException extends RuntimeException {
+public class ElementException extends RuntimeException {
     private final DataElement element;
 
-    public ReadException(DataElement data, String message) {
-        super("Error while reading data at %s, %s.".formatted(data.path(), message));
+    public ElementException(DataElement data, String message) {
+        super("Error at %s, %s.".formatted(data.path(), message));
         this.element = data;
     }
 
-    public ReadException(DataElement data, String message, Throwable cause) {
-        super("Error while reading data at %s, %s.".formatted(data.path(), message), cause);
+    public ElementException(DataElement data, String message, Throwable cause) {
+        super("Error at %s, %s.".formatted(data.path(), message), cause);
         this.element = data;
     }
 
-    public static ReadException requireField(DataElement data, String field) {
-        return new ReadException(data, "missing required field '" + field + "'");
+    public static ElementException requireField(DataElement data, String field) {
+        return new ElementException(data, "missing required field '" + field + "'");
     }
 
-    public static ReadException requireType(DataElement data, Class<?> type) {
+    public static ElementException requireType(DataElement data, Class<?> type) {
         return requireType(data, type.getSimpleName());
     }
 
-    public static ReadException requireType(DataElement data, String typeName) {
-        return new ReadException(data, "should be of " + typeName);
+    public static ElementException requireType(DataElement data, String typeName) {
+        return new ElementException(data, "should be of " + typeName);
     }
 
     /**
-     * @return The element this ReadException was thrown on.
+     * @return The element this ElementException was thrown on.
      */
     public DataElement getElement() {
         return element;

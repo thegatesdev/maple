@@ -17,16 +17,23 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * A DataNull is a null element. It represents a null value in a structure.
+ */
 public class DataNull extends DataElement implements Cloneable, Comparable<DataElement> {
+    /**
+     * Constructs an empty DataNull with its data unset.
+     */
     public DataNull() {
     }
 
+    /**
+     * Constructs an empty DataNull with its parent defaulted to {@code null}.
+     *
+     * @param name The name to initialize the data with.
+     */
     public DataNull(String name) {
         super(name);
-    }
-
-    public DataNull(DataElement parent, String name) {
-        setData(parent, name);
     }
 
     @Override

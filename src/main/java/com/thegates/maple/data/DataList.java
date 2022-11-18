@@ -19,6 +19,10 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * A DataList is a list element backed by an ArrayList, containing an array of DataElement.
+ * It allows for more advanced iteration, for example by element type ({@link DataList#iterator(Class)}.
+ */
 public class DataList extends DataElement implements Iterable<DataElement>, Cloneable, Comparable<DataElement> {
 
     private ArrayList<DataElement> value;
@@ -79,6 +83,10 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
             value.add(element.setData(this, "[" + value.size() + "]"));
         }
         return this;
+    }
+
+    public DataElement get(int index) throws IndexOutOfBoundsException {
+        return value.get(index);
     }
 
     private void init(int initialCapacity) {

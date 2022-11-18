@@ -1,6 +1,6 @@
 package com.thegates.maple.data;
 
-import com.thegates.maple.exception.ReadException;
+import com.thegates.maple.exception.ElementException;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -22,6 +22,10 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * A DataMap is a map element backed by a LinkedHashMap, with String for keys and DataElements for values.
+ * It allows for more advanced iteration, for example by element type ({@link DataMap#iterator(Class)}.
+ */
 public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>>, Cloneable, Comparable<DataElement> {
 
     private LinkedHashMap<String, DataElement> value;
@@ -52,10 +56,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         init(initialCapacity);
     }
 
-    private void init(int initialCapacity) {
-        if (value == null) value = new LinkedHashMap<>(initialCapacity);
-    }
-
     /**
      * Constructs a DataMap with its data unset.
      *
@@ -71,6 +71,25 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
             if (entry.getKey() instanceof String key) output.put(key, DataElement.readOf(entry.getValue()));
         }
         return output;
+    }
+
+    /**
+     * Read a Map to a DataMap.
+     *
+     * @param data The map to read from.
+     * @return @return A new DataMap containing all the keys and elements of the Map,
+     * read using {@link DataElement#readOf(Object)}
+     */
+    public static DataMap read(Map<String, ?> data) {
+        final DataMap output = new DataMap();
+        for (Map.Entry<String, ?> entry : data.entrySet()) {
+            output.put(entry.getKey(), DataElement.readOf(entry.getValue()));
+        }
+        return output;
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null) value = new LinkedHashMap<>(initialCapacity);
     }
 
     /**
@@ -92,21 +111,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
             value.put(key, element.setData(this, key));
         }
         return this;
-    }
-
-    /**
-     * Read a Map to a DataMap.
-     *
-     * @param data The map to read from.
-     * @return @return A new DataMap containing all the keys and elements of the Map,
-     * read using {@link DataElement#readOf(Object)}
-     */
-    public static DataMap read(Map<String, ?> data) {
-        final DataMap output = new DataMap();
-        for (Map.Entry<String, ?> entry : data.entrySet()) {
-            output.put(entry.getKey(), DataElement.readOf(entry.getValue()));
-        }
-        return output;
     }
 
     /**
@@ -138,7 +142,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
     public DataElement get(String key) {
         final DataElement el = getOrNull(key);
-        return el == null ? new DataNull(this, key) : el;
+        return el == null ? new DataNull().setData(this, key) : el;
     }
 
     public DataElement getOrNull(String key) {
@@ -263,7 +267,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         final String key = keys[current];
         final DataElement element = get(key);
         if (current == keys.length - 1) return element;
-        if (!element.isMap()) return new DataNull(this, key);
+        if (!element.isMap()) return new DataNull().setData(this, key);
         return element.asMap().navigate(++current, keys);
     }
 
@@ -289,34 +293,34 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * @throws ReadException When this key isn't present.
+     * @throws ElementException When this key isn't present.
      */
-    public DataMap requireKey(String key) throws ReadException {
-        if (!hasKey(key)) throw ReadException.requireField(this, key);
+    public DataMap requireKey(String key) throws ElementException {
+        if (!hasKey(key)) throw ElementException.requireField(this, key);
         return this;
     }
 
     /**
-     * @throws ReadException When these keys aren't present.
+     * @throws ElementException When these keys aren't present.
      */
-    public DataMap requireKeys(String... keys) throws ReadException {
+    public DataMap requireKeys(String... keys) throws ElementException {
         return requireKeys(Arrays.asList(keys));
     }
 
     /**
-     * @throws ReadException When these keys aren't present.
+     * @throws ElementException When these keys aren't present.
      */
-    public DataMap requireKeys(Collection<String> keys) throws ReadException {
-        if (!hasKeys(keys)) throw ReadException.requireField(this, String.join(" and ", keys));
+    public DataMap requireKeys(Collection<String> keys) throws ElementException {
+        if (!hasKeys(keys)) throw ElementException.requireField(this, String.join(" and ", keys));
         return this;
     }
 
     /**
-     * @throws ReadException When the element associated with this key is not of the required type.
+     * @throws ElementException When the element associated with this key is not of the required type.
      */
-    public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws ReadException {
+    public DataMap requireOf(String key, Class<? extends DataElement> clazz) throws ElementException {
         final DataElement el = getOrNull(key);
-        if (!(clazz.isInstance(el))) throw ReadException.requireType(el, clazz);
+        if (!(clazz.isInstance(el))) throw ElementException.requireType(el, clazz);
         return this;
     }
 

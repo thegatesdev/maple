@@ -1,6 +1,6 @@
 package com.thegates.maple.data;
 
-import com.thegates.maple.exception.ReadException;
+import com.thegates.maple.exception.ElementException;
 
 import java.util.Collection;
 import java.util.Map;
@@ -23,6 +23,12 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * An abstract class for any element.
+ * A DataElement contains a parent and name, which together are only settable once, using a constructor, or dedicated methods {@link DataElement#setData(DataElement, String)} and {@link DataElement#setName(String)}.
+ * With the name and parent it can calculate the root of the structure ({@link DataElement#root()}), the path to this element ({@link DataElement#path()}) or check if it is a child of an element ({@link DataElement#isChild(DataElement)}).
+ * The parent is only to be set by the parent itself, to avoid 'ghost' elements that have the parent set, but are not actually contained in the structure.
+ */
 public abstract class DataElement implements Cloneable, Comparable<DataElement> {
 
     protected static final Object MODIFY_MUTEX = new Object();
@@ -48,6 +54,26 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
     protected DataElement(String name) {
         setData(null, name);
+    }
+
+    /**
+     * Read this object as a DataElement, so that when;
+     * <ul>
+     * <li>{@code input == null} -> {@link DataNull#DataNull()}.
+     * <li>{@code input instanceof Collection<?>} -> {@link DataList#read(Collection)}.
+     * <li>{@code input instanceof Map<?,?>} -> {@link DataMap#read(Map)}.
+     * <li>If none of the above apply -> {@link DataPrimitive#DataPrimitive(Object)}.
+     * </ul>
+     *
+     * @param input The Object to read from.
+     * @return The new DataNull, DataList, DataMap or DataPrimitive.
+     */
+    public static DataElement readOf(Object input) {
+        if (input == null) return new DataNull();
+        final Object reading = (input instanceof DataElement el) ? el.value() : input;
+        if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
+        if (reading instanceof Collection<?> collection) return DataList.read(collection);
+        return new DataPrimitive(reading);
     }
 
     /**
@@ -82,24 +108,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Read this object as a DataElement, so that when;<br>
-     * {@code input == null} -> {@link DataNull#DataNull()}.<br>
-     * {@code input instanceof Collection<?>} -> {@link DataList#read(Collection)}.<br>
-     * {@code input instanceof Map<?,?>} -> {@link DataMap#read(Map)}.<br>
-     * If none of the above apply -> {@link DataPrimitive#DataPrimitive(Object)}.
-     *
-     * @param input The Object to read from.
-     * @return The new DataNull, DataList, DataMap or DataPrimitive.
-     */
-    public static DataElement readOf(Object input) {
-        if (input == null) return new DataNull();
-        final Object reading = (input instanceof DataElement el) ? el.value() : input;
-        if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
-        if (reading instanceof Collection<?> collection) return DataList.read(collection);
-        return new DataPrimitive(reading);
-    }
-
-    /**
      * @return The value contained in this DataElement.
      */
     public abstract Object value();
@@ -122,7 +130,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     /**
      * @param elementClass The class to get this DataElement as.
-     * @return This element casted to E, or null if the element could not be casted.
+     * @return This element cast to E, or null if the element could not be cast.
      */
     @SuppressWarnings("unchecked")
     public <E extends DataElement> E asOrNull(Class<E> elementClass) {
@@ -166,10 +174,10 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      * @param parent The parent to check for.
      * @return {@code true} if the parent was found.
      */
-    public boolean hasParent(DataElement parent) {
+    public boolean isChild(DataElement parent) {
         if (this.parent == null) return false;
         if (this.parent == parent) return true;
-        return this.parent.hasParent(parent);
+        return this.parent.isChild(parent);
     }
 
     /**
@@ -237,11 +245,11 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      * @param elementClass The class this element is required to be.
      * @param <T>          The type of {@code elementClass}.
      * @return This element, casted to T.
-     * @throws ReadException If this element is not assignable to {@code elementClass}.
+     * @throws ElementException If this element is not assignable to {@code elementClass}.
      */
     @SuppressWarnings("unchecked")
-    public <T extends DataElement> T requireOf(Class<T> elementClass) throws ReadException {
-        if (!isOf(elementClass)) throw ReadException.requireType(this, elementClass);
+    public <T extends DataElement> T requireOf(Class<T> elementClass) throws ElementException {
+        if (!isOf(elementClass)) throw ElementException.requireType(this, elementClass);
         return ((T) this);
     }
 

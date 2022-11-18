@@ -1,6 +1,6 @@
 package com.thegates.maple.data;
 
-import com.thegates.maple.exception.ReadException;
+import com.thegates.maple.exception.ElementException;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -19,6 +19,10 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * A DataPrimitive is a primitive element. It holds an Object, and has methods to check the type, get the value as etc.
+ * A DataPrimitive's value is mutable, unlike the other DataElement implementations.
+ */
 public class DataPrimitive extends DataElement implements Cloneable, Comparable<DataElement> {
 
     Object value;
@@ -63,19 +67,19 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
 
     /**
      * @return The boolean this primitive holds.
-     * @throws ReadException If the value this primitive holds is not a boolean.
+     * @throws ElementException If the value this primitive holds is not a boolean.
      */
-    public boolean booleanValue() throws ReadException {
+    public boolean booleanValue() throws ElementException {
         return requireValue(Boolean.class);
     }
 
     /**
      * @param clazz The class the value should be an instance of.
      * @return The cast value.
-     * @throws ReadException If the value is not an instance of {@code clazz}.
+     * @throws ElementException If the value is not an instance of {@code clazz}.
      */
-    public <T> T requireValue(Class<T> clazz) throws ReadException {
-        if (!isValueOf(clazz)) throw ReadException.requireType(this, clazz);
+    public <T> T requireValue(Class<T> clazz) throws ElementException {
+        if (!isValueOf(clazz)) throw ElementException.requireType(this, clazz);
         return valueUnsafe();
     }
 
@@ -98,25 +102,25 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
 
     /**
      * @return The double this primitive holds.
-     * @throws ReadException If the value this primitive holds is not a number.
+     * @throws ElementException If the value this primitive holds is not a number.
      */
-    public double doubleValue() throws ReadException {
+    public double doubleValue() throws ElementException {
         return requireValue(Number.class).intValue();
     }
 
     /**
      * @return The float this primitive holds.
-     * @throws ReadException If the value this primitive holds is not a number.
+     * @throws ElementException If the value this primitive holds is not a number.
      */
-    public float floatValue() throws ReadException {
+    public float floatValue() throws ElementException {
         return requireValue(Number.class).floatValue();
     }
 
     /**
      * @return The int this primitive holds.
-     * @throws ReadException If the value this primitive holds is not a number.
+     * @throws ElementException If the value this primitive holds is not a number.
      */
-    public int intValue() throws ReadException {
+    public int intValue() throws ElementException {
         return requireValue(Number.class).intValue();
     }
 
@@ -143,17 +147,17 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
 
     /**
      * @return The long this primitive holds.
-     * @throws ReadException If the value this primitive holds is not a number.
+     * @throws ElementException If the value this primitive holds is not a number.
      */
-    public long longValue() throws ReadException {
+    public long longValue() throws ElementException {
         return requireValue(Number.class).longValue();
     }
 
     /**
      * @return The String this primitive holds.
-     * @throws ReadException If the value this primitive holds is not a String.
+     * @throws ElementException If the value this primitive holds is not a String.
      */
-    public String stringValue() throws ReadException {
+    public String stringValue() throws ElementException {
         return requireValue(String.class);
     }
 
