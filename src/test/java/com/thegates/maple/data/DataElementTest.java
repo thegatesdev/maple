@@ -34,6 +34,11 @@ public class DataElementTest {
         assert testMap.navigate("test_element").asOrNull(DataPrimitive.class) != null;
     }
 
+    @Test
+    void cloneEqualTest() {
+        assert testMap.equals(testMap.clone().setData(null, "named"));
+    }
+
     @AfterEach
     void tearDown() {
         testMap = null;

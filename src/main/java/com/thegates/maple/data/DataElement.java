@@ -166,6 +166,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DataElement that)) return false;
+        System.out.printf("EQUALS [%s] name:%s raw:%s%n", cachedPath, Objects.equals(name, that.name), Objects.equals(raw(), that.raw()));
         return Objects.equals(name, that.name) && Objects.equals(raw(), that.raw());
     }
 

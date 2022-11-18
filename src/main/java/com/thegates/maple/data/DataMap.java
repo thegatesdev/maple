@@ -205,10 +205,14 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return this;
     }
 
-    public DataMap putAll(DataMap dataMap) {
+    public DataMap cloneFrom(DataMap dataMap) {
         final var toAdd = dataMap.value();
         if (value == null) init(toAdd.size());
-        toAdd.forEach(this::put);
+        toAdd.forEach((s, el) -> {
+            synchronized (MODIFY_MUTEX){
+                value.put(s, el.clone().setData(this, s));
+            }
+        });
         return this;
     }
 
@@ -295,7 +299,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
     @Override
     public DataElement clone() {
-        return new DataMap().putAll(this);
+        return new DataMap().cloneFrom(this);
     }
 
     @Override
