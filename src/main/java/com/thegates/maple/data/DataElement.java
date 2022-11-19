@@ -94,7 +94,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     private String calcPath() {
-        final String n = name == null ? "root" : name;
+        final String n = name == null ? "unknown" : name;
         return parent == null ? n : parent.path() + "." + n;
     }
 
@@ -110,7 +110,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     /**
      * @return The value contained in this DataElement.
      */
-    
+
     public abstract Object value();
 
     /**
@@ -245,7 +245,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     /**
      * @param elementClass The class this element is required to be.
      * @param <T>          The type of {@code elementClass}.
-     * @return This element, casted to T.
+     * @return This element, cast to T.
      * @throws ElementException If this element is not assignable to {@code elementClass}.
      */
     @SuppressWarnings("unchecked")

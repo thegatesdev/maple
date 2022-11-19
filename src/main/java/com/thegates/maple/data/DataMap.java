@@ -132,19 +132,69 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return new ClassedIterator<>(elementClass);
     }
 
+    /**
+     * Get the value of the {@link DataPrimitive} associated with this key.
+     *
+     * @param key            The key of the primitive.
+     * @param primitiveClass The type the primitive should be.
+     * @return The value of the primitive.
+     * @throws ElementException If the element is not present, is not a primitive, or it's value is not of the required type.
+     */
     public <P> P get(String key, Class<P> primitiveClass) {
         return getPrimitive(key).requireValue(primitiveClass);
+    }
+
+    /**
+     * Get the value of the first {@link DataPrimitive} associated with one of these keys.
+     *
+     * @param keys           The possible keys of the primitive.
+     * @param primitiveClass The type the primitive should be.
+     * @return The value of the primitive.
+     * @throws ElementException If the found element is not present, is not a primitive, or it's value is not of the required type.
+     */
+    public <P> P getFirst(Class<P> primitiveClass, String... keys) {
+        for (String key : keys) {
+            final DataElement el = getOrNull(key);
+            if (el != null && el.isPrimitive()) return el.asPrimitive().requireValue(primitiveClass);
+        }
+        throw ElementException.requireField(this, String.join(" or ", keys));
     }
 
     public DataPrimitive getPrimitive(String key) {
         return get(key).requireOf(DataPrimitive.class);
     }
 
+    /**
+     * Get the element associated with this key.
+     *
+     * @param key The key of the element.
+     * @return The element associated with this key, or a new {@link DataNull};
+     */
     public DataElement get(String key) {
         final DataElement el = getOrNull(key);
         return el == null ? new DataNull().setData(this, key) : el;
     }
 
+    /**
+     * Find the first element associated with one of the keys.
+     *
+     * @param keys The possible keys of the element.
+     * @return The element associated with one of these keys, or a new {@link DataNull};
+     */
+    public DataElement getFirst(String... keys) {
+        for (String key : keys) {
+            final DataElement el = getOrNull(key);
+            if (el != null) return el;
+        }
+        return new DataNull().setData(this, null);
+    }
+
+    /**
+     * Get the element associated with this key, or null.
+     *
+     * @param key The key of the element.
+     * @return The element associated with this key, or {@code null}.
+     */
     public DataElement getOrNull(String key) {
         if (value != null) synchronized (READ_MUTEX) {
             return value.get(key);
