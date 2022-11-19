@@ -57,26 +57,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Read this object as a DataElement, so that when;
-     * <ul>
-     * <li>{@code input == null} -> {@link DataNull#DataNull()}.
-     * <li>{@code input instanceof Collection<?>} -> {@link DataList#read(Collection)}.
-     * <li>{@code input instanceof Map<?,?>} -> {@link DataMap#read(Map)}.
-     * <li>If none of the above apply -> {@link DataPrimitive#DataPrimitive(Object)}.
-     * </ul>
-     *
-     * @param input The Object to read from.
-     * @return The new DataNull, DataList, DataMap or DataPrimitive.
-     */
-    public static DataElement readOf(Object input) {
-        if (input == null) return new DataNull();
-        final Object reading = (input instanceof DataElement el) ? el.value() : input;
-        if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
-        if (reading instanceof Collection<?> collection) return DataList.read(collection);
-        return new DataPrimitive(reading);
-    }
-
-    /**
      * Sets the data.
      *
      * @param parent The parent to initialize the data with.
@@ -105,6 +85,26 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
     public String path() {
         return cachedPath;
+    }
+
+    /**
+     * Read this object as a DataElement, so that when;
+     * <ul>
+     * <li>{@code input == null} -> {@link DataNull#DataNull()}.
+     * <li>{@code input instanceof Collection<?>} -> {@link DataList#read(Collection)}.
+     * <li>{@code input instanceof Map<?,?>} -> {@link DataMap#read(Map)}.
+     * <li>If none of the above apply -> {@link DataPrimitive#DataPrimitive(Object)}.
+     * </ul>
+     *
+     * @param input The Object to read from.
+     * @return The new DataNull, DataList, DataMap or DataPrimitive.
+     */
+    public static DataElement readOf(Object input) {
+        if (input == null) return new DataNull();
+        final Object reading = (input instanceof DataElement el) ? el.value() : input;
+        if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
+        if (reading instanceof Collection<?> collection) return DataList.read(collection);
+        return new DataPrimitive(reading);
     }
 
     /**
@@ -170,6 +170,13 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Check if this elements parent is not equal to {@code null}.
+     */
+    public boolean hasParent() {
+        return parent != null;
+    }
+
+    /**
      * Check if {@code parent} is in the chain of parents of this DataElement.
      *
      * @param parent The parent to check for.
@@ -179,13 +186,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         if (this.parent == null) return false;
         if (this.parent == parent) return true;
         return this.parent.isChild(parent);
-    }
-
-    /**
-     * Check if this elements parent is not equal to {@code null}.
-     */
-    public boolean hasParent() {
-        return parent != null;
     }
 
     /**

@@ -46,16 +46,6 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     /**
-     * Constructs a DataPrimitive with its data unset.
-     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#setName(String)} to set the name instead.
-     *
-     * @param value The value to hold.
-     */
-    public DataPrimitive(Object value) {
-        setValue(value);
-    }
-
-    /**
      * Sets this primitives value.
      *
      * @param value The value to set to.
@@ -63,6 +53,16 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     public void setValue(Object value) {
         this.value = value;
         cachedSimpleName = value.getClass().getSimpleName();
+    }
+
+    /**
+     * Constructs a DataPrimitive with its data unset.
+     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#setName(String)} to set the name instead.
+     *
+     * @param value The value to hold.
+     */
+    public DataPrimitive(Object value) {
+        setValue(value);
     }
 
     /**

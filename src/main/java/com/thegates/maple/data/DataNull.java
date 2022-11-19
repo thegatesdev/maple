@@ -47,16 +47,6 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     }
 
     @Override
-    public DataNull clone() {
-        return new DataNull();
-    }
-
-    @Override
-    protected Object raw() {
-        return null;
-    }
-
-    @Override
     public boolean isList() {
         return false;
     }
@@ -84,5 +74,15 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     @Override
     public boolean isPrimitive() {
         return false;
+    }
+
+    @Override
+    public DataNull clone() {
+        return new DataNull();
+    }
+
+    @Override
+    protected Object raw() {
+        return null;
     }
 }

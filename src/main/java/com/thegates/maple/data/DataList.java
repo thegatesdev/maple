@@ -85,17 +85,16 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return this;
     }
 
+    private void init(int initialCapacity) {
+        if (value == null)
+            value = new ArrayList<>(initialCapacity);
+    }
 
     /**
      * See {@link ArrayList#get(int)}
      */
     public DataElement get(int index) throws IndexOutOfBoundsException {
         return value.get(index);
-    }
-
-    private void init(int initialCapacity) {
-        if (value == null)
-            value = new ArrayList<>(initialCapacity);
     }
 
     /**

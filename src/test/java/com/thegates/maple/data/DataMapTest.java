@@ -45,7 +45,7 @@ class DataMapTest {
     @Test
     void ifPresent() {
         final AtomicReference<String> test = new AtomicReference<>();
-        testMap.ifPresent("primitive_entry", DataPrimitive.class, primitive -> test.set(primitive.stringValue()));
+        testMap.ifPresent("primitive_entry", el -> test.set(el.asPrimitive().stringValue()));
         assert test.get().equals("test_2");
     }
 
