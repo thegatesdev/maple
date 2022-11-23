@@ -61,11 +61,17 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
         return true;
     }
 
+    /**
+     * Always returns {@code true}.
+     */
     @Override
     public boolean isPresent() {
         return true;
     }
 
+    /**
+     * Always returns {@code false}.
+     */
     @Override
     public boolean isEmpty() {
         return false;
@@ -81,6 +87,9 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
         return new DataNull();
     }
 
+    /**
+     * Always returns {@code null}.
+     */
     @Override
     protected Object raw() {
         return null;
