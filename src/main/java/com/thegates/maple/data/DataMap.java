@@ -297,19 +297,90 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return val == null ? def : val;
     }
 
+    /**
+     * Checks if this map contains all supplied keys.
+     *
+     * @param keys The keys to check for.
+     * @return {@code true} if all of the keys were contained in this map.
+     */
     public boolean hasKeys(String... keys) {
         if (value == null) return false;
         return hasKeys(Arrays.asList(keys));
     }
 
+    /**
+     * Checks if this map contains all supplied keys.
+     *
+     * @param keys The keys to check for.
+     * @return {@code true} if all of the keys were contained in this map.
+     */
     public boolean hasKeys(Collection<String> keys) {
         if (value == null) return false;
         return value.keySet().containsAll(keys);
     }
 
+    /**
+     * Runs the action if the specified element is present, and is a DataList.
+     * This will never be a DataNull.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     */
+    public void ifList(String key, Consumer<DataList> action) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isList()) action.accept(el.asList());
+    }
+
+    /**
+     * Runs the action if the specified element is present, and is a DataMap.
+     * This will never be a DataNull.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     */
+    public void ifMap(String key, Consumer<DataMap> action) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isMap()) action.accept(el.asMap());
+    }
+
+    /**
+     * Runs the action if the specified element is present.
+     * This will never be a DataNull.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     */
     public void ifPresent(String key, Consumer<DataElement> action) {
         final DataElement el = getOrNull(key);
         if (el != null) action.accept(el);
+    }
+
+    /**
+     * Runs the action if the specified element is present, and is a DataPrimitive.
+     * This will never be a DataNull.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     */
+    public void ifPrimitive(String key, Consumer<DataPrimitive> action) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isPrimitive()) action.accept(el.asPrimitive());
+    }
+
+    /**
+     * Runs the action if the specified element is present, is a DataPrimitive, and it's value is of the specified type.
+     * This will never be a DataNull.
+     *
+     * @param key            The key to find the element at.
+     * @param primitiveClass The type the DataPrimitive should be of.
+     * @param action         The consumer to run when the element is found.
+     */
+    public <P> void ifPrimitiveOf(String key, Class<P> primitiveClass, Consumer<P> action) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isPrimitive()) {
+            final DataPrimitive primitive = el.asPrimitive();
+            if (primitive.isValueOf(primitiveClass)) action.accept(primitive.valueUnsafe());
+        }
     }
 
     /**
@@ -450,6 +521,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return false;
     }
 
+    /**
+     * Check if this list is empty, or not initialized.
+     */
     @Override
     public boolean isEmpty() {
         return value == null || value.isEmpty();
