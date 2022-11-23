@@ -139,7 +139,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     protected String[] calcPath() {
         int parents = parents();
-        return calcPath(new String[++parents], parents);
+        return calcPath(new String[parents + 1], parents);
     }
 
     /**
