@@ -7,25 +7,11 @@ import org.junit.jupiter.api.Test;
 public class DataElementTest {
 
     private DataMap testMap;
-
-    @BeforeEach
-    void setUp() {
-        testMap = new DataMap("named").put("test_element", new DataPrimitive("test_value"));
-    }
+    private DataPrimitive rootedPrimitive;
 
     @Test
-    void path() {
-        assert testMap.navigate("test_element").path().equals("named.test_element");
-    }
-
-    @Test
-    void hashCodeTest() {
-        assert new DataMap("named").put("test_element", new DataPrimitive("test_value")).hashCode() == testMap.hashCode();
-    }
-
-    @Test
-    void isOf() {
-        assert testMap.navigate("test_element").isOf(DataPrimitive.class);
+    void cloneEqualTest() {
+        assert testMap.equals(testMap.clone().setName("named"));
     }
 
     @Test
@@ -35,8 +21,31 @@ public class DataElementTest {
     }
 
     @Test
-    void cloneEqualTest() {
-        assert testMap.equals(testMap.clone().setData(null, "named"));
+    void hashCodeTest() {
+        assert new DataMap("named").put("test_element", new DataPrimitive("test_value")).hashCode() == testMap.hashCode();
+    }
+
+    @Test
+    void isOf() {
+        assert rootedPrimitive.isOf(DataPrimitive.class);
+    }
+
+    @Test
+    void parentsAmount() {
+        assert rootedPrimitive.parents() == 1;
+    }
+
+    @Test
+    void path() {
+        final String[] elements = testMap.navigate("test_element").path();
+        assert elements[0].equals("named");
+        assert elements[1].equals("test_element");
+    }
+
+    @BeforeEach
+    void setUp() {
+        rootedPrimitive = new DataPrimitive("test_value");
+        testMap = new DataMap("named").put("test_element", rootedPrimitive);
     }
 
     @AfterEach

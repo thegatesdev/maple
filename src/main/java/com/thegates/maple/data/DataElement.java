@@ -35,7 +35,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     protected static final Object READ_MUTEX = new Object();
 
     private final Class<? extends DataElement> cachedType = getClass();
-    private String cachedPath;
+    private String[] cachedPath;
 
     private DataElement parent;
     private String name;
@@ -54,37 +54,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
     protected DataElement(String name) {
         setData(null, name);
-    }
-
-    /**
-     * Sets the data.
-     *
-     * @param parent The parent to initialize the data with.
-     * @param name   The name to initialize the data with.
-     * @return The same DataElement.
-     * @throws IllegalArgumentException When the data is already set.
-     */
-    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
-        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
-        dataSet = true;
-        this.parent = parent;
-        this.name = name;
-        cachedPath = calcPath();
-        return this;
-    }
-
-    private String calcPath() {
-        final String n = name == null ? "unknown" : name;
-        return parent == null ? n : parent.path() + "." + n;
-    }
-
-    /**
-     * Get the cached path of the element.
-     *
-     * @return The path of this element as a dot separated string.
-     */
-    public String path() {
-        return cachedPath;
     }
 
     /**
@@ -160,6 +129,17 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     @SuppressWarnings("unchecked")
     public <E extends DataElement> E asUnsafe(Class<E> elementClass) {
         return (E) this;
+    }
+
+    private String[] calcPath(String[] collected, int index) {
+        collected[index] = name;
+        if (index == 0) return collected;
+        return parent.calcPath(collected, --index);
+    }
+
+    protected String[] calcPath() {
+        int parents = parents();
+        return calcPath(new String[++parents], parents);
     }
 
     /**
@@ -243,6 +223,25 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Gets the amount of parents this element has, or in other words, how deeply nested this element is.
+     * Returns 0 if this element has no parent.
+     */
+    protected int parents() {
+        if (!hasParent()) return 0;
+        return parent.parents() + 1;
+    }
+
+    /**
+     * Get the path of the element, to the root of the structure.
+     *
+     * @return The path of this element as an array of Strings, where the first String is the name of the root element, and the last String the name of this element.
+     */
+    public String[] path() {
+        if (cachedPath == null) return calcPath();
+        return cachedPath;
+    }
+
+    /**
      * @param elementClass The class this element is required to be.
      * @param <T>          The type of {@code elementClass}.
      * @return This element, cast to T.
@@ -262,6 +261,23 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     public DataElement root() {
         if (parent == null) return this;
         return parent.root();
+    }
+
+    /**
+     * Sets the data.
+     *
+     * @param parent The parent to initialize the data with.
+     * @param name   The name to initialize the data with.
+     * @return The same DataElement.
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
+        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
+        dataSet = true;
+        this.parent = parent;
+        this.name = name;
+        cachedPath = calcPath();
+        return this;
     }
 
     /**
@@ -288,7 +304,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DataElement that)) return false;
-        System.out.printf("EQUALS [%s] name:%s raw:%s%n", cachedPath, Objects.equals(name, that.name), Objects.equals(raw(), that.raw()));
         return Objects.equals(name, that.name) && Objects.equals(raw(), that.raw());
     }
 
