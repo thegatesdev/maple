@@ -19,27 +19,62 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * An exception to notify *the user* that they did something wrong. Not to be used for in code error handling.
+ */
 public class ElementException extends RuntimeException {
     private final DataElement element;
 
+    /**
+     * Constructs a new ElementException.
+     *
+     * @param data    The element the error happened at.
+     * @param message The message for the exception.
+     */
     public ElementException(DataElement data, String message) {
-        super("Error at %s, %s.".formatted(data.path(), message));
-        this.element = data;
+        this(data, message, null);
     }
 
+    /**
+     * Constructs a new ElementException.
+     *
+     * @param data    The element the error happened at.
+     * @param message The message for the exception.
+     */
     public ElementException(DataElement data, String message, Throwable cause) {
         super("Error at %s, %s.".formatted(data.path(), message), cause);
         this.element = data;
     }
 
+    /**
+     * Constructs a new ElementException for a missing field.
+     *
+     * @param data  The element the error happened at.
+     * @param field The field that is required.
+     * @return A new ElementException.
+     */
     public static ElementException requireField(DataElement data, String field) {
         return new ElementException(data, "missing required field '" + field + "'");
     }
 
+    /**
+     * Constructs a new ElementException for an element not being the required type.
+     *
+     * @param data The element the error happened at.
+     * @param type The type this element is required to be.
+     * @return A new ElementException.
+     */
     public static ElementException requireType(DataElement data, Class<?> type) {
         return requireType(data, type.getSimpleName());
     }
 
+    /**
+     * Constructs a new ElementException for an element not being the required type.
+     *
+     * @param data     The element the error happened at.
+     * @param typeName The name of the type this element is required to be.
+     * @return A new ElementException.
+     */
     public static ElementException requireType(DataElement data, String typeName) {
         return new ElementException(data, "should be of " + typeName);
     }

@@ -23,7 +23,7 @@ Copyright (C) 2022  Timar Karels
 */
 
 /**
- * A DataMap is a map element backed by a LinkedHashMap, with String for keys and DataElements for values.
+ * A map element backed by a LinkedHashMap, with String for keys and DataElements for values.
  * It allows for more advanced iteration, for example by element type ({@link DataMap#iterator(Class)}.
  */
 public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>>, Cloneable, Comparable<DataElement> {
@@ -244,7 +244,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         }
         return new DataNull().setData(this, null);
     }
-
+    
     public float getFloat(String key) {
         return getPrimitive(key).floatValue();
     }

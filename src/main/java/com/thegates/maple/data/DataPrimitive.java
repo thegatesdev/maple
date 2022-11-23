@@ -20,7 +20,7 @@ Copyright (C) 2022  Timar Karels
 */
 
 /**
- * A DataPrimitive is a primitive element. It holds an Object, and has methods to check the type, get the value as etc.
+ * A primitive element. It holds an Object, and has methods to check the type, get the value as etc.
  * A DataPrimitive's value is mutable, unlike the other DataElement implementations.
  */
 public class DataPrimitive extends DataElement implements Cloneable, Comparable<DataElement> {
@@ -126,6 +126,8 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
 
     /**
      * Check if the value contained is a boolean.
+     *
+     * @return {@code true} if the value is a boolean.
      */
     public boolean isBooleanValue() {
         return value instanceof Boolean;
@@ -133,6 +135,8 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
 
     /**
      * Check if the value contained is a number.
+     *
+     * @return {@code true} if the value is a number.
      */
     public boolean isNumberValue() {
         return value instanceof Number;
@@ -140,6 +144,8 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
 
     /**
      * Check if the value contained is a String.
+     *
+     * @return {@code true} if the value is a String
      */
     public boolean isStringValue() {
         return value instanceof String;
@@ -163,6 +169,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
 
     /**
      * @param clazz The class the value should be an instance of.
+     * @param <T>   The type to get the value as.
      * @return The cast value, or {@code null} if the value is not an instance of {@code clazz}.
      */
     public <T> T valueOrNull(Class<T> clazz) {

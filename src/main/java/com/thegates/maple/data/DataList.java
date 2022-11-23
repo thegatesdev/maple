@@ -20,7 +20,7 @@ Copyright (C) 2022  Timar Karels
 */
 
 /**
- * A DataList is a list element backed by an ArrayList, containing an array of DataElement.
+ * A list element backed by an ArrayList, containing an array of DataElement.
  * It allows for more advanced iteration, for example by element type ({@link DataList#iterator(Class)}.
  */
 public class DataList extends DataElement implements Iterable<DataElement>, Cloneable, Comparable<DataElement> {

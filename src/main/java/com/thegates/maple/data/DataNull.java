@@ -18,7 +18,7 @@ Copyright (C) 2022  Timar Karels
 */
 
 /**
- * A DataNull is a null element. It represents a null value in a structure.
+ * A null element. It represents a null value in a structure.
  */
 public class DataNull extends DataElement implements Cloneable, Comparable<DataElement> {
     /**
