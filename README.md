@@ -45,7 +45,7 @@ structure. This is to prevent ghost items ( and also who are you to say who thei
 - `new DataMap("Timmy")` This creates a new DataMap with its data *set*, the parent is defaulted to *null*.
 - `new DataMap("Timmy").put("Johnny", new DataMap())` The DataMap put in the map named "Timmy" will have its name set to
   the key it is associated with ( in this case "Johnny" ).
-- `new DataMap("Timmy").put("Johhny", new DataMap("JohnnyV2"))` This will fail. The DataMap we are putting in already
+- `new DataMap("Timmy").put("Johnny", new DataMap("JohnnyV2"))` This will fail. The DataMap we are putting in already
   has its data set!
 
 ### DataMap
