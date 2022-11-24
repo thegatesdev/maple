@@ -42,17 +42,17 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
      */
     public DataPrimitive(String name, Object value) {
         super(name);
-        setValue(value);
+        value(value);
     }
 
     /**
      * Constructs a DataPrimitive with its data unset.
-     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#setName(String)} to set the name instead.
+     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#name(String)} to set the name instead.
      *
      * @param value The value to hold.
      */
     public DataPrimitive(Object value) {
-        setValue(value);
+        value(value);
     }
 
     /**
@@ -60,7 +60,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
      *
      * @param value The value to set to.
      */
-    public void setValue(Object value) {
+    public void value(Object value) {
         this.value = value;
         cachedSimpleName = value.getClass().getSimpleName();
     }
@@ -80,14 +80,14 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
      * @throws ElementException If the value is not an instance of {@code clazz}.
      */
     public <T> T requireValue(Class<T> clazz) throws ElementException {
-        if (!isValueOf(clazz)) throw ElementException.requireType(this, clazz);
+        if (!valueOf(clazz)) throw ElementException.requireType(this, clazz);
         return valueUnsafe();
     }
 
     /**
      * Check if the value contained is an instance of {@code clazz}.
      */
-    public boolean isValueOf(Class<?> clazz) {
+    public boolean valueOf(Class<?> clazz) {
         if (isEmpty()) return false;
         return clazz.isInstance(value);
     }
@@ -174,7 +174,7 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
      * @return The cast value, or {@code null} if the value is not an instance of {@code clazz}.
      */
     public <T> T valueOrNull(Class<T> clazz) {
-        return isValueOf(clazz) ? clazz.cast(value) : null;
+        return valueOf(clazz) ? clazz.cast(value) : null;
     }
 
     @Override
@@ -218,6 +218,11 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     @Override
+    protected Object raw() {
+        return value;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DataPrimitive)) return false;
@@ -227,10 +232,5 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     @Override
     public DataPrimitive clone() {
         return new DataPrimitive(value);
-    }
-
-    @Override
-    protected Object raw() {
-        return value;
     }
 }

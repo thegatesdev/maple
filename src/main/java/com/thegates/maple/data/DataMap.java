@@ -69,8 +69,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Read a Map to a DataMap.
      *
      * @param data The map to read from.
-     * @return @return A new DataMap containing all the keys and elements of the Map,
-     * read using {@link DataElement#readOf(Object)}
+     * @return @return A new DataMap containing all the entries of the Map,
+     * the values read using {@link DataElement#readOf(Object)}
      */
     public static DataMap read(Map<String, ?> data) {
         final DataMap output = new DataMap();
@@ -80,7 +80,14 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return output;
     }
 
-    static DataMap readInternal(Map<?, ?> data) {
+    /**
+     * Read a Map with unknown type keys to a DataMap.
+     *
+     * @param data The map to read from.
+     * @return @return A new DataMap containing the entries of the Map which key is a String,
+     * the values read using {@link DataElement#readOf(Object)}
+     */
+    public static DataMap readUnknown(Map<?, ?> data) {
         final DataMap output = new DataMap();
         for (Map.Entry<?, ?> entry : data.entrySet()) {
             if (entry.getKey() instanceof String key) output.put(key, DataElement.readOf(entry.getValue()));
@@ -428,6 +435,18 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Runs the action if the specified element is present.
+     * This will never be a DataNull.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     */
+    public void ifPresent(String key, Consumer<DataElement> action) {
+        final DataElement el = getOrNull(key);
+        if (el != null) action.accept(el);
+    }
+
+    /**
      * Runs the action if the specified element is present, and is a DataList.
      * This will never be a DataNull.
      *
@@ -449,18 +468,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public void ifMap(String key, Consumer<DataMap> action) {
         final DataElement el = getOrNull(key);
         if (el != null && el.isMap()) action.accept(el.asMap());
-    }
-
-    /**
-     * Runs the action if the specified element is present.
-     * This will never be a DataNull.
-     *
-     * @param key    The key to find the element at.
-     * @param action The consumer to run when the element is found.
-     */
-    public void ifPresent(String key, Consumer<DataElement> action) {
-        final DataElement el = getOrNull(key);
-        if (el != null) action.accept(el);
     }
 
     /**
@@ -487,7 +494,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         final DataElement el = getOrNull(key);
         if (el != null && el.isPrimitive()) {
             final DataPrimitive primitive = el.asPrimitive();
-            if (primitive.isValueOf(primitiveClass)) action.accept(primitive.valueUnsafe());
+            if (primitive.valueOf(primitiveClass)) action.accept(primitive.valueUnsafe());
         }
     }
 
@@ -676,6 +683,11 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
+    protected LinkedHashMap<String, DataElement> raw() {
+        return value;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DataMap)) return false;
@@ -685,11 +697,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     @Override
     public DataMap clone() {
         return new DataMap().cloneFrom(this);
-    }
-
-    @Override
-    protected LinkedHashMap<String, DataElement> raw() {
-        return value;
     }
 
     private class ClassedIterator<E extends DataElement> implements Iterator<Map.Entry<String, E>> {

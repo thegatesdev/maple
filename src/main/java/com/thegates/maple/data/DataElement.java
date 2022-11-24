@@ -25,7 +25,7 @@ Copyright (C) 2022  Timar Karels
 
 /**
  * An abstract class for any element.
- * A DataElement contains a parent and name, which together are only settable once, using a constructor, or dedicated methods {@link DataElement#setData(DataElement, String)} and {@link DataElement#setName(String)}.
+ * A DataElement contains a parent and name, which together are only settable once, using a constructor, or dedicated methods {@link DataElement#setData(DataElement, String)} and {@link DataElement#name(String)}.
  * With the name and parent it can calculate the root of the structure ({@link DataElement#root()}), the path to this element ({@link DataElement#path()}) or check if it is a child of an element ({@link DataElement#isChild(DataElement)}).
  * The parent is only to be set by the parent itself, to avoid 'ghost' elements that have the parent set, but are not actually contained in the structure.
  */
@@ -71,7 +71,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     public static DataElement readOf(Object input) {
         if (input == null) return new DataNull();
         final Object reading = (input instanceof DataElement el) ? el.value() : input;
-        if (reading instanceof Map<?, ?> map) return DataMap.readInternal(map);
+        if (reading instanceof Map<?, ?> map) return DataMap.readUnknown(map);
         if (reading instanceof Collection<?> collection) return DataList.read(collection);
         return new DataPrimitive(reading);
     }
@@ -129,17 +129,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     @SuppressWarnings("unchecked")
     public <E extends DataElement> E asUnsafe(Class<E> elementClass) {
         return (E) this;
-    }
-
-    private String[] calcPath(String[] collected, int index) {
-        collected[index] = name;
-        if (index == 0) return collected;
-        return parent.calcPath(collected, --index);
-    }
-
-    protected String[] calcPath() {
-        int parents = parents();
-        return calcPath(new String[parents + 1], parents);
     }
 
     /**
@@ -223,15 +212,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Gets the amount of parents this element has, or in other words, how deeply nested this element is.
-     * Returns 0 if this element has no parent.
-     */
-    protected int parents() {
-        if (!hasParent()) return 0;
-        return parent.parents() + 1;
-    }
-
-    /**
      * Get the path of the element, to the root of the structure.
      *
      * @return The path of this element as an array of Strings, where the first String is the name of the root element, and the last String the name of this element.
@@ -264,6 +244,15 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Set the name of this element.
+     *
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    public DataElement name(String name) throws IllegalArgumentException {
+        return setData(null, name);
+    }
+
+    /**
      * Sets the data.
      *
      * @param parent The parent to initialize the data with.
@@ -280,13 +269,29 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return this;
     }
 
+    protected String[] calcPath() {
+        int parents = parents();
+        return calcPath(new String[parents + 1], parents);
+    }
+
     /**
-     * Set the name of this element.
-     *
-     * @throws IllegalArgumentException When the data is already set.
+     * Gets the amount of parents this element has, or in other words, how deeply nested this element is.
+     * Returns 0 if this element has no parent.
      */
-    public DataElement setName(String name) throws IllegalArgumentException {
-        return setData(null, name);
+    protected int parents() {
+        if (!hasParent()) return 0;
+        return parent.parents() + 1;
+    }
+
+    /**
+     * @return The raw value contained in this element.
+     */
+    protected abstract Object raw();
+
+    private String[] calcPath(String[] collected, int index) {
+        collected[index] = name;
+        if (index == 0) return collected;
+        return parent.calcPath(collected, --index);
     }
 
     @Override
@@ -313,9 +318,4 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      * @return A new DataElement of the original type, <b>without it's data set.</b>
      */
     public abstract DataElement clone();
-
-    /**
-     * @return The raw value contained in this element.
-     */
-    protected abstract Object raw();
 }

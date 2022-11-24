@@ -11,7 +11,7 @@ public class DataElementTest {
 
     @Test
     void cloneEqualTest() {
-        assert testMap.equals(testMap.clone().setName("named"));
+        assert testMap.equals(testMap.clone().name("named"));
     }
 
     @Test

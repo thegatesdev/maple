@@ -111,7 +111,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         final ArrayList<T> out = new ArrayList<>();
         synchronized (READ_MUTEX) {
             for (final DataElement element : this) {
-                if (element.isPrimitive() && element.asPrimitive().isValueOf(elementClass))
+                if (element.isPrimitive() && element.asPrimitive().valueOf(elementClass))
                     out.add(element.asPrimitive().valueUnsafe());
             }
         }
