@@ -85,13 +85,12 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return this;
     }
 
-    private void init(int initialCapacity) {
-        if (value == null)
-            value = new ArrayList<>(initialCapacity);
-    }
-
     /**
-     * See {@link ArrayList#get(int)}
+     * Get the element at the specified position in this list.
+     *
+     * @param index Index of the element to return.
+     * @return The element at the specified position in this list.
+     * @throws IndexOutOfBoundsException If the index is out of range.
      */
     public DataElement get(int index) throws IndexOutOfBoundsException {
         return value.get(index);
@@ -141,6 +140,31 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
      */
     public void sort(Comparator<? super DataElement> comparator) {
         value.sort(comparator);
+    }
+
+    /**
+     * @see DataList#cloneFrom(Collection)
+     */
+    public DataList cloneFrom(DataList dataList) {
+        return cloneFrom(dataList.value);
+    }
+
+    /**
+     * Clone the elements of the input list to this list.
+     *
+     * @return This DataList.
+     */
+    public DataList cloneFrom(Collection<DataElement> elements) {
+        if (elements != null && !elements.isEmpty()) {
+            if (value == null) init(elements.size());
+            for (final DataElement element : elements) add(element.clone());
+        }
+        return this;
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null)
+            value = new ArrayList<>(initialCapacity);
     }
 
     @Override
@@ -221,26 +245,6 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     @Override
     protected ArrayList<DataElement> raw() {
         return value;
-    }
-
-    /**
-     * @see DataList#cloneFrom(Collection)
-     */
-    public DataList cloneFrom(DataList dataList) {
-        return cloneFrom(dataList.value);
-    }
-
-    /**
-     * Clone the elements of the input list to this list.
-     *
-     * @return This DataList.
-     */
-    public DataList cloneFrom(Collection<DataElement> elements) {
-        if (elements != null && !elements.isEmpty()) {
-            if (value == null) init(elements.size());
-            for (final DataElement element : elements) add(element.clone());
-        }
-        return this;
     }
 
     private class ClassedIterator<E extends DataElement> implements Iterator<E> {

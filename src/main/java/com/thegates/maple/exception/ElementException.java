@@ -38,6 +38,7 @@ public class ElementException extends RuntimeException {
     /**
      * Constructs a new ElementException.
      *
+     * @param cause   The Throwable to take as a cause.
      * @param data    The element the error happened at.
      * @param message The message for the exception.
      */
