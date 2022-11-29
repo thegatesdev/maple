@@ -6,7 +6,7 @@
 
     <groupId>com.thegates</groupId>
     <artifactId>maple</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
 
     <build>
         <plugins>
