@@ -217,7 +217,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      * @return The path of this element as an array of Strings, where the first String is the name of the root element, and the last String the name of this element.
      */
     public String[] path() {
-        if (cachedPath == null) return calcPath();
+        if (cachedPath == null) cachedPath = calcPath();
         return cachedPath;
     }
 
@@ -270,7 +270,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     protected String[] calcPath() {
-        int parents = parents();
+        final int parents = parents();
         return calcPath(new String[parents + 1], parents);
     }
 
