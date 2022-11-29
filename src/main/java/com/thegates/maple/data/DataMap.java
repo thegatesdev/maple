@@ -221,6 +221,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return val == null ? def : val;
     }
 
+    public <P> P get(String key, Class<P> primitiveClass) {
+        return getPrimitive(key).requireValue(primitiveClass);
+    }
+
     /**
      * Get the value of the first {@link DataPrimitive} associated with one of these keys.
      *
