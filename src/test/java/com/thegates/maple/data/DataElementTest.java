@@ -22,7 +22,7 @@ public class DataElementTest {
 
     @Test
     void hashCodeTest() {
-        assert new DataMap("named").put("test_element", new DataPrimitive("test_value")).hashCode() == testMap.hashCode();
+        assert new DataMap("named").put("test_element", new DataPrimitive("test_value")).put("test_map", new DataMap().put("map_element", new DataPrimitive("test"))).hashCode() == testMap.hashCode();
     }
 
     @Test
@@ -37,15 +37,17 @@ public class DataElementTest {
 
     @Test
     void path() {
-        final String[] elements = testMap.navigate("test_element").path();
+        final String[] elements = testMap.getMap("test_map").get("map_element").path();
         assert elements[0].equals("named");
-        assert elements[1].equals("test_element");
+        assert elements[1].equals("test_map");
+        assert elements[2].equals("map_element");
+
     }
 
     @BeforeEach
     void setUp() {
-        rootedPrimitive = new DataPrimitive("test_value");
-        testMap = new DataMap("named").put("test_element", rootedPrimitive);
+        rootedPrimitive = new DataPrimitive("test_value");// Setting value not name
+        testMap = new DataMap("named").put("test_element", rootedPrimitive).put("test_map", new DataMap().put("map_element", new DataPrimitive("test")));
     }
 
     @AfterEach

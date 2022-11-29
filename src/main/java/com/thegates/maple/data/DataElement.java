@@ -265,7 +265,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         dataSet = true;
         this.parent = parent;
         this.name = name;
-        cachedPath = calcPath();
         return this;
     }
 
