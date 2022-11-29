@@ -62,7 +62,9 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
      */
     public void value(Object value) {
         this.value = value;
-        cachedSimpleName = value.getClass().getSimpleName();
+        if (value != null)
+            cachedSimpleName = value.getClass().getSimpleName();
+        else cachedSimpleName = "Null";
     }
 
     /**
