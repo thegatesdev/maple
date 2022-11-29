@@ -97,28 +97,6 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     /**
-     * Get the iterator for elements of this {@code elementClass}.
-     */
-    public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
-        return new ClassedIterator<>(elementClass);
-    }
-
-    /**
-     * @param elementClass The class the DataPrimitives values should be of.
-     * @return A new ArrayList containing the values of the DataPrimitives in this DataList conforming to {@code elementClass}.
-     */
-    public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
-        final ArrayList<T> out = new ArrayList<>();
-        synchronized (READ_MUTEX) {
-            for (final DataElement element : this) {
-                if (element.isPrimitive() && element.asPrimitive().valueOf(elementClass))
-                    out.add(element.asPrimitive().valueUnsafe());
-            }
-        }
-        return out;
-    }
-
-    /**
      * @return The size of this list, or {@code 0} if the list is not initialized.
      */
     public int size() {
@@ -160,6 +138,28 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
             for (final DataElement element : elements) add(element.clone());
         }
         return this;
+    }
+
+    /**
+     * Get the iterator for elements of this {@code elementClass}.
+     */
+    public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
+        return new ClassedIterator<>(elementClass);
+    }
+
+    /**
+     * @param elementClass The class the DataPrimitives values should be of.
+     * @return A new ArrayList containing the values of the DataPrimitives in this DataList conforming to {@code elementClass}.
+     */
+    public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
+        final ArrayList<T> out = new ArrayList<>();
+        synchronized (READ_MUTEX) {
+            for (final DataElement element : this) {
+                if (element.isPrimitive() && element.asPrimitive().valueOf(elementClass))
+                    out.add(element.asPrimitive().valueUnsafe());
+            }
+        }
+        return out;
     }
 
     private void init(int initialCapacity) {
@@ -231,6 +231,11 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     @Override
+    protected ArrayList<DataElement> raw() {
+        return value;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DataList)) return false;
@@ -240,11 +245,6 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     @Override
     public DataList clone() {
         return new DataList().cloneFrom(this);
-    }
-
-    @Override
-    protected ArrayList<DataElement> raw() {
-        return value;
     }
 
     private class ClassedIterator<E extends DataElement> implements Iterator<E> {
