@@ -43,7 +43,7 @@ public class ElementException extends RuntimeException {
      * @param message The message for the exception.
      */
     public ElementException(DataElement data, String message, Throwable cause) {
-        super("Error at %s; %s.".formatted(data.path(), message), cause);
+        super("Error at %s; %s.".formatted(String.join(".", data.path()), message), cause);
         this.element = data;
     }
 
