@@ -24,7 +24,7 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     /**
      * Constructs an empty DataNull with its data unset.
      */
-    protected DataNull() {
+    public DataNull() {
     }
 
     /**
@@ -32,7 +32,7 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
      *
      * @param name The name to initialize the data with.
      */
-    protected DataNull(String name) {
+    public DataNull(String name) {
         super(name);
     }
 
