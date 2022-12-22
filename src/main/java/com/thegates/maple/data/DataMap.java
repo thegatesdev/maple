@@ -492,17 +492,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * Runs the action if the specified element is present, is a DataPrimitive, and a value is present.
-     *
-     * @param key    The key to find the element at.
-     * @param action The consumer to run when the element is found.
-     */
-    public void ifPrimitivePresent(String key, Consumer<DataPrimitive> action) {
-        final DataElement el = getOrNull(key);
-        if (el != null && el.isPrimitive() && el.asPrimitive().isPresent()) action.accept(el.asPrimitive());
-    }
-
-    /**
      * Runs the action if the specified element is present, is a DataPrimitive, and it's value is of the specified type.
      *
      * @param key            The key to find the element at.
