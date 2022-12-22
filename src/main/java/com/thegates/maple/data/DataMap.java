@@ -30,6 +30,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
     private LinkedHashMap<String, DataElement> value;
 
+    private String keyCache;
+    private DataElement elementCache;
+
     /**
      * Constructs an empty DataMap with its data unset.
      */
@@ -114,6 +117,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         synchronized (MODIFY_MUTEX) {
             value.put(key, element.setData(this, key));
         }
+        keyCache = key;
+        elementCache = element;
         return this;
     }
 
@@ -155,8 +160,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * @return The element associated with this key, or {@code null}.
      */
     public DataElement getOrNull(String key) {
+        if (Objects.equals(keyCache, key)) return elementCache;
         if (value != null) synchronized (READ_MUTEX) {
-            return value.get(key);
+            keyCache = key;
+            return elementCache = value.get(key);
         }
         return null;
     }
@@ -412,6 +419,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * @param key The key to check for.
      */
     public boolean hasKey(String key) {
+        if (Objects.equals(key, keyCache)) return true;
         if (value == null) return false;
         return value.containsKey(key);
     }
