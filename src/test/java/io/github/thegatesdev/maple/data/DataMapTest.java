@@ -1,4 +1,4 @@
-package com.thegates.maple.data;
+package io.github.thegatesdev.maple.data;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +23,7 @@ class DataMapTest {
 
     @Test
     void ifPresent() {
+        // This is indeed questionable lol
         final AtomicReference<String> ifPresent = new AtomicReference<>();
         testMap.ifPresent("primitive_entry", el -> ifPresent.set(el.asPrimitive().stringValue()));
         assert ifPresent.get().equals("test_2");

@@ -1,4 +1,4 @@
-package com.thegates.maple.data;
+package io.github.thegatesdev.maple.data;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +22,7 @@ public class DataElementTest {
 
     @Test
     void hashCodeTest() {
+        //noinspection AssertWithSideEffects
         assert new DataMap("named").put("test_element", new DataPrimitive("test_value")).put("test_map", new DataMap().put("map_element", new DataPrimitive("test"))).hashCode() == testMap.hashCode();
     }
 

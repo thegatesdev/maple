@@ -1,4 +1,4 @@
-package com.thegates.maple.data;
+package io.github.thegatesdev.maple.data;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

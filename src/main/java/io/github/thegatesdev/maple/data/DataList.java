@@ -1,4 +1,4 @@
-package com.thegates.maple.data;
+package io.github.thegatesdev.maple.data;
 
 import java.util.*;
 

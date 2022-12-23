@@ -1,6 +1,6 @@
-package com.thegates.maple.exception;
+package io.github.thegatesdev.maple.exception;
 
-import com.thegates.maple.data.DataElement;
+import io.github.thegatesdev.maple.data.DataElement;
 
 /*
 Copyright (C) 2022  Timar Karels
