@@ -14,19 +14,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.4.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <file>${project.build.directory}/${project.build.finalName}.jar</file>
-                </configuration>
-                <version>2.5.2</version>
                 <executions>
                     <execution>
                         <phase>install</phase>
                         <goals>
-                            <goal>install-file</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
