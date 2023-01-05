@@ -23,6 +23,9 @@ Copyright (C) 2022  Timar Karels
  * An exception to notify *the user* that they did something wrong. Not to be used for in code error handling.
  */
 public class ElementException extends RuntimeException {
+    /**
+     * The element where this exception was thrown for.
+     */
     private final DataElement element;
 
     /**

@@ -31,7 +31,13 @@ Copyright (C) 2022  Timar Karels
  */
 public abstract class DataElement implements Cloneable, Comparable<DataElement> {
 
+    /**
+     * The mutex for modifying this element.
+     */
     protected static final Object MODIFY_MUTEX = new Object();
+    /**
+     * The mutex for reading from this element.
+     */
     protected static final Object READ_MUTEX = new Object();
 
     private final Class<? extends DataElement> cachedType = getClass();
@@ -100,6 +106,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     /**
      * @param elementClass The class to get this DataElement as.
+     * @param <E>          The type to get this DataElement as.
      * @return This element cast to E, or null if the element could not be cast.
      */
     @SuppressWarnings("unchecked")
@@ -110,6 +117,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     /**
      * @param elementClass The class to check this DataElement for.
+     * @return True if the elementClass matches the DataElement class.
      */
     public boolean isOf(Class<? extends DataElement> elementClass) {
         return cachedType == elementClass;
@@ -126,6 +134,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     /**
      * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive, or the elseAction if not.
+     * @param elseAction        The runnable to run if this element is not a DataPrimitive.
      */
     public void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
@@ -133,6 +142,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     /**
      * @param mapConsumer Runs this consumer if this element is a DataMap, or the elseAction if not.
+     * @param elseAction  The runnable to run if this element is not a DataMap.
      */
     public void ifMap(Consumer<DataMap> mapConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
@@ -140,6 +150,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     /**
      * @param listConsumer Runs this consumer if this element is a DataList, or the elseAction if not.
+     * @param elseAction   The runnable to run if this element is not a DataList.
      */
     public void ifList(Consumer<DataList> listConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
@@ -167,7 +178,11 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Cast to E
+     * Unsafe cast to E
+     *
+     * @param elementClass The class to cast to.
+     * @param <E>          The type to cast to.
+     * @return The cast element.
      */
     @SuppressWarnings("unchecked")
     public <E extends DataElement> E asUnsafe(Class<E> elementClass) {
@@ -182,7 +197,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Check if this elements parent is not equal to {@code null}.
+     * @return True if this elements parent is not null.
      */
     public boolean hasParent() {
         return parent != null;
@@ -203,46 +218,48 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     /**
      * Check if the data (parent / name) is initialized.
      * Initializing the data can be done through a constructor or {@link DataElement#setData(DataElement, String)}
+     *
+     * @return True if the parent or name is set.
      */
     public boolean isDataSet() {
         return dataSet;
     }
 
     /**
-     * Check if this DataElement is a DataList.
+     * @return True if this element is a DataList.
      */
     public boolean isList() {
         return false;
     }
 
     /**
-     * Check if this DataElement is a DataMap.
+     * @return True if this element is a DataMap.
      */
     public boolean isMap() {
         return false;
     }
 
     /**
-     * Check if this DataElement is a DataNull.
+     * @return True if this element is a DataNull.
      */
     public boolean isNull() {
         return false;
     }
 
     /**
-     * Check if this DataElement's value is not empty.
+     * @return True if this element is not empty.
      */
     public boolean isPresent() {
         return !isEmpty();
     }
 
     /**
-     * Check if this DataElement's value empty. Implementation may differ.
+     * @return True if this element is empty. Implementation may differ.
      */
     public abstract boolean isEmpty();
 
     /**
-     * Check if this DataElement is a DataPrimitive.
+     * @return True if this element is a DataPrimitive.
      */
     public boolean isPrimitive() {
         return false;
@@ -297,6 +314,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     /**
      * Set the name of this element.
      *
+     * @param name The name to set.
+     * @return The same DataElement.
      * @throws IllegalArgumentException When the data is already set.
      */
     public DataElement name(String name) throws IllegalArgumentException {
@@ -319,13 +338,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return this;
     }
 
-    protected String[] calcPath() {
-        final int parents = parents();
-        return calcPath(new String[parents + 1], parents);
-    }
-
     /**
-     * Gets the amount of parents this element has, or in other words, how deeply nested this element is.
+     * @return The amount of parents this element has, or in other words, how deeply nested this element is.
      * Returns 0 if this element has no parent.
      */
     protected int parents() {
@@ -333,7 +347,15 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return parent.parents() + 1;
     }
 
+    /**
+     * @return The raw value that backs this element.
+     */
     protected abstract Object raw();
+
+    private String[] calcPath() {
+        final int parents = parents();
+        return calcPath(new String[parents + 1], parents);
+    }
 
     private String[] calcPath(String[] collected, int index) {
         collected[index] = name;

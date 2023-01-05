@@ -72,7 +72,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Read a Map to a DataMap.
      *
      * @param data The map to read from.
-     * @return @return A new DataMap containing all the entries of the Map,
+     * @return A new DataMap containing all the entries of the Map,
      * the values read using {@link DataElement#readOf(Object)}
      */
     public static DataMap read(Map<String, ?> data) {
@@ -87,7 +87,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Read a Map with unknown type keys to a DataMap.
      *
      * @param data The map to read from.
-     * @return @return A new DataMap containing the entries of the Map which key is a String,
+     * @return A new DataMap containing the entries of the Map which key is a String,
      * the values read using {@link DataElement#readOf(Object)}
      */
     public static DataMap readUnknown(Map<?, ?> data) {
@@ -123,7 +123,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * @param elementClass The class of DataElements to
+     * @param elementClass The class of DataElements to collect.
+     * @param <E>          The type of DataElements to collect.
      * @return A new Map containing all the key value pairs of the values that match {@code elementClass}.
      */
     public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
@@ -135,7 +136,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * Get the iterator for entries with values of this {@code elementClass}.
+     * @param elementClass The class to create an iterator for.
+     * @param <E>          The type to create an iterator for.
+     * @return The iterator for entries with values of this {@code elementClass}.
      */
     public <E extends DataElement> Iterator<Map.Entry<String, E>> iterator(Class<E> elementClass) {
         return new ClassedIterator<>(elementClass);
@@ -215,7 +218,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Get the value of the {@link DataPrimitive} associated with this key, or a default.
      *
      * @param key            The key of the primitive.
-     * @param primitiveClass The type the primitive should be of.
+     * @param primitiveClass The class the primitive should be of.
+     * @param <P>            The type the primitive should be of.
      * @param def            The default value to return when the element is not present, not a primitive, or the type does not match.
      * @return The value of the primitive, or the default value.
      */
@@ -228,7 +232,16 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return val == null ? def : val;
     }
 
-    public <P> P get(String key, Class<P> primitiveClass) {
+    /**
+     * Get the value of the {@link DataPrimitive} associated with this key, or throw.
+     *
+     * @param key            The key of the primitive.
+     * @param primitiveClass The class the primitive should be of.
+     * @param <P>            The type the primitive should be of.
+     * @return The value of the primitive.
+     * @throws ElementException If the primitive was not found, or the value did not conform to P.
+     */
+    public <P> P get(String key, Class<P> primitiveClass) throws ElementException {
         return getPrimitive(key).requireValue(primitiveClass);
     }
 
@@ -236,7 +249,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Get the value of the first {@link DataPrimitive} associated with one of these keys.
      *
      * @param keys           The possible keys of the primitive.
-     * @param primitiveClass The type the primitive should be of.
+     * @param primitiveClass The class the primitive should be of.
+     * @param <P>            The type the primitive should be of.
      * @return The value of the primitive.
      * @throws ElementException If the found element is not present, is not a primitive, or it's value is not of the required type.
      */
@@ -414,9 +428,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * Check if this map contains this key.
-     *
      * @param key The key to check for.
+     * @return True if the key is contained in this DataMap.
      */
     public boolean hasKey(String key) {
         if (Objects.equals(key, keyCache)) return true;
@@ -544,7 +557,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Runs the action if the specified element is present and is a DataPrimitive and it's value is of the specified type.
      *
      * @param key            The key to find the element at.
-     * @param primitiveClass The type the DataPrimitive should be of.
+     * @param primitiveClass The class the DataPrimitive should be of.
+     * @param <P>            The type the DataPrimitive should be of.
      * @param action         The consumer to run when the element is found.
      */
     public <P> void ifPrimitiveOf(String key, Class<P> primitiveClass, Consumer<P> action) {
@@ -555,7 +569,9 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Runs the action if the specified element is present and is a DataPrimitive and it's value is of the specified type, or the elseAction if not.
      *
      * @param key            The key to find the element at.
-     * @param primitiveClass The type the DataPrimitive should be of.
+     * @param primitiveClass The class the DataPrimitive should be of.
+     * @param <P>            The type the DataPrimitive should be of.
+     * @param elseAction     The runnable to run when the element is not present or is not a DataPrimitive, or it's value is not of the specified type.
      * @param action         The consumer to run when the element is found.
      */
     public <P> void ifPrimitiveOf(String key, Class<P> primitiveClass, Consumer<P> action, Runnable elseAction) {
@@ -642,6 +658,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * @param toAdd The DataMap to add the elements from to this map.
      * @return This DataMap.
      * @see DataMap#cloneFrom(Map)
      */

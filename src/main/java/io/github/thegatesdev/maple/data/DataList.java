@@ -59,6 +59,13 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return dataList;
     }
 
+    /**
+     * Read an Object varargs array to a DataList.
+     *
+     * @param objects The array to read from.
+     * @return A new DataList containing all the elements returned from the array,
+     * read using {@link DataElement#readOf(Object)}
+     */
     public static DataList read(Object... objects) {
         final DataList dataList = new DataList();
         for (Object o : objects) {
@@ -87,14 +94,19 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
      * Get the element at the specified position in this list.
      *
      * @param index Index of the element to return.
-     * @return The element at the specified position in this list.
-     * @throws IndexOutOfBoundsException If the index is out of range.
+     * @return The element at the specified position in this list, or DataNull if out of bounds.
      */
     public DataElement get(int index) {
         final DataElement el = getOrNull(index);
         return el == null ? new DataNull().setData(this, "[Out of bounds]") : el;
     }
 
+    /**
+     * Get the element at the specified position in this list.
+     *
+     * @param index Index of the element to return.
+     * @return The element at the specified position in this list, or null if out of bounds.
+     */
     public DataElement getOrNull(int index) {
         try {
             return value.get(index);
@@ -122,12 +134,16 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
     /**
      * See {@link ArrayList#sort(Comparator)}
+     *
+     * @param comparator the Comparator used to compare list elements. A null value indicates that the elements' natural ordering should be used
      */
     public void sort(Comparator<? super DataElement> comparator) {
         value.sort(comparator);
     }
 
     /**
+     * @param dataList The DataList to clone the elements from.
+     * @return This DataList.
      * @see DataList#cloneFrom(Collection)
      */
     public DataList cloneFrom(DataList dataList) {
@@ -135,8 +151,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     /**
-     * Clone the elements of the input list to this list.
-     *
+     * @param elements The Collection to clone the elements from.
      * @return This DataList.
      */
     public DataList cloneFrom(Collection<DataElement> elements) {
@@ -148,14 +163,17 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     }
 
     /**
-     * Get the iterator for elements of this {@code elementClass}.
+     * @param elementClass The class to get the iterator for.
+     * @param <E>          The type to get the iterator for.
+     * @return The iterator for elements of this {@code elementClass}.
      */
     public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
         return new ClassedIterator<>(elementClass, iterator());
     }
 
     /**
-     * @param elementClass The class the DataPrimitives values should be of.
+     * @param elementClass The class the DataPrimitive's values should be of.
+     * @param <T>          The type the DataPrimitive's values should be of.
      * @return A new ArrayList containing the values of the DataPrimitives in this DataList conforming to {@code elementClass}.
      */
     public <T> ArrayList<T> primitiveList(Class<T> elementClass) {

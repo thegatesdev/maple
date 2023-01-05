@@ -89,7 +89,8 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     /**
-     * Check if the value contained is an instance of {@code clazz}.
+     * @param clazz The class the value should conform to.
+     * @return True if the value of this primitive conforms to clazz
      */
     public boolean valueOf(Class<?> clazz) {
         if (isEmpty()) return false;
