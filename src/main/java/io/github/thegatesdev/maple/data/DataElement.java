@@ -178,15 +178,26 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Unsafe cast to E
+     * Unsafe cast this element to E
      *
-     * @param elementClass The class to cast to.
-     * @param <E>          The type to cast to.
+     * @param <E> The type to cast this element to.
      * @return The cast element.
      */
     @SuppressWarnings("unchecked")
-    public <E extends DataElement> E asUnsafe(Class<E> elementClass) {
+    public <E extends DataElement> E unsafeCast() {
         return (E) this;
+    }
+
+    /**
+     * Cast this element to E
+     *
+     * @param <E>          The type to cast this element to.
+     * @param elementClass The class to cast this element with.
+     * @return The same DataElement as E, or null if this element does not conform to elementClass.
+     */
+    @SuppressWarnings("unchecked")
+    public <E extends DataElement> E castOrNull(Class<E> elementClass) {
+        return elementClass.isInstance(this) ? (E) this : null;
     }
 
     /**
