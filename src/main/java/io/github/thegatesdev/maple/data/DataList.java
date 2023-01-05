@@ -59,6 +59,14 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return dataList;
     }
 
+    public static DataList read(Object... objects) {
+        final DataList dataList = new DataList();
+        for (Object o : objects) {
+            dataList.add(DataElement.readOf(o));
+        }
+        return dataList;
+    }
+
 
     /**
      * @param element The element to add to this DataList.
