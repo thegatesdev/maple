@@ -44,24 +44,13 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
 
 
     /**
-     * Read a Collection to a DataList.
+     * Read an Object iterable to a DataList.
      *
-     * @param list The list to read from.
-     * @return A new DataList containing all the elements of the Collection,
+     * @param objects The iterable to read from.
+     * @return A new DataList containing all the elements returned from the iterable,
      * read using {@link DataElement#readOf(Object)}
      */
-    public static DataList read(Collection<?> list) {
-        return read(list.toArray());
-    }
-
-    /**
-     * Read an Object array to a DataList.
-     *
-     * @param objects The array to read from.
-     * @return A new DataList containing all the elements of the array,
-     * read using {@link DataElement#readOf(Object)}
-     */
-    public static DataList read(Object... objects) {
+    public static DataList read(Iterable<Object> objects) {
         final DataList dataList = new DataList();
         for (Object o : objects) {
             dataList.add(DataElement.readOf(o));
