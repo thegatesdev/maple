@@ -92,8 +92,17 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
      * @return The element at the specified position in this list.
      * @throws IndexOutOfBoundsException If the index is out of range.
      */
-    public DataElement get(int index) throws IndexOutOfBoundsException {
-        return value.get(index);
+    public DataElement get(int index) {
+        final DataElement el = getOrNull(index);
+        return el == null ? new DataNull().setData(this, "[Out of bounds]") : el;
+    }
+
+    public DataElement getOrNull(int index) {
+        try {
+            return value.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /**
