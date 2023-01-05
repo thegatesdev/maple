@@ -60,7 +60,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      * Read this object as a DataElement, so that when;
      * <ul>
      * <li>{@code input == null} -> {@link DataNull#DataNull()}.
-     * <li>{@code input instanceof Collection<?>} -> {@link DataList#read(Collection)}.
+     * <li>{@code input instanceof Collection<?>} -> {@link DataList#read(Iterable)}.
      * <li>{@code input instanceof Map<?,?>} -> {@link DataMap#read(Map)}.
      * <li>If none of the above apply -> {@link DataPrimitive#DataPrimitive(Object)}.
      * </ul>
@@ -72,7 +72,7 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         if (input == null) return new DataNull();
         final Object reading = (input instanceof DataElement el) ? el.value() : input;
         if (reading instanceof Map<?, ?> map) return DataMap.readUnknown(map);
-        if (reading instanceof Collection<?> collection) return DataList.read(collection);
+        if (reading instanceof Iterable<?> collection) return DataList.read(collection);
         return new DataPrimitive(reading);
     }
 

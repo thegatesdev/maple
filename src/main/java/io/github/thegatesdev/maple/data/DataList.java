@@ -50,7 +50,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
      * @return A new DataList containing all the elements returned from the iterable,
      * read using {@link DataElement#readOf(Object)}
      */
-    public static DataList read(Iterable<Object> objects) {
+    public static DataList read(Iterable<?> objects) {
         final DataList dataList = new DataList();
         for (Object o : objects) {
             dataList.add(DataElement.readOf(o));
