@@ -47,16 +47,6 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
     }
 
     @Override
-    public boolean isList() {
-        return false;
-    }
-
-    @Override
-    public boolean isMap() {
-        return false;
-    }
-
-    @Override
     public boolean isNull() {
         return true;
     }
@@ -74,11 +64,6 @@ public class DataNull extends DataElement implements Cloneable, Comparable<DataE
      */
     @Override
     public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public boolean isPrimitive() {
         return false;
     }
 

@@ -168,17 +168,23 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     /**
      * Check if this DataElement is a DataList.
      */
-    public abstract boolean isList();
+    public boolean isList() {
+        return false;
+    }
 
     /**
      * Check if this DataElement is a DataMap.
      */
-    public abstract boolean isMap();
+    public boolean isMap() {
+        return false;
+    }
 
     /**
      * Check if this DataElement is a DataNull.
      */
-    public abstract boolean isNull();
+    public boolean isNull() {
+        return false;
+    }
 
     /**
      * Check if this DataElement's value is not empty.
@@ -195,7 +201,9 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     /**
      * Check if this DataElement is a DataPrimitive.
      */
-    public abstract boolean isPrimitive();
+    public boolean isPrimitive() {
+        return false;
+    }
 
     /**
      * @return The name of this element.
@@ -282,9 +290,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return parent.parents() + 1;
     }
 
-    /**
-     * @return The raw value contained in this element.
-     */
     protected abstract Object raw();
 
     private String[] calcPath(String[] collected, int index) {

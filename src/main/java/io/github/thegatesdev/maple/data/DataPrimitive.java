@@ -195,21 +195,6 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     @Override
-    public boolean isList() {
-        return false;
-    }
-
-    @Override
-    public boolean isMap() {
-        return false;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-    }
-
-    @Override
     public boolean isEmpty() {
         return value == null;
     }

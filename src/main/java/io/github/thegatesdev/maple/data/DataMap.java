@@ -727,18 +727,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
-    public boolean isList() {
-        return false;
-    }
-
-    @Override
     public boolean isMap() {
         return true;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
     }
 
     /**
@@ -747,11 +737,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     @Override
     public boolean isEmpty() {
         return value == null || value.isEmpty();
-    }
-
-    @Override
-    public boolean isPrimitive() {
-        return false;
     }
 
     @Override

@@ -216,27 +216,12 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return true;
     }
 
-    @Override
-    public boolean isMap() {
-        return false;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-    }
-
     /**
      * Check if this list is empty, or not initialized.
      */
     @Override
     public boolean isEmpty() {
         return value == null || value.isEmpty();
-    }
-
-    @Override
-    public boolean isPrimitive() {
-        return false;
     }
 
     @Override
