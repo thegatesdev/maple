@@ -142,7 +142,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
      * Get the iterator for elements of this {@code elementClass}.
      */
     public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
-        return new ClassedIterator<>(elementClass);
+        return new ClassedIterator<>(elementClass, iterator());
     }
 
     /**
@@ -230,14 +230,14 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
         return new DataList().cloneFrom(this);
     }
 
-    private class ClassedIterator<E extends DataElement> implements Iterator<E> {
+    private static class ClassedIterator<E extends DataElement> implements Iterator<E> {
         private final Class<E> elementClass;
         private final Iterator<DataElement> iterator;
         private E next;
 
-        public ClassedIterator(Class<E> elementClass) {
+        public ClassedIterator(Class<E> elementClass, Iterator<DataElement> iterator) {
             this.elementClass = elementClass;
-            iterator = iterator();
+            this.iterator = iterator;
         }
 
         @SuppressWarnings("unchecked")
