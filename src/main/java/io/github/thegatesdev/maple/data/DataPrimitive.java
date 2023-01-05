@@ -2,6 +2,8 @@ package io.github.thegatesdev.maple.data;
 
 import io.github.thegatesdev.maple.exception.ElementException;
 
+import java.util.function.Consumer;
+
 /*
 Copyright (C) 2022  Timar Karels
 
@@ -192,6 +194,11 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     @Override
     public DataPrimitive asPrimitive() {
         return this;
+    }
+
+    @Override
+    public void ifPrimitive(final Consumer<DataPrimitive> primitiveConsumer, final Runnable elseAction) {
+        primitiveConsumer.accept(this);
     }
 
     @Override

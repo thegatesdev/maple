@@ -2,9 +2,9 @@ package io.github.thegatesdev.maple.data;
 
 import io.github.thegatesdev.maple.exception.ElementException;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -121,6 +121,49 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
     public DataPrimitive asPrimitive() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a primitive!");
+    }
+
+
+    /**
+     * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive, or the elseAction if not.
+     */
+    public void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * @param mapConsumer Runs this consumer if this element is a DataMap, or the elseAction if not.
+     */
+    public void ifMap(Consumer<DataMap> mapConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * @param listConsumer Runs this consumer if this element is a DataList, or the elseAction if not.
+     */
+    public void ifList(Consumer<DataList> listConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive.
+     */
+    public final void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer) {
+        ifPrimitive(primitiveConsumer, null);
+    }
+
+    /**
+     * @param mapConsumer Runs this consumer if this element is a DataMap.
+     */
+    public final void ifMap(Consumer<DataMap> mapConsumer) {
+        ifMap(mapConsumer, null);
+    }
+
+    /**
+     * @param listConsumer Runs this consumer if this element is a DataList.
+     */
+    public final void ifList(Consumer<DataList> listConsumer) {
+        ifList(listConsumer, null);
     }
 
     /**

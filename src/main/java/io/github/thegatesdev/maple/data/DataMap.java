@@ -727,6 +727,11 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
+    public void ifMap(final Consumer<DataMap> mapConsumer, final Runnable elseAction) {
+        mapConsumer.accept(this);
+    }
+
+    @Override
     public boolean isMap() {
         return true;
     }

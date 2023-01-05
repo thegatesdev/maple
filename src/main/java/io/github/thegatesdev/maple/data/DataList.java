@@ -1,6 +1,7 @@
 package io.github.thegatesdev.maple.data;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -198,6 +199,11 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
     @Override
     public DataList asList() {
         return this;
+    }
+
+    @Override
+    public void ifList(final Consumer<DataList> listConsumer, final Runnable elseAction) {
+        listConsumer.accept(this);
     }
 
     @Override
