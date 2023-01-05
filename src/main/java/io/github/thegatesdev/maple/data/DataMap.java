@@ -454,56 +454,120 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * @param action The consumer to run when the element is found.
      */
     public void ifPresent(String key, Consumer<DataElement> action) {
-        final DataElement el = getOrNull(key);
-        if (el != null) action.accept(el);
+        ifPresent(key, action, null);
     }
 
     /**
-     * Runs the action if the specified element is present, and is a DataList.
+     * Runs the action if the specified element is present, or the elseAction if not.
+     * This will never be a DataNull.
+     *
+     * @param key        The key to find the element at.
+     * @param action     The consumer to run when the element is found.
+     * @param elseAction The runnable to run when the element is not present.
+     */
+    public void ifPresent(String key, Consumer<DataElement> action, Runnable elseAction) {
+        final DataElement el = getOrNull(key);
+        if (el != null) action.accept(el);
+        else if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * Runs the action if the specified element is present and is a DataList.
      *
      * @param key    The key to find the element at.
      * @param action The consumer to run when the element is found.
      */
     public void ifList(String key, Consumer<DataList> action) {
-        final DataElement el = getOrNull(key);
-        if (el != null && el.isList()) action.accept(el.asList());
+        ifList(key, action, null);
     }
 
     /**
-     * Runs the action if the specified element is present, and is a DataMap.
+     * Runs the action if the specified element is present and is a DataList, or the elseAction if not.
+     *
+     * @param key        The key to find the element at.
+     * @param action     The consumer to run when the element is found.
+     * @param elseAction The runnable to run when the element is not present or not a DataList.
+     */
+    public void ifList(String key, Consumer<DataList> action, Runnable elseAction) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isList()) action.accept(el.asList());
+        else if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * Runs the action if the specified element is present and is a DataMap.
      *
      * @param key    The key to find the element at.
      * @param action The consumer to run when the element is found.
      */
     public void ifMap(String key, Consumer<DataMap> action) {
-        final DataElement el = getOrNull(key);
-        if (el != null && el.isMap()) action.accept(el.asMap());
+        ifMap(key, action, null);
     }
 
     /**
-     * Runs the action if the specified element is present, and is a DataPrimitive.
+     * Runs the action if the specified element is present and is a DataMap, or the elseAction if not.
+     *
+     * @param key        The key to find the element at.
+     * @param action     The consumer to run when the element is found.
+     * @param elseAction The runnable to run when the element is not present or not a DataMap.
+     */
+    public void ifMap(String key, Consumer<DataMap> action, Runnable elseAction) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isMap()) action.accept(el.asMap());
+        else if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * Runs the action if the specified element is present and is a DataPrimitive.
      *
      * @param key    The key to find the element at.
      * @param action The consumer to run when the element is found.
      */
     public void ifPrimitive(String key, Consumer<DataPrimitive> action) {
-        final DataElement el = getOrNull(key);
-        if (el != null && el.isPrimitive()) action.accept(el.asPrimitive());
+        ifPrimitive(key, action, null);
     }
 
     /**
-     * Runs the action if the specified element is present, is a DataPrimitive, and it's value is of the specified type.
+     * Runs the action if the specified element is present and is a DataPrimitive, or the elseAction if not.
+     *
+     * @param key        The key to find the element at.
+     * @param action     The consumer to run when the element is found.
+     * @param elseAction The runnable to run when the element is not present or not a DataPrimitive.
+     */
+    public void ifPrimitive(String key, Consumer<DataPrimitive> action, Runnable elseAction) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isPrimitive()) action.accept(el.asPrimitive());
+        else if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * Runs the action if the specified element is present and is a DataPrimitive and it's value is of the specified type.
      *
      * @param key            The key to find the element at.
      * @param primitiveClass The type the DataPrimitive should be of.
      * @param action         The consumer to run when the element is found.
      */
     public <P> void ifPrimitiveOf(String key, Class<P> primitiveClass, Consumer<P> action) {
+        ifPrimitiveOf(key, primitiveClass, action, null);
+    }
+
+    /**
+     * Runs the action if the specified element is present and is a DataPrimitive and it's value is of the specified type, or the elseAction if not.
+     *
+     * @param key            The key to find the element at.
+     * @param primitiveClass The type the DataPrimitive should be of.
+     * @param action         The consumer to run when the element is found.
+     */
+    public <P> void ifPrimitiveOf(String key, Class<P> primitiveClass, Consumer<P> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
         if (el != null && el.isPrimitive()) {
             final DataPrimitive primitive = el.asPrimitive();
-            if (primitive.valueOf(primitiveClass)) action.accept(primitive.valueUnsafe());
+            if (primitive.valueOf(primitiveClass)) {
+                action.accept(primitive.valueUnsafe());
+                return;
+            }
         }
+        if (elseAction != null) elseAction.run();
     }
 
     /**
