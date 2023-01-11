@@ -106,6 +106,10 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
 
     public abstract Object value();
 
+    /**
+     * @return This element as a DataArray.
+     * @throws UnsupportedOperationException If this element is not a DataArray.
+     */
     public DataArray asArray() {
         throw new UnsupportedOperationException("Not an array!");
     }
@@ -190,10 +194,17 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return parent != null;
     }
 
+    /**
+     * @param arrayConsumer Runs this consumer if this element is a DataArray.
+     */
     public void ifArray(Consumer<DataArray> arrayConsumer) {
         ifArray(arrayConsumer, null);
     }
 
+    /**
+     * @param arrayConsumer Runs this consumer if this element is a DataArray, or the elseAction if not.
+     * @param elseAction    The runnable to run if this element is not a DataArray.
+     */
     public void ifArray(Consumer<DataArray> arrayConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
     }
@@ -243,6 +254,9 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         if (elseAction != null) elseAction.run();
     }
 
+    /**
+     * @return True if this element is a DataArray.
+     */
     public boolean isArray() {
         return false;
     }

@@ -175,7 +175,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Get the element associated with this key.
      *
      * @param key The key of the element.
-     * @return The element associated with this key, or a new {@link DataNull};
+     * @return The element associated with this key, or a new {@link DataNull}.
      */
     public DataElement get(String key) {
         final DataElement el = getOrNull(key);
@@ -197,6 +197,13 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return null;
     }
 
+    /**
+     * Get the array element associated with this key.
+     *
+     * @param key The key associated with the array.
+     * @return The found DataArray.
+     * @throws ElementException If the element was not found, or the element was not a DataArray.
+     */
     public DataArray getArray(String key) throws ElementException {
         return get(key).requireOf(DataArray.class);
     }
@@ -455,10 +462,23 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return value.keySet().containsAll(keys);
     }
 
+    /**
+     * Runs the action if the specified element is present and is a DataArray.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     */
     public void ifArray(String key, Consumer<DataArray> action) {
         ifArray(key, action, null);
     }
 
+    /**
+     * Runs the action if the specified element is present and is a DataArray, or the elseAction if not.
+     *
+     * @param key        The key to find the element at.
+     * @param action     The consumer to run when the element is found.
+     * @param elseAction The runnable to run when the element is not present or not a DataArray.
+     */
     public void ifArray(String key, Consumer<DataArray> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
         if (el != null && el.isArray()) action.accept(el.asArray());
