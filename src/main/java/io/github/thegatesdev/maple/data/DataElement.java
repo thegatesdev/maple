@@ -63,22 +63,40 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Sets the data.
+     *
+     * @param parent The parent to initialize the data with.
+     * @param name   The name to initialize the data with.
+     * @return The same DataElement.
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
+        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
+        dataSet = true;
+        this.parent = parent;
+        this.name = name;
+        return this;
+    }
+
+    /**
      * Read this object as a DataElement, so that when;
      * <ul>
      * <li>{@code input == null} -> {@link DataNull#DataNull()}.
      * <li>{@code input instanceof Collection<?>} -> {@link DataList#read(Iterable)}.
      * <li>{@code input instanceof Map<?,?>} -> {@link DataMap#read(Map)}.
+     * <li>{@code input instanceof Object[]} -> {@link DataArray#read(Object[])}.
      * <li>If none of the above apply -> {@link DataPrimitive#DataPrimitive(Object)}.
      * </ul>
      *
      * @param input The Object to read from.
-     * @return The new DataNull, DataList, DataMap or DataPrimitive.
+     * @return The new DataNull, DataList, DataArray, DataMap or DataPrimitive.
      */
     public static DataElement readOf(Object input) {
         if (input == null) return new DataNull();
         final Object reading = (input instanceof DataElement el) ? el.value() : input;
         if (reading instanceof Map<?, ?> map) return DataMap.readUnknown(map);
         if (reading instanceof Iterable<?> collection) return DataList.read(collection);
+        if (reading instanceof Object[] array) return DataArray.read(array);
         return new DataPrimitive(reading);
     }
 
@@ -87,6 +105,10 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
 
     public abstract Object value();
+
+    public DataArray asArray() {
+        throw new UnsupportedOperationException("Not an array!");
+    }
 
     /**
      * @return This element as a DataList.
@@ -131,61 +153,15 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         throw new UnsupportedOperationException("Not a primitive!");
     }
 
-
-    /**
-     * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive, or the elseAction if not.
-     * @param elseAction        The runnable to run if this element is not a DataPrimitive.
-     */
-    public void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer, Runnable elseAction) {
-        if (elseAction != null) elseAction.run();
+    private String[] calcPath() {
+        final int parents = parents();
+        return calcPath(new String[parents + 1], parents);
     }
 
-    /**
-     * @param mapConsumer Runs this consumer if this element is a DataMap, or the elseAction if not.
-     * @param elseAction  The runnable to run if this element is not a DataMap.
-     */
-    public void ifMap(Consumer<DataMap> mapConsumer, Runnable elseAction) {
-        if (elseAction != null) elseAction.run();
-    }
-
-    /**
-     * @param listConsumer Runs this consumer if this element is a DataList, or the elseAction if not.
-     * @param elseAction   The runnable to run if this element is not a DataList.
-     */
-    public void ifList(Consumer<DataList> listConsumer, Runnable elseAction) {
-        if (elseAction != null) elseAction.run();
-    }
-
-    /**
-     * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive.
-     */
-    public final void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer) {
-        ifPrimitive(primitiveConsumer, null);
-    }
-
-    /**
-     * @param mapConsumer Runs this consumer if this element is a DataMap.
-     */
-    public final void ifMap(Consumer<DataMap> mapConsumer) {
-        ifMap(mapConsumer, null);
-    }
-
-    /**
-     * @param listConsumer Runs this consumer if this element is a DataList.
-     */
-    public final void ifList(Consumer<DataList> listConsumer) {
-        ifList(listConsumer, null);
-    }
-
-    /**
-     * Unsafe cast this element to E
-     *
-     * @param <E> The type to cast this element to.
-     * @return The cast element.
-     */
-    @SuppressWarnings("unchecked")
-    public <E extends DataElement> E unsafeCast() {
-        return (E) this;
+    private String[] calcPath(String[] collected, int index) {
+        collected[index] = name;
+        if (index == 0) return collected;
+        return parent.calcPath(collected, --index);
     }
 
     /**
@@ -212,6 +188,63 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
     public boolean hasParent() {
         return parent != null;
+    }
+
+    public void ifArray(Consumer<DataArray> arrayConsumer) {
+        ifArray(arrayConsumer, null);
+    }
+
+    public void ifArray(Consumer<DataArray> arrayConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * @param listConsumer Runs this consumer if this element is a DataList.
+     */
+    public final void ifList(Consumer<DataList> listConsumer) {
+        ifList(listConsumer, null);
+    }
+
+    /**
+     * @param listConsumer Runs this consumer if this element is a DataList, or the elseAction if not.
+     * @param elseAction   The runnable to run if this element is not a DataList.
+     */
+    public void ifList(Consumer<DataList> listConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * @param mapConsumer Runs this consumer if this element is a DataMap.
+     */
+    public final void ifMap(Consumer<DataMap> mapConsumer) {
+        ifMap(mapConsumer, null);
+    }
+
+    /**
+     * @param mapConsumer Runs this consumer if this element is a DataMap, or the elseAction if not.
+     * @param elseAction  The runnable to run if this element is not a DataMap.
+     */
+    public void ifMap(Consumer<DataMap> mapConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive.
+     */
+    public final void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer) {
+        ifPrimitive(primitiveConsumer, null);
+    }
+
+    /**
+     * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive, or the elseAction if not.
+     * @param elseAction        The runnable to run if this element is not a DataPrimitive.
+     */
+    public void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
+    public boolean isArray() {
+        return false;
     }
 
     /**
@@ -284,10 +317,30 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Set the name of this element.
+     *
+     * @param name The name to set.
+     * @return The same DataElement.
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    public DataElement name(String name) throws IllegalArgumentException {
+        return setData(null, name);
+    }
+
+    /**
      * @return The parent of this element.
      */
     public DataElement parent() {
         return parent;
+    }
+
+    /**
+     * @return The amount of parents this element has, or in other words, how deeply nested this element is.
+     * Returns 0 if this element has no parent.
+     */
+    protected int parents() {
+        if (!hasParent()) return 0;
+        return parent.parents() + 1;
     }
 
     /**
@@ -323,55 +376,14 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Set the name of this element.
+     * Unsafe cast this element to E
      *
-     * @param name The name to set.
-     * @return The same DataElement.
-     * @throws IllegalArgumentException When the data is already set.
+     * @param <E> The type to cast this element to.
+     * @return The cast element.
      */
-    public DataElement name(String name) throws IllegalArgumentException {
-        return setData(null, name);
-    }
-
-    /**
-     * Sets the data.
-     *
-     * @param parent The parent to initialize the data with.
-     * @param name   The name to initialize the data with.
-     * @return The same DataElement.
-     * @throws IllegalArgumentException When the data is already set.
-     */
-    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
-        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
-        dataSet = true;
-        this.parent = parent;
-        this.name = name;
-        return this;
-    }
-
-    /**
-     * @return The amount of parents this element has, or in other words, how deeply nested this element is.
-     * Returns 0 if this element has no parent.
-     */
-    protected int parents() {
-        if (!hasParent()) return 0;
-        return parent.parents() + 1;
-    }
-
-    /**
-     * @return The raw value that backs this element.
-     */
-    protected abstract Object raw();
-
-    private String[] calcPath() {
-        final int parents = parents();
-        return calcPath(new String[parents + 1], parents);
-    }
-
-    private String[] calcPath(String[] collected, int index) {
-        collected[index] = name;
-        if (index == 0) return collected;
-        return parent.calcPath(collected, --index);
+    @SuppressWarnings("unchecked")
+    public <E extends DataElement> E unsafeCast() {
+        return (E) this;
     }
 
     @Override
@@ -385,6 +397,11 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         result = 31 * result + (raw() != null ? raw().hashCode() : 0);
         return result;
     }
+
+    /**
+     * @return The raw value that backs this element.
+     */
+    protected abstract Object raw();
 
     @Override
     public boolean equals(Object o) {

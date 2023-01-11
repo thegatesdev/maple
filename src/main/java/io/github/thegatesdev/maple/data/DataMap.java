@@ -59,6 +59,10 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         init(initialCapacity);
     }
 
+    private void init(int initialCapacity) {
+        if (value == null) value = new LinkedHashMap<>(initialCapacity);
+    }
+
     /**
      * Constructs a DataMap with its data unset.
      *
@@ -84,22 +88,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * Read a Map with unknown type keys to a DataMap.
-     *
-     * @param data The map to read from.
-     * @return A new DataMap containing the entries of the Map which key is a String,
-     * the values read using {@link DataElement#readOf(Object)}
-     */
-    public static DataMap readUnknown(Map<?, ?> data) {
-        final DataMap output = new DataMap();
-        for (Map.Entry<?, ?> entry : data.entrySet()) {
-            if (entry.getKey() instanceof String key) output.put(key, DataElement.readOf(entry.getValue()));
-        }
-        return output;
-    }
-
-
-    /**
      * Put an element into this map.
      *
      * @param key     Key with which the specified value is to be associated.
@@ -120,6 +108,21 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         keyCache = key;
         elementCache = element;
         return this;
+    }
+
+    /**
+     * Read a Map with unknown type keys to a DataMap.
+     *
+     * @param data The map to read from.
+     * @return A new DataMap containing the entries of the Map which key is a String,
+     * the values read using {@link DataElement#readOf(Object)}
+     */
+    public static DataMap readUnknown(Map<?, ?> data) {
+        final DataMap output = new DataMap();
+        for (Map.Entry<?, ?> entry : data.entrySet()) {
+            if (entry.getKey() instanceof String key) output.put(key, DataElement.readOf(entry.getValue()));
+        }
+        return output;
     }
 
     /**
@@ -144,6 +147,29 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return new ClassedIterator<>(elementClass);
     }
 
+    /**
+     * Get the value of the {@link DataPrimitive} associated with this key, or throw.
+     *
+     * @param key            The key of the primitive.
+     * @param primitiveClass The class the primitive should be of.
+     * @param <P>            The type the primitive should be of.
+     * @return The value of the primitive.
+     * @throws ElementException If the primitive was not found, or the value did not conform to P.
+     */
+    public <P> P get(String key, Class<P> primitiveClass) throws ElementException {
+        return getPrimitive(key).requireValue(primitiveClass);
+    }
+
+    /**
+     * Get the primitive element associated with this key.
+     *
+     * @param key The key associated with the primitive.
+     * @return The found DataPrimitive.
+     * @throws ElementException If the element was not found, or the element was not a DataPrimitive.
+     */
+    public DataPrimitive getPrimitive(String key) throws ElementException {
+        return get(key).requireOf(DataPrimitive.class);
+    }
 
     /**
      * Get the element associated with this key.
@@ -171,95 +197,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return null;
     }
 
-    /**
-     * Get the value of the primitive associated with this key, cast to P.
-     *
-     * @param key The key associated with the primitive element.
-     * @param <P> The type to cast to.
-     * @return The cast value.
-     * @throws ElementException If the element was not found, or is not a primitive.
-     */
-    public <P> P getUnsafe(String key) throws ElementException {
-        return getPrimitive(key).valueUnsafe();
-    }
-
-    /**
-     * Get the value of the primitive associated with this key, cast to P, or a default value.
-     * This does not return the default value if the cast throws!
-     *
-     * @param key The key associated with the primitive element.
-     * @param <P> The type to cast to.
-     * @param def The default value to return if the element is not a primitive.
-     * @return The cast value.
-     */
-    public <P> P getUnsafe(String key, P def) {
-        final DataElement el = getOrNull(key);
-        if (el == null || !el.isPrimitive()) return def;
-        if (def == null) return el.asPrimitive().valueUnsafe();
-        final P val = el.asPrimitive().valueUnsafe();
-        return val == null ? def : val;
-    }
-
-    /**
-     * Find the first element associated with one of the keys.
-     *
-     * @param keys The possible keys of the element.
-     * @return The element associated with one of these keys, or a new {@link DataNull};
-     */
-    public DataElement getFirst(String... keys) {
-        for (String key : keys) {
-            final DataElement el = getOrNull(key);
-            if (el != null) return el;
-        }
-        return new DataNull().setData(this, null);
-    }
-
-    /**
-     * Get the value of the {@link DataPrimitive} associated with this key, or a default.
-     *
-     * @param key            The key of the primitive.
-     * @param primitiveClass The class the primitive should be of.
-     * @param <P>            The type the primitive should be of.
-     * @param def            The default value to return when the element is not present, not a primitive, or the type does not match.
-     * @return The value of the primitive, or the default value.
-     */
-    public <P> P get(String key, Class<P> primitiveClass, P def) {
-        final DataElement el = getOrNull(key);
-        if (el == null || !el.isPrimitive()) return def;
-        if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
-            return el.asPrimitive().valueOrNull(primitiveClass);
-        final P val = el.asPrimitive().valueOrNull(primitiveClass);
-        return val == null ? def : val;
-    }
-
-    /**
-     * Get the value of the {@link DataPrimitive} associated with this key, or throw.
-     *
-     * @param key            The key of the primitive.
-     * @param primitiveClass The class the primitive should be of.
-     * @param <P>            The type the primitive should be of.
-     * @return The value of the primitive.
-     * @throws ElementException If the primitive was not found, or the value did not conform to P.
-     */
-    public <P> P get(String key, Class<P> primitiveClass) throws ElementException {
-        return getPrimitive(key).requireValue(primitiveClass);
-    }
-
-    /**
-     * Get the value of the first {@link DataPrimitive} associated with one of these keys.
-     *
-     * @param keys           The possible keys of the primitive.
-     * @param primitiveClass The class the primitive should be of.
-     * @param <P>            The type the primitive should be of.
-     * @return The value of the primitive.
-     * @throws ElementException If the found element is not present, is not a primitive, or it's value is not of the required type.
-     */
-    public <P> P getFirst(Class<P> primitiveClass, String... keys) {
-        for (String key : keys) {
-            final DataElement el = getOrNull(key);
-            if (el != null && el.isPrimitive()) return el.asPrimitive().requireValue(primitiveClass);
-        }
-        throw ElementException.requireField(this, String.join(" or ", keys));
+    public DataArray getArray(String key) throws ElementException {
+        return get(key).requireOf(DataArray.class);
     }
 
     /**
@@ -285,6 +224,24 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Get the value of the {@link DataPrimitive} associated with this key, or a default.
+     *
+     * @param key            The key of the primitive.
+     * @param primitiveClass The class the primitive should be of.
+     * @param <P>            The type the primitive should be of.
+     * @param def            The default value to return when the element is not present, not a primitive, or the type does not match.
+     * @return The value of the primitive, or the default value.
+     */
+    public <P> P get(String key, Class<P> primitiveClass, P def) {
+        final DataElement el = getOrNull(key);
+        if (el == null || !el.isPrimitive()) return def;
+        if (def == null) // Shortcut, def is already null, so returning null wouldn't matter.
+            return el.asPrimitive().valueOrNull(primitiveClass);
+        final P val = el.asPrimitive().valueOrNull(primitiveClass);
+        return val == null ? def : val;
+    }
+
+    /**
      * Get the double value from the primitive associated with this key.
      *
      * @param key The key associated with the element.
@@ -304,6 +261,37 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      */
     public double getDouble(String key, double def) {
         return get(key, Number.class, def).doubleValue();
+    }
+
+    /**
+     * Find the first element associated with one of the keys.
+     *
+     * @param keys The possible keys of the element.
+     * @return The element associated with one of these keys, or a new {@link DataNull};
+     */
+    public DataElement getFirst(String... keys) {
+        for (String key : keys) {
+            final DataElement el = getOrNull(key);
+            if (el != null) return el;
+        }
+        return new DataNull().setData(this, null);
+    }
+
+    /**
+     * Get the value of the first {@link DataPrimitive} associated with one of these keys.
+     *
+     * @param keys           The possible keys of the primitive.
+     * @param primitiveClass The class the primitive should be of.
+     * @param <P>            The type the primitive should be of.
+     * @return The value of the primitive.
+     * @throws ElementException If the found element is not present, is not a primitive, or it's value is not of the required type.
+     */
+    public <P> P getFirst(Class<P> primitiveClass, String... keys) {
+        for (String key : keys) {
+            final DataElement el = getOrNull(key);
+            if (el != null && el.isPrimitive()) return el.asPrimitive().requireValue(primitiveClass);
+        }
+        throw ElementException.requireField(this, String.join(" or ", keys));
     }
 
     /**
@@ -351,6 +339,17 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Get the list element associated with this key.
+     *
+     * @param key The key associated with the list.
+     * @return The found DataList.
+     * @throws ElementException If the element was not found, or the element was not a DataList.
+     */
+    public DataList getList(String key) throws ElementException {
+        return get(key).requireOf(DataList.class);
+    }
+
+    /**
      * Get the long value from the primitive associated with this key.
      *
      * @param key The key associated with the element.
@@ -370,6 +369,17 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      */
     public long getLong(String key, long def) {
         return get(key, Number.class, def).intValue();
+    }
+
+    /**
+     * Get the map element associated with this key.
+     *
+     * @param key The key associated with the map.
+     * @return The found DataMap.
+     * @throws ElementException If the element was not found, or the element was not a DataMap.
+     */
+    public DataMap getMap(String key) throws ElementException {
+        return get(key).requireOf(DataMap.class);
     }
 
     /**
@@ -395,46 +405,32 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * Get the list element associated with this key.
+     * Get the value of the primitive associated with this key, cast to P.
      *
-     * @param key The key associated with the list.
-     * @return The found DataList.
-     * @throws ElementException If the element was not found, or the element was not a DataList.
+     * @param key The key associated with the primitive element.
+     * @param <P> The type to cast to.
+     * @return The cast value.
+     * @throws ElementException If the element was not found, or is not a primitive.
      */
-    public DataList getList(String key) throws ElementException {
-        return get(key).requireOf(DataList.class);
+    public <P> P getUnsafe(String key) throws ElementException {
+        return getPrimitive(key).valueUnsafe();
     }
 
     /**
-     * Get the map element associated with this key.
+     * Get the value of the primitive associated with this key, cast to P, or a default value.
+     * This does not return the default value if the cast throws!
      *
-     * @param key The key associated with the map.
-     * @return The found DataMap.
-     * @throws ElementException If the element was not found, or the element was not a DataMap.
+     * @param key The key associated with the primitive element.
+     * @param <P> The type to cast to.
+     * @param def The default value to return if the element is not a primitive.
+     * @return The cast value.
      */
-    public DataMap getMap(String key) throws ElementException {
-        return get(key).requireOf(DataMap.class);
-    }
-
-    /**
-     * Get the primitive element associated with this key.
-     *
-     * @param key The key associated with the primitive.
-     * @return The found DataPrimitive.
-     * @throws ElementException If the element was not found, or the element was not a DataPrimitive.
-     */
-    public DataPrimitive getPrimitive(String key) throws ElementException {
-        return get(key).requireOf(DataPrimitive.class);
-    }
-
-    /**
-     * @param key The key to check for.
-     * @return True if the key is contained in this DataMap.
-     */
-    public boolean hasKey(String key) {
-        if (Objects.equals(key, keyCache)) return true;
-        if (value == null) return false;
-        return value.containsKey(key);
+    public <P> P getUnsafe(String key, P def) {
+        final DataElement el = getOrNull(key);
+        if (el == null || !el.isPrimitive()) return def;
+        if (def == null) return el.asPrimitive().valueUnsafe();
+        final P val = el.asPrimitive().valueUnsafe();
+        return val == null ? def : val;
     }
 
     /**
@@ -459,28 +455,13 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return value.keySet().containsAll(keys);
     }
 
-    /**
-     * Runs the action if the specified element is present.
-     * This will never be a DataNull.
-     *
-     * @param key    The key to find the element at.
-     * @param action The consumer to run when the element is found.
-     */
-    public void ifPresent(String key, Consumer<DataElement> action) {
-        ifPresent(key, action, null);
+    public void ifArray(String key, Consumer<DataArray> action) {
+        ifArray(key, action, null);
     }
 
-    /**
-     * Runs the action if the specified element is present, or the elseAction if not.
-     * This will never be a DataNull.
-     *
-     * @param key        The key to find the element at.
-     * @param action     The consumer to run when the element is found.
-     * @param elseAction The runnable to run when the element is not present.
-     */
-    public void ifPresent(String key, Consumer<DataElement> action, Runnable elseAction) {
+    public void ifArray(String key, Consumer<DataArray> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
-        if (el != null) action.accept(el);
+        if (el != null && el.isArray()) action.accept(el.asArray());
         else if (elseAction != null) elseAction.run();
     }
 
@@ -527,6 +508,31 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public void ifMap(String key, Consumer<DataMap> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
         if (el != null && el.isMap()) action.accept(el.asMap());
+        else if (elseAction != null) elseAction.run();
+    }
+
+    /**
+     * Runs the action if the specified element is present.
+     * This will never be a DataNull.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     */
+    public void ifPresent(String key, Consumer<DataElement> action) {
+        ifPresent(key, action, null);
+    }
+
+    /**
+     * Runs the action if the specified element is present, or the elseAction if not.
+     * This will never be a DataNull.
+     *
+     * @param key        The key to find the element at.
+     * @param action     The consumer to run when the element is found.
+     * @param elseAction The runnable to run when the element is not present.
+     */
+    public void ifPresent(String key, Consumer<DataElement> action, Runnable elseAction) {
+        final DataElement el = getOrNull(key);
+        if (el != null) action.accept(el);
         else if (elseAction != null) elseAction.run();
     }
 
@@ -587,6 +593,24 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Navigate this map with the specified keys until the element is reached, or the next element is not a map.
+     *
+     * @param keys The keys to navigate the elements with.
+     * @return The found DataElement, or {@code DataNull} if it was not found.
+     */
+    public DataElement navigate(String... keys) {
+        return navigate(0, keys);
+    }
+
+    private DataElement navigate(int current, String[] keys) {
+        final String key = keys[current];
+        final DataElement element = get(key);
+        if (current == keys.length - 1) return element;
+        if (!element.isMap()) return new DataNull().setData(this, key);
+        return element.asMap().navigate(++current, keys);
+    }
+
+    /**
      * @param primitiveClass The class the DataPrimitives values should be of.
      * @param <P>            The type the DataPrimitives values should be of.
      * @return A new Map containing the key values pairs of the DataPrimitives in this DataMap conforming to {@code elementClass}.
@@ -618,6 +642,16 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public DataMap requireKey(String key) throws ElementException {
         if (!hasKey(key)) throw ElementException.requireField(this, key);
         return this;
+    }
+
+    /**
+     * @param key The key to check for.
+     * @return True if the key is contained in this DataMap.
+     */
+    public boolean hasKey(String key) {
+        if (Objects.equals(key, keyCache)) return true;
+        if (value == null) return false;
+        return value.containsKey(key);
     }
 
     /**
@@ -655,53 +689,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         final DataElement el = getOrNull(key);
         if (!(clazz.isInstance(el))) throw ElementException.requireType(el, clazz);
         return this;
-    }
-
-    /**
-     * @param toAdd The DataMap to add the elements from to this map.
-     * @return This DataMap.
-     * @see DataMap#cloneFrom(Map)
-     */
-    public DataMap cloneFrom(DataMap toAdd) {
-        return cloneFrom(toAdd.value);
-    }
-
-    /**
-     * Clone the elements of the input map to this map.
-     *
-     * @param toAdd The input map.
-     * @return This DataMap.
-     */
-    public DataMap cloneFrom(Map<String, DataElement> toAdd) {
-        if (value == null) init(toAdd.size());
-        for (Map.Entry<String, DataElement> entry : toAdd.entrySet()) {
-            synchronized (MODIFY_MUTEX) {
-                put(entry.getKey(), entry.getValue().clone());
-            }
-        }
-        return this;
-    }
-
-    /**
-     * Navigate this map with the specified keys until the element is reached, or the next element is not a map.
-     *
-     * @param keys The keys to navigate the elements with.
-     * @return The found DataElement, or {@code DataNull} if it was not found.
-     */
-    public DataElement navigate(String... keys) {
-        return navigate(0, keys);
-    }
-
-    private DataElement navigate(int current, String[] keys) {
-        final String key = keys[current];
-        final DataElement element = get(key);
-        if (current == keys.length - 1) return element;
-        if (!element.isMap()) return new DataNull().setData(this, key);
-        return element.asMap().navigate(++current, keys);
-    }
-
-    private void init(int initialCapacity) {
-        if (value == null) value = new LinkedHashMap<>(initialCapacity);
     }
 
     @Override
@@ -776,6 +763,31 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     @Override
     public DataMap clone() {
         return new DataMap().cloneFrom(this);
+    }
+
+    /**
+     * @param toAdd The DataMap to add the elements from to this map.
+     * @return This DataMap.
+     * @see DataMap#cloneFrom(Map)
+     */
+    public DataMap cloneFrom(DataMap toAdd) {
+        return cloneFrom(toAdd.value);
+    }
+
+    /**
+     * Clone the elements of the input map to this map.
+     *
+     * @param toAdd The input map.
+     * @return This DataMap.
+     */
+    public DataMap cloneFrom(Map<String, DataElement> toAdd) {
+        if (value == null) init(toAdd.size());
+        for (Map.Entry<String, DataElement> entry : toAdd.entrySet()) {
+            synchronized (MODIFY_MUTEX) {
+                put(entry.getKey(), entry.getValue().clone());
+            }
+        }
+        return this;
     }
 
     private class ClassedIterator<E extends DataElement> implements Iterator<Map.Entry<String, E>> {
