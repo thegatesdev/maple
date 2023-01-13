@@ -55,8 +55,11 @@ structure. This is to prevent ghost items ( and also who are you to say who thei
 DataMap map = new DataMap("root_map");
 // Add to map:
 map.put("map_entry", new DataMap().put("nested_map_entry", new DataMap()));
+map.put("integer_entry", new DataPrimitive(3));
 // Get from map:
 DataElement el = map.get("map_entry");
+// Get specific primitive value from map:
+int i = map.get("integer_entry", Integer.class);
 // Find in map structure
 DataElement nestedEntry = map.navigate("map_entry", "nested_map_entry");
 // If you are very sure about what the element type is
@@ -76,6 +79,17 @@ DataElement el = list.get(0);
 Iterator<DataMap> mapsInList = list.iterator(DataMap.class);
 // Get a list of primitive elements values of a certain type:
 List<String> stringPrimitives = list.primitiveList(String.class);
+```
+
+### DataArray
+
+```java
+// Create array that can hold 20 elements.
+DataArray array = new DataArray(20);
+// Set elements:
+array.set(0, new DataPrimitive("hello world"));
+// Get elements:
+DataElement element = array.get(0);
 ```
 
 ### DataPrimitive
