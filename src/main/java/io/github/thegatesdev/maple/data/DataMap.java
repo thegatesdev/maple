@@ -148,7 +148,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * Get the value of the {@link DataPrimitive} associated with this key, or throw.
+     * Get the value of the primitive associated with this key, or throw.
      *
      * @param key            The key of the primitive.
      * @param primitiveClass The class the primitive should be of.
@@ -165,7 +165,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      *
      * @param key The key associated with the primitive.
      * @return The found DataPrimitive.
-     * @throws ElementException If the element was not found, or the element was not a DataPrimitive.
+     * @throws ElementException If the element was not found, or the element was not a primitive.
      */
     public DataPrimitive getPrimitive(String key) throws ElementException {
         return get(key).requireOf(DataPrimitive.class);
@@ -231,7 +231,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
-     * Get the value of the {@link DataPrimitive} associated with this key, or a default.
+     * Get the value of the primitive associated with this key, or a default.
      *
      * @param key            The key of the primitive.
      * @param primitiveClass The class the primitive should be of.
