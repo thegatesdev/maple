@@ -24,7 +24,7 @@ Copyright (C) 2022  Timar Karels
  * A list element backed by an ArrayList, containing an array of DataElement.
  * It allows for more advanced iteration, for example by element type ({@link DataList#iterator(Class)}.
  */
-public class DataList extends DataElement implements Iterable<DataElement>, Cloneable, Comparable<DataElement> {
+public class DataList extends IndexedElement implements Iterable<DataElement>, Cloneable, Comparable<DataElement> {
 
     private ArrayList<DataElement> value;
 
@@ -40,7 +40,7 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
      * @param name The name to initialize the data with.
      */
     public DataList(String name) {
-        super(name);
+        setData(null, name);
     }
 
 
@@ -94,19 +94,9 @@ public class DataList extends DataElement implements Iterable<DataElement>, Clon
      * Get the element at the specified position in this list.
      *
      * @param index Index of the element to return.
-     * @return The element at the specified position in this list, or DataNull if out of bounds.
-     */
-    public DataElement get(int index) {
-        final DataElement el = getOrNull(index);
-        return el == null ? new DataNull().setData(this, "[Out of bounds]") : el;
-    }
-
-    /**
-     * Get the element at the specified position in this list.
-     *
-     * @param index Index of the element to return.
      * @return The element at the specified position in this list, or null if out of bounds.
      */
+    @Override
     public DataElement getOrNull(int index) {
         try {
             return value.get(index);
