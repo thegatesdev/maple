@@ -63,22 +63,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Sets the data.
-     *
-     * @param parent The parent to initialize the data with.
-     * @param name   The name to initialize the data with.
-     * @return The same DataElement.
-     * @throws IllegalArgumentException When the data is already set.
-     */
-    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
-        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
-        dataSet = true;
-        this.parent = parent;
-        this.name = name;
-        return this;
-    }
-
-    /**
      * Read this object as a DataElement, so that when;
      * <ul>
      * <li>{@code input == null} -> {@link DataNull#DataNull()}.
@@ -101,12 +85,32 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Sets the data.
+     *
+     * @param parent The parent to initialize the data with.
+     * @param name   The name to initialize the data with.
+     * @return The same DataElement.
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
+        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
+        dataSet = true;
+        this.parent = parent;
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Get the value contained in this DataElement.
+     *
      * @return The value contained in this DataElement.
      */
 
     public abstract Object value();
 
     /**
+     * Get this element as a DataArray, or throw.
+     *
      * @return This element as a DataArray.
      * @throws UnsupportedOperationException If this element is not a DataArray.
      */
@@ -115,6 +119,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get this element as a DataList, or throw.
+     *
      * @return This element as a DataList.
      * @throws UnsupportedOperationException If this element is not a DataList.
      */
@@ -123,6 +129,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get this element as a DataMap, or throw.
+     *
      * @return This element as a DataMap.
      * @throws UnsupportedOperationException If this element is not a DataMap.
      */
@@ -131,6 +139,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get this element as E, or return null.
+     *
      * @param elementClass The class to get this DataElement as.
      * @param <E>          The type to get this DataElement as.
      * @return This element cast to E, or null if the element could not be cast.
@@ -142,6 +152,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Check if this elements type is of elementClass.
+     *
      * @param elementClass The class to check this DataElement for.
      * @return True if the elementClass matches the DataElement class.
      */
@@ -150,6 +162,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get this element as a DataPrimitive, or throw.
+     *
      * @return This element as a DataPrimitive.
      * @throws UnsupportedOperationException If this element is not a DataPrimitive.
      */
@@ -181,13 +195,17 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * @return {@code true} if this element's name is not {@code null}
+     * Check if this DataElement has a name.
+     *
+     * @return True if this elements name is not null
      */
     public boolean hasName() {
         return name != null;
     }
 
     /**
+     * Check if this DataElement has a parent
+     *
      * @return True if this elements parent is not null.
      */
     public boolean hasParent() {
@@ -195,66 +213,84 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * @param arrayConsumer Runs this consumer if this element is a DataArray.
+     * Run the arrayConsumer if this element is a DataArray.
+     *
+     * @param arrayConsumer The if action.
      */
     public void ifArray(Consumer<DataArray> arrayConsumer) {
         ifArray(arrayConsumer, null);
     }
 
     /**
-     * @param arrayConsumer Runs this consumer if this element is a DataArray, or the elseAction if not.
-     * @param elseAction    The runnable to run if this element is not a DataArray.
+     * Run the arrayConsumer if this element is a DataArray, or the elseAction.
+     *
+     * @param arrayConsumer The if action.
+     * @param elseAction    The else action.
      */
     public void ifArray(Consumer<DataArray> arrayConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
     }
 
     /**
-     * @param listConsumer Runs this consumer if this element is a DataList.
+     * Run the listConsumer if this element is a DataList.
+     *
+     * @param listConsumer The if action.
      */
     public final void ifList(Consumer<DataList> listConsumer) {
         ifList(listConsumer, null);
     }
 
     /**
-     * @param listConsumer Runs this consumer if this element is a DataList, or the elseAction if not.
-     * @param elseAction   The runnable to run if this element is not a DataList.
+     * Run the listConsumer if this element is a DataList, or the elseAction.
+     *
+     * @param listConsumer The if action.
+     * @param elseAction   The else action.
      */
     public void ifList(Consumer<DataList> listConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
     }
 
     /**
-     * @param mapConsumer Runs this consumer if this element is a DataMap.
+     * Run the mapConsumer if this element is a DataMap.
+     *
+     * @param mapConsumer The if action.
      */
     public final void ifMap(Consumer<DataMap> mapConsumer) {
         ifMap(mapConsumer, null);
     }
 
     /**
-     * @param mapConsumer Runs this consumer if this element is a DataMap, or the elseAction if not.
-     * @param elseAction  The runnable to run if this element is not a DataMap.
+     * Run the mapConsumer if this element is a DataMap, or the elseAction.
+     *
+     * @param mapConsumer The if action.
+     * @param elseAction  The else action.
      */
     public void ifMap(Consumer<DataMap> mapConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
     }
 
     /**
-     * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive.
+     * Run the primitiveConsumer if this element is a DataPrimitive.
+     *
+     * @param primitiveConsumer The if action.
      */
     public final void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer) {
         ifPrimitive(primitiveConsumer, null);
     }
 
     /**
-     * @param primitiveConsumer Runs this consumer if this element is a DataPrimitive, or the elseAction if not.
-     * @param elseAction        The runnable to run if this element is not a DataPrimitive.
+     * Run the primitiveConsumer if this element is a DataPrimitive, or the elseAction.
+     *
+     * @param primitiveConsumer The if action.
+     * @param elseAction        The else action.
      */
     public void ifPrimitive(Consumer<DataPrimitive> primitiveConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
     }
 
     /**
+     * Check if this element is a DataArray.
+     *
      * @return True if this element is a DataArray.
      */
     public boolean isArray() {
@@ -284,6 +320,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Check if this element is a DataList.
+     *
      * @return True if this element is a DataList.
      */
     public boolean isList() {
@@ -291,6 +329,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Check if this element is a DataMap.
+     *
      * @return True if this element is a DataMap.
      */
     public boolean isMap() {
@@ -298,6 +338,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Check if this element is a DataNull.
+     *
      * @return True if this element is a DataNull.
      */
     public boolean isNull() {
@@ -305,6 +347,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Check if this element is not empty.
+     *
      * @return True if this element is not empty.
      */
     public boolean isPresent() {
@@ -312,11 +356,15 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Check if this element is empty.
+     *
      * @return True if this element is empty. Implementation may differ.
      */
     public abstract boolean isEmpty();
 
     /**
+     * Check if this element is a DataPrimitive.
+     *
      * @return True if this element is a DataPrimitive.
      */
     public boolean isPrimitive() {
@@ -324,6 +372,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get the name of this element.
+     *
      * @return The name of this element.
      */
     public String name() {
@@ -342,6 +392,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get the parent of this element.
+     *
      * @return The parent of this element.
      */
     public DataElement parent() {
@@ -349,6 +401,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get the amount of parents of this element.
+     *
      * @return The amount of parents this element has, or in other words, how deeply nested this element is.
      * Returns 0 if this element has no parent.
      */
@@ -368,6 +422,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get this element as T, or throw.
+     *
      * @param elementClass The class this element is required to be.
      * @param <T>          The type of {@code elementClass}.
      * @return This element, cast to T.
@@ -413,6 +469,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Get the raw value that backs this element.
+     *
      * @return The raw value that backs this element.
      */
     protected abstract Object raw();
