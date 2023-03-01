@@ -4,9 +4,11 @@ import io.github.thegatesdev.maple.exception.ElementException;
 
 import java.util.function.Consumer;
 
+/**
+ * An abstract class for indexed elements. Implemented by DataList and DataArray.
+ * Has common methods for getting different elements using an index.
+ */
 public abstract class IndexedElement extends DataElement {
-
-    abstract DataElement getOrNull(int index);
 
     /**
      * Get the element at this index.
@@ -405,4 +407,6 @@ public abstract class IndexedElement extends DataElement {
         }
         if (elseAction != null) elseAction.run();
     }
+
+    abstract DataElement getOrNull(int index);
 }
