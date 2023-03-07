@@ -20,7 +20,7 @@ Copyright (C) 2022  Timar Karels
 */
 
 /**
- * An exception to notify *the user* that they did something wrong. Not to be used for in code error handling.
+ * An exception thrown by an element. Mostly meant for the end user, used in assertions.
  */
 public class ElementException extends RuntimeException {
     /**
