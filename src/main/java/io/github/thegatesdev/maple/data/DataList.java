@@ -2,6 +2,7 @@ package io.github.thegatesdev.maple.data;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.IntFunction;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -26,12 +27,14 @@ Copyright (C) 2022  Timar Karels
  */
 public class DataList extends IndexedElement implements Iterable<DataElement>, Cloneable, Comparable<DataElement> {
 
-    private ArrayList<DataElement> value;
+    private final IntFunction<List<DataElement>> listSupplier;
+    private List<DataElement> value;
 
     /**
      * Constructs an empty DataList with its data unset.
      */
     public DataList() {
+        this(null, null);
     }
 
     /**
@@ -40,7 +43,27 @@ public class DataList extends IndexedElement implements Iterable<DataElement>, C
      * @param name The name to initialize the data with.
      */
     public DataList(String name) {
-        setData(null, name);
+        this(name, null);
+    }
+
+    /**
+     * Constructs an empty DataList with its parent defaulted to {@code null}.
+     *
+     * @param name The name to initialize the data with.
+     * @param listSupplier  An IntFunction to supply a list when initializing, taking an initial capacity.
+     */
+    public DataList(String name, IntFunction<List<DataElement>> listSupplier){
+        this.listSupplier = listSupplier;
+        if (name != null) setData(null, name);
+    }
+
+    /**
+     * Constructs an empty DataList with its data unset.
+     *
+     * @param listSupplier  An IntFunction to supply a list when initializing, taking an initial capacity.
+     */
+    public DataList(IntFunction<List<DataElement>> listSupplier){
+        this(null, listSupplier);
     }
 
 
@@ -178,8 +201,14 @@ public class DataList extends IndexedElement implements Iterable<DataElement>, C
     }
 
     private void init(int initialCapacity) {
-        if (value == null)
-            value = new ArrayList<>(initialCapacity);
+        if (value == null) {
+            if (listSupplier == null) value = new ArrayList<>(initialCapacity);
+            else{
+                final List<DataElement> suppliedList = listSupplier.apply(initialCapacity);
+                if (!suppliedList.isEmpty()) throw new IllegalArgumentException("List supplier should return empty list");
+                this.value = suppliedList;
+            }
+        }
     }
 
     @Override
@@ -236,7 +265,7 @@ public class DataList extends IndexedElement implements Iterable<DataElement>, C
     }
 
     @Override
-    protected ArrayList<DataElement> raw() {
+    protected List<DataElement> raw() {
         return value;
     }
 

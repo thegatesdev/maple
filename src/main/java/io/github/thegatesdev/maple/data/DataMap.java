@@ -4,6 +4,7 @@ import io.github.thegatesdev.maple.exception.ElementException;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.IntFunction;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -28,7 +29,8 @@ Copyright (C) 2022  Timar Karels
  */
 public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>>, Cloneable, Comparable<DataElement> {
 
-    private LinkedHashMap<String, DataElement> value;
+    private final IntFunction<Map<String, DataElement>> mapSupplier;
+    private Map<String, DataElement> value;
 
     private String keyCache;
     private DataElement elementCache;
@@ -37,6 +39,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * Constructs an empty DataMap with its data unset.
      */
     public DataMap() {
+        this(null, null);
     }
 
     /**
@@ -45,31 +48,38 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      * @param name The name to initialize the data with.
      */
     public DataMap(String name) {
-        setData(null, name);
+        this(name, null);
     }
 
     /**
      * Constructs an empty DataMap with its parent defaulted to {@code null}.
      *
      * @param name            The name to initialize the data with.
-     * @param initialCapacity The initial capacity.
+     * @param mapSupplier An IntFunction to supply a map when initializing, taking an initial capacity.
      */
-    public DataMap(String name, int initialCapacity) {
-        super(name);
-        init(initialCapacity);
-    }
-
-    private void init(int initialCapacity) {
-        if (value == null) value = new LinkedHashMap<>(initialCapacity);
+    public DataMap(String name, IntFunction<Map<String, DataElement>> mapSupplier) {
+        if (name != null) setData(null, name);
+        this.mapSupplier = mapSupplier;
     }
 
     /**
-     * Constructs a DataMap with its data unset.
+     * Constructs an empty DataMap with its data unset.
      *
-     * @param initialCapacity The initial capacity.
+     * @param mapSupplier An IntFunction to supply a map when initializing, taking an initial capacity.
      */
-    public DataMap(int initialCapacity) {
-        init(initialCapacity);
+    public DataMap(IntFunction<Map<String, DataElement>> mapSupplier){
+        this(null, mapSupplier);
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null){
+            if (mapSupplier == null) value = new LinkedHashMap<>(initialCapacity);
+            else{
+                final Map<String, DataElement> suppliedMap = mapSupplier.apply(initialCapacity);
+                if (!suppliedMap.isEmpty()) throw new IllegalArgumentException("List supplier should return empty list");
+                value = suppliedMap;
+            }
+        }
     }
 
     /**
@@ -769,7 +779,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
-    protected LinkedHashMap<String, DataElement> raw() {
+    protected Map<String, DataElement> raw() {
         return value;
     }
 
