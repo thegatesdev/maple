@@ -126,7 +126,11 @@ public class DataArray extends IndexedElement {
 
     @Override
     public DataElement clone() {
-        return new DataArray(value());
+        final DataArray cloned = new DataArray(value.length);
+        for (int i = 0, valueLength = value.length; i < valueLength; i++) {
+            cloned.set(i, this.value[i].clone());
+        }
+        return cloned;
     }
 
     public int size(){
