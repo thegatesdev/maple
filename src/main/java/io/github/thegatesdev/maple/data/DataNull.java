@@ -20,7 +20,7 @@ Copyright (C) 2022  Timar Karels
 /**
  * A null element. It represents a null value in a structure.
  */
-public class DataNull extends DataElement implements Cloneable, Comparable<DataElement> {
+public class DataNull extends DataElement {
     /**
      * Constructs an empty DataNull with its data unset.
      */

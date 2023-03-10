@@ -25,7 +25,7 @@ Copyright (C) 2022  Timar Karels
  * A list element backed by an ArrayList, containing an array of DataElement.
  * It allows for more advanced iteration, for example by element type ({@link DataList#iterator(Class)}.
  */
-public class DataList extends IndexedElement implements Cloneable, Comparable<DataElement> {
+public class DataList extends IndexedElement {
 
     private final IntFunction<List<DataElement>> listSupplier;
     private List<DataElement> value;

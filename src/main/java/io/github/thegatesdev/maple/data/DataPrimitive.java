@@ -25,7 +25,7 @@ Copyright (C) 2022  Timar Karels
  * A primitive element. It holds an Object, and has methods to check the type, get the value as etc.
  * A DataPrimitive's value is mutable, unlike the other DataElement implementations.
  */
-public class DataPrimitive extends DataElement implements Cloneable, Comparable<DataElement> {
+public class DataPrimitive extends DataElement {
 
     Object value;
     private String cachedSimpleName;
