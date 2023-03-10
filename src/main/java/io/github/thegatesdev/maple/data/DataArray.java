@@ -141,6 +141,9 @@ public class DataArray extends IndexedElement {
         return this;
     }
 
+    /**
+     * @return The length of this array.
+     */
     public int size(){
         return value.length;
     }
