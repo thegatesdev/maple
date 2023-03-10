@@ -256,6 +256,12 @@ public class DataList extends IndexedElement implements Iterable<DataElement>, C
         return true;
     }
 
+    @Override
+    public DataList name(String name) throws IllegalArgumentException {
+        super.name(name);
+        return this;
+    }
+
     /**
      * Check if this list is empty, or not initialized.
      */

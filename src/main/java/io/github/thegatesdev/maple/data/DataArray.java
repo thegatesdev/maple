@@ -120,17 +120,23 @@ public class DataArray extends IndexedElement {
     }
 
     @Override
-    protected Object raw() {
+    protected DataElement[] raw() {
         return value;
     }
 
     @Override
-    public DataElement clone() {
+    public DataArray clone() {
         final DataArray cloned = new DataArray(value.length);
         for (int i = 0, valueLength = value.length; i < valueLength; i++) {
             cloned.set(i, this.value[i].clone());
         }
         return cloned;
+    }
+
+    @Override
+    public DataArray name(String name) throws IllegalArgumentException {
+        super.name(name);
+        return this;
     }
 
     public int size(){

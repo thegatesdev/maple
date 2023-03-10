@@ -791,6 +791,12 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
+    public DataMap name(String name) throws IllegalArgumentException {
+        super.name(name);
+        return this;
+    }
+
+    @Override
     public DataMap clone() {
         return new DataMap().cloneFrom(this);
     }

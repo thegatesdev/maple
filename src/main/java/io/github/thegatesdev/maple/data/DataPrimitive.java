@@ -213,6 +213,12 @@ public class DataPrimitive extends DataElement implements Cloneable, Comparable<
     }
 
     @Override
+    public DataPrimitive name(String name) throws IllegalArgumentException {
+        super.name(name);
+        return this;
+    }
+
+    @Override
     protected Object raw() {
         return value;
     }
