@@ -2,41 +2,19 @@
 
 A simple type safe data structure.
 
-## Why
+## About
 
-Minecraft server plugins.
-I needed to read and use a lot of data read from ( yaml ) data files.
-Spigot does have its own data structure, called the Configuration API,
-which is pretty garbage for the code I wanted to write, so I started Maple.
+I made Maple as replacement for the Spigot Configuration API, to use in my own plugins that read a lot of data from the user.
 
-The goal was to make a small, type safe structure with short syntax and a lot of utility / shortcut methods to write
-less code and nested if statements. An example for getting a String value from a map:
+## Usage
 
-```java
-// Messy approach:
-DataElement element = data.get("my_string_property");
-if(element.isPrimitive()){
-    DataPrimitive primitive = element.asPrimitive();
-    if (primitive.valueOf(String.class)){
-        String stringData = primitive.valueOrNull(String.class); // You could also use valueUnsafe()
-        // Nice! We got the data we wanted! But what a mess me made!
-        // Oh great, we also need to handle 2 'else' cases..
-    }
-}
-// Can also be written as:
-String stringData = data.get("my_string_property", String.class, "404 not found");
-```
+### Element data
 
-## How
-
-### Data
-
-Each DataElement has its data.
+Each DataElement has its element data.
 Data consists of a *parent* and a *name*.
 A DataElement's data can only be set **once**.
 
-The element's **name** can be set in the constructor ( Except for DataPrimitive ), or using
-the `DataElement#setName(String)` method.
+The element's **name** can be set in the constructor, or using the `DataElement#setName(String)` method.
 
 The element's **parent** is not accessible to the outside. It is set by the parent when a child is added to its
 structure. This is to prevent ghost items ( and also who are you to say who their parent is.. )
@@ -49,6 +27,8 @@ structure. This is to prevent ghost items ( and also who are you to say who thei
   has its data set!
 
 ### DataMap
+
+*Key value pair structure*
 
 ```java
 // Create map, giving it a name. This means this map cannot be a child anymore, as its data is set.
@@ -64,9 +44,13 @@ int i = map.get("integer_entry", Integer.class);
 DataElement nestedEntry = map.navigate("map_entry", "nested_map_entry");
 // If you are very sure about what the element type is
 DataList surelyThisIsAList = map.getList("map_entry"); // ElementException!!
+
+// And more ..
 ```
 
 ### DataList
+
+*Dynamic sized indexed structure*
 
 ```java
 // Create list, giving it no name. This means this list can be parented.
@@ -79,9 +63,13 @@ DataElement el = list.get(0);
 Iterator<DataMap> mapsInList = list.iterator(DataMap.class);
 // Get a list of primitive elements values of a certain type:
 List<String> stringPrimitives = list.primitiveList(String.class);
+
+// And more ..
 ```
 
 ### DataArray
+
+*Static sized indexed structure*
 
 ```java
 // Create array that can hold 20 elements.
@@ -90,9 +78,13 @@ DataArray array = new DataArray(20);
 array.set(0, new DataPrimitive("hello world"));
 // Get elements:
 DataElement element = array.get(0);
+
+// And more ..
 ```
 
 ### DataPrimitive
+
+*A single value*
 
 ```java
 // Create primitive. A DataPrimitive is an exception in that there is no constructor with name parameter.
@@ -106,11 +98,17 @@ primitive.isNumberValue() // false
 // Get value or throw
 String stringValue = primitive.requireValue(String.class); // "hello world"
 int intValue = primitive.requireValue(Integer.class); // ElementException with appropriate message.
+
+// And more ..
 ```
 
 ### DataNull
 
-Literally a *null* value. Who could have thought.
+*A null value*
 
 DataNull gets returned by for example `DataMap#get(String)` if the element is not found. This enables the possibility
 for type checking without the occasional NullPointerException.
+
+### ElementException
+
+This exception should mostly be used to notify the end user that they did something unexpected, for example when using assertion methods.
