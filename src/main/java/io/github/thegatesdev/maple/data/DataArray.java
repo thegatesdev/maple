@@ -2,6 +2,7 @@ package io.github.thegatesdev.maple.data;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /*
@@ -142,6 +143,12 @@ public class DataArray extends IndexedElement {
 
     public int size(){
         return value.length;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof DataArray that)) return false;
+        return Objects.equals(name(), that.name()) && Arrays.equals(raw(), that.raw());
     }
 
     @Override
