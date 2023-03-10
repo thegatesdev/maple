@@ -426,4 +426,6 @@ public abstract class IndexedElement extends DataElement implements Iterable<Dat
     }
 
     abstract DataElement getOrNull(int index);
+
+    abstract int size();
 }
