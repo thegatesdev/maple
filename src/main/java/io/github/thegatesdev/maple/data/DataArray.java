@@ -128,4 +128,8 @@ public class DataArray extends IndexedElement {
     public DataElement clone() {
         return new DataArray(value());
     }
+
+    public int size(){
+        return value.length;
+    }
 }
