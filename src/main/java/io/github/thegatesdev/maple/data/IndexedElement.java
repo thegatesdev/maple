@@ -25,7 +25,7 @@ Copyright (C) 2022  Timar Karels
  * An abstract class for indexed elements. Implemented by DataList and DataArray.
  * Has common methods for getting different elements using an index.
  */
-public abstract class IndexedElement extends DataElement {
+public abstract class IndexedElement extends DataElement implements Iterable<DataElement> {
 
     /**
      * Get the element at this index.

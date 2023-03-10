@@ -1,6 +1,7 @@
 package io.github.thegatesdev.maple.data;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.function.Consumer;
 
 /*
@@ -141,5 +142,10 @@ public class DataArray extends IndexedElement {
 
     public int size(){
         return value.length;
+    }
+
+    @Override
+    public Iterator<DataElement> iterator() {
+        return Arrays.stream(value).iterator();
     }
 }
