@@ -464,7 +464,8 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (raw() != null ? raw().hashCode() : 0);
+        Object raw = raw();
+        result = 31 * result + (raw != null ? raw.hashCode() : 0);
         return result;
     }
 
