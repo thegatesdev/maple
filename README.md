@@ -1,23 +1,18 @@
 # Maple
 
-A simple type safe data structure.
+A clean type safe data structure.
 
 ## About
 
-I made Maple as replacement for the Spigot Configuration API, to use in my own plugins that read a lot of data from the user.
+Maple is used as a replacement for the Spigot Configuration API, and used in my own projects to help read extensive amounts of data.
 
 ## Usage
 
 ### Element data
 
-Each DataElement has its element data.
-Data consists of a *parent* and a *name*.
-A DataElement's data can only be set **once**.
-
-The element's **name** can be set in the constructor, or using the `DataElement#setName(String)` method.
-
-The element's **parent** is not accessible to the outside. It is set by the parent when a child is added to its
-structure. This is to prevent ghost items ( and also who are you to say who their parent is.. )
+A DataElement can have a *parent* and a *name*.
+The *parent* is set by the parent when added in a structure. It is used to identify where the element lives.
+The *name* can be set manually, or by the structure it is in. If the name is set, manually or by the parent, it can not be changed.
 
 - `new DataMap()` This creates a new DataMap with its data *unset*.
 - `new DataMap("Timmy")` This creates a new DataMap with its data *set*, the parent is defaulted to *null*.
@@ -69,7 +64,7 @@ List<String> stringPrimitives = list.primitiveList(String.class);
 
 ### DataArray
 
-*Static sized indexed structure*
+*A normal static sized array*
 
 ```java
 // Create array that can hold 20 elements.
