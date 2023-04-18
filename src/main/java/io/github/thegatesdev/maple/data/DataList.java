@@ -25,7 +25,7 @@ Copyright (C) 2022  Timar Karels
  * A list element backed by an ArrayList, containing an array of DataElement.
  * It allows for more advanced iteration, for example by element type ({@link DataList#iterator(Class)}.
  */
-public class DataList extends IndexedElement {
+public class DataList extends DataElement implements IndexedElement {
 
     private final IntFunction<List<DataElement>> listSupplier;
     private List<DataElement> value;
@@ -124,6 +124,13 @@ public class DataList extends IndexedElement {
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
+    }
+
+    @Override
+    public DataElement get(int index) {
+        final DataElement element = getOrNull(index);
+        if (element == null) return new DataNull().setData(this, "[" + index + "]");
+        return element;
     }
 
     /**

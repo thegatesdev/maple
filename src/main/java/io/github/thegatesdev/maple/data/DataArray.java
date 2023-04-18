@@ -25,7 +25,7 @@ Copyright (C) 2022  Timar Karels
 /**
  * An array element backed by a Java array.
  */
-public class DataArray extends IndexedElement {
+public class DataArray extends DataElement implements IndexedElement {
 
     private final DataElement[] value;
 
@@ -95,6 +95,12 @@ public class DataArray extends IndexedElement {
         return value[index];
     }
 
+    @Override
+    public DataElement get(int index) {
+        final DataElement element = getOrNull(index);
+        if (element == null) return new DataNull().setData(this, "[" + index + "]");
+        return element;
+    }
 
     @Override
     public DataElement[] value() {
