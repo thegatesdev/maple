@@ -27,7 +27,7 @@ Copyright (C) 2022  Timar Karels
  * A map element backed by a LinkedHashMap, with String for keys and DataElements for values.
  * It allows for more advanced iteration, for example by element type ({@link DataMap#iterator(Class)}.
  */
-public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>> {
+public class DataMap extends DataElement implements Iterable<DataElement> {
 
     private final IntFunction<Map<String, DataElement>> mapSupplier;
     private Map<String, DataElement> value;
@@ -720,13 +720,8 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
-    public Iterator<Map.Entry<String, DataElement>> iterator() {
-        return value.entrySet().iterator();
-    }
-
-    @Override
-    public Spliterator<Map.Entry<String, DataElement>> spliterator() {
-        return value.entrySet().spliterator();
+    public Iterator<DataElement> iterator() {
+        return value.values().iterator();
     }
 
     @Override
@@ -735,7 +730,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dataMap{");
         int len = value.size();
-        for (Map.Entry<String, DataElement> entry : this) {
+        for (Map.Entry<String, DataElement> entry : value.entrySet()) {
             stringBuilder.append("'");
             stringBuilder.append(entry.getKey());
             stringBuilder.append("'");
@@ -829,7 +824,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
         public ClassedIterator(Class<E> elementClass) {
             this.elementClass = elementClass;
-            iterator = iterator();
+            iterator = value.entrySet().iterator();
         }
 
         @SuppressWarnings("unchecked")
