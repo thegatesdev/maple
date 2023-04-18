@@ -107,9 +107,7 @@ public class DataList extends IndexedElement {
         if (element.isDataSet())
             throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
-        synchronized (MODIFY_MUTEX) {
-            value.add(element.setData(this, "[" + value.size() + "]"));
-        }
+        value.add(element.setData(this, "[" + value.size() + "]"));
         return this;
     }
 
@@ -191,11 +189,9 @@ public class DataList extends IndexedElement {
      */
     public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
         final ArrayList<T> out = new ArrayList<>();
-        synchronized (READ_MUTEX) {
-            for (final DataElement element : this) {
-                if (element.isPrimitive() && element.asPrimitive().valueOf(elementClass))
-                    out.add(element.asPrimitive().valueUnsafe());
-            }
+        for (final DataElement element : this) {
+            if (element.isPrimitive() && element.asPrimitive().valueOf(elementClass))
+                out.add(element.asPrimitive().valueUnsafe());
         }
         return out;
     }

@@ -112,9 +112,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         if (element.isDataSet())
             throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
-        synchronized (MODIFY_MUTEX) {
-            value.put(key, element.setData(this, key));
-        }
+        value.put(key, element.setData(this, key));
         keyCache = key;
         elementCache = element;
         return this;
@@ -200,7 +198,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      */
     public DataElement getOrNull(String key) {
         if (Objects.equals(keyCache, key)) return elementCache;
-        if (value != null) synchronized (READ_MUTEX) {
+        if (value != null){
             keyCache = key;
             return elementCache = value.get(key);
         }
@@ -819,9 +817,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public DataMap cloneFrom(Map<String, DataElement> toAdd) {
         if (value == null) init(toAdd.size());
         for (Map.Entry<String, DataElement> entry : toAdd.entrySet()) {
-            synchronized (MODIFY_MUTEX) {
-                put(entry.getKey(), entry.getValue().clone());
-            }
+            put(entry.getKey(), entry.getValue().clone());
         }
         return this;
     }
@@ -840,10 +836,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         @Override
         public boolean hasNext() {
             if (!iterator.hasNext()) return false;
-            final Map.Entry<String, DataElement> el;
-            synchronized (READ_MUTEX) {
-                el = iterator.next();
-            }
+            final Map.Entry<String, DataElement> el = iterator.next();
             if (el.getValue().isOf(elementClass)) {
                 next = ((Map.Entry<String, E>) el);
                 return true;

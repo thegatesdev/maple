@@ -30,16 +30,6 @@ Copyright (C) 2022  Timar Karels
  * The parent is only to be set by the parent itself, to avoid 'ghost' elements that have the parent set, but are not actually contained in the structure.
  */
 public abstract class DataElement implements Cloneable, Comparable<DataElement> {
-
-    /**
-     * The mutex for modifying this element.
-     */
-    protected static final Object MODIFY_MUTEX = new Object();
-    /**
-     * The mutex for reading from this element.
-     */
-    protected static final Object READ_MUTEX = new Object();
-
     private final Class<? extends DataElement> cachedType = getClass();
     private String[] cachedPath;
 
