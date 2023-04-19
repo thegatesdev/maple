@@ -1,6 +1,7 @@
 package io.github.thegatesdev.maple.data;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -25,22 +26,9 @@ Copyright (C) 2022  Timar Karels
 /**
  * An array element backed by a Java array.
  */
-public class DataArray extends IndexedElement {
+public class DataArray extends DataElement implements IndexedElement {
 
     private final DataElement[] value;
-
-    private DataArray(DataElement[] value) {
-        this.value = value;
-    }
-
-    /**
-     * Constructs a DataArray with its data unset.
-     *
-     * @param size The size to initialize the array with.
-     */
-    public DataArray(int size) {
-        value = new DataElement[size];
-    }
 
     /**
      * Constructs a DataArray with its parent defaulted to {@code null}
@@ -49,24 +37,36 @@ public class DataArray extends IndexedElement {
      * @param size The size to initialize the array with.
      */
     public DataArray(final String name, int size) {
+        this(size);
         setData(null, name);
-        value = new DataElement[size];
     }
 
+    /**
+     * Constructs a DataArray with its data unset.
+     *
+     * @param size The size to initialize the array with.
+     */
+    public DataArray(int size) {
+        this.value = new DataElement[size];
+    }
 
     /**
-     * Read an array to a DataArray
-     *
-     * @param data The array to read from.
-     * @return A new DataArray with the same size as the array,
-     * the values read using {@link DataElement#readOf(Object)}
+     * @param dataArray The DataArray to clone the elements from.
+     * @return A new DataArray containing all the cloned elements with the same ordering.
      */
-    public static DataArray read(Object[] data) {
-        final DataArray output = new DataArray(data.length);
-        for (int i = 0; i < data.length; i++) {
-            output.set(i, DataElement.readOf(data[i]));
-        }
-        return output;
+    public static DataArray cloneFrom(DataArray dataArray) {
+        return cloneFrom(Arrays.asList(dataArray.value));
+    }
+
+    /**
+     * @param elements The Collection to clone the elements from.
+     * @return A new DataArray containing all the cloned elements with the same ordering.
+     */
+    public static DataArray cloneFrom(Collection<DataElement> elements) {
+        final DataArray array = new DataArray(elements.size());
+        int i = 0;
+        for (DataElement el : elements) array.set(i++, el.clone());
+        return array;
     }
 
     /**
@@ -84,6 +84,28 @@ public class DataArray extends IndexedElement {
     }
 
     /**
+     * Read an array to a DataArray
+     *
+     * @param data The array to read from.
+     * @return A new DataArray with the same size as the array,
+     * the values read using {@link DataElement#readOf(Object)}
+     */
+    public static DataArray read(Object[] data) {
+        final DataArray output = new DataArray(data.length);
+        for (int i = 0; i < data.length; i++) {
+            output.set(i, DataElement.readOf(data[i]));
+        }
+        return output;
+    }
+
+    @Override
+    public DataElement get(int index) {
+        final DataElement element = getOrNull(index);
+        if (element == null) return new DataNull().setData(this, "[" + index + "]");
+        return element;
+    }
+
+    /**
      * Get the element at this index, or null.
      *
      * @param index The index of the element.
@@ -95,6 +117,17 @@ public class DataArray extends IndexedElement {
         return value[index];
     }
 
+    /**
+     * @return The length of this array.
+     */
+    public int size() {
+        return value.length;
+    }
+    
+    @Override
+    public Iterator<DataElement> iterator() {
+        return Arrays.stream(value).iterator();
+    }
 
     @Override
     public DataElement[] value() {
@@ -122,30 +155,14 @@ public class DataArray extends IndexedElement {
     }
 
     @Override
-    protected DataElement[] raw() {
-        return value;
-    }
-
-    @Override
-    public DataArray clone() {
-        final DataArray cloned = new DataArray(value.length);
-        for (int i = 0, valueLength = value.length; i < valueLength; i++) {
-            cloned.set(i, this.value[i].clone());
-        }
-        return cloned;
-    }
-
-    @Override
     public DataArray name(String name) throws IllegalArgumentException {
         super.name(name);
         return this;
     }
 
-    /**
-     * @return The length of this array.
-     */
-    public int size(){
-        return value.length;
+    @Override
+    protected DataElement[] raw() {
+        return value;
     }
 
     @Override
@@ -155,7 +172,11 @@ public class DataArray extends IndexedElement {
     }
 
     @Override
-    public Iterator<DataElement> iterator() {
-        return Arrays.stream(value).iterator();
+    public DataArray clone() {
+        final DataArray cloned = new DataArray(value.length);
+        for (int i = 0, valueLength = value.length; i < valueLength; i++) {
+            cloned.set(i, this.value[i].clone());
+        }
+        return cloned;
     }
 }

@@ -27,7 +27,7 @@ Copyright (C) 2022  Timar Karels
  * A map element backed by a LinkedHashMap, with String for keys and DataElements for values.
  * It allows for more advanced iteration, for example by element type ({@link DataMap#iterator(Class)}.
  */
-public class DataMap extends DataElement implements Iterable<Map.Entry<String, DataElement>> {
+public class DataMap extends DataElement implements Iterable<DataElement> {
 
     private final IntFunction<Map<String, DataElement>> mapSupplier;
     private Map<String, DataElement> value;
@@ -45,16 +45,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     /**
      * Constructs an empty DataMap with its parent defaulted to {@code null}.
      *
-     * @param name The name to initialize the data with.
-     */
-    public DataMap(String name) {
-        this(name, null);
-    }
-
-    /**
-     * Constructs an empty DataMap with its parent defaulted to {@code null}.
-     *
-     * @param name            The name to initialize the data with.
+     * @param name        The name to initialize the data with.
      * @param mapSupplier An IntFunction to supply a map when initializing, taking an initial capacity.
      */
     public DataMap(String name, IntFunction<Map<String, DataElement>> mapSupplier) {
@@ -63,23 +54,21 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     /**
+     * Constructs an empty DataMap with its parent defaulted to {@code null}.
+     *
+     * @param name The name to initialize the data with.
+     */
+    public DataMap(String name) {
+        this(name, null);
+    }
+
+    /**
      * Constructs an empty DataMap with its data unset.
      *
      * @param mapSupplier An IntFunction to supply a map when initializing, taking an initial capacity.
      */
-    public DataMap(IntFunction<Map<String, DataElement>> mapSupplier){
+    public DataMap(IntFunction<Map<String, DataElement>> mapSupplier) {
         this(null, mapSupplier);
-    }
-
-    private void init(int initialCapacity) {
-        if (value == null){
-            if (mapSupplier == null) value = new LinkedHashMap<>(initialCapacity);
-            else{
-                final Map<String, DataElement> suppliedMap = mapSupplier.apply(initialCapacity);
-                if (!suppliedMap.isEmpty()) throw new IllegalArgumentException("List supplier should return empty list");
-                value = suppliedMap;
-            }
-        }
     }
 
     /**
@@ -112,12 +101,22 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         if (element.isDataSet())
             throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
-        synchronized (MODIFY_MUTEX) {
-            value.put(key, element.setData(this, key));
-        }
+        value.put(key, element.setData(this, key));
         keyCache = key;
         elementCache = element;
         return this;
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null) {
+            if (mapSupplier == null) value = new LinkedHashMap<>(initialCapacity);
+            else {
+                final Map<String, DataElement> suppliedMap = mapSupplier.apply(initialCapacity);
+                if (!suppliedMap.isEmpty())
+                    throw new IllegalArgumentException("List supplier should return empty list");
+                value = suppliedMap;
+            }
+        }
     }
 
     /**
@@ -200,7 +199,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
      */
     public DataElement getOrNull(String key) {
         if (Objects.equals(keyCache, key)) return elementCache;
-        if (value != null) synchronized (READ_MUTEX) {
+        if (value != null) {
             keyCache = key;
             return elementCache = value.get(key);
         }
@@ -721,14 +720,23 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         return this;
     }
 
-    @Override
-    public Iterator<Map.Entry<String, DataElement>> iterator() {
-        return value.entrySet().iterator();
+    /**
+     * @return A DataArray with the *cloned* values of this DataMap, with the same ordering.
+     */
+    public DataArray valueArray() {
+        return DataArray.cloneFrom(value.values());
+    }
+
+    /**
+     * @return A DataList with the *cloned* values of this DataMap, with the same ordering.
+     */
+    public DataList valueList() {
+        return new DataList().cloneFrom(value.values());
     }
 
     @Override
-    public Spliterator<Map.Entry<String, DataElement>> spliterator() {
-        return value.entrySet().spliterator();
+    public Iterator<DataElement> iterator() {
+        return value.values().iterator();
     }
 
     @Override
@@ -737,7 +745,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dataMap{");
         int len = value.size();
-        for (Map.Entry<String, DataElement> entry : this) {
+        for (Map.Entry<String, DataElement> entry : value.entrySet()) {
             stringBuilder.append("'");
             stringBuilder.append(entry.getKey());
             stringBuilder.append("'");
@@ -779,6 +787,12 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     }
 
     @Override
+    public DataMap name(String name) throws IllegalArgumentException {
+        super.name(name);
+        return this;
+    }
+
+    @Override
     protected Map<String, DataElement> raw() {
         return value;
     }
@@ -788,12 +802,6 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
         if (this == o) return true;
         if (!(o instanceof DataMap)) return false;
         return super.equals(o);
-    }
-
-    @Override
-    public DataMap name(String name) throws IllegalArgumentException {
-        super.name(name);
-        return this;
     }
 
     @Override
@@ -819,9 +827,7 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
     public DataMap cloneFrom(Map<String, DataElement> toAdd) {
         if (value == null) init(toAdd.size());
         for (Map.Entry<String, DataElement> entry : toAdd.entrySet()) {
-            synchronized (MODIFY_MUTEX) {
-                put(entry.getKey(), entry.getValue().clone());
-            }
+            put(entry.getKey(), entry.getValue().clone());
         }
         return this;
     }
@@ -833,17 +839,14 @@ public class DataMap extends DataElement implements Iterable<Map.Entry<String, D
 
         public ClassedIterator(Class<E> elementClass) {
             this.elementClass = elementClass;
-            iterator = iterator();
+            iterator = value.entrySet().iterator();
         }
 
         @SuppressWarnings("unchecked")
         @Override
         public boolean hasNext() {
             if (!iterator.hasNext()) return false;
-            final Map.Entry<String, DataElement> el;
-            synchronized (READ_MUTEX) {
-                el = iterator.next();
-            }
+            final Map.Entry<String, DataElement> el = iterator.next();
             if (el.getValue().isOf(elementClass)) {
                 next = ((Map.Entry<String, E>) el);
                 return true;

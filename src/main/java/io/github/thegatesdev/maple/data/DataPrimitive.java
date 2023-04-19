@@ -48,16 +48,6 @@ public class DataPrimitive extends DataElement {
     }
 
     /**
-     * Constructs a DataPrimitive with its data unset.
-     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#name(String)} to set the name instead.
-     *
-     * @param value The value to hold.
-     */
-    public DataPrimitive(Object value) {
-        value(value);
-    }
-
-    /**
      * Sets this primitives value.
      *
      * @param value The value to set to.
@@ -67,6 +57,16 @@ public class DataPrimitive extends DataElement {
         if (value != null)
             cachedSimpleName = value.getClass().getSimpleName();
         else cachedSimpleName = "Null";
+    }
+
+    /**
+     * Constructs a DataPrimitive with its data unset.
+     * The name only constructor is left out to avoid confusion with this constructor. Use {@link DataElement#name(String)} to set the name instead.
+     *
+     * @param value The value to hold.
+     */
+    public DataPrimitive(Object value) {
+        value(value);
     }
 
     /**
