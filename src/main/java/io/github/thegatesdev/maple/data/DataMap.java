@@ -720,11 +720,11 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
     }
 
     public DataArray valueArray(){
-        return new DataArray(value.values().toArray(new DataElement[0]));
+        return DataArray.cloneFrom(value.values());
     }
 
     public DataList valueList(){
-        return new DataList(new ArrayList<>(value.values()));
+        return new DataList().cloneFrom(value.values());
     }
 
     @Override

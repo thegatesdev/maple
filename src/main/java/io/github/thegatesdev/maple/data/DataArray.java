@@ -1,6 +1,7 @@
 package io.github.thegatesdev.maple.data;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -29,8 +30,15 @@ public class DataArray extends DataElement implements IndexedElement {
 
     private final DataElement[] value;
 
-    DataArray(DataElement[] value) {
-        this.value = value;
+    public static DataArray cloneFrom(Collection<DataElement> elements){
+        final DataArray array = new DataArray(elements.size());
+        int i = 0;
+        for (DataElement el : elements) array.set(i++, el.clone());
+        return array;
+    }
+
+    public static DataArray cloneFrom(DataArray dataArray){
+        return cloneFrom(Arrays.asList(dataArray.value));
     }
 
     /**
@@ -39,7 +47,7 @@ public class DataArray extends DataElement implements IndexedElement {
      * @param size The size to initialize the array with.
      */
     public DataArray(int size) {
-        this(new DataElement[size]);
+        this.value = new DataElement[size];
     }
 
     /**
