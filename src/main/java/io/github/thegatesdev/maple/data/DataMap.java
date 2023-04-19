@@ -45,16 +45,7 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
     /**
      * Constructs an empty DataMap with its parent defaulted to {@code null}.
      *
-     * @param name The name to initialize the data with.
-     */
-    public DataMap(String name) {
-        this(name, null);
-    }
-
-    /**
-     * Constructs an empty DataMap with its parent defaulted to {@code null}.
-     *
-     * @param name            The name to initialize the data with.
+     * @param name        The name to initialize the data with.
      * @param mapSupplier An IntFunction to supply a map when initializing, taking an initial capacity.
      */
     public DataMap(String name, IntFunction<Map<String, DataElement>> mapSupplier) {
@@ -63,23 +54,21 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
     }
 
     /**
+     * Constructs an empty DataMap with its parent defaulted to {@code null}.
+     *
+     * @param name The name to initialize the data with.
+     */
+    public DataMap(String name) {
+        this(name, null);
+    }
+
+    /**
      * Constructs an empty DataMap with its data unset.
      *
      * @param mapSupplier An IntFunction to supply a map when initializing, taking an initial capacity.
      */
-    public DataMap(IntFunction<Map<String, DataElement>> mapSupplier){
+    public DataMap(IntFunction<Map<String, DataElement>> mapSupplier) {
         this(null, mapSupplier);
-    }
-
-    private void init(int initialCapacity) {
-        if (value == null){
-            if (mapSupplier == null) value = new LinkedHashMap<>(initialCapacity);
-            else{
-                final Map<String, DataElement> suppliedMap = mapSupplier.apply(initialCapacity);
-                if (!suppliedMap.isEmpty()) throw new IllegalArgumentException("List supplier should return empty list");
-                value = suppliedMap;
-            }
-        }
     }
 
     /**
@@ -116,6 +105,18 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
         keyCache = key;
         elementCache = element;
         return this;
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null) {
+            if (mapSupplier == null) value = new LinkedHashMap<>(initialCapacity);
+            else {
+                final Map<String, DataElement> suppliedMap = mapSupplier.apply(initialCapacity);
+                if (!suppliedMap.isEmpty())
+                    throw new IllegalArgumentException("List supplier should return empty list");
+                value = suppliedMap;
+            }
+        }
     }
 
     /**
@@ -198,7 +199,7 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
      */
     public DataElement getOrNull(String key) {
         if (Objects.equals(keyCache, key)) return elementCache;
-        if (value != null){
+        if (value != null) {
             keyCache = key;
             return elementCache = value.get(key);
         }
@@ -719,11 +720,17 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
         return this;
     }
 
-    public DataArray valueArray(){
+    /**
+     * @return A DataArray with the *cloned* values of this DataMap, with the same ordering.
+     */
+    public DataArray valueArray() {
         return DataArray.cloneFrom(value.values());
     }
 
-    public DataList valueList(){
+    /**
+     * @return A DataList with the *cloned* values of this DataMap, with the same ordering.
+     */
+    public DataList valueList() {
         return new DataList().cloneFrom(value.values());
     }
 
@@ -780,6 +787,12 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
     }
 
     @Override
+    public DataMap name(String name) throws IllegalArgumentException {
+        super.name(name);
+        return this;
+    }
+
+    @Override
     protected Map<String, DataElement> raw() {
         return value;
     }
@@ -789,12 +802,6 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
         if (this == o) return true;
         if (!(o instanceof DataMap)) return false;
         return super.equals(o);
-    }
-
-    @Override
-    public DataMap name(String name) throws IllegalArgumentException {
-        super.name(name);
-        return this;
     }
 
     @Override

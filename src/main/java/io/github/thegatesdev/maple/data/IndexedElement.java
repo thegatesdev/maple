@@ -28,19 +28,6 @@ Copyright (C) 2022  Timar Karels
 public interface IndexedElement extends Iterable<DataElement> {
 
     /**
-     * Get the element at this index.
-     *
-     * @param index The index of the element.
-     * @return The element at this index, or a new {@link DataNull}.
-     */
-    DataElement get(int index);
-
-    DataElement getOrNull(int index);
-
-    int size();
-
-
-    /**
      * Get the value of the primitive at this index, or throw.
      *
      * @param index          The index of the primitive.
@@ -49,7 +36,7 @@ public interface IndexedElement extends Iterable<DataElement> {
      * @return The value of the primitive.
      * @throws ElementException If the primitive was not found, or the value did not conform to P.
      */
-    default  <P> P get(int index, Class<P> primitiveClass) throws ElementException {
+    default <P> P get(int index, Class<P> primitiveClass) throws ElementException {
         return getPrimitive(index).requireValue(primitiveClass);
     }
 
@@ -63,6 +50,14 @@ public interface IndexedElement extends Iterable<DataElement> {
     default DataPrimitive getPrimitive(int index) throws ElementException {
         return get(index).requireOf(DataPrimitive.class);
     }
+
+    /**
+     * Get the element at this index.
+     *
+     * @param index The index of the element.
+     * @return The element at this index, or a new {@link DataNull} if out of bounds.
+     */
+    DataElement get(int index);
 
     /**
      * Get the array element at this index.
@@ -114,6 +109,14 @@ public interface IndexedElement extends Iterable<DataElement> {
         final P val = el.asPrimitive().valueOrNull(primitiveCLass);
         return val == null ? def : val;
     }
+
+    /**
+     * Get the element at this index, or null.
+     *
+     * @param index The index of the element.
+     * @return The element at this index, or null if out of bounds.
+     */
+    DataElement getOrNull(int index);
 
     /**
      * Get the double value from the primitive at this index.
@@ -425,4 +428,9 @@ public interface IndexedElement extends Iterable<DataElement> {
         }
         if (elseAction != null) elseAction.run();
     }
+
+    /**
+     * @return The amount of elements contained in this element.
+     */
+    int size();
 }
