@@ -30,6 +30,11 @@ public class DataList extends DataElement implements IndexedElement {
     private final IntFunction<List<DataElement>> listSupplier;
     private List<DataElement> value;
 
+    DataList(List<DataElement> value){
+        this(null,null);
+        this.value = value;
+    }
+
     /**
      * Constructs an empty DataList with its data unset.
      */

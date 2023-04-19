@@ -719,6 +719,14 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
         return this;
     }
 
+    public DataArray valueArray(){
+        return new DataArray(value.values().toArray(new DataElement[0]));
+    }
+
+    public DataList valueList(){
+        return new DataList(new ArrayList<>(value.values()));
+    }
+
     @Override
     public Iterator<DataElement> iterator() {
         return value.values().iterator();
