@@ -30,9 +30,20 @@ public class DataList extends DataElement implements IndexedElement {
     private final IntFunction<List<DataElement>> listSupplier;
     private List<DataElement> value;
 
-    DataList(List<DataElement> value){
-        this(null,null);
+    DataList(List<DataElement> value) {
+        this(null, null);
         this.value = value;
+    }
+
+    /**
+     * Constructs an empty DataList with its parent defaulted to {@code null}.
+     *
+     * @param name         The name to initialize the data with.
+     * @param listSupplier An IntFunction to supply a list when initializing, taking an initial capacity.
+     */
+    public DataList(String name, IntFunction<List<DataElement>> listSupplier) {
+        this.listSupplier = listSupplier;
+        if (name != null) setData(null, name);
     }
 
     /**
@@ -52,22 +63,11 @@ public class DataList extends DataElement implements IndexedElement {
     }
 
     /**
-     * Constructs an empty DataList with its parent defaulted to {@code null}.
-     *
-     * @param name The name to initialize the data with.
-     * @param listSupplier  An IntFunction to supply a list when initializing, taking an initial capacity.
-     */
-    public DataList(String name, IntFunction<List<DataElement>> listSupplier){
-        this.listSupplier = listSupplier;
-        if (name != null) setData(null, name);
-    }
-
-    /**
      * Constructs an empty DataList with its data unset.
      *
-     * @param listSupplier  An IntFunction to supply a list when initializing, taking an initial capacity.
+     * @param listSupplier An IntFunction to supply a list when initializing, taking an initial capacity.
      */
-    public DataList(IntFunction<List<DataElement>> listSupplier){
+    public DataList(IntFunction<List<DataElement>> listSupplier) {
         this(null, listSupplier);
     }
 
@@ -88,6 +88,31 @@ public class DataList extends DataElement implements IndexedElement {
     }
 
     /**
+     * @param element The element to add to this DataList.
+     * @return This DataList.
+     * @throws IllegalArgumentException When the supplied DataElement already has its data set.
+     */
+    public DataList add(DataElement element) throws IllegalArgumentException {
+        if (element.isDataSet())
+            throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
+        if (value == null) init(1);
+        value.add(element.setData(this, "[" + value.size() + "]"));
+        return this;
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null) {
+            if (listSupplier == null) value = new ArrayList<>(initialCapacity);
+            else {
+                final List<DataElement> suppliedList = listSupplier.apply(initialCapacity);
+                if (!suppliedList.isEmpty())
+                    throw new IllegalArgumentException("List supplier should return empty list");
+                this.value = suppliedList;
+            }
+        }
+    }
+
+    /**
      * Read an Object varargs array to a DataList.
      *
      * @param objects The array to read from.
@@ -102,48 +127,37 @@ public class DataList extends DataElement implements IndexedElement {
         return dataList;
     }
 
-
     /**
-     * @param element The element to add to this DataList.
-     * @return This DataList.
-     * @throws IllegalArgumentException When the supplied DataElement already has its data set.
+     * @param elementClass The class to get the iterator for.
+     * @param <E>          The type to get the iterator for.
+     * @return The iterator for elements of this {@code elementClass}.
      */
-    public DataList add(DataElement element) throws IllegalArgumentException {
-        if (element.isDataSet())
-            throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
-        if (value == null) init(1);
-        value.add(element.setData(this, "[" + value.size() + "]"));
-        return this;
+    public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
+        return new ClassedIterator<>(elementClass, iterator());
+    }
+
+    @Override
+    public Iterator<DataElement> iterator() {
+        return value.iterator();
+    }
+
+    @Override
+    public Spliterator<DataElement> spliterator() {
+        return value.spliterator();
     }
 
     /**
-     * Get the element at the specified position in this list.
-     *
-     * @param index Index of the element to return.
-     * @return The element at the specified position in this list, or null if out of bounds.
+     * @param elementClass The class the DataPrimitive's values should be of.
+     * @param <T>          The type the DataPrimitive's values should be of.
+     * @return A new ArrayList containing the values of the DataPrimitives in this DataList conforming to {@code elementClass}.
      */
-    @Override
-    public DataElement getOrNull(int index) {
-        try {
-            return value.get(index);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
+    public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
+        final ArrayList<T> out = new ArrayList<>();
+        for (final DataElement element : this) {
+            if (element.isPrimitive() && element.asPrimitive().valueOf(elementClass))
+                out.add(element.asPrimitive().valueUnsafe());
         }
-    }
-
-    @Override
-    public DataElement get(int index) {
-        final DataElement element = getOrNull(index);
-        if (element == null) return new DataNull().setData(this, "[" + index + "]");
-        return element;
-    }
-
-    /**
-     * @return The size of this list, or {@code 0} if the list is not initialized.
-     */
-    public int size() {
-        if (value == null) return 0;
-        return value.size();
+        return out;
     }
 
     /**
@@ -164,69 +178,34 @@ public class DataList extends DataElement implements IndexedElement {
         value.sort(comparator);
     }
 
-    /**
-     * @param dataList The DataList to clone the elements from.
-     * @return This DataList.
-     * @see DataList#cloneFrom(Collection)
-     */
-    public DataList cloneFrom(DataList dataList) {
-        return cloneFrom(dataList.value);
-    }
-
-    /**
-     * @param elements The Collection to clone the elements from.
-     * @return This DataList.
-     */
-    public DataList cloneFrom(Collection<DataElement> elements) {
-        if (elements != null && !elements.isEmpty()) {
-            if (value == null) init(elements.size());
-            for (final DataElement element : elements) add(element.clone());
-        }
-        return this;
-    }
-
-    /**
-     * @param elementClass The class to get the iterator for.
-     * @param <E>          The type to get the iterator for.
-     * @return The iterator for elements of this {@code elementClass}.
-     */
-    public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
-        return new ClassedIterator<>(elementClass, iterator());
-    }
-
-    /**
-     * @param elementClass The class the DataPrimitive's values should be of.
-     * @param <T>          The type the DataPrimitive's values should be of.
-     * @return A new ArrayList containing the values of the DataPrimitives in this DataList conforming to {@code elementClass}.
-     */
-    public <T> ArrayList<T> primitiveList(Class<T> elementClass) {
-        final ArrayList<T> out = new ArrayList<>();
-        for (final DataElement element : this) {
-            if (element.isPrimitive() && element.asPrimitive().valueOf(elementClass))
-                out.add(element.asPrimitive().valueUnsafe());
-        }
-        return out;
-    }
-
-    private void init(int initialCapacity) {
-        if (value == null) {
-            if (listSupplier == null) value = new ArrayList<>(initialCapacity);
-            else{
-                final List<DataElement> suppliedList = listSupplier.apply(initialCapacity);
-                if (!suppliedList.isEmpty()) throw new IllegalArgumentException("List supplier should return empty list");
-                this.value = suppliedList;
-            }
-        }
-    }
-
     @Override
-    public Iterator<DataElement> iterator() {
-        return value.iterator();
+    public DataElement get(int index) {
+        final DataElement element = getOrNull(index);
+        if (element == null) return new DataNull().setData(this, "[" + index + "]");
+        return element;
     }
 
+    /**
+     * Get the element at the specified position in this list.
+     *
+     * @param index Index of the element to return.
+     * @return The element at the specified position in this list, or null if out of bounds.
+     */
     @Override
-    public Spliterator<DataElement> spliterator() {
-        return value.spliterator();
+    public DataElement getOrNull(int index) {
+        try {
+            return value.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return The size of this list, or {@code 0} if the list is not initialized.
+     */
+    public int size() {
+        if (value == null) return 0;
+        return value.size();
     }
 
     @Override
@@ -264,18 +243,18 @@ public class DataList extends DataElement implements IndexedElement {
         return true;
     }
 
-    @Override
-    public DataList name(String name) throws IllegalArgumentException {
-        super.name(name);
-        return this;
-    }
-
     /**
      * Check if this list is empty, or not initialized.
      */
     @Override
     public boolean isEmpty() {
         return value == null || value.isEmpty();
+    }
+
+    @Override
+    public DataList name(String name) throws IllegalArgumentException {
+        super.name(name);
+        return this;
     }
 
     @Override
@@ -293,6 +272,27 @@ public class DataList extends DataElement implements IndexedElement {
     @Override
     public DataList clone() {
         return new DataList().cloneFrom(this);
+    }
+
+    /**
+     * @param dataList The DataList to clone the elements from.
+     * @return This DataList.
+     * @see DataList#cloneFrom(Collection)
+     */
+    public DataList cloneFrom(DataList dataList) {
+        return cloneFrom(dataList.value);
+    }
+
+    /**
+     * @param elements The Collection to clone the elements from.
+     * @return This DataList.
+     */
+    public DataList cloneFrom(Collection<DataElement> elements) {
+        if (elements != null && !elements.isEmpty()) {
+            if (value == null) init(elements.size());
+            for (final DataElement element : elements) add(element.clone());
+        }
+        return this;
     }
 
     private static class ClassedIterator<E extends DataElement> implements Iterator<E> {

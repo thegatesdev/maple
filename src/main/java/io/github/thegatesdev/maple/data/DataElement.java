@@ -53,6 +53,22 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
+     * Sets the data.
+     *
+     * @param parent The parent to initialize the data with.
+     * @param name   The name to initialize the data with.
+     * @return The same DataElement.
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
+        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
+        dataSet = true;
+        this.parent = parent;
+        this.name = name;
+        return this;
+    }
+
+    /**
      * Read this object as a DataElement, so that when;
      * <ul>
      * <li>{@code input == null} -> {@link DataNull#DataNull()}.
@@ -72,22 +88,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         if (reading instanceof Iterable<?> collection) return DataList.read(collection);
         if (reading instanceof Object[] array) return DataArray.read(array);
         return new DataPrimitive(reading);
-    }
-
-    /**
-     * Sets the data.
-     *
-     * @param parent The parent to initialize the data with.
-     * @param name   The name to initialize the data with.
-     * @return The same DataElement.
-     * @throws IllegalArgumentException When the data is already set.
-     */
-    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
-        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
-        dataSet = true;
-        this.parent = parent;
-        this.name = name;
-        return this;
     }
 
     /**

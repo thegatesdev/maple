@@ -123,7 +123,7 @@ public class DataArray extends DataElement implements IndexedElement {
     public int size() {
         return value.length;
     }
-
+    
     @Override
     public Iterator<DataElement> iterator() {
         return Arrays.stream(value).iterator();
