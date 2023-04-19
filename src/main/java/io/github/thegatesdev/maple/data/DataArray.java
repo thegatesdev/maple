@@ -29,7 +29,7 @@ public class DataArray extends DataElement implements IndexedElement {
 
     private final DataElement[] value;
 
-    private DataArray(DataElement[] value) {
+    DataArray(DataElement[] value) {
         this.value = value;
     }
 
@@ -39,7 +39,7 @@ public class DataArray extends DataElement implements IndexedElement {
      * @param size The size to initialize the array with.
      */
     public DataArray(int size) {
-        value = new DataElement[size];
+        this(new DataElement[size]);
     }
 
     /**
@@ -49,8 +49,8 @@ public class DataArray extends DataElement implements IndexedElement {
      * @param size The size to initialize the array with.
      */
     public DataArray(final String name, int size) {
+        this(size);
         setData(null, name);
-        value = new DataElement[size];
     }
 
 
