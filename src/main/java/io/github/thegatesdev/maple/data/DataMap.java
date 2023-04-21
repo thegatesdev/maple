@@ -91,11 +91,11 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
      *
      * @param key     Key with which the specified value is to be associated.
      * @param element Element to be associated with the specified key.
-     * @return This same DataMap.
+     * @return The previous value associated with key, or null if there was no mapping for key.
      * @throws NullPointerException     If the element or key is null.
      * @throws IllegalArgumentException When the data of the input element is already set.
      */
-    public DataMap put(String key, DataElement element) throws RuntimeException {
+    public DataElement put(String key, DataElement element) throws RuntimeException {
         if (key == null) throw new NullPointerException("key can't be null");
         if (element == null) throw new NullPointerException("element can't be null");
         if (element.isDataSet())
