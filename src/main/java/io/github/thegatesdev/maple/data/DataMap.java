@@ -113,7 +113,7 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
             else {
                 final Map<String, DataElement> suppliedMap = mapSupplier.apply(initialCapacity);
                 if (!suppliedMap.isEmpty())
-                    throw new IllegalArgumentException("List supplier should return empty list");
+                    throw new IllegalArgumentException("Map supplier should return an empty map");
                 value = suppliedMap;
             }
         }
