@@ -24,13 +24,14 @@ Copyright (C) 2022  Timar Karels
 */
 
 /**
- * A map element backed by a LinkedHashMap, with String for keys and DataElements for values.
- * It allows for more advanced iteration, for example by element type ({@link DataMap#iterator(Class)}.
+ * A map element backed by a LinkedHashMap by default, with String for keys and DataElements for values.
  */
-public class DataMap extends DataElement implements Iterable<DataElement> {
+public class DataMap extends DataElement implements Iterable<DataElement>, IndexedElement {
 
     private final IntFunction<Map<String, DataElement>> mapSupplier;
     private Map<String, DataElement> value;
+    private List<DataElement> indexed;
+    private boolean rebuildIndex = false;
 
     private String keyCache;
     private DataElement elementCache;
@@ -101,6 +102,7 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
         if (element.isDataSet())
             throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
         if (value == null) init(1);
+        rebuildIndex = true;
         value.put(key, element.setData(this, key));
         keyCache = key;
         elementCache = element;
@@ -675,23 +677,31 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
         return element.asMap().navigate(++current, keys);
     }
 
-    /**
-     * @param primitiveClass The class the DataPrimitives values should be of.
-     * @param <P>            The type the DataPrimitives values should be of.
-     * @return A new Map containing the key values pairs of the DataPrimitives in this DataMap conforming to {@code elementClass}.
-     */
-    public <P> Map<String, P> primitiveMap(Class<P> primitiveClass) {
-        final Map<String, P> out = new LinkedHashMap<>(size());
-        iterator(DataPrimitive.class).forEachRemaining(e -> {
-            final P val = e.getValue().valueOrNull(primitiveClass);
-            if (val != null) out.put(e.getKey(), val);
-        });
-        return out;
+    @Override
+    public DataElement get(final int index) {
+        final DataElement element = getOrNull(index);
+        if (element == null) return new DataNull().setData(this, "[" + index + "]");
+        return element;
+    }
+
+    @Override
+    public DataElement getOrNull(final int index) {
+        if (value == null || value.isEmpty()) return null;
+        if (rebuildIndex) {
+            indexed = new ArrayList<>(value.values());
+            rebuildIndex = false;
+        }
+        try {
+            return indexed.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /**
      * @return The size of this map, or {@code 0} if the map is not initialized.
      */
+    @Override
     public int size() {
         if (value == null) return 0;
         return value.size();
