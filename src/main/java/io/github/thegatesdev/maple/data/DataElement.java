@@ -466,6 +466,10 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
     protected abstract Object raw();
 
+    public DataElement self() {
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof DataElement that)) return false;
