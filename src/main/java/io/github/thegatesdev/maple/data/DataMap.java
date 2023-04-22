@@ -181,6 +181,17 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
     }
 
     /**
+     * Get the primitive element associated with this key, or a default.
+     *
+     * @param key The key associated with the primitive.
+     * @param def The value to return if the element is not a primitive.
+     * @return The found DataPrimitive, or the default value.
+     */
+    public DataPrimitive getPrimitive(String key, DataPrimitive def) {
+        return get(key, DataPrimitive.class, def);
+    }
+
+    /**
      * Get the element associated with this key.
      *
      * @param key The key of the element.
@@ -215,6 +226,17 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
      */
     public DataArray getArray(String key) throws ElementException {
         return get(key).requireOf(DataArray.class);
+    }
+
+    /**
+     * Get the array element associated with this key, or a default.
+     *
+     * @param key The key associated with the array.
+     * @param def The value to return if the element is not a array.
+     * @return The found DataArray, or the default value.
+     */
+    public DataArray getArray(String key, DataArray def) {
+        return get(key, DataArray.class, def);
     }
 
     /**
@@ -255,6 +277,20 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
             return el.asPrimitive().valueOrNull(primitiveClass);
         final P val = el.asPrimitive().valueOrNull(primitiveClass);
         return val == null ? def : val;
+    }
+
+    /**
+     * Get the element associated with this key, or a default.
+     *
+     * @param key          The key of the element.
+     * @param elementClass The class the element should be of.
+     * @param def          The default value to return when the element is not present, or the type does not match.
+     * @param <D>          The type the element should be of.
+     * @return The element, or the default value.
+     */
+    public <D extends DataElement> D get(String key, Class<D> elementClass, D def) {
+        final DataElement el = getOrNull(key);
+        return el == null || !el.isOf(elementClass) ? def : el.unsafeCast();
     }
 
     /**
@@ -366,6 +402,17 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
     }
 
     /**
+     * Get the list element associated with this key, or a default.
+     *
+     * @param key The key associated with the list.
+     * @param def The value to return if the element is not a list.
+     * @return The found DataList, or the default value.
+     */
+    public DataList getList(String key, DataList def) {
+        return get(key, DataList.class, def);
+    }
+
+    /**
      * Get the long value from the primitive associated with this key.
      *
      * @param key The key associated with the element.
@@ -396,6 +443,17 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
      */
     public DataMap getMap(String key) throws ElementException {
         return get(key).requireOf(DataMap.class);
+    }
+
+    /**
+     * Get the map element associated with this key, or a default.
+     *
+     * @param key The key associated with the map.
+     * @param def The value to return if the element is not a map.
+     * @return The found DataMap, or the default value.
+     */
+    public DataMap getMap(String key, DataMap def) {
+        return get(key, DataMap.class, def);
     }
 
     /**
