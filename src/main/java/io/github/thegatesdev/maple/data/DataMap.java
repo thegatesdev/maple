@@ -135,28 +135,6 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
     }
 
     /**
-     * @param elementClass The class of DataElements to collect.
-     * @param <E>          The type of DataElements to collect.
-     * @return A new Map containing all the key value pairs of the values that match {@code elementClass}.
-     */
-    public <E extends DataElement> Map<String, E> collect(Class<E> elementClass) {
-        final ArrayList<Map.Entry<String, E>> collector = new ArrayList<>();
-        iterator(elementClass).forEachRemaining(collector::add);
-        final LinkedHashMap<String, E> out = new LinkedHashMap<>(collector.size(), 1f);
-        out.entrySet().addAll(collector);
-        return out;
-    }
-
-    /**
-     * @param elementClass The class to create an iterator for.
-     * @param <E>          The type to create an iterator for.
-     * @return The iterator for entries with values of this {@code elementClass}.
-     */
-    public <E extends DataElement> Iterator<Map.Entry<String, E>> iterator(Class<E> elementClass) {
-        return new ClassedIterator<>(elementClass);
-    }
-
-    /**
      * Get the value of the primitive associated with this key, or throw.
      *
      * @param key            The key of the primitive.
@@ -888,33 +866,5 @@ public class DataMap extends DataElement implements Iterable<DataElement> {
             put(entry.getKey(), entry.getValue().clone());
         }
         return this;
-    }
-
-    private class ClassedIterator<E extends DataElement> implements Iterator<Map.Entry<String, E>> {
-        private final Class<E> elementClass;
-        private final Iterator<Map.Entry<String, DataElement>> iterator;
-        private Map.Entry<String, E> next;
-
-        public ClassedIterator(Class<E> elementClass) {
-            this.elementClass = elementClass;
-            iterator = value.entrySet().iterator();
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public boolean hasNext() {
-            if (!iterator.hasNext()) return false;
-            final Map.Entry<String, DataElement> el = iterator.next();
-            if (el.getValue().isOf(elementClass)) {
-                next = ((Map.Entry<String, E>) el);
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public Map.Entry<String, E> next() {
-            return next;
-        }
     }
 }
