@@ -53,22 +53,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Sets the data.
-     *
-     * @param parent The parent to initialize the data with.
-     * @param name   The name to initialize the data with.
-     * @return The same DataElement.
-     * @throws IllegalArgumentException When the data is already set.
-     */
-    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
-        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
-        dataSet = true;
-        this.parent = parent;
-        this.name = name;
-        return this;
-    }
-
-    /**
      * Read this object as a DataElement, so that when;
      * <ul>
      * <li>{@code input == null} -> {@link DataNull#DataNull()}.
@@ -159,17 +143,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
     public DataPrimitive asPrimitive() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a primitive!");
-    }
-
-    private String[] calcPath() {
-        final int parents = parents();
-        return calcPath(new String[parents + 1], parents);
-    }
-
-    private String[] calcPath(String[] collected, int index) {
-        collected[index] = name;
-        if (index == 0) return collected;
-        return parent.calcPath(collected, --index);
     }
 
     /**
@@ -391,17 +364,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     }
 
     /**
-     * Get the amount of parents of this element.
-     *
-     * @return The amount of parents this element has, or in other words, how deeply nested this element is.
-     * Returns 0 if this element has no parent.
-     */
-    protected int parents() {
-        if (!hasParent()) return 0;
-        return parent.parents() + 1;
-    }
-
-    /**
      * Get the path of the element, to the root of the structure.
      *
      * @return The path of this element as an array of Strings, where the first String is the name of the root element, and the last String the name of this element.
@@ -446,6 +408,51 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         return (E) this;
     }
 
+    /**
+     * Sets the data.
+     *
+     * @param parent The parent to initialize the data with.
+     * @param name   The name to initialize the data with.
+     * @return The same DataElement.
+     * @throws IllegalArgumentException When the data is already set.
+     */
+    DataElement setData(DataElement parent, String name) throws IllegalArgumentException {
+        if (dataSet) throw new IllegalArgumentException("Parent and name already set");
+        dataSet = true;
+        this.parent = parent;
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Get the amount of parents of this element.
+     *
+     * @return The amount of parents this element has, or in other words, how deeply nested this element is.
+     * Returns 0 if this element has no parent.
+     */
+    protected int parents() {
+        if (!hasParent()) return 0;
+        return parent.parents() + 1;
+    }
+
+    /**
+     * Get the raw value that backs this element.
+     *
+     * @return The raw value that backs this element.
+     */
+    protected abstract Object raw();
+
+    private String[] calcPath() {
+        final int parents = parents();
+        return calcPath(new String[parents + 1], parents);
+    }
+
+    private String[] calcPath(String[] collected, int index) {
+        collected[index] = name;
+        if (index == 0) return collected;
+        return parent.calcPath(collected, --index);
+    }
+
     @Override
     public int compareTo(DataElement o) {
         return name.compareTo(o.name);
@@ -458,13 +465,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
         result = 31 * result + (raw != null ? raw.hashCode() : 0);
         return result;
     }
-
-    /**
-     * Get the raw value that backs this element.
-     *
-     * @return The raw value that backs this element.
-     */
-    protected abstract Object raw();
 
     @Override
     public boolean equals(Object o) {

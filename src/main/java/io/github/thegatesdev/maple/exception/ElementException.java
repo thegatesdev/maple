@@ -23,6 +23,7 @@ Copyright (C) 2022  Timar Karels
  * An exception thrown by an element. Mostly meant for the end user, used in assertions.
  */
 public class ElementException extends RuntimeException {
+
     /**
      * The element where this exception was thrown for.
      */

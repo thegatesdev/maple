@@ -296,6 +296,7 @@ public class DataList extends DataElement implements IndexedElement {
     }
 
     private static class ClassedIterator<E extends DataElement> implements Iterator<E> {
+
         private final Class<E> elementClass;
         private final Iterator<DataElement> iterator;
         private E next;

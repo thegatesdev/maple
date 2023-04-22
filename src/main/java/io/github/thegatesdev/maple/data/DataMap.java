@@ -88,6 +88,21 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
     }
 
     /**
+     * Read a Map with unknown type keys to a DataMap.
+     *
+     * @param data The map to read from.
+     * @return A new DataMap containing the entries of the Map which key is a String,
+     * the values read using {@link DataElement#readOf(Object)}
+     */
+    public static DataMap readUnknown(Map<?, ?> data) {
+        final DataMap output = new DataMap();
+        for (Map.Entry<?, ?> entry : data.entrySet()) {
+            if (entry.getKey() instanceof String key) output.put(key, DataElement.readOf(entry.getValue()));
+        }
+        return output;
+    }
+
+    /**
      * Put an element into this map.
      *
      * @param key     Key with which the specified value is to be associated.
@@ -107,33 +122,6 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
         keyCache = key;
         elementCache = element;
         return this;
-    }
-
-    private void init(int initialCapacity) {
-        if (value == null) {
-            if (mapSupplier == null) value = new LinkedHashMap<>(initialCapacity);
-            else {
-                final Map<String, DataElement> suppliedMap = mapSupplier.apply(initialCapacity);
-                if (!suppliedMap.isEmpty())
-                    throw new IllegalArgumentException("Map supplier should return an empty map");
-                value = suppliedMap;
-            }
-        }
-    }
-
-    /**
-     * Read a Map with unknown type keys to a DataMap.
-     *
-     * @param data The map to read from.
-     * @return A new DataMap containing the entries of the Map which key is a String,
-     * the values read using {@link DataElement#readOf(Object)}
-     */
-    public static DataMap readUnknown(Map<?, ?> data) {
-        final DataMap output = new DataMap();
-        for (Map.Entry<?, ?> entry : data.entrySet()) {
-            if (entry.getKey() instanceof String key) output.put(key, DataElement.readOf(entry.getValue()));
-        }
-        return output;
     }
 
     /**
@@ -669,44 +657,6 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
         return navigate(0, keys);
     }
 
-    private DataElement navigate(int current, String[] keys) {
-        final String key = keys[current];
-        final DataElement element = get(key);
-        if (current == keys.length - 1) return element;
-        if (!element.isMap()) return new DataNull().setData(this, key);
-        return element.asMap().navigate(++current, keys);
-    }
-
-    @Override
-    public DataElement get(final int index) {
-        final DataElement element = getOrNull(index);
-        if (element == null) return new DataNull().setData(this, "[" + index + "]");
-        return element;
-    }
-
-    @Override
-    public DataElement getOrNull(final int index) {
-        if (value == null || value.isEmpty()) return null;
-        if (rebuildIndex) {
-            indexed = new ArrayList<>(value.values());
-            rebuildIndex = false;
-        }
-        try {
-            return indexed.get(index);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-    }
-
-    /**
-     * @return The size of this map, or {@code 0} if the map is not initialized.
-     */
-    @Override
-    public int size() {
-        if (value == null) return 0;
-        return value.size();
-    }
-
     /**
      * Check if this key is present, or else throw.
      *
@@ -778,6 +728,79 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
      */
     public DataList valueList() {
         return new DataList().cloneFrom(value.values());
+    }
+
+    /**
+     * @param toAdd The DataMap to add the elements from to this map.
+     * @return This DataMap.
+     * @see DataMap#cloneFrom(Map)
+     */
+    public DataMap cloneFrom(DataMap toAdd) {
+        return cloneFrom(toAdd.value);
+    }
+
+    /**
+     * Clone the elements of the input map to this map.
+     *
+     * @param toAdd The input map.
+     * @return This DataMap.
+     */
+    public DataMap cloneFrom(Map<String, DataElement> toAdd) {
+        if (value == null) init(toAdd.size());
+        for (Map.Entry<String, DataElement> entry : toAdd.entrySet()) {
+            put(entry.getKey(), entry.getValue().clone());
+        }
+        return this;
+    }
+
+    private void init(int initialCapacity) {
+        if (value == null) {
+            if (mapSupplier == null) value = new LinkedHashMap<>(initialCapacity);
+            else {
+                final Map<String, DataElement> suppliedMap = mapSupplier.apply(initialCapacity);
+                if (!suppliedMap.isEmpty())
+                    throw new IllegalArgumentException("Map supplier should return an empty map");
+                value = suppliedMap;
+            }
+        }
+    }
+
+    private DataElement navigate(int current, String[] keys) {
+        final String key = keys[current];
+        final DataElement element = get(key);
+        if (current == keys.length - 1) return element;
+        if (!element.isMap()) return new DataNull().setData(this, key);
+        return element.asMap().navigate(++current, keys);
+    }
+
+    @Override
+    public DataElement get(final int index) {
+        final DataElement element = getOrNull(index);
+        if (element == null) return new DataNull().setData(this, "[" + index + "]");
+        return element;
+    }
+
+    @Override
+    public DataElement getOrNull(final int index) {
+        if (value == null || value.isEmpty()) return null;
+        if (rebuildIndex) {
+            indexed = new ArrayList<>(value.values());
+            rebuildIndex = false;
+        }
+        try {
+            return indexed.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return The size of this map, or {@code 0} if the map is not initialized.
+     */
+    @Override
+    public int size() {
+        if (value == null) return 0;
+        return value.size();
     }
 
     @Override
@@ -853,28 +876,5 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
     @Override
     public DataMap clone() {
         return new DataMap().cloneFrom(this);
-    }
-
-    /**
-     * @param toAdd The DataMap to add the elements from to this map.
-     * @return This DataMap.
-     * @see DataMap#cloneFrom(Map)
-     */
-    public DataMap cloneFrom(DataMap toAdd) {
-        return cloneFrom(toAdd.value);
-    }
-
-    /**
-     * Clone the elements of the input map to this map.
-     *
-     * @param toAdd The input map.
-     * @return This DataMap.
-     */
-    public DataMap cloneFrom(Map<String, DataElement> toAdd) {
-        if (value == null) init(toAdd.size());
-        for (Map.Entry<String, DataElement> entry : toAdd.entrySet()) {
-            put(entry.getKey(), entry.getValue().clone());
-        }
-        return this;
     }
 }
