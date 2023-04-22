@@ -41,6 +41,20 @@ public interface IndexedElement extends Iterable<DataElement> {
     }
 
     /**
+     * Get the element at this index, or a default.
+     *
+     * @param index        The index of the element.
+     * @param elementClass The class the element should be of.
+     * @param def          The default value to return when the element is not present, or the type does not match.
+     * @param <D>          The type the element should be of.
+     * @return The element, or the default value.
+     */
+    default <D extends DataElement> D get(int index, Class<D> elementClass, D def) {
+        final DataElement el = getOrNull(index);
+        return el == null || !el.isOf(elementClass) ? def : el.unsafeCast();
+    }
+
+    /**
      * Get the primitive element at this index.
      *
      * @param index The index of the primitive.
@@ -49,6 +63,17 @@ public interface IndexedElement extends Iterable<DataElement> {
      */
     default DataPrimitive getPrimitive(int index) throws ElementException {
         return get(index).requireOf(DataPrimitive.class);
+    }
+
+    /**
+     * Get the primitive element at this index, or a default.
+     *
+     * @param index The index of the primitive.
+     * @param def   The value to return if the element is not a primitive.
+     * @return The found DataPrimitive, or the default value.
+     */
+    default DataPrimitive getPrimitive(int index, DataPrimitive def) {
+        return get(index, DataPrimitive.class, def);
     }
 
     /**
@@ -68,6 +93,17 @@ public interface IndexedElement extends Iterable<DataElement> {
      */
     default DataArray getArray(int index) throws ElementException {
         return get(index).requireOf(DataArray.class);
+    }
+
+    /**
+     * Get the array element at this index, or a default.
+     *
+     * @param index The index of the array.
+     * @param def   The value to return if the element is not an array.
+     * @return The found DataArray, or the default value.
+     */
+    default DataArray getArray(int index, DataArray def) {
+        return get(index, DataArray.class, def);
     }
 
     /**
@@ -196,6 +232,18 @@ public interface IndexedElement extends Iterable<DataElement> {
     }
 
     /**
+     * Get the list element at this index, or a default.
+     *
+     * @param index The index of the list.
+     * @param def   The value to return if the element is not a list.
+     * @return The found DataList, or the default value.
+     */
+    default DataList getList(int index, DataList def) {
+        return get(index, DataList.class, def);
+    }
+
+
+    /**
      * Get the long value from the primitive at this index.
      *
      * @param index The index of the element.
@@ -226,6 +274,17 @@ public interface IndexedElement extends Iterable<DataElement> {
      */
     default DataMap getMap(int index) throws ElementException {
         return get(index).requireOf(DataMap.class);
+    }
+
+    /**
+     * Get the map element at this index, or a default.
+     *
+     * @param index The index of the map.
+     * @param def   The value to return if the element is not a map.
+     * @return The found DataMap, or the default value.
+     */
+    default DataMap getMap(int index, DataMap def) {
+        return get(index, DataMap.class, def);
     }
 
     /**
