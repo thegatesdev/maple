@@ -720,14 +720,14 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
      * @return A DataArray with the *cloned* values of this DataMap, with the same ordering.
      */
     public DataArray valueArray() {
-        return DataArray.cloneFrom(value.values());
+        return DataArray.cloneFrom(getIndex());
     }
 
     /**
      * @return A DataList with the *cloned* values of this DataMap, with the same ordering.
      */
     public DataList valueList() {
-        return new DataList().cloneFrom(value.values());
+        return new DataList().cloneFrom(getIndex());
     }
 
     /**
@@ -765,6 +765,14 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
         }
     }
 
+    private List<DataElement> getIndex() {
+        if (rebuildIndex || indexed == null) {
+            indexed = new ArrayList<>(value.values());
+            rebuildIndex = false;
+        }
+        return indexed;
+    }
+
     private DataElement navigate(int current, String[] keys) {
         final String key = keys[current];
         final DataElement element = get(key);
@@ -782,13 +790,8 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
 
     @Override
     public DataElement getOrNull(final int index) {
-        if (value == null || value.isEmpty()) return null;
-        if (rebuildIndex) {
-            indexed = new ArrayList<>(value.values());
-            rebuildIndex = false;
-        }
         try {
-            return indexed.get(index);
+            return getIndex().get(index);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
@@ -805,7 +808,7 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
 
     @Override
     public Iterator<DataElement> iterator() {
-        return value.values().iterator();
+        return getIndex().iterator();
     }
 
     @Override
