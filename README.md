@@ -57,7 +57,7 @@ Since DataMap uses LinkedHashMap by default in the background, the elements will
 // ( Using the code above )
 // Access map elements by index:
 map.get(0).isMap() // True
-map.get(1).intValue() // 3
+map.getInt(1) // 3
 ```
 
 ### DataList
