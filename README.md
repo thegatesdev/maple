@@ -4,6 +4,10 @@ A clean type safe data structure.
 
 Updated for **1.4.2**
 
+- [About](#about)
+- [Usage](#usage)
+- [Use with Yaml and Minecraft plugins](#using-with-yaml-and-minecraft-plugins)
+
 ## About
 
 Maple is used as a replacement for the Spigot Configuration API, and used in my own projects to help read extensive
@@ -106,3 +110,24 @@ for type checking without the occasional NullPointerException.
 
 This exception should mostly be used to notify the end user that they did something unexpected, for example when using
 assertion methods.
+
+## Using with Yaml and Minecraft plugins
+
+Maple is completely separate from Minecraft plugins, however it was created for use with them. The example below shows
+how
+to use the SnakeYaml library (included by default in Spigot) to read data from files.
+
+```java
+Yaml yaml = new Yaml();
+// Load some file
+Object loaded = yaml.load(Files.newInputStream(Path.of("my", "folder", "structure", "file.yaml")));
+// Load plugin config file
+Object loaded = yaml.load(Files.newInputStream(getDataFolder().getPath().resolve("mypluginname.yml")));
+
+// Read the data to a DataElement
+DataElement read = DataElement.readOf(loaded);
+// Do your thing!
+read.ifMap(dataMap -> {
+    int myOption = dataMap.getInt("some_option");
+});
+```
