@@ -76,16 +76,6 @@ public class DataMapTest {
     }
 
     @Test
-    void whenMapValueArray_thenOrderedElements() {
-        final DataArray arr = testMap.valueArray();
-        Assertions.assertTrue(arr.get(0).isNull());
-        Assertions.assertTrue(arr.get(1).isPrimitive());
-        Assertions.assertTrue(arr.get(2).isPrimitive());
-        Assertions.assertTrue(arr.get(3).isMap());
-        Assertions.assertNull(arr.getOrNull(4));
-    }
-
-    @Test
     void whenMapValueList_thenOrderedElements() {
         final DataList arr = testMap.valueList();
         Assertions.assertTrue(arr.get(0).isNull());

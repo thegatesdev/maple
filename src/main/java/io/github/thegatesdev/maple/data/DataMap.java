@@ -186,28 +186,6 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
     }
 
     /**
-     * Get the array element associated with this key.
-     *
-     * @param key The key associated with the array.
-     * @return The found DataArray.
-     * @throws ElementException If the element was not found, or the element was not a DataArray.
-     */
-    public DataArray getArray(String key) throws ElementException {
-        return get(key).requireOf(DataArray.class);
-    }
-
-    /**
-     * Get the array element associated with this key, or a default.
-     *
-     * @param key The key associated with the array.
-     * @param def The value to return if the element is not a array.
-     * @return The found DataArray, or the default value.
-     */
-    public DataArray getArray(String key, DataArray def) {
-        return get(key, DataArray.class, def);
-    }
-
-    /**
      * Get the boolean value from the primitive associated with this key.
      *
      * @param key The key associated with the element.
@@ -498,29 +476,6 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
     }
 
     /**
-     * Runs the action if the specified element is present and is a DataArray.
-     *
-     * @param key    The key to find the element at.
-     * @param action The consumer to run when the element is found.
-     */
-    public void ifArray(String key, Consumer<DataArray> action) {
-        ifArray(key, action, null);
-    }
-
-    /**
-     * Runs the action if the specified element is present and is a DataArray, or the elseAction if not.
-     *
-     * @param key        The key to find the element at.
-     * @param action     The consumer to run when the element is found.
-     * @param elseAction The runnable to run when the element is not present or not a DataArray.
-     */
-    public void ifArray(String key, Consumer<DataArray> action, Runnable elseAction) {
-        final DataElement el = getOrNull(key);
-        if (el != null && el.isArray()) action.accept(el.asArray());
-        else if (elseAction != null) elseAction.run();
-    }
-
-    /**
      * Runs the action if the specified element is present and is a DataList.
      *
      * @param key    The key to find the element at.
@@ -717,14 +672,10 @@ public class DataMap extends DataElement implements Iterable<DataElement>, Index
     }
 
     /**
-     * @return A DataArray with the *cloned* values of this DataMap, with the same ordering.
-     */
-    public DataArray valueArray() {
-        return DataArray.cloneFrom(getIndex());
-    }
-
-    /**
-     * @return A DataList with the *cloned* values of this DataMap, with the same ordering.
+     * Clone the values of this map into a DataList.
+     * This operation maintains ordering.
+     *
+     * @return The DataList with all the cloned values.
      */
     public DataList valueList() {
         return new DataList().cloneFrom(getIndex());

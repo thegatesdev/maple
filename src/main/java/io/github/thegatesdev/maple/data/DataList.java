@@ -161,12 +161,17 @@ public class DataList extends DataElement implements IndexedElement {
     }
 
     /**
-     * Sort this list using the default sort method.
+     * Set an element at the specified index.
      *
-     * @see DataElement#compareTo(DataElement)
+     * @param index   The index to put the element at.
+     * @param element The element to put.
+     * @return This same DataArray.
      */
-    public void sort() {
-        value.sort(DataElement::compareTo);
+    public DataList set(int index, DataElement element) {
+        if (element.isDataSet())
+            throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
+        if (index >= value.size()) value.set(index, element.setData(this, "[" + index + "]"));
+        return this;
     }
 
     /**
@@ -176,6 +181,15 @@ public class DataList extends DataElement implements IndexedElement {
      */
     public void sort(Comparator<? super DataElement> comparator) {
         value.sort(comparator);
+    }
+
+    /**
+     * Sort this list using the default sort method.
+     *
+     * @see DataElement#compareTo(DataElement)
+     */
+    public void sort() {
+        value.sort(DataElement::compareTo);
     }
 
     @Override

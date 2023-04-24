@@ -85,28 +85,6 @@ public interface IndexedElement extends Iterable<DataElement> {
     DataElement get(int index);
 
     /**
-     * Get the array element at this index.
-     *
-     * @param index The index of the array.
-     * @return The found DataArray.
-     * @throws ElementException If the element was not found, or the element was not a DataArray.
-     */
-    default DataArray getArray(int index) throws ElementException {
-        return get(index).requireOf(DataArray.class);
-    }
-
-    /**
-     * Get the array element at this index, or a default.
-     *
-     * @param index The index of the array.
-     * @param def   The value to return if the element is not an array.
-     * @return The found DataArray, or the default value.
-     */
-    default DataArray getArray(int index, DataArray def) {
-        return get(index, DataArray.class, def);
-    }
-
-    /**
      * Get the boolean value from the primitive at this index.
      *
      * @param index The index of the primitive.
@@ -336,29 +314,6 @@ public interface IndexedElement extends Iterable<DataElement> {
         if (def == null) return el.asPrimitive().valueUnsafe();
         final P val = el.asPrimitive().valueUnsafe();
         return val == null ? def : val;
-    }
-
-    /**
-     * Runs the action if the specified element is present and is a DataArray.
-     *
-     * @param index  The index of the element.
-     * @param action The consumer to run when the element is found.
-     */
-    default void ifArray(int index, Consumer<DataArray> action) {
-        ifArray(index, action, null);
-    }
-
-    /**
-     * Runs the action if the specified element is present and is a DataArray, or the elseAction if not.
-     *
-     * @param index      The index to find the element at.
-     * @param action     The consumer to run when the element is found.
-     * @param elseAction The runnable to run when the element is not present or not a DataArray.
-     */
-    default void ifArray(int index, Consumer<DataArray> action, Runnable elseAction) {
-        final DataElement el = getOrNull(index);
-        if (el != null && el.isArray()) action.accept(el.asArray());
-        else if (elseAction != null) elseAction.run();
     }
 
     /**

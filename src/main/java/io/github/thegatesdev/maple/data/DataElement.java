@@ -56,9 +56,9 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      * Read this object as a DataElement, so that when;
      * <ul>
      * <li>{@code input == null} -> {@link DataNull#DataNull()}.
-     * <li>{@code input instanceof Collection<?>} -> {@link DataList#read(Iterable)}.
+     * <li>{@code input instanceof Iterable<?>} -> {@link DataList#read(Iterable)}.
      * <li>{@code input instanceof Map<?,?>} -> {@link DataMap#read(Map)}.
-     * <li>{@code input instanceof Object[]} -> {@link DataArray#read(Object[])}.
+     * <li>{@code input instanceof Object[]} -> {@link DataList#read(Object[])}.
      * <li>If none of the above apply -> {@link DataPrimitive#DataPrimitive(Object)}.
      * </ul>
      *
@@ -68,9 +68,9 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     public static DataElement readOf(Object input) {
         if (input == null) return new DataNull();
         final Object reading = (input instanceof DataElement el) ? el.value() : input;
-        if (reading instanceof Map<?, ?> map) return DataMap.readUnknown(map);
+        if (reading instanceof Object[] array) return DataList.read(array);
         if (reading instanceof Iterable<?> collection) return DataList.read(collection);
-        if (reading instanceof Object[] array) return DataArray.read(array);
+        if (reading instanceof Map<?, ?> map) return DataMap.readUnknown(map);
         return new DataPrimitive(reading);
     }
 
@@ -81,16 +81,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
 
     public abstract Object value();
-
-    /**
-     * Get this element as a DataArray, or throw.
-     *
-     * @return This element as a DataArray.
-     * @throws UnsupportedOperationException If this element is not a DataArray.
-     */
-    public DataArray asArray() {
-        throw new UnsupportedOperationException("Not an array!");
-    }
 
     /**
      * Get this element as a DataList, or throw.
@@ -173,25 +163,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
      */
     public boolean hasParent() {
         return parent != null;
-    }
-
-    /**
-     * Run the arrayConsumer if this element is a DataArray.
-     *
-     * @param arrayConsumer The if action.
-     */
-    public void ifArray(Consumer<DataArray> arrayConsumer) {
-        ifArray(arrayConsumer, null);
-    }
-
-    /**
-     * Run the arrayConsumer if this element is a DataArray, or the elseAction.
-     *
-     * @param arrayConsumer The if action.
-     * @param elseAction    The else action.
-     */
-    public void ifArray(Consumer<DataArray> arrayConsumer, Runnable elseAction) {
-        if (elseAction != null) elseAction.run();
     }
 
     /**
