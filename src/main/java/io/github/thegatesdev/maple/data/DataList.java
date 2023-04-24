@@ -88,6 +88,21 @@ public class DataList extends DataElement implements IndexedElement {
     }
 
     /**
+     * Read an Object varargs array to a DataList.
+     *
+     * @param objects The array to read from.
+     * @return A new DataList containing all the elements returned from the array,
+     * read using {@link DataElement#readOf(Object)}
+     */
+    public static DataList read(Object... objects) {
+        final DataList dataList = new DataList();
+        for (Object o : objects) {
+            dataList.add(DataElement.readOf(o));
+        }
+        return dataList;
+    }
+
+    /**
      * @param element The element to add to this DataList.
      * @return This DataList.
      * @throws IllegalArgumentException When the supplied DataElement already has its data set.
@@ -110,21 +125,6 @@ public class DataList extends DataElement implements IndexedElement {
                 this.value = suppliedList;
             }
         }
-    }
-
-    /**
-     * Read an Object varargs array to a DataList.
-     *
-     * @param objects The array to read from.
-     * @return A new DataList containing all the elements returned from the array,
-     * read using {@link DataElement#readOf(Object)}
-     */
-    public static DataList read(Object... objects) {
-        final DataList dataList = new DataList();
-        for (Object o : objects) {
-            dataList.add(DataElement.readOf(o));
-        }
-        return dataList;
     }
 
     /**
@@ -170,7 +170,8 @@ public class DataList extends DataElement implements IndexedElement {
     public DataList set(int index, DataElement element) {
         if (element.isDataSet())
             throw new IllegalArgumentException("This element already has a parent / name. Did you mean to copy() first?");
-        if (index >= value.size()) value.set(index, element.setData(this, "[" + index + "]"));
+        Objects.checkIndex(index, value.size());
+        value.set(index, element.setData(this, "[" + index + "]"));
         return this;
     }
 
