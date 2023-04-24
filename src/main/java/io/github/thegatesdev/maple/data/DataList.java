@@ -22,8 +22,7 @@ Copyright (C) 2022  Timar Karels
 */
 
 /**
- * A list element backed by an ArrayList, containing an array of DataElement.
- * It allows for more advanced iteration, for example by element type ({@link DataList#iterator(Class)}.
+ * A list element backed by an ArrayList, containing a list of DataElements.
  */
 public class DataList extends DataElement implements IndexedElement {
 
@@ -125,15 +124,6 @@ public class DataList extends DataElement implements IndexedElement {
                 this.value = suppliedList;
             }
         }
-    }
-
-    /**
-     * @param elementClass The class to get the iterator for.
-     * @param <E>          The type to get the iterator for.
-     * @return The iterator for elements of this {@code elementClass}.
-     */
-    public <E extends DataElement> Iterator<E> iterator(Class<E> elementClass) {
-        return new ClassedIterator<>(elementClass, iterator());
     }
 
     @Override
@@ -308,35 +298,5 @@ public class DataList extends DataElement implements IndexedElement {
             for (final DataElement element : elements) add(element.clone());
         }
         return this;
-    }
-
-    private static class ClassedIterator<E extends DataElement> implements Iterator<E> {
-
-        private final Class<E> elementClass;
-        private final Iterator<DataElement> iterator;
-        private E next;
-
-        public ClassedIterator(Class<E> elementClass, Iterator<DataElement> iterator) {
-            this.elementClass = elementClass;
-            this.iterator = iterator;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public boolean hasNext() {
-            while (iterator.hasNext()) {
-                final DataElement el = iterator.next();
-                if (el.isOf(elementClass)) {
-                    next = (E) el;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public E next() {
-            return next;
-        }
     }
 }
