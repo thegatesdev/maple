@@ -10,21 +10,7 @@ public class DataElementTest {
 
     @BeforeAll
     static void beforeAll() {
-        testElement = new DataPrimitive();
-    }
-
-    @Test
-    void whenIncorrectAs_thenThrow() {
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> testElement.asMap());
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> testElement.asList());
-        Assertions.assertDoesNotThrow(() -> testElement.asPrimitive());
-    }
-
-    @Test
-    void whenIncorrectAsOrNull_thenNull() {
-        Assertions.assertNull(testElement.asOrNull(DataMap.class));
-        Assertions.assertNull(testElement.asOrNull(DataList.class));
-        Assertions.assertNotNull(testElement.asOrNull(DataPrimitive.class));
+        testElement = new DataPrimitive("test");
     }
 
     @Test
@@ -39,5 +25,19 @@ public class DataElementTest {
     void testRequireOf() {
         Assertions.assertThrows(ElementException.class, () -> testElement.requireOf(DataList.class));
         Assertions.assertDoesNotThrow(() -> testElement.requireOf(DataPrimitive.class));
+    }
+
+    @Test
+    void whenIncorrectAsOrNull_thenNull() {
+        Assertions.assertNull(testElement.asOrNull(DataMap.class));
+        Assertions.assertNull(testElement.asOrNull(DataList.class));
+        Assertions.assertNotNull(testElement.asOrNull(DataPrimitive.class));
+    }
+
+    @Test
+    void whenIncorrectAs_thenThrow() {
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> testElement.asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> testElement.asList());
+        Assertions.assertDoesNotThrow(() -> testElement.asPrimitive());
     }
 }
