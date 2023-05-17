@@ -6,13 +6,9 @@ import org.junit.jupiter.api.Test;
 
 public class DataPrimitiveTest {
     @Test
-    void whenRequireCorrectValue_thenReturnValue() {
-        Assertions.assertEquals("foo", new DataPrimitive("foo").requireValue(String.class));
-    }
-
-    @Test
-    void whenRequireIncorrectValue_thenThrow() {
-        Assertions.assertThrows(ElementException.class, () -> new DataPrimitive("foo").requireValue(Number.class));
+    void assertCloneEquals() {
+        DataPrimitive foo = new DataPrimitive("foo");
+        Assertions.assertEquals(foo, foo.clone());
     }
 
     @Test
@@ -23,8 +19,21 @@ public class DataPrimitiveTest {
     }
 
     @Test
-    void whenValueOrNullIncorrectValue_thenReturnNull() {
-        Assertions.assertNull(new DataPrimitive("foo").valueOrNull(Number.class));
+    void assertValueSet() {
+        DataPrimitive foo = new DataPrimitive("foo");
+        Assertions.assertEquals("foo", foo.value());
+        foo.value("bar");
+        Assertions.assertEquals("bar", foo.value());
+    }
+
+    @Test
+    void whenRequireCorrectValue_thenReturnValue() {
+        Assertions.assertEquals("foo", new DataPrimitive("foo").requireValue(String.class));
+    }
+
+    @Test
+    void whenRequireIncorrectValue_thenThrow() {
+        Assertions.assertThrows(ElementException.class, () -> new DataPrimitive("foo").requireValue(Number.class));
     }
 
     @Test
@@ -33,16 +42,7 @@ public class DataPrimitiveTest {
     }
 
     @Test
-    void assertCloneEquals() {
-        DataPrimitive foo = new DataPrimitive("foo");
-        Assertions.assertEquals(foo, foo.clone());
-    }
-
-    @Test
-    void assertValueSet() {
-        DataPrimitive foo = new DataPrimitive("foo");
-        Assertions.assertEquals("foo", foo.value);
-        foo.value("bar");
-        Assertions.assertEquals("bar", foo.value);
+    void whenValueOrNullIncorrectValue_thenReturnNull() {
+        Assertions.assertNull(new DataPrimitive("foo").valueOrNull(Number.class));
     }
 }

@@ -2,6 +2,7 @@ package io.github.thegatesdev.maple.data;
 
 import io.github.thegatesdev.maple.exception.ElementException;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /*
@@ -27,14 +28,8 @@ Copyright (C) 2022  Timar Karels
  */
 public class DataPrimitive extends DataElement {
 
-    Object value;
+    private Object value;
     private String cachedSimpleName;
-
-    /**
-     * Constructs an empty DataList with its data unset.
-     */
-    public DataPrimitive() {
-    }
 
     /**
      * Constructs a DataPrimitive with its parent defaulted to {@code null}.
@@ -48,14 +43,14 @@ public class DataPrimitive extends DataElement {
     }
 
     /**
-     * Sets this primitives value.
+     * Sets this primitives value. Can not be null.
      *
      * @param value The value to set to.
      */
     public void value(Object value) {
+        Objects.requireNonNull(value, "Value cannot be null");
         this.value = value;
-        if (value != null) cachedSimpleName = value.getClass().getSimpleName();
-        else cachedSimpleName = "Null";
+        cachedSimpleName = value.getClass().getSimpleName();
     }
 
     /**
@@ -92,7 +87,6 @@ public class DataPrimitive extends DataElement {
      * @return True if the value of this primitive conforms to clazz
      */
     public boolean valueOf(Class<?> clazz) {
-        if (isEmpty()) return false;
         return clazz.isInstance(value);
     }
 
@@ -183,7 +177,7 @@ public class DataPrimitive extends DataElement {
 
     @Override
     public String toString() {
-        return value == null ? "nullPrimitive" : "dataPrimitive<" + cachedSimpleName + ">";
+        return "dataPrimitive<" + cachedSimpleName + ">";
     }
 
     @Override
@@ -203,7 +197,7 @@ public class DataPrimitive extends DataElement {
 
     @Override
     public boolean isEmpty() {
-        return value == null;
+        return false;
     }
 
     @Override
