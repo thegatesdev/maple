@@ -1,6 +1,15 @@
 package io.github.thegatesdev.maple;
 
+/**
+ * An element without any value.
+ */
 public class DataNull extends DataElement {
+
+    DataNull() {
+    }
+
+    // -- ELEMENT
+
     @Override
     protected Object raw() {
         return null;
@@ -15,12 +24,6 @@ public class DataNull extends DataElement {
     public boolean isEmpty() {
         return true;
     }
-
-    @Override
-    public DataElement clone() {
-        return new DataNull();
-    }
-
 
     @Override
     public boolean isNull() {
