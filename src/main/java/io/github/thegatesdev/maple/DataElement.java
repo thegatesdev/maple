@@ -6,7 +6,7 @@ import java.util.Objects;
  * The base class for any data element.
  * A data element is an element in a data structure.
  */
-public abstract class DataElement implements Cloneable, Comparable<DataElement> {
+public abstract class DataElement implements Comparable<DataElement> {
 
     private DataElement parent;
     private String name;
@@ -167,12 +167,6 @@ public abstract class DataElement implements Cloneable, Comparable<DataElement> 
     public int compareTo(DataElement o) {
         return name.compareToIgnoreCase(o.name);
     }
-
-    /**
-     * Clones this element's to a new element without a parent and name.
-     */
-    @Override
-    public abstract DataElement clone();
 
     @Override
     public int hashCode() {
