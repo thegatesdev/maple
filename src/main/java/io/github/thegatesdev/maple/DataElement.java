@@ -17,36 +17,24 @@ public abstract class DataElement implements Comparable<DataElement> {
 
     // -- DATA
 
-    protected DataElement data(DataElement newParent, String newName) {
+    protected DataElement connect(DataElement newParent, String newName) {
+        if (parent != null) throw new RuntimeException("Parent already set");
         parent = Objects.requireNonNull(newParent, "Parent cannot be null");
         name = Objects.requireNonNull(newName, "Name cannot be null");
         path = null;
         return this;
     }
 
-    /**
-     * Gets the name of this element. Can be {@code null}.
-     *
-     * @return The name of this element.
-     */
-    public String name() {
-        return name;
+    protected DataElement disconnect() {
+        parent = null;
+        name = null;
+        path = null;
+        return this;
     }
 
-    /**
-     * Gets a friendly display name for this element. Can never be {@code null}.
-     *
-     * @return The friendly display name for this element.
-     */
-    public String friendlyName() {
-        return hasName() ? name : "root";
-    }
 
-    /**
-     * @return {@code true} if this element has a non-null name.
-     */
-    public boolean hasName() {
-        return name != null;
+    protected String friendlyName() {
+        return name == null ? "root" : name;
     }
 
     /**
@@ -88,7 +76,7 @@ public abstract class DataElement implements Comparable<DataElement> {
     }
 
     /**
-     * Gets the path of friendly element names from the root to this element, with the first element being the name of the root, and the last the name of this element.
+     * Gets the path of element keys from the root to this element, with the first element being the name of the root, and the last the name of this element.
      *
      * @return The path to this element.
      */
