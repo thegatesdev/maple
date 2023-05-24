@@ -1,5 +1,7 @@
 package io.github.thegatesdev.maple;
 
+import io.github.thegatesdev.maple.exception.ElementException;
+
 import java.util.Objects;
 
 /**
@@ -136,6 +138,32 @@ public abstract class DataElement implements Comparable<DataElement> {
         return (E) this;
     }
 
+    /**
+     * Cast this element to E
+     *
+     * @param <E>          The type to cast this element to.
+     * @param elementClass The class to cast this element with.
+     * @return The same DataElement as E, or null if this element does not conform to elementClass.
+     */
+    @SuppressWarnings("unchecked")
+    public <E extends DataElement> E castOrNull(Class<E> elementClass) {
+        return elementClass.isInstance(this) ? (E) this : null;
+    }
+
+
+    /**
+     * Get this element as E, or throw.
+     *
+     * @param elementClass The class this element is required to be.
+     * @param <E>          The type of {@code elementClass}.
+     * @return This element, cast to E.
+     * @throws ElementException If this element is not assignable to {@code elementClass}.
+     */
+    @SuppressWarnings("unchecked")
+    public <E extends DataElement> E requireOf(Class<E> elementClass) throws ElementException {
+        if (!elementClass.isInstance(this)) throw ElementException.requireType(this, elementClass);
+        return ((E) this);
+    }
 
     /**
      * Check if this element is a DataNull.
