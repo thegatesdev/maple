@@ -3,6 +3,7 @@ package io.github.thegatesdev.maple;
 import io.github.thegatesdev.maple.exception.ElementException;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * The base class for any data element.
@@ -165,13 +166,96 @@ public abstract class DataElement implements Comparable<DataElement> {
         return ((E) this);
     }
 
+
+    // NULL
+
     /**
      * Check if this element is a DataNull.
      *
-     * @return True if this element is a DataNull.
+     * @return {@code true} if this element is a DataNull.
      */
     public boolean isNull() {
         return false;
+    }
+
+    // MAP
+
+    /**
+     * Check if this element is a DataMap.
+     *
+     * @return {@code true} if this element is a DataMap.
+     */
+    public boolean isMap() {
+        return false;
+    }
+
+    /**
+     * Get this element as a DataMap, or throw.
+     *
+     * @return This element as a DataMap.
+     * @throws UnsupportedOperationException If this element is not a DataMap.
+     */
+    public DataMap asMap() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not a map!");
+    }
+
+    /**
+     * Run the mapConsumer if this element is a DataMap.
+     *
+     * @param mapConsumer The if action.
+     */
+    public final void ifMap(Consumer<DataMap> mapConsumer) {
+        ifMap(mapConsumer, null);
+    }
+
+    /**
+     * Run the mapConsumer if this element is a DataMap, or the elseAction.
+     *
+     * @param mapConsumer The if action.
+     * @param elseAction  The else action.
+     */
+    public void ifMap(Consumer<DataMap> mapConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
+    // VALUE
+
+    /**
+     * Check if this element is a DataValue.
+     *
+     * @return {@code true} if this element is a DataValue.
+     */
+    public boolean isValue() {
+        return false;
+    }
+
+    /**
+     * Get this element as a DataValue, or throw.
+     *
+     * @return This element as a DataValue.
+     * @throws UnsupportedOperationException If this element is not a DataValue.
+     */
+    public DataValue asValue() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not a value!");
+    }
+
+    /**
+     * Run the valueConsumer if this element is a DataValue.
+     *
+     * @param valueConsumer The if action.
+     */
+    public final void ifValue(Consumer<DataValue> valueConsumer) {
+        ifValue(valueConsumer, null);
+    }
+
+    /**
+     * Run the valueConsumer if this element is a DataValue, or the elseAction.
+     *
+     * @param valueConsumer The if action.
+     * @param elseAction    The else action.
+     */
+    public void ifValue(Consumer<DataValue> valueConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
     }
 
     // -- OBJECT
