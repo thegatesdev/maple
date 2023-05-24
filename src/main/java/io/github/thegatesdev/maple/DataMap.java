@@ -7,7 +7,7 @@ public class DataMap extends DataElement {
 
     private final Map<String, DataElement> elements, view;
 
-    private DataMap(Map<String, DataElement> map) {
+    DataMap(Map<String, DataElement> map) {
         elements = map;
         view = Collections.unmodifiableMap(elements);
     }
