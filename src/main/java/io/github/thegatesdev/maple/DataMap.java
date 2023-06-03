@@ -23,11 +23,13 @@ public class DataMap extends DataElement {
      *
      * @param key     The key to associate the element with.
      * @param element The element to associate the key with.
+     * @return The previous element mapped to this key, or null if it wasn't present.
      */
-    public void set(String key, DataElement element) {
+    public DataElement set(String key, DataElement element) {
         element.connect(this, key);
         var old = elements.put(key, element);
         if (old != null) old.disconnect();
+        return old;
     }
 
     /**
@@ -35,10 +37,12 @@ public class DataMap extends DataElement {
      * Also see {@link Map#remove(Object)}.
      *
      * @param key The key of the mapping to be removed.
+     * @return The previous element mapped to this key, or null if it wasn't present.
      */
-    public void remove(String key) {
+    public DataElement remove(String key) {
         var old = elements.remove(key);
         if (old != null) old.disconnect();
+        return old;
     }
 
     /**
