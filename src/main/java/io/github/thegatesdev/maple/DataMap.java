@@ -225,7 +225,7 @@ public class DataMap extends DataElement {
     /**
      * Get the map element associated with this key, or a default.
      *
-     * @param key The key associated with the value element.
+     * @param key The key associated with the map element.
      * @param def The value to return if the element is not a map element, or is not present.
      * @return The found DataMap, or the default value.
      */
@@ -259,7 +259,73 @@ public class DataMap extends DataElement {
         return this;
     }
 
+    // LIST
+
+    /**
+     * Get the list element associated with this key.
+     *
+     * @param key The key associated with the list element.
+     * @return The found DataList.
+     * @throws ElementException If the element was not found, or the element was not a list element.
+     */
+    public DataList getList(String key) throws ElementException {
+        return get(key).requireOf(DataList.class);
+    }
+
+    /**
+     * Get the list element associated with this key, or a default.
+     *
+     * @param key The key associated with the list element.
+     * @param def The value to return if the element is not a list element, or is not present.
+     * @return The found DataList, or the default value.
+     */
+    public DataList getList(String key, DataList def) {
+        return get(key, DataList.class, def);
+    }
+
+    /**
+     * Runs the action if the specified element is present and is a DataList.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     * @return This DataMap.
+     */
+    public DataMap ifList(String key, Consumer<DataList> action) {
+        return ifList(key, action, null);
+    }
+
+    /**
+     * Runs the action if the specified element is present and is a DataList, or the elseAction if not.
+     *
+     * @param key        The key to find the element at.
+     * @param action     The consumer to run when the element is found.
+     * @param elseAction The runnable to run when the element is not present or not a DataList.
+     * @return This DataMap.
+     */
+    public DataMap ifList(String key, Consumer<DataList> action, Runnable elseAction) {
+        final DataElement el = getOrNull(key);
+        if (el != null && el.isMap()) action.accept(el.asList());
+        else if (elseAction != null) elseAction.run();
+        return this;
+    }
+
     // -- ELEMENT
+
+
+    @Override
+    public boolean isMap() {
+        return true;
+    }
+
+    @Override
+    public DataMap asMap() throws UnsupportedOperationException {
+        return this;
+    }
+
+    @Override
+    public void ifMap(Consumer<DataMap> mapConsumer, Runnable elseAction) {
+        mapConsumer.accept(this);
+    }
 
     @Override
     protected Map<String, DataElement> raw() {

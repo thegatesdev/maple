@@ -17,8 +17,10 @@ public class Maple {
 
     // -- CONSTRUCT
 
+    // MAP
+
     /**
-     * @return A new DataMap using the default map implementation.
+     * @return A new DataMap using the default Map implementation.
      */
     public static DataMap map() {
         return map(DEFAULT_MAP_IMPL);
@@ -29,14 +31,27 @@ public class Maple {
      * @return A new DataMap using the supplied map.
      */
     public static DataMap map(Supplier<Map<String, DataElement>> mapSupplier) {
-        return map(mapSupplier.get());
+        var input = mapSupplier.get();
+        if (!input.isEmpty()) throw new IllegalArgumentException("The supplied map must be empty");
+        return new DataMap(input);
+    }
+
+    // LIST
+
+    /**
+     * @return A new DataList using the default List implementation.
+     */
+    public static DataList list() {
+        return list(DEFAULT_LIST_IMPL);
     }
 
     /**
-     * @param inputMap A map to construct the DataMap with.
+     * @param listSupplier A supplier to construct the DataMap with.
      * @return A new DataMap using the supplied map.
      */
-    public static DataMap map(Map<String, DataElement> inputMap) {
-        return new DataMap(inputMap);
+    public static DataList list(Supplier<List<DataElement>> listSupplier) {
+        var input = listSupplier.get();
+        if (!input.isEmpty()) throw new IllegalArgumentException("The supplied map must be empty");
+        return new DataList(input);
     }
 }

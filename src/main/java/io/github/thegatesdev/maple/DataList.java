@@ -2,6 +2,7 @@ package io.github.thegatesdev.maple;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class DataList extends DataElement {
 
@@ -83,6 +84,21 @@ public class DataList extends DataElement {
     }
 
     // -- ELEMENT
+
+    @Override
+    public boolean isList() {
+        return true;
+    }
+
+    @Override
+    public DataList asList() throws UnsupportedOperationException {
+        return this;
+    }
+
+    @Override
+    public void ifList(Consumer<DataList> listConsumer, Runnable elseAction) {
+        listConsumer.accept(this);
+    }
 
     private DataElement connectThis(DataElement element, int index) {
         return element.connect(this, "[" + index + "]");

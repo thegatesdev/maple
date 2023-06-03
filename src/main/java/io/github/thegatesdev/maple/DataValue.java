@@ -2,6 +2,8 @@ package io.github.thegatesdev.maple;
 
 import io.github.thegatesdev.maple.exception.ElementException;
 
+import java.util.function.Consumer;
+
 /**
  * An element for holding a single value that may change.
  */
@@ -66,6 +68,22 @@ public abstract class DataValue extends DataElement {
 
 
     // -- ELEMENT
+
+
+    @Override
+    public boolean isValue() {
+        return true;
+    }
+
+    @Override
+    public DataValue asValue() throws UnsupportedOperationException {
+        return this;
+    }
+
+    @Override
+    public void ifValue(Consumer<DataValue> valueConsumer, Runnable elseAction) {
+        valueConsumer.accept(this);
+    }
 
     @Override
     public Object view() {

@@ -275,6 +275,46 @@ public abstract class DataElement implements Comparable<DataElement> {
         if (elseAction != null) elseAction.run();
     }
 
+    // LIST
+
+    /**
+     * Check if this element is a DataList.
+     *
+     * @return {@code true} if this element is a DataList.
+     */
+    public boolean isList() {
+        return false;
+    }
+
+    /**
+     * Get this element as a DataList, or throw.
+     *
+     * @return This element as a DataList.
+     * @throws UnsupportedOperationException If this element is not a DataList.
+     */
+    public DataList asList() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not a list!");
+    }
+
+    /**
+     * Run the listConsumer if this element is a DataList.
+     *
+     * @param listConsumer The if action.
+     */
+    public final void ifList(Consumer<DataList> listConsumer) {
+        ifList(listConsumer, null);
+    }
+
+    /**
+     * Run the listConsumer if this element is a DataList, or the elseAction.
+     *
+     * @param listConsumer The if action.
+     * @param elseAction   The else action.
+     */
+    public void ifList(Consumer<DataList> listConsumer, Runnable elseAction) {
+        if (elseAction != null) elseAction.run();
+    }
+
     // -- OBJECT
 
     /**
