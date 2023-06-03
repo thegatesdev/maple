@@ -99,9 +99,10 @@ public class DataMap extends DataElement {
      *
      * @param key    The key to find the element at.
      * @param action The consumer to run when the element is found.
+     * @return This DataMap.
      */
-    public void ifValue(String key, Consumer<DataValue> action) {
-        ifValue(key, action, null);
+    public DataMap ifValue(String key, Consumer<DataValue> action) {
+        return ifValue(key, action, null);
     }
 
     /**
@@ -110,11 +111,13 @@ public class DataMap extends DataElement {
      * @param key        The key to find the element at.
      * @param action     The consumer to run when the element is found.
      * @param elseAction The runnable to run when the element is not present or not a DataValue.
+     * @return This DataMap.
      */
-    public void ifValue(String key, Consumer<DataValue> action, Runnable elseAction) {
+    public DataMap ifValue(String key, Consumer<DataValue> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
         if (el != null && el.isValue()) action.accept(el.asValue());
         else if (elseAction != null) elseAction.run();
+        return this;
     }
 
     /**
@@ -204,9 +207,10 @@ public class DataMap extends DataElement {
      *
      * @param key    The key to find the element at.
      * @param action The consumer to run when the element is found.
+     * @return This DataMap.
      */
-    public void ifMap(String key, Consumer<DataMap> action) {
-        ifMap(key, action, null);
+    public DataMap ifMap(String key, Consumer<DataMap> action) {
+        return ifMap(key, action, null);
     }
 
     /**
@@ -215,11 +219,13 @@ public class DataMap extends DataElement {
      * @param key        The key to find the element at.
      * @param action     The consumer to run when the element is found.
      * @param elseAction The runnable to run when the element is not present or not a DataMap.
+     * @return This DataMap.
      */
-    public void ifMap(String key, Consumer<DataMap> action, Runnable elseAction) {
+    public DataMap ifMap(String key, Consumer<DataMap> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
         if (el != null && el.isMap()) action.accept(el.asMap());
         else if (elseAction != null) elseAction.run();
+        return this;
     }
 
     // -- ELEMENT
