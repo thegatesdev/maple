@@ -81,6 +81,12 @@ public class DataMap extends DataElement implements MappedElements<String> {
         }
     }
 
+    /**
+     * @return The number of mappings in this map.
+     */
+    public int size() {
+        return elements.size();
+    }
 
     // -- ELEMENT
 
