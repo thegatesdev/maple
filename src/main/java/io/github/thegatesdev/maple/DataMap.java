@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * An element that maps String keys to DataElement values.
+ */
 public class DataMap extends DataElement {
 
     private final Map<String, DataElement> elements, view;

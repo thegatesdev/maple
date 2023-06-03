@@ -2,14 +2,23 @@ package io.github.thegatesdev.maple;
 
 import io.github.thegatesdev.maple.exception.ElementException;
 
+/**
+ * An element for holding a single value that may change.
+ */
 public abstract class DataValue extends DataElement {
 
     private final Class<?> valueType;
 
+    /**
+     * @param valueType The type of the value contained in this DataValue.
+     */
     protected DataValue(Class<?> valueType) {
         this.valueType = valueType;
     }
 
+    /**
+     * @return The type of the value contained in this DataValue.
+     */
     public Class<?> valueType() {
         return valueType;
     }

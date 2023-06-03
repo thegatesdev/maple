@@ -15,11 +15,21 @@ public abstract class DataElement implements Comparable<DataElement> {
     private String name;
     private String[] path;
 
+    /**
+     * Constructs a new DataElement.
+     */
     protected DataElement() {
     }
 
     // -- DATA
 
+    /**
+     * Connects this element to the specified parent with the specified name.
+     *
+     * @param newParent The parent to connect to.
+     * @param newName   The name to hold.
+     * @return This DataElement.
+     */
     protected DataElement connect(DataElement newParent, String newName) {
         if (parent != null) throw new RuntimeException("Parent already set");
         parent = Objects.requireNonNull(newParent, "Parent cannot be null");
@@ -28,6 +38,11 @@ public abstract class DataElement implements Comparable<DataElement> {
         return this;
     }
 
+    /**
+     * Disconnect this element from the set parent, if any.
+     *
+     * @return This DataElement.
+     */
     protected DataElement disconnect() {
         parent = null;
         path = null;
@@ -35,6 +50,9 @@ public abstract class DataElement implements Comparable<DataElement> {
     }
 
 
+    /**
+     * @return The name of this element, or "root".
+     */
     protected String friendlyName() {
         return name == null ? "root" : name;
     }
