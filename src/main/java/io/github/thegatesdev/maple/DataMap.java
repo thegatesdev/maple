@@ -70,6 +70,34 @@ public class DataMap extends DataElement {
     // -- ELEMENT GETTERS
 
 
+    // ANY
+
+    /**
+     * Runs the action if the specified element is present, or the elseAction if not.
+     *
+     * @param key        The key to find the element at.
+     * @param action     The consumer to run when the element is found.
+     * @param elseAction The runnable to run when the element is not present.
+     * @return This DataMap.
+     */
+    public DataMap ifPresent(String key, Consumer<DataElement> action, Runnable elseAction) {
+        final DataElement el = getOrNull(key);
+        if (el != null) action.accept(el);
+        else if (elseAction != null) elseAction.run();
+        return this;
+    }
+
+    /**
+     * Runs the action if the specified element is present.
+     *
+     * @param key    The key to find the element at.
+     * @param action The consumer to run when the element is found.
+     * @return This DataMap.
+     */
+    public DataMap ifPresent(String key, Consumer<DataElement> action) {
+        return ifPresent(key, action, null);
+    }
+
     // VALUE
 
     /**
