@@ -2,6 +2,7 @@ package io.github.thegatesdev.maple;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -10,6 +11,8 @@ import java.util.function.Consumer;
 public class DataMap extends DataElement implements MappedElements<String> {
 
     private final Map<String, DataElement> elements, view;
+    private String prevKey;
+    private DataElement prevVal;
 
     DataMap(Map<String, DataElement> map) {
         elements = map;
@@ -27,6 +30,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
      * @return The previous element mapped to this key, or null if it wasn't present.
      */
     public DataElement set(String key, DataElement element) {
+        checkPrev(key);
         var old = elements.put(key, element);
         connectThis(element, key);
         if (old != null) old.disconnect();
@@ -41,6 +45,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
      * @return The previous element mapped to this key, or null if it wasn't present.
      */
     public DataElement remove(String key) {
+        checkPrev(key);
         var old = elements.remove(key);
         if (old != null) old.disconnect();
         return old;
@@ -53,6 +58,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
      * @return The element associated with this key, or {@code null}.
      */
     public DataElement getOrNull(String key) {
+        if (Objects.equals(prevKey, key)) return prevVal;
         return elements.get(key);
     }
 
@@ -66,6 +72,13 @@ public class DataMap extends DataElement implements MappedElements<String> {
         var el = getOrNull(key);
         if (el == null) return connectThis(new DataNull(), key);
         return el;
+    }
+
+    private void checkPrev(String key) {
+        if (key.equals(prevKey)) {
+            prevKey = null;
+            prevVal = null;
+        }
     }
 
 
