@@ -1,3 +1,7 @@
-/target/
 /.idea/
-maple.iml
+*.iws
+*.iml
+*.ipr
+
+.gradle
+/build/
