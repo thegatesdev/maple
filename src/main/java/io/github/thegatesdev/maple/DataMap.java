@@ -31,6 +31,17 @@ public class DataMap extends DataElement {
     }
 
     /**
+     * Removes the mapping for this key.
+     * Also see {@link Map#remove(Object)}.
+     *
+     * @param key The key of the mapping to be removed.
+     */
+    public void remove(String key) {
+        var old = elements.remove(key);
+        if (old != null) old.disconnect();
+    }
+
+    /**
      * Get the element associated with this key, or null.
      *
      * @param key The key of the element.
