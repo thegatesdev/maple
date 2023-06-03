@@ -30,7 +30,6 @@ public abstract class DataElement implements Comparable<DataElement> {
 
     protected DataElement disconnect() {
         parent = null;
-        name = null;
         path = null;
         return this;
     }
