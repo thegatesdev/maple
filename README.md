@@ -15,8 +15,9 @@ This WIP branch rewrites things for a bit of cleaner code.
 - Simplify DataMap operation
     - Uses a final map instead of dynamically initializing when values were added
 - Add DataValue abstract class representing both final and changing values.
+- Switch project to Gradle
 
-### Work
+### Incorporate
 
 - Make the Maple class handle construction of elements
 
@@ -28,3 +29,4 @@ This WIP branch rewrites things for a bit of cleaner code.
 - Reimplement nice toString
 - Make ElementException nicer?
 - Add tests
+- Merge with MapleTree??
