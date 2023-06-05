@@ -152,4 +152,17 @@ public class DataList extends DataElement implements MappedElements<Integer> {
     public boolean isEmpty() {
         return elements.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        if (elements.isEmpty()) return "emptyList";
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dataList[");
+        for (int i = 0, elementsSize = elements.size(); i < elementsSize; i++) {
+            stringBuilder.append(elements.get(i).toString());
+            if (i == elementsSize - 1) stringBuilder.append(", ");
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
 }

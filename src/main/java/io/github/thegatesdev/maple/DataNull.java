@@ -39,4 +39,9 @@ public class DataNull extends DataElement {
     public DataNull deepCopy() {
         return shallowCopy();
     }
+
+    @Override
+    public String toString() {
+        return "empty";
+    }
 }

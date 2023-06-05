@@ -89,4 +89,9 @@ public abstract class DataValue extends DataElement {
     public Object view() {
         return raw();
     }
+
+    @Override
+    public String toString() {
+        return "value<" + valueType.getSimpleName() + ">";
+    }
 }

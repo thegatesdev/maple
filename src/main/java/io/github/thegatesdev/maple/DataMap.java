@@ -135,4 +135,21 @@ public class DataMap extends DataElement implements MappedElements<String> {
     public boolean isEmpty() {
         return elements.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        if (elements.isEmpty()) return "emptyMap";
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("map{");
+        int len = elements.size();
+        for (Map.Entry<String, DataElement> entry : elements.entrySet()) {
+            stringBuilder
+                    .append("'").append(entry.getKey()).append("'")
+                    .append(": ").append(entry.getValue());
+            if (--len > 0) stringBuilder.append(", ");
+        }
+        stringBuilder.append("}");
+        return stringBuilder.toString();
+    }
+
 }
