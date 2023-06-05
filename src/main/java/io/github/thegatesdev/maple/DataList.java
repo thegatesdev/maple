@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class DataList extends DataElement {
+public class DataList extends DataElement implements MappedElements<Integer> {
 
     private final List<DataElement> elements, view;
 
@@ -74,6 +74,28 @@ public class DataList extends DataElement {
     public DataElement get(int index) {
         var el = getOrNull(index);
         return el == null ? connectThis(new DataNull(), index) : el;
+    }
+
+    /**
+     * Get the element at the specified index, or null.
+     *
+     * @param index The index of the element to get.
+     * @return The element at the specified index, or {@code null}.
+     */
+    @Override
+    public DataElement getOrNull(Integer index) {
+        return getOrNull((int) index);
+    }
+
+    /**
+     * Get the element at the specified index.
+     *
+     * @param index The index of the element to get.
+     * @return The element at the specified index, or a new {@link DataNull}.
+     */
+    @Override
+    public DataElement get(Integer index) {
+        return get((int) index);
     }
 
     /**
