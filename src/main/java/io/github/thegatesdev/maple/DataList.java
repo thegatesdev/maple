@@ -122,6 +122,18 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         listConsumer.accept(this);
     }
 
+    @Override
+    public DataList shallowCopy() {
+        return new DataList(elements);
+    }
+
+    @Override
+    public DataList deepCopy() {
+        var copy = new DataList(Maple.DEFAULT_LIST_IMPL.apply(elements.size()));
+        for (int i = 0; i < elements.size(); i++) copy.set(i, get(i).deepCopy());
+        return copy;
+    }
+
     private DataElement connectThis(DataElement element, int index) {
         return element.connect(this, "[" + index + "]");
     }

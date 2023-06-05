@@ -110,6 +110,18 @@ public class DataMap extends DataElement implements MappedElements<String> {
     }
 
     @Override
+    public DataMap shallowCopy() {
+        return new DataMap(elements);
+    }
+
+    @Override
+    public DataMap deepCopy() {
+        var copy = new DataMap(Maple.DEFAULT_MAP_IMPL.apply(elements.size()));
+        elements.forEach((s, element) -> copy.set(s, element.deepCopy()));
+        return copy;
+    }
+
+    @Override
     protected Map<String, DataElement> raw() {
         return elements;
     }

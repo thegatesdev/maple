@@ -29,4 +29,14 @@ public class DataNull extends DataElement {
     public boolean isNull() {
         return true;
     }
+
+    @Override
+    public DataNull shallowCopy() {
+        return new DataNull();
+    }
+
+    @Override
+    public DataNull deepCopy() {
+        return shallowCopy();
+    }
 }

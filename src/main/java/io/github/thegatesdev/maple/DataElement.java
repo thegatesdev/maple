@@ -318,6 +318,20 @@ public abstract class DataElement implements Comparable<DataElement> {
     // -- OBJECT
 
     /**
+     * Creates a new element of the same type, not copying the optional containing elements.
+     *
+     * @return The copied element.
+     */
+    public abstract DataElement shallowCopy();
+
+    /**
+     * Creates a new element of the same type, copying all optional containing elements.
+     *
+     * @return The copied element.
+     */
+    public abstract DataElement deepCopy();
+
+    /**
      * Compares elements by name.
      */
     @Override
