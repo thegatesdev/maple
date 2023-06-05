@@ -16,6 +16,9 @@ This WIP branch rewrites things for a bit of cleaner code.
     - Uses a final map instead of dynamically initializing when values were added
 - Add DataValue abstract class representing both final and changing values.
 - Switch project to Gradle
+- Reimplement DataList
+- Reimplement cloning
+- Reimplement nice toString
 
 ### Incorporate
 
@@ -23,10 +26,7 @@ This WIP branch rewrites things for a bit of cleaner code.
 
 ### ToDo:
 
-- Reimplement DataList
 - Reimplement DataPrimitive and a dynamic counterpart
-- Reimplement cloning
-- Reimplement nice toString
 - Make ElementException nicer?
 - Add tests
 - Merge with MapleTree??
