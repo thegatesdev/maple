@@ -1,10 +1,8 @@
 package io.github.thegatesdev.maple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 /**
  * Utility class for constructing and operating on Maple elements.
@@ -51,5 +49,33 @@ public class Maple {
     public static DataList list(List<DataElement> list) {
         if (!list.isEmpty()) throw new IllegalArgumentException("The supplied map must be empty");
         return new DataList(list);
+    }
+
+    // VALUE
+
+    /**
+     * @param value The value to be contained in the element.
+     * @return A new DataValue containing the specified object.
+     */
+    public static DataValue value(Object value) {
+        return new DataValue.Static(Objects.requireNonNull(value));
+    }
+
+    /**
+     * @param type          The type of the value to be supplied.
+     * @param valueSupplier The supplier for the value.
+     * @return A new DataValue producing values of the specified type using the specified supplier.
+     */
+    public static <T> DataValue value(Class<T> type, Supplier<T> valueSupplier) {
+        return new DataValue.Dynamic<>(Objects.requireNonNull(type), Objects.requireNonNull(valueSupplier));
+    }
+
+    // NULL
+
+    /**
+     * @return A new DataNull.
+     */
+    public static DataNull nothing() {
+        return new DataNull();
     }
 }

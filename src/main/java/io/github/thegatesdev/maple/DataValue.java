@@ -3,18 +3,19 @@ package io.github.thegatesdev.maple;
 import io.github.thegatesdev.maple.exception.ElementException;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * An element for holding a single value that may change.
  */
 public abstract class DataValue extends DataElement {
 
-    private final Class<?> valueType;
+    protected final Class<?> valueType;
 
     /**
      * @param valueType The type of the value contained in this DataValue.
      */
-    protected DataValue(Class<?> valueType) {
+    private DataValue(Class<?> valueType) {
         this.valueType = valueType;
     }
 
@@ -93,5 +94,64 @@ public abstract class DataValue extends DataElement {
     @Override
     public String toString() {
         return "value<" + valueType.getSimpleName() + ">";
+    }
+
+    static class Static extends DataValue {
+        private final Object value;
+
+        Static(Object value) {
+            super(value.getClass());
+            this.value = value;
+        }
+
+        @Override
+        protected Object raw() {
+            return value;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public DataElement shallowCopy() {
+            return new Static(value);
+        }
+
+        @Override
+        public DataElement deepCopy() {
+            return shallowCopy();
+        }
+    }
+
+    static class Dynamic<T> extends DataValue {
+        private final Supplier<T> valueSupplier;
+
+        Dynamic(Class<T> valueType, Supplier<T> valueSupplier) {
+            super(valueType);
+            this.valueSupplier = valueSupplier;
+        }
+
+        @Override
+        protected Object raw() {
+            return valueSupplier.get();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public DataElement shallowCopy() {
+            return new Dynamic<>((Class<T>) valueType, valueSupplier);
+        }
+
+        @Override
+        public DataElement deepCopy() {
+            return shallowCopy();
+        }
     }
 }
