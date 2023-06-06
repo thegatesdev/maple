@@ -1,6 +1,6 @@
 # Maple
 
-A clean type safe data structure.
+A clean type safe configuration structure.
 
 ## V2
 
@@ -19,14 +19,10 @@ This WIP branch rewrites things for a bit of cleaner code.
 - Reimplement DataList
 - Reimplement cloning
 - Reimplement nice toString
-
-### Incorporate
-
-- Make the Maple class handle construction of elements
+- Reimplement DataPrimitive and a dynamic counterpart
 
 ### ToDo:
 
-- Reimplement DataPrimitive and a dynamic counterpart
 - Make ElementException nicer?
 - Add tests
 - Merge with MapleTree??
