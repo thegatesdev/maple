@@ -21,7 +21,15 @@ public class Maple {
      * @return A new DataMap using the default Map implementation.
      */
     public static DataMap map() {
-        return map(DEFAULT_MAP_IMPL.apply(0));
+        return map(0);
+    }
+
+    /**
+     * @param initialCapacity The initial amount of items the map can hold.
+     * @return A new DataMap using the default Map implementation.
+     */
+    public static DataMap map(int initialCapacity) {
+        return map(DEFAULT_MAP_IMPL.apply(initialCapacity));
     }
 
     /**
@@ -39,7 +47,15 @@ public class Maple {
      * @return A new DataList using the default List implementation.
      */
     public static DataList list() {
-        return list(DEFAULT_LIST_IMPL.apply(0));
+        return list(0);
+    }
+
+    /**
+     * @param initialCapacity The initial amount of items the list can hold.
+     * @return A new DataList using the default List implementation.
+     */
+    public static DataList list(int initialCapacity) {
+        return list(DEFAULT_LIST_IMPL.apply(initialCapacity));
     }
 
     /**
