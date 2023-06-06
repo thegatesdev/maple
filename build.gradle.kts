@@ -15,7 +15,7 @@ dependencies {
 
 group = "io.github.thegatesdev"
 version = "2.0.0"
-description = "A clean type safe data structure."
+description = "A clean type safe configuration structure."
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 java {
