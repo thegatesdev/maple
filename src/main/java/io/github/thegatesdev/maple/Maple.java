@@ -12,6 +12,63 @@ public class Maple {
     static final IntFunction<Map<String, DataElement>> DEFAULT_MAP_IMPL = HashMap::new;
     static final IntFunction<List<DataElement>> DEFAULT_LIST_IMPL = ArrayList::new;
 
+    // -- READ
+
+    /**
+     * Read this object as a DataElement, so that when;
+     * <ul>
+     * <li>{@code input == null} -> {@link DataNull#DataNull()}.
+     * <li>{@code input instanceof Object[]} -> {@link Maple#readList(Object...)}.
+     * <li>{@code input instanceof List<?>} -> {@link Maple#readList(List)}.
+     * <li>{@code input instanceof Iterable<?>} -> {@link Maple#readList(Iterable)}.
+     * <li>{@code input instanceof Map<?,?>} -> {@link Maple#readMap(Map)}.
+     * <li>If none of the above apply -> {@link Maple#value(Object)}.
+     * </ul>
+     * If the specified object is already a DataElement, it will be returned as is.
+     *
+     * @param input The Object to read from.
+     * @return The new element.
+     */
+    public static DataElement read(Object input) {
+        if (input == null) return nothing();
+        if (input instanceof DataElement element) return element;
+
+        if (input instanceof Object[] objects) return readList(objects);
+        if (input instanceof List<?> list) return readList(list);
+        if (input instanceof Iterable<?> iterable) return readList(iterable);
+
+        if (input instanceof Map<?, ?> map) return readMap(map);
+
+        return value(input);
+    }
+
+    public static DataList readList(Object... objects) {
+        final DataList output = list(objects.length);
+        for (int i = 0; i < objects.length; i++)
+            output.set(i, Maple.read(objects[i]));
+        return output;
+    }
+
+    public static DataList readList(List<?> list) {
+        final DataList output = list(list.size());
+        for (int i = 0; i < list.size(); i++)
+            output.set(i, Maple.read(list.get(i)));
+        return output;
+    }
+
+    public static DataList readList(Iterable<?> iterable) {
+        final DataList output = list(2);
+        for (Object o : iterable) output.add(read(o));
+        return output;
+    }
+
+    public static DataMap readMap(Map<?, ?> map) {
+        final DataMap output = map(map.size());
+        map.forEach((key, val) -> {
+            if (key instanceof String sKey) output.set(sKey, read(val));
+        });
+        return output;
+    }
 
     // -- CONSTRUCT
 
