@@ -265,4 +265,72 @@ public interface MappedElements<Key> {
         else if (elseAction != null) elseAction.run();
         return this;
     }
+
+    // VALUE GETTERS
+
+    /**
+     * Get the boolean value from the value element associated with this key.
+     *
+     * @param key The key associated with the element.
+     * @return The boolean value of the value element.
+     * @throws ElementException If the element was not a value element, or the value was not a boolean.
+     */
+    default Boolean getBoolean(Key key) throws ElementException {
+        return get(key, Boolean.class);
+    }
+
+    /**
+     * Get the integer value from the value element associated with this key.
+     *
+     * @param key The key associated with the element.
+     * @return The integer value of the value element.
+     * @throws ElementException If the element was not a value element, or the value was not an integer.
+     */
+    default Integer getInt(Key key) throws ElementException {
+        return get(key, Integer.class);
+    }
+
+    /**
+     * Get the double value from the value element associated with this key.
+     *
+     * @param key The key associated with the element.
+     * @return The double value of the value element.
+     * @throws ElementException If the element was not a value element, or the value was not a double.
+     */
+    default Double getDouble(Key key) throws ElementException {
+        return get(key, Double.class);
+    }
+
+    /**
+     * Get the float value from the value element associated with this key.
+     *
+     * @param key The key associated with the element.
+     * @return The float value of the value element.
+     * @throws ElementException If the element was not a value element, or the value was not a float.
+     */
+    default Float getFloat(Key key) throws ElementException {
+        return get(key, Float.class);
+    }
+
+    /**
+     * Get the long value from the value element associated with this key.
+     *
+     * @param key The key associated with the element.
+     * @return The long value of the value element.
+     * @throws ElementException If the element was not a value element, or the value was not a long.
+     */
+    default Long getLong(Key key) throws ElementException {
+        return get(key, Long.class);
+    }
+
+    /**
+     * Get the string value from the value element associated with this key.
+     *
+     * @param key The key associated with the element.
+     * @return The string value of the value element.
+     * @throws ElementException If the element was not a value element, or the value was not a string.
+     */
+    default String getString(Key key) throws ElementException {
+        return get(key, String.class);
+    }
 }
