@@ -61,8 +61,13 @@ public abstract class DataValue extends DataElement {
      * @throws ElementException If the value is not an instance of {@code clazz}.
      */
     public <T> T valueOrThrow(Class<T> clazz) throws ElementException {
-        if (!valueOf(clazz)) throw ElementException.requireType(this, clazz);
+        requireType(clazz);
         return valueUnsafe();
+    }
+
+    public <T> DataValue requireType(Class<T> clazz) throws ElementException {
+        if (!valueOf(clazz)) throw ElementException.requireType(this, clazz);
+        return this;
     }
 
     /**
@@ -83,6 +88,18 @@ public abstract class DataValue extends DataElement {
     public <T> T valueUnsafe() {
         return (T) raw();
     }
+
+    /**
+     * Creates a new dynamic or static DataValue using the supplier.
+     * If this element is static, it will create a new static value by applying the specified supplier.
+     * If this element is dynamic, it will create a new dynamic value that applies the specified supplier everytime the value is gotten.
+     *
+     * @param valueType The type of the new DataValue.
+     * @param supplier  The value supplier.
+     * @param <T>       The type of the new DataValue.
+     * @return A new DataValue.
+     */
+    public abstract <T> DataValue andThen(Class<T> valueType, Supplier<T> supplier);
 
 
     // -- ELEMENT
@@ -122,6 +139,11 @@ public abstract class DataValue extends DataElement {
         }
 
         @Override
+        public <T> DataValue andThen(Class<T> valueType, Supplier<T> supplier) {
+            return new Static(supplier.get());
+        }
+
+        @Override
         protected Object raw() {
             return value;
         }
@@ -148,6 +170,11 @@ public abstract class DataValue extends DataElement {
         public Dynamic(Class<T> valueType, Supplier<T> valueSupplier) {
             super(valueType);
             this.valueSupplier = valueSupplier;
+        }
+
+        @Override
+        public <D> DataValue andThen(Class<D> valueType, Supplier<D> supplier) {
+            return new Dynamic<>(valueType, supplier);
         }
 
         @Override
