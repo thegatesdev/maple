@@ -76,6 +76,9 @@ public abstract class DataValue extends DataElement {
         return valueUnsafe();
     }
 
+    /**
+     * Throws if this element does not contain a value of the specified type.
+     */
     public <T> DataValue requireType(Class<T> clazz) throws ElementException {
         if (!valueOf(clazz)) throw ElementException.requireType(this, clazz);
         return this;
@@ -114,26 +117,50 @@ public abstract class DataValue extends DataElement {
 
     // PRIMITIVE GETTERS
 
-    public Boolean booleanValue() {
+    /**
+     * @return The boolean value contained in this element.
+     * @throws ElementException If this element does not contain a boolean value.
+     */
+    public Boolean booleanValue() throws ElementException {
         return valueOrThrow(Boolean.class);
     }
 
+    /**
+     * @param def The value to return if this element does not contain a boolean value.
+     * @return The boolean value contained in this element.
+     */
     public Boolean booleanValue(boolean def) {
         return valueOr(Boolean.class, def);
     }
 
-    public Integer intValue() {
+    /**
+     * @return The integer value contained in this element.
+     * @throws ElementException If this element does not contain a integer value.
+     */
+    public Integer intValue() throws ElementException {
         return valueOrThrow(Integer.class);
     }
 
+    /**
+     * @param def The value to return if this element does not contain an integer value.
+     * @return The integer value contained in this element.
+     */
     public Integer intValue(int def) {
         return valueOr(Integer.class, def);
     }
 
-    public String stringValue() {
+    /**
+     * @return The string value contained in this element.
+     * @throws ElementException If this element does not contain a string value.
+     */
+    public String stringValue() throws ElementException {
         return valueOrThrow(String.class);
     }
 
+    /**
+     * @param def The value to return if this element does not contain a string value.
+     * @return The string value contained in this element.
+     */
     public String stringValue(String def) {
         return valueOr(String.class, def);
     }
@@ -166,9 +193,15 @@ public abstract class DataValue extends DataElement {
         return "value<" + valueType.getSimpleName() + ">";
     }
 
+    /**
+     * A static value holder.
+     */
     public static class Static extends DataValue {
         private final Object value;
 
+        /**
+         * Construct a new static DataValue containing the specified value.
+         */
         public Static(Object value) {
             super(value.getClass());
             this.value = value;
@@ -200,9 +233,15 @@ public abstract class DataValue extends DataElement {
         }
     }
 
+    /**
+     * A changing value holder.
+     */
     public static class Dynamic<T> extends DataValue {
         private final Supplier<T> valueSupplier;
 
+        /**
+         * Construct a new static DataValue of the specified type using the specified supplier.
+         */
         public Dynamic(Class<T> valueType, Supplier<T> valueSupplier) {
             super(valueType);
             this.valueSupplier = valueSupplier;

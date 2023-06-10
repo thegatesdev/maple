@@ -30,6 +30,9 @@ public class DataList extends DataElement implements MappedElements<Integer> {
 
     private final List<DataElement> elements, view;
 
+    /**
+     * Construct a new DataList using the specified list.
+     */
     public DataList(List<DataElement> elements) {
         this.elements = elements;
         this.view = Collections.unmodifiableList(elements);
@@ -130,6 +133,11 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         return elements.size();
     }
 
+    /**
+     * Run the specified consumer for every element in this list.
+     *
+     * @param elementConsumer The consumer.
+     */
     public void forEach(Consumer<DataElement> elementConsumer) {
         for (int i = 0; i < elements.size(); i++) elementConsumer.accept(elements.get(i));
     }

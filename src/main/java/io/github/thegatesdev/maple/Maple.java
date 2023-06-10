@@ -1,6 +1,7 @@
 package io.github.thegatesdev.maple;
 
 import io.github.thegatesdev.maple.data.*;
+import io.github.thegatesdev.maple.read.ReadableOptions;
 
 import java.util.*;
 import java.util.function.IntFunction;
@@ -28,7 +29,13 @@ Copyright (C) 2022  Timar Karels
  */
 public class Maple {
 
+    /**
+     * The default map implementation used.
+     */
     public static final IntFunction<Map<String, DataElement>> DEFAULT_MAP_IMPL = HashMap::new;
+    /**
+     * The default list implementation used.
+     */
     public static final IntFunction<List<DataElement>> DEFAULT_LIST_IMPL = ArrayList::new;
 
     // -- READ
@@ -196,5 +203,11 @@ public class Maple {
      */
     public static DataNull nothing() {
         return new DataNull();
+    }
+
+    // -- DATA
+
+    public static ReadableOptions options() {
+        return new ReadableOptions();
     }
 }

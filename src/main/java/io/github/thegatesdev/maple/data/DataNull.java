@@ -22,6 +22,9 @@ Copyright (C) 2022  Timar Karels
  */
 public class DataNull extends DataElement {
 
+    /**
+     * Construct a new DataNull.
+     */
     public DataNull() {
     }
 
