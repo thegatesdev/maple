@@ -94,9 +94,3 @@ DataElement nullableElement = list.getOrNull(1);
 Integer intValue = list.getInt(0);
 SomeObject obj = map.getUnsafe(1);
 ```
-
-## ToDo:
-
-- Make ElementException nicer?
-- Add tests
-- Merge with MapleTree??
