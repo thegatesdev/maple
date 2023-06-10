@@ -28,6 +28,8 @@ Copyright (C) 2022  Timar Karels
 public class DataMap extends DataElement implements MappedElements<String> {
 
     private final Map<String, DataElement> elements, view;
+    private DataList cachedElementsList;
+
     private String prevKey;
     private DataElement prevVal;
 
@@ -103,6 +105,19 @@ public class DataMap extends DataElement implements MappedElements<String> {
      */
     public int size() {
         return elements.size();
+    }
+
+    // -- LIST
+
+    private DataList buildList() {
+        DataList list = Maple.list(size());
+        elements.values().forEach(list::add);
+        return list;
+    }
+
+    public DataList valueList() {
+        if (cachedElementsList == null) cachedElementsList = buildList();
+        return cachedElementsList;
     }
 
     // -- ELEMENT
