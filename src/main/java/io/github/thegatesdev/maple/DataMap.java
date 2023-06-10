@@ -50,6 +50,8 @@ public class DataMap extends DataElement implements MappedElements<String> {
      */
     public DataElement set(String key, DataElement element) {
         requireNotLocked();
+        resetCache();
+
         checkPrev(key);
         var old = elements.put(key, element);
         connectThis(element, key);
@@ -66,6 +68,8 @@ public class DataMap extends DataElement implements MappedElements<String> {
      */
     public DataElement remove(String key) {
         requireNotLocked();
+        resetCache();
+
         checkPrev(key);
         var old = elements.remove(key);
         if (old != null) old.disconnect();
@@ -109,9 +113,13 @@ public class DataMap extends DataElement implements MappedElements<String> {
         return elements.size();
     }
 
-    // -- LIST
+    // -- CACHE
 
-    private DataList buildList() {
+    private void resetCache() {
+        cachedElementsList = null;
+    }
+
+    private DataList buildValueList() {
         DataList list = Maple.list(size());
         elements.values().forEach(list::add);
         return list;
@@ -119,7 +127,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
 
     public DataList valueList() {
         if (cachedElementsList == null) {
-            cachedElementsList = buildList();
+            cachedElementsList = buildValueList();
             cachedElementsList.lockContent();
         }
         return cachedElementsList;
