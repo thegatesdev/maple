@@ -134,10 +134,17 @@ public abstract class DataElement implements Comparable<DataElement> {
     }
 
 
+    /**
+     * Locks the contents of this DataElement.
+     * Trying to modify any of the contents after calling this will result in a {@code UnsupportedOperationException} being thrown.
+     */
     protected final void lockContent() {
         contentLocked = true;
     }
 
+    /**
+     * Throw if this element is content locked.
+     */
     protected final void requireNotLocked() throws UnsupportedOperationException {
         if (contentLocked) throw new UnsupportedOperationException("The content of this element is locked");
     }

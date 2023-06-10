@@ -21,6 +21,9 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * An element holding multiple values in a list.
+ */
 public class DataList extends DataElement implements MappedElements<Integer> {
 
     private final List<DataElement> elements, view;

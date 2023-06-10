@@ -61,6 +61,12 @@ public class Maple {
         return value(input);
     }
 
+    /**
+     * Read this varargs array to a DataList.
+     *
+     * @param objects The input array.
+     * @return A new DataList containing the values of the input array read using {@link Maple#read(Object)}
+     */
     public static DataList readList(Object... objects) {
         final DataList output = list(objects.length);
         for (int i = 0; i < objects.length; i++)
@@ -68,6 +74,12 @@ public class Maple {
         return output;
     }
 
+    /**
+     * Read this list to a DataList.
+     *
+     * @param list The input list.
+     * @return A new DataList containing the values of the input list read using {@link Maple#read(Object)}
+     */
     public static DataList readList(List<?> list) {
         final DataList output = list(list.size());
         for (int i = 0; i < list.size(); i++)
@@ -75,12 +87,24 @@ public class Maple {
         return output;
     }
 
+    /**
+     * Read this iterable to a DataList.
+     *
+     * @param iterable The input iterable.
+     * @return A new DataList containing the values of the input iterable read using {@link Maple#read(Object)}
+     */
     public static DataList readList(Iterable<?> iterable) {
         final DataList output = list(2);
         for (Object o : iterable) output.add(read(o));
         return output;
     }
 
+    /**
+     * Read this map to a DataMap.
+     *
+     * @param map The input map.
+     * @return A new DataMap containing all the mappings where the key is a {@code String}, the values read using {@link Maple#read(Object)}
+     */
     public static DataMap readMap(Map<?, ?> map) {
         final DataMap output = map(map.size());
         map.forEach((key, val) -> {
@@ -155,6 +179,7 @@ public class Maple {
 
     /**
      * @param type          The type of the value to be supplied.
+     * @param <T>           The type of the value to be supplied.
      * @param valueSupplier The supplier for the value.
      * @return A new DataValue producing values of the specified type using the specified supplier.
      */

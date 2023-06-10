@@ -21,10 +21,25 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * An element mapping values to {@code <Key>}.
+ */
 public interface MappedElements<Key> {
 
+    /**
+     * Get the element associated with this key, or null.
+     *
+     * @param key The key of the element.
+     * @return The element associated with this key, or {@code null}.
+     */
     DataElement getOrNull(Key key);
 
+    /**
+     * Get the element associated with this key.
+     *
+     * @param key The key of the element.
+     * @return The element associated with this key, or a new {@link DataNull}.
+     */
     DataElement get(Key key);
 
     // -- ELEMENT GETTERS

@@ -75,24 +75,12 @@ public class DataMap extends DataElement implements MappedElements<String> {
         if (old != null) old.disconnect();
         return old;
     }
-
-    /**
-     * Get the element associated with this key, or null.
-     *
-     * @param key The key of the element.
-     * @return The element associated with this key, or {@code null}.
-     */
+    
     public DataElement getOrNull(String key) {
         if (Objects.equals(prevKey, key)) return prevVal;
         return elements.get(key);
     }
 
-    /**
-     * Get the element associated with this key.
-     *
-     * @param key The key of the element.
-     * @return The element associated with this key, or a new {@link DataNull}.
-     */
     public DataElement get(String key) {
         var el = getOrNull(key);
         if (el == null) return connectThis(new DataNull(), key);
@@ -125,6 +113,9 @@ public class DataMap extends DataElement implements MappedElements<String> {
         return list;
     }
 
+    /**
+     * @return A list of the values contained in this map, with the same ordering as the map.
+     */
     public DataList valueList() {
         if (cachedElementsList == null) {
             cachedElementsList = buildValueList();

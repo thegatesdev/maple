@@ -27,7 +27,7 @@ Copyright (C) 2022  Timar Karels
  */
 public abstract class DataValue extends DataElement {
 
-    protected final Class<?> valueType;
+    private final Class<?> valueType;
 
     /**
      * @param valueType The type of the value contained in this DataValue.
@@ -163,7 +163,7 @@ public abstract class DataValue extends DataElement {
         @SuppressWarnings("unchecked")
         @Override
         public DataElement shallowCopy() {
-            return new Dynamic<>((Class<T>) valueType, valueSupplier);
+            return new Dynamic<>((Class<T>) valueType(), valueSupplier);
         }
 
         @Override
