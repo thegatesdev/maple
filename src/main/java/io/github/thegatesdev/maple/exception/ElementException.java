@@ -87,7 +87,7 @@ public class ElementException extends RuntimeException {
     /**
      * @return The element this ElementException was thrown on.
      */
-    public DataElement getElement() {
+    public DataElement element() {
         return element;
     }
 }
