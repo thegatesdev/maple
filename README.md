@@ -68,6 +68,10 @@ DataElement nullableElement = map.getOrNull("some_other_key");
 // Getting values
 Integer intValue = map.getInt("some_key");
 SomeObject obj = map.getUnsafe("some_other_key");
+
+// Getting value list, ordered by the map order
+// The list is cached and doesn't rebuild until the map is changed
+DataList values = map.valueList();
 ```
 
 ### DataList
