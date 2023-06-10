@@ -118,7 +118,10 @@ public class DataMap extends DataElement implements MappedElements<String> {
     }
 
     public DataList valueList() {
-        if (cachedElementsList == null) cachedElementsList = buildList();
+        if (cachedElementsList == null) {
+            cachedElementsList = buildList();
+            cachedElementsList.lockContent();
+        }
         return cachedElementsList;
     }
 
