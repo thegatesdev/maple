@@ -1,4 +1,6 @@
-package io.github.thegatesdev.maple;
+package io.github.thegatesdev.maple.data;
+
+import io.github.thegatesdev.maple.Maple;
 
 import java.util.Collections;
 import java.util.List;

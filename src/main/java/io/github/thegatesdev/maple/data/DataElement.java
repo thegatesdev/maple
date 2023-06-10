@@ -1,4 +1,4 @@
-package io.github.thegatesdev.maple;
+package io.github.thegatesdev.maple.data;
 
 import io.github.thegatesdev.maple.exception.ElementException;
 

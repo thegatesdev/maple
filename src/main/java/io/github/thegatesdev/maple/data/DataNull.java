@@ -1,4 +1,4 @@
-package io.github.thegatesdev.maple;
+package io.github.thegatesdev.maple.data;
 
 /*
 Copyright (C) 2022  Timar Karels
