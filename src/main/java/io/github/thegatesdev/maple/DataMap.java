@@ -75,12 +75,14 @@ public class DataMap extends DataElement implements MappedElements<String> {
         if (old != null) old.disconnect();
         return old;
     }
-    
+
+    @Override
     public DataElement getOrNull(String key) {
         if (Objects.equals(prevKey, key)) return prevVal;
         return elements.get(key);
     }
 
+    @Override
     public DataElement get(String key) {
         var el = getOrNull(key);
         if (el == null) return connectThis(new DataNull(), key);
