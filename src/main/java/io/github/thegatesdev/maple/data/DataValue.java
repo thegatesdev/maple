@@ -272,5 +272,13 @@ public abstract class DataValue extends DataElement {
         public DataElement deepCopy() {
             return shallowCopy();
         }
+
+        @Override
+        public int hashCode() {
+            int result = friendlyName().hashCode();
+            result = 31 * result + (valueType().hashCode());
+            result = 31 * result + (valueSupplier.hashCode());
+            return result;
+        }
     }
 }
