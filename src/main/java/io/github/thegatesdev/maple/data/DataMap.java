@@ -29,7 +29,7 @@ Copyright (C) 2022  Timar Karels
  */
 public class DataMap extends DataElement implements MappedElements<String> {
 
-    private final Map<String, DataElement> elements, view;
+    private final Map<String, DataElement> elements;
     private DataList cachedElementsList;
 
     private String prevKey;
@@ -40,7 +40,6 @@ public class DataMap extends DataElement implements MappedElements<String> {
      */
     public DataMap(Map<String, DataElement> map) {
         elements = map;
-        view = Collections.unmodifiableMap(elements);
     }
 
     // -- BASIC OPERATIONS
@@ -171,7 +170,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
 
     @Override
     public Map<String, DataElement> view() {
-        return view;
+        return Collections.unmodifiableMap(elements);
     }
 
     @Override

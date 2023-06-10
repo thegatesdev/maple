@@ -28,14 +28,13 @@ Copyright (C) 2022  Timar Karels
  */
 public class DataList extends DataElement implements MappedElements<Integer> {
 
-    private final List<DataElement> elements, view;
+    private final List<DataElement> elements;
 
     /**
      * Construct a new DataList using the specified list.
      */
     public DataList(List<DataElement> elements) {
         this.elements = elements;
-        this.view = Collections.unmodifiableList(elements);
     }
 
     // -- BASIC OPERATIONS
@@ -182,7 +181,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
 
     @Override
     public Object view() {
-        return view;
+        return Collections.unmodifiableList(elements);
     }
 
     @Override
