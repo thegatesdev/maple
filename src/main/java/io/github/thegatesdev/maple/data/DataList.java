@@ -130,6 +130,10 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         return elements.size();
     }
 
+    public void forEach(Consumer<DataElement> elementConsumer) {
+        for (int i = 0; i < elements.size(); i++) elementConsumer.accept(elements.get(i));
+    }
+
     // -- ELEMENT
 
     @Override
