@@ -52,9 +52,11 @@ public class Maple {
 
         if (input instanceof Object[] objects) return readList(objects);
         if (input instanceof List<?> list) return readList(list);
-        if (input instanceof Iterable<?> iterable) return readList(iterable);
 
+        // Some Maps are Iterable, but we still want a map.
         if (input instanceof Map<?, ?> map) return readMap(map);
+
+        if (input instanceof Iterable<?> iterable) return readList(iterable);
 
         return value(input);
     }
