@@ -34,7 +34,7 @@ public class Maple {
     /**
      * Read this object as a DataElement, so that when;
      * <ul>
-     * <li>{@code input == null} -> {@link DataNull#DataNull()}.
+     * <li>{@code input == null} -> {@link Maple#nothing()}.
      * <li>{@code input instanceof Object[]} -> {@link Maple#readList(Object...)}.
      * <li>{@code input instanceof List<?>} -> {@link Maple#readList(List)}.
      * <li>{@code input instanceof Iterable<?>} -> {@link Maple#readList(Iterable)}.
