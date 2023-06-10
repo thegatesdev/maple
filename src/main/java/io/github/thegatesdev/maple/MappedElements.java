@@ -280,6 +280,17 @@ public interface MappedElements<Key> {
     }
 
     /**
+     * Get the boolean value from the value element associated with this key, or a default if the element is not present or the type does not match.
+     *
+     * @param key The key associated with the element.
+     * @param def The default value.
+     * @return The boolean value of the value element, or the default value.
+     */
+    default Boolean getBoolean(Key key, boolean def) {
+        return get(key, Boolean.class, def);
+    }
+
+    /**
      * Get the integer value from the value element associated with this key.
      *
      * @param key The key associated with the element.
@@ -288,6 +299,17 @@ public interface MappedElements<Key> {
      */
     default Integer getInt(Key key) throws ElementException {
         return get(key, Integer.class);
+    }
+
+    /**
+     * Get the integer value from the value element associated with this key, or a default if the element is not present or the type does not match.
+     *
+     * @param key The key associated with the element.
+     * @param def The default value.
+     * @return The integer value of the value element, or the default value.
+     */
+    default Integer getInt(Key key, int def) {
+        return get(key, Integer.class, def);
     }
 
     /**
@@ -302,6 +324,17 @@ public interface MappedElements<Key> {
     }
 
     /**
+     * Get the double value from the value element associated with this key, or a default if the element is not present or the type does not match.
+     *
+     * @param key The key associated with the element.
+     * @param def The default value.
+     * @return The double value of the value element, or the default value.
+     */
+    default Double getDouble(Key key, double def) {
+        return get(key, Double.class, def);
+    }
+
+    /**
      * Get the float value from the value element associated with this key.
      *
      * @param key The key associated with the element.
@@ -310,6 +343,17 @@ public interface MappedElements<Key> {
      */
     default Float getFloat(Key key) throws ElementException {
         return get(key, Float.class);
+    }
+
+    /**
+     * Get the float value from the value element associated with this key, or a default if the element is not present or the type does not match.
+     *
+     * @param key The key associated with the element.
+     * @param def The default value.
+     * @return The float value of the value element, or the default value.
+     */
+    default Float getFloat(Key key, float def) {
+        return get(key, Float.class, def);
     }
 
     /**
@@ -324,6 +368,17 @@ public interface MappedElements<Key> {
     }
 
     /**
+     * Get the long value from the value element associated with this key, or a default if the element is not present or the type does not match.
+     *
+     * @param key The key associated with the element.
+     * @param def The default value.
+     * @return The long value of the value element, or the default value.
+     */
+    default Long getLong(Key key, long def) {
+        return get(key, Long.class, def);
+    }
+
+    /**
      * Get the string value from the value element associated with this key.
      *
      * @param key The key associated with the element.
@@ -332,5 +387,16 @@ public interface MappedElements<Key> {
      */
     default String getString(Key key) throws ElementException {
         return get(key, String.class);
+    }
+
+    /**
+     * Get the string value from the value element associated with this key, or a default if the element is not present or the type does not match.
+     *
+     * @param key The key associated with the element.
+     * @param def The default value.
+     * @return The string value of the value element, or the default value.
+     */
+    default String getString(Key key, String def) {
+        return get(key, String.class, def);
     }
 }
