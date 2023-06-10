@@ -30,7 +30,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
 
     private final List<DataElement> elements, view;
 
-    DataList(List<DataElement> elements) {
+    public DataList(List<DataElement> elements) {
         this.elements = elements;
         this.view = Collections.unmodifiableList(elements);
     }

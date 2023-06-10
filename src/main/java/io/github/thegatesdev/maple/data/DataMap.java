@@ -35,7 +35,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
     private String prevKey;
     private DataElement prevVal;
 
-    DataMap(Map<String, DataElement> map) {
+    public DataMap(Map<String, DataElement> map) {
         elements = map;
         view = Collections.unmodifiableMap(elements);
     }

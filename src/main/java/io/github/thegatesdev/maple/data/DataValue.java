@@ -113,10 +113,10 @@ public abstract class DataValue extends DataElement {
         return "value<" + valueType.getSimpleName() + ">";
     }
 
-    static class Static extends DataValue {
+    public static class Static extends DataValue {
         private final Object value;
 
-        Static(Object value) {
+        public Static(Object value) {
             super(value.getClass());
             this.value = value;
         }
@@ -142,10 +142,10 @@ public abstract class DataValue extends DataElement {
         }
     }
 
-    static class Dynamic<T> extends DataValue {
+    public static class Dynamic<T> extends DataValue {
         private final Supplier<T> valueSupplier;
 
-        Dynamic(Class<T> valueType, Supplier<T> valueSupplier) {
+        public Dynamic(Class<T> valueType, Supplier<T> valueSupplier) {
             super(valueType);
             this.valueSupplier = valueSupplier;
         }

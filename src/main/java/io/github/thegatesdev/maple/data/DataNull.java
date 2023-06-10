@@ -22,7 +22,7 @@ Copyright (C) 2022  Timar Karels
  */
 public class DataNull extends DataElement {
 
-    DataNull() {
+    public DataNull() {
     }
 
     // -- ELEMENT
