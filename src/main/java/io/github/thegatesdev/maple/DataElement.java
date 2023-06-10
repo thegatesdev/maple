@@ -32,6 +32,8 @@ public abstract class DataElement implements Comparable<DataElement> {
     private String name;
     private String[] path;
 
+    private boolean contentLocked = false;
+
     /**
      * Constructs a new DataElement.
      */
@@ -47,7 +49,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @param newName   The name to hold.
      * @return This DataElement.
      */
-    protected DataElement connect(DataElement newParent, String newName) {
+    protected final DataElement connect(DataElement newParent, String newName) {
         if (parent != null) throw new RuntimeException("Parent already set");
         parent = Objects.requireNonNull(newParent, "Parent cannot be null");
         name = Objects.requireNonNull(newName, "Name cannot be null");
@@ -60,7 +62,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      *
      * @return This DataElement.
      */
-    protected DataElement disconnect() {
+    protected final DataElement disconnect() {
         parent = null;
         path = null;
         return this;
@@ -79,14 +81,14 @@ public abstract class DataElement implements Comparable<DataElement> {
      *
      * @return The parent of this element.
      */
-    public DataElement parent() {
+    public final DataElement parent() {
         return parent;
     }
 
     /**
      * @return {@code true} if this element has a non-null parent.
      */
-    public boolean hasParent() {
+    public final boolean hasParent() {
         return parent != null;
     }
 
@@ -96,7 +98,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @param parent The parent to check for.
      * @return {@code true} if the parent was found.
      */
-    public boolean isChild(DataElement parent) {
+    public final boolean isChild(DataElement parent) {
         if (this.parent == null) return false;
         if (this.parent == parent) return true;
         return this.parent.isChild(parent);
@@ -107,7 +109,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      *
      * @return The amount of parents until the root element.
      */
-    public int nested() {
+    public final int nested() {
         if (!hasParent()) return 0;
         return parent.nested() + 1;
     }
@@ -117,7 +119,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      *
      * @return The path to this element.
      */
-    public String[] path() {
+    public final String[] path() {
         if (path == null) {
             int nested = nested();
             addPath(path = new String[nested + 1], nested);
@@ -129,6 +131,15 @@ public abstract class DataElement implements Comparable<DataElement> {
         collect[index] = friendlyName();
         if (index == 0) return;
         parent.addPath(collect, --index);
+    }
+
+
+    protected final void lockContent() {
+        contentLocked = true;
+    }
+
+    protected final void requireNotLocked() throws UnsupportedOperationException {
+        if (contentLocked) throw new UnsupportedOperationException("The content of this element is locked");
     }
 
     // -- VALUE
@@ -155,7 +166,7 @@ public abstract class DataElement implements Comparable<DataElement> {
     /**
      * @return Inverse of {@link DataElement#isEmpty()}.
      */
-    public boolean isPresent() {
+    public final boolean isPresent() {
         return !isEmpty();
     }
 
@@ -169,7 +180,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @throws ClassCastException when this element is could not be cast to {@code E}.
      */
     @SuppressWarnings("unchecked")
-    public <E extends DataElement> E unsafeCast() throws ClassCastException {
+    public final <E extends DataElement> E unsafeCast() throws ClassCastException {
         return (E) this;
     }
 
@@ -181,7 +192,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @return The same DataElement as E, or null if this element does not conform to elementClass.
      */
     @SuppressWarnings("unchecked")
-    public <E extends DataElement> E castOrNull(Class<E> elementClass) {
+    public final <E extends DataElement> E castOrNull(Class<E> elementClass) {
         return elementClass.isInstance(this) ? (E) this : null;
     }
 
@@ -195,7 +206,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @throws ElementException If this element is not assignable to {@code elementClass}.
      */
     @SuppressWarnings("unchecked")
-    public <E extends DataElement> E requireOf(Class<E> elementClass) throws ElementException {
+    public final <E extends DataElement> E requireOf(Class<E> elementClass) throws ElementException {
         if (!elementClass.isInstance(this)) throw ElementException.requireType(this, elementClass);
         return ((E) this);
     }

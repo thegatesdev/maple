@@ -41,6 +41,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
      * @return The previous element mapped at this index.
      */
     public DataElement set(int index, DataElement element) {
+        requireNotLocked();
         var old = elements.set(index, element);
         connectThis(element, index);
         if (old != null) old.disconnect();
@@ -54,6 +55,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
      * @param element The element to add.
      */
     public void add(DataElement element) {
+        requireNotLocked();
         elements.add(element);
         connectThis(element, size());
     }
@@ -66,6 +68,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
      * @return The removed element.
      */
     public DataElement remove(int index) {
+        requireNotLocked();
         var old = elements.remove(index);
         if (old != null) old.disconnect();
         return old;

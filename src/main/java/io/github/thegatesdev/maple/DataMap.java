@@ -49,6 +49,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
      * @return The previous element mapped to this key, or null if it wasn't present.
      */
     public DataElement set(String key, DataElement element) {
+        requireNotLocked();
         checkPrev(key);
         var old = elements.put(key, element);
         connectThis(element, key);
@@ -64,6 +65,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
      * @return The previous element mapped to this key, or null if it wasn't present.
      */
     public DataElement remove(String key) {
+        requireNotLocked();
         checkPrev(key);
         var old = elements.remove(key);
         if (old != null) old.disconnect();
