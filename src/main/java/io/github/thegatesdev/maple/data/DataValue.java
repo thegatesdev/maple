@@ -55,6 +55,17 @@ public abstract class DataValue extends DataElement {
     }
 
     /**
+     * @param expectedType The class the value should be an instance of.
+     * @param <T>          The type to get the value as.
+     * @param def          The default value.
+     * @return The cast value, or the specified default value if the value is not an instance of {@code expectedType}.
+     */
+    public <T> T valueOr(Class<T> expectedType, T def) {
+        var value = valueOrNull(expectedType);
+        return value == null ? def : value;
+    }
+
+    /**
      * @param clazz The class the value should be of.
      * @param <T>   The type the value should be of.
      * @return The cast value.
@@ -101,6 +112,31 @@ public abstract class DataValue extends DataElement {
      */
     public abstract <T> DataValue andThen(Class<T> valueType, Supplier<T> supplier);
 
+    // PRIMITIVE GETTERS
+
+    public Boolean booleanValue() {
+        return valueOrThrow(Boolean.class);
+    }
+
+    public Boolean booleanValue(boolean def) {
+        return valueOr(Boolean.class, def);
+    }
+
+    public Integer intValue() {
+        return valueOrThrow(Integer.class);
+    }
+
+    public Integer intValue(int def) {
+        return valueOr(Integer.class, def);
+    }
+
+    public String stringValue() {
+        return valueOrThrow(String.class);
+    }
+
+    public String stringValue(String def) {
+        return valueOr(String.class, def);
+    }
 
     // -- ELEMENT
 
