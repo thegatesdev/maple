@@ -12,13 +12,22 @@ decided it would be fun to try to create my own.
 
 ## Usage
 
-### DataElement
+- [Elements](#elements)
+    - [DataElement](#elements)
+    - [The Maple class](#maple-class)
+    - [DataValue](#datavalue)
+    - [DataMap](#datamap)
+    - [DataList](#datalist)
+
+### Elements
+
+#### DataElement
 
 The base class for any element in Maple is `DataElement`.
 It stores its position in the structure, allowing you to get the root element, the path to this element and more.
 It also has useful methods for checking its type, cloning and getting its value.
 
-### Maple
+#### Maple class
 
 The `Maple` class is used to create all types of elements.
 In addition, it provides methods to 'read' elements from a plain object, Map, array etc;
@@ -32,7 +41,7 @@ Map<String, List<?>> toBeRead = //...
 DataMap map = Maple.readMap(toBeRead); // Read map
 ```
 
-### DataValue
+#### DataValue
 
 *A single value*
 
@@ -47,7 +56,7 @@ DataValue randomIntValue = Maple.value(Integer.class, random::nextInt);
 // This generates a random integer every time the value is gotten
 ```
 
-### DataMap
+#### DataMap
 
 *String key, element value pair structure*
 
@@ -74,7 +83,7 @@ SomeObject obj = map.getUnsafe("some_other_key");
 DataList values = map.valueList();
 ```
 
-### DataList
+#### DataList
 
 *A list of elements*
 
