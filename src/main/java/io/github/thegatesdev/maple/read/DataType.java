@@ -8,6 +8,9 @@ import java.util.function.Consumer;
 
 public interface DataType<Value> extends DataTypeHolder<Value>, Identifiable {
 
+    /**
+     * Returns an element representing the Value gotten from the specified element.
+     */
     DataElement read(DataElement element);
 
     @Override
