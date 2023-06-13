@@ -8,6 +8,7 @@ import io.github.thegatesdev.maple.data.DataValue;
 import io.github.thegatesdev.maple.exception.ElementException;
 import io.github.thegatesdev.maple.registry.DataTypeInfo;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +26,6 @@ public class Readable<Value> implements DataType<Value> {
     public Readable(String identifier, final Function<DataElement, DataElement> readFunction) {
         this.identifier = identifier;
         this.readFunction = readFunction;
-    }
-
-    public static <Value> Readable<Value> element(String identifier, Function<DataElement, DataElement> readFunction) {
-        return new Readable<>(identifier, readFunction);
     }
 
     // ELEMENTS
@@ -57,9 +54,9 @@ public class Readable<Value> implements DataType<Value> {
     // PRIMITIVE
 
     private static <Value> Readable<Value> createPrimitive(Class<Value> valueClass) {
-        return new Readable<>(valueClass.getSimpleName().toLowerCase(), el ->
+        return new Readable<Value>(valueClass.getSimpleName().toLowerCase(), el ->
                 el.requireOf(DataValue.class).requireType(valueClass)
-        );
+        ).info(i -> i.description("Any " + valueClass.getSimpleName().toLowerCase()));
     }
 
     public static Readable<String> string() {
@@ -74,11 +71,11 @@ public class Readable<Value> implements DataType<Value> {
         return primitive(Number.class);
     }
 
-
     // ENUM
 
     public static <E extends Enum<E>> Readable<E> enumeration(Class<E> enumClass) {
-        return new Readable<>(enumClass.getSimpleName().toLowerCase(), el -> enumGetter(enumClass, el.requireOf(DataValue.class)));
+        return new Readable<E>(enumClass.getSimpleName().toLowerCase(), el -> enumGetter(enumClass, el.requireOf(DataValue.class)))
+                .info(i -> i.description("A " + enumClass.getSimpleName().toLowerCase()).possibleValues(Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).toArray(String[]::new)));
     }
 
     private static <E extends Enum<E>> DataValue enumGetter(Class<E> enumClass, DataValue value) {
@@ -95,12 +92,13 @@ public class Readable<Value> implements DataType<Value> {
     // LIST (CACHED)
 
     private static <Value> Readable<List<Value>> createList(DataType<Value> original) {
-        return new Readable<>(original.friendlyId() + "_list", el -> {
+        return new Readable<List<Value>>(original.friendlyId() + "_list", el -> {
             DataList list = el.requireOf(DataList.class);
             DataList results = Maple.list(list.size());
             list.forEach(listEl -> results.add(original.read(listEl)));
             return results;
-        });
+        })
+                .info(i -> i.description("A list of " + original.id()));
     }
 
     @SuppressWarnings("unchecked")
