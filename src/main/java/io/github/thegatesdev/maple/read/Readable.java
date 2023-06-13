@@ -74,10 +74,6 @@ public class Readable<Value> implements DataType<Value> {
         return primitive(Number.class);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <Value> Readable<List<Value>> list(DataType<Value> original) {
-        return ((Readable<List<Value>>) LIST_TYPE_CACHE.computeIfAbsent(original, Readable::createList));
-    }
 
     // ENUM
 
@@ -105,6 +101,11 @@ public class Readable<Value> implements DataType<Value> {
             list.forEach(listEl -> results.add(original.read(listEl)));
             return results;
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <Value> Readable<List<Value>> list(DataType<Value> original) {
+        return ((Readable<List<Value>>) LIST_TYPE_CACHE.computeIfAbsent(original, Readable::createList));
     }
 
     @Override
