@@ -2,9 +2,7 @@ package io.github.thegatesdev.maple.data;
 
 import io.github.thegatesdev.maple.Maple;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 /*
@@ -30,7 +28,7 @@ Copyright (C) 2022  Timar Karels
 public class DataMap extends DataElement implements MappedElements<String> {
 
     private final Map<String, DataElement> elements;
-    private DataList cachedElementsList;
+    private List<DataElement> cachedElementsList;
 
     private String prevKey;
     private DataElement prevVal;
@@ -113,20 +111,17 @@ public class DataMap extends DataElement implements MappedElements<String> {
         cachedElementsList = null;
     }
 
-    private DataList buildValueList() {
-        DataList list = Maple.list(size());
-        elements.values().forEach(list::add);
-        return list;
+    private List<DataElement> buildValueList() {
+        List<DataElement> values = new ArrayList<>(elements.values());
+        return Collections.unmodifiableList(values);
     }
 
     /**
      * @return A list of the values contained in this map, with the same ordering as the map.
      */
-    public DataList valueList() {
-        if (cachedElementsList == null) {
+    public List<DataElement> valueList() {
+        if (cachedElementsList == null)
             cachedElementsList = buildValueList();
-            cachedElementsList.lockContent();
-        }
         return cachedElementsList;
     }
 
