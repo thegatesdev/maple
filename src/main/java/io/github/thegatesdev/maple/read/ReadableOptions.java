@@ -3,7 +3,6 @@ package io.github.thegatesdev.maple.read;
 import io.github.thegatesdev.maple.Maple;
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataMap;
-import io.github.thegatesdev.maple.data.DataNull;
 import io.github.thegatesdev.maple.exception.ElementException;
 
 import java.util.ArrayList;
@@ -37,15 +36,6 @@ public class ReadableOptions {
 
     // -- ACTIONS
 
-    private static StringBuilder displayEntry(OptionEntry<?> entry) {
-        final StringBuilder builder = new StringBuilder("A " + entry.dataType().id() + "; ");
-        if (entry.hasDefault) {
-            if (entry.defaultValue == null) builder.append("optional");
-            else builder.append("default value: ").append(entry.defaultValue);
-        } else builder.append("required");
-        return builder;
-    }
-
     public DataMap read(DataMap data) {
         // Create output
         final DataMap output = Maple.map();
@@ -69,16 +59,23 @@ public class ReadableOptions {
         return output;
     }
 
-    // -- MUTATE
-
-    private DataElement readEntry(OptionEntry<?> value, DataElement element) {
-        if (element == null) { // Not present
-            if (value.hasDefault) {
-                if (value.defaultValue == null) return new DataNull(); // Default null value
-                else return Maple.value(value.defaultValue); // Has default
-            } else return null; // Not present and no default is error
-        } else return Maple.value(value.dataType.read(element)); // Present
+    private static StringBuilder displayEntry(OptionEntry<?> entry) {
+        final StringBuilder builder = new StringBuilder("A " + entry.dataType().id() + "; ");
+        if (entry.hasDefault) {
+            if (entry.defaultValue == null) builder.append("optional");
+            else builder.append("default value: ").append(entry.defaultValue);
+        } else builder.append("required");
+        return builder;
     }
+
+    private static DataElement readEntry(OptionEntry<?> value, DataElement element) {
+        if (element != null) return value.dataType.read(element); // Present
+        // Not present
+        if (value.hasDefault) return Maple.read(value.defaultValue);
+        return null; // Not present and no default is error
+    }
+
+    // -- MUTATE
 
     public ReadableOptions add(String key, DataTypeHolder<?> holder) {
         return add(new OptionEntry<>(key, holder.dataType()));
