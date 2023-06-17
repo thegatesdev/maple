@@ -1,4 +1,4 @@
-package io.github.thegatesdev.maple.registry;
+package io.github.thegatesdev.maple.read.struct;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -17,11 +17,8 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public interface Identifiable {
-    String id();
+import io.github.thegatesdev.maple.read.ReadableOptions;
 
-    default String friendlyId() {
-        final String id = id();
-        return id == null ? "unknown" : id;
-    }
+public interface ReadableOptionsHolder {
+    ReadableOptions readableOptions();
 }

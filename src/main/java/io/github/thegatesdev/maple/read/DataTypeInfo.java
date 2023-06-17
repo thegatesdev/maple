@@ -1,7 +1,6 @@
-package io.github.thegatesdev.maple.registry;
+package io.github.thegatesdev.maple.read;
 
-import io.github.thegatesdev.maple.read.DataType;
-import io.github.thegatesdev.maple.read.ReadableOptions;
+import io.github.thegatesdev.maple.read.struct.DataType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,16 +26,16 @@ Copyright (C) 2022  Timar Karels
 
 public class DataTypeInfo {
 
-    private final DataType<?> dataType;
+    private final DataType dataType;
     private String description, stringRep, origin;
     private List<String> possibleValues;
     private ReadableOptions readableOptions;
 
-    public DataTypeInfo(DataType<?> dataType) {
+    public DataTypeInfo(DataType dataType) {
         this.dataType = dataType;
     }
 
-    public DataType<?> dataType() {
+    public DataType dataType() {
         return dataType;
     }
 

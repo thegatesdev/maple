@@ -1,4 +1,4 @@
-package io.github.thegatesdev.maple.read;
+package io.github.thegatesdev.maple.registry.struct;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -17,7 +17,11 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-@FunctionalInterface
-public interface DataTypeHolder<Value> {
-    DataType<Value> dataType();
+public interface Identifiable {
+    String id();
+
+    default String friendlyId() {
+        final String id = id();
+        return id == null ? "unknown" : id;
+    }
 }

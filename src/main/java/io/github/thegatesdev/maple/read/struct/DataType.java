@@ -1,8 +1,8 @@
-package io.github.thegatesdev.maple.read;
+package io.github.thegatesdev.maple.read.struct;
 
 import io.github.thegatesdev.maple.data.DataElement;
-import io.github.thegatesdev.maple.registry.DataTypeInfo;
-import io.github.thegatesdev.maple.registry.Identifiable;
+import io.github.thegatesdev.maple.read.DataTypeInfo;
+import io.github.thegatesdev.maple.registry.struct.Identifiable;
 
 import java.util.function.Consumer;
 
@@ -23,7 +23,7 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public interface DataType<Value> extends DataTypeHolder<Value>, Identifiable {
+public interface DataType extends DataTypeHolder, Identifiable {
 
     /**
      * Returns an element representing the Value gotten from the specified element.
@@ -31,14 +31,14 @@ public interface DataType<Value> extends DataTypeHolder<Value>, Identifiable {
     DataElement read(DataElement element);
 
     @Override
-    default DataType<Value> dataType() {
+    default DataType dataType() {
         return this;
     }
 
 
     // -- INFO
 
-    default DataType<Value> info(Consumer<DataTypeInfo> consumer) {
+    default DataType info(Consumer<DataTypeInfo> consumer) {
         consumer.accept(info());
         return this;
     }

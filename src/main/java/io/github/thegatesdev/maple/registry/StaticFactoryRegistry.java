@@ -5,8 +5,8 @@ import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataMap;
 import io.github.thegatesdev.maple.data.DataValue;
 import io.github.thegatesdev.maple.exception.ElementException;
-import io.github.thegatesdev.maple.read.Factory;
-import io.github.thegatesdev.maple.read.ReadableOptionsHolder;
+import io.github.thegatesdev.maple.read.struct.ReadableOptionsHolder;
+import io.github.thegatesdev.maple.registry.struct.Factory;
 
 import java.util.*;
 import java.util.function.Function;

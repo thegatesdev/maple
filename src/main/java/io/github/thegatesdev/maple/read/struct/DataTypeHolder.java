@@ -1,6 +1,4 @@
-package io.github.thegatesdev.maple.read;
-
-import io.github.thegatesdev.maple.data.DataMap;
+package io.github.thegatesdev.maple.read.struct;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -20,7 +18,6 @@ Copyright (C) 2022  Timar Karels
 */
 
 @FunctionalInterface
-public interface Factory<G> {
-
-    G build(DataMap data);
+public interface DataTypeHolder {
+    DataType dataType();
 }

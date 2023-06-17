@@ -1,8 +1,10 @@
 package io.github.thegatesdev.maple.registry;
 
-import io.github.thegatesdev.maple.read.DataType;
-import io.github.thegatesdev.maple.read.Factory;
-import io.github.thegatesdev.maple.read.ReadableOptionsHolder;
+import io.github.thegatesdev.maple.read.DataTypeInfo;
+import io.github.thegatesdev.maple.read.struct.DataType;
+import io.github.thegatesdev.maple.read.struct.ReadableOptionsHolder;
+import io.github.thegatesdev.maple.registry.struct.Factory;
+import io.github.thegatesdev.maple.registry.struct.Identifiable;
 
 import java.util.Collection;
 
@@ -22,7 +24,7 @@ Copyright (C) 2022  Timar Karels
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public abstract class FactoryRegistry<Data, Fac extends Factory<? extends Data> & ReadableOptionsHolder> implements Identifiable, DataType<Data> {
+public abstract class FactoryRegistry<Data, Fac extends Factory<? extends Data> & ReadableOptionsHolder> implements Identifiable, DataType {
     protected final String id;
     protected DataTypeInfo info;
 

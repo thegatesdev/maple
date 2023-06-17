@@ -1,4 +1,6 @@
-package io.github.thegatesdev.maple.read;
+package io.github.thegatesdev.maple.registry.struct;
+
+import io.github.thegatesdev.maple.data.DataMap;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -17,6 +19,8 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public interface ReadableOptionsHolder {
-    ReadableOptions readableOptions();
+@FunctionalInterface
+public interface Factory<G> {
+
+    G build(DataMap data);
 }
