@@ -1,6 +1,5 @@
 package io.github.thegatesdev.maple.read;
 
-import io.github.thegatesdev.maple.Maple;
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataList;
 import io.github.thegatesdev.maple.data.DataMap;
@@ -8,7 +7,6 @@ import io.github.thegatesdev.maple.data.DataValue;
 import io.github.thegatesdev.maple.exception.ElementException;
 import io.github.thegatesdev.maple.read.struct.DataType;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -31,96 +29,74 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class Readable implements DataType {
-    private static final Map<Class<?>, Readable> SINGLE_TYPE_CACHE = new HashMap<>();
-    private static final Map<DataType, Readable> LIST_TYPE_CACHE = new HashMap<>();
+public class Readable<E extends DataElement> implements DataType<E> {
 
-    private final Function<DataElement, DataElement> readFunction;
+
+    private static final Map<Class<?>, Readable<?>> CACHE_PRIMITIVE_TYPES = new HashMap<>();
+    private static final Map<DataType<?>, Readable<?>> CACHE_LIST_TYPES = new HashMap<>();
+
+
+    private final Function<DataElement, E> readFunction;
     private final String identifier;
+
     private DataTypeInfo info;
 
-    public Readable(String identifier, final Function<DataElement, DataElement> readFunction) {
+    private Readable(String identifier, Function<DataElement, E> readFunction) {
         this.identifier = identifier;
         this.readFunction = readFunction;
     }
 
-    // ELEMENTS
-
-    public static Readable list(String identifier, Function<DataList, DataElement> readFunction) {
-        return new Readable(identifier, el -> readFunction.apply(el.requireOf(DataList.class)));
+    private Readable(Class<?> valueClass, Function<DataElement, E> readFunction) {
+        this(valueClass.getSimpleName().toLowerCase(), readFunction);
     }
 
-    public static Readable value(String identifier, Function<DataValue, DataElement> readFunction) {
-        return new Readable(identifier, el -> readFunction.apply(el.requireOf(DataValue.class)));
+    // -- CREATE
+
+    public static <E extends DataElement> Readable<E> map(String identifier, Function<DataMap, E> readFunction) {
+        return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataMap.class)));
     }
 
-    public static Readable map(String identifier, Function<DataMap, DataElement> readFunction) {
-        return new Readable(identifier, el -> readFunction.apply(el.requireOf(DataMap.class)));
+    public static <E extends DataElement> Readable<E> map(String identifier, Function<DataMap, E> readFunction, ReadableOptions options) {
+        return new Readable<>(identifier, element -> readFunction.apply(options.read(element.requireOf(DataMap.class))))
+                .info(info -> info.readableOptions(options));
     }
 
-    public static Readable map(String identifier, Function<DataMap, DataElement> readFunction, ReadableOptions options) {
-        return new Readable(identifier, el -> readFunction.apply(options.read(el.requireOf(DataMap.class))));
+    public static <E extends DataElement> Readable<E> list(String identifier, Function<DataList, E> readFunction) {
+        return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataList.class)));
     }
 
-    public static Readable primitive(Class<?> valueClass) {
-        return SINGLE_TYPE_CACHE.computeIfAbsent(valueClass, Readable::createPrimitive);
+    public static <E extends DataElement> Readable<E> value(String identifier, Function<DataValue<?>, E> readFunction) {
+        return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataValue.class)));
     }
 
-    // PRIMITIVE
 
-    private static Readable createPrimitive(Class<?> valueClass) {
-        return new Readable(valueClass.getSimpleName().toLowerCase(), el ->
-                el.requireOf(DataValue.class).requireType(valueClass)
-        ).info(i -> i.description("Any " + valueClass.getSimpleName().toLowerCase()));
+    private static <P> Readable<DataValue<P>> createPrimitive(Class<P> primitiveClass) {
+        return new Readable<>(primitiveClass, el ->
+                ((DataValue<?>) el.requireOf(DataValue.class)).requireType(primitiveClass));
     }
 
-    public static Readable string() {
+    @SuppressWarnings("unchecked")
+    public static <P> Readable<DataValue<P>> primitive(Class<P> primitiveClass) {
+        return ((Readable<DataValue<P>>) CACHE_PRIMITIVE_TYPES.computeIfAbsent(primitiveClass, Readable::createPrimitive));
+    }
+
+    public static Readable<DataValue<String>> string() {
         return primitive(String.class);
     }
 
-    public static Readable integer() {
+    public static Readable<DataValue<Integer>> integer() {
         return primitive(Integer.class);
     }
 
-    public static Readable number() {
+    public static Readable<DataValue<Number>> number() {
         return primitive(Number.class);
     }
 
-    // ENUM
 
-    public static <E extends Enum<E>> Readable enumeration(Class<E> enumClass) {
-        return new Readable(enumClass.getSimpleName().toLowerCase(), el -> enumGetter(enumClass, el.requireOf(DataValue.class)))
-                .info(i -> i.description("A " + enumClass.getSimpleName().toLowerCase()).possibleValues(Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).toArray(String[]::new)));
-    }
-
-    private static <E extends Enum<E>> DataValue enumGetter(Class<E> enumClass, DataValue value) {
-        return value.requireType(String.class).andThen(enumClass, () -> {
-            String input = value.valueUnsafe();
-            try {
-                return Enum.valueOf(enumClass, input);
-            } catch (IllegalArgumentException e) {
-                throw new ElementException(value, "'%s' does not contain value %s".formatted(enumClass.getSimpleName(), input));
-            }
-        });
-    }
-
-    // LIST (CACHED)
-
-    private static Readable createList(DataType original) {
-        return new Readable(original.friendlyId() + "_list", el -> {
-            DataList list = el.requireOf(DataList.class);
-            DataList results = Maple.list(list.size());
-            list.forEach(listEl -> results.add(original.read(listEl)));
-            return results;
-        }).info(i -> i.description("A list of " + original.id()));
-    }
-
-    public static Readable list(DataType original) {
-        return LIST_TYPE_CACHE.computeIfAbsent(original, Readable::createList);
-    }
+    // -- ACTIONS
 
     @Override
-    public DataElement read(DataElement element) {
+    public E read(DataElement element) {
         try {
             return readFunction.apply(element);
         } catch (ElementException e) {
@@ -138,14 +114,13 @@ public class Readable implements DataType {
     }
 
     @Override
-    public Readable info(Consumer<DataTypeInfo> consumer) {
+    public Readable<E> info(Consumer<DataTypeInfo> consumer) {
         DataType.super.info(consumer);
         return this;
     }
 
     @Override
     public DataTypeInfo info() {
-        if (info == null) info = new DataTypeInfo(this);
         return info;
     }
 }

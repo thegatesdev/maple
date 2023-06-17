@@ -74,7 +74,7 @@ public class StaticFactoryRegistry<Data, Fac extends Factory<? extends Data> & R
     }
 
     @Override
-    public DataValue read(final DataElement element) {
+    public DataValue<Data> read(final DataElement element) {
         final DataMap data = element.requireOf(DataMap.class);
         final String s = data.getString("type");
         final Factory<? extends Data> factory = factories.get(s);

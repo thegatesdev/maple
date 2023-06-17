@@ -1,5 +1,6 @@
 package io.github.thegatesdev.maple.registry;
 
+import io.github.thegatesdev.maple.data.DataValue;
 import io.github.thegatesdev.maple.read.DataTypeInfo;
 import io.github.thegatesdev.maple.read.struct.DataType;
 import io.github.thegatesdev.maple.read.struct.ReadableOptionsHolder;
@@ -24,7 +25,7 @@ Copyright (C) 2022  Timar Karels
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-public abstract class FactoryRegistry<Data, Fac extends Factory<? extends Data> & ReadableOptionsHolder> implements Identifiable, DataType {
+public abstract class FactoryRegistry<Data, Fac extends Factory<? extends Data> & ReadableOptionsHolder> implements Identifiable, DataType<DataValue<Data>> {
     protected final String id;
     protected DataTypeInfo info;
 
@@ -43,7 +44,7 @@ public abstract class FactoryRegistry<Data, Fac extends Factory<? extends Data> 
 
     @Override
     public DataTypeInfo info() {
-        if (info == null) info = new DataTypeInfo(this);
+        if (info == null) info = new DataTypeInfo();
         return info;
     }
 }

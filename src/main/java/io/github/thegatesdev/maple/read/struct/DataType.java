@@ -23,22 +23,22 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public interface DataType extends DataTypeHolder, Identifiable {
+public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Identifiable {
 
     /**
      * Returns an element representing the Value gotten from the specified element.
      */
-    DataElement read(DataElement element);
+    E read(DataElement element);
 
     @Override
-    default DataType dataType() {
+    default DataType<E> dataType() {
         return this;
     }
 
 
     // -- INFO
 
-    default DataType info(Consumer<DataTypeInfo> consumer) {
+    default DataType<E> info(Consumer<DataTypeInfo> consumer) {
         consumer.accept(info());
         return this;
     }

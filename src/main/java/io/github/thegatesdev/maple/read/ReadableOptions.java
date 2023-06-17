@@ -33,13 +33,8 @@ Copyright (C) 2022  Timar Karels
 public class ReadableOptions {
 
     private final Object MUT_ENTRIES = new Object(), MUT_AFTER = new Object();
-    protected List<OptionEntry> entries;
+    protected List<OptionEntry<?>> entries;
     protected List<AfterEntry> afterFunctions;
-
-    static {
-        Maple.options()
-                .add("how_many", Readable.integer(), Maple.value(3));
-    }
 
     // -- ACTIONS
 
@@ -48,7 +43,7 @@ public class ReadableOptions {
         final DataMap output = Maple.map();
         try {
             if (entries != null) synchronized (MUT_ENTRIES) {
-                for (OptionEntry entry : entries) {
+                for (OptionEntry<?> entry : entries) {
                     final DataElement read = readEntry(entry, data.getOrNull(entry.key));
                     if (read == null) throw ElementException.requireField(data, entry.key);
                     output.set(entry.key, read);
@@ -66,7 +61,7 @@ public class ReadableOptions {
         return output;
     }
 
-    private static StringBuilder displayEntry(OptionEntry entry) {
+    private static StringBuilder displayEntry(OptionEntry<?> entry) {
         final StringBuilder builder = new StringBuilder("A " + entry.dataType().id() + "; ");
         if (entry.hasDefault) {
             if (entry.defaultValue == null) builder.append("optional");
@@ -75,7 +70,7 @@ public class ReadableOptions {
         return builder;
     }
 
-    private static DataElement readEntry(OptionEntry value, DataElement element) {
+    private static <E extends DataElement> E readEntry(OptionEntry<E> value, DataElement element) {
         if (element != null) return value.dataType.read(element); // Present
         // Not present
         if (value.hasDefault) return value.defaultValue;
@@ -84,36 +79,34 @@ public class ReadableOptions {
 
     // -- MUTATE
 
-    public ReadableOptions add(String key, DataTypeHolder holder) {
-        return add(new OptionEntry(key, holder.dataType()));
+    public ReadableOptions add(String key, DataTypeHolder<?> holder) {
+        return add(new OptionEntry<>(key, holder.dataType()));
     }
 
-    public ReadableOptions add(String key, DataTypeHolder holder, DataElement def) {
-        return add(new OptionEntry(key, holder.dataType(), def));
+    public <E extends DataElement> ReadableOptions add(String key, DataTypeHolder<E> holder, E def) {
+        return add(new OptionEntry<>(key, holder.dataType(), def));
     }
 
-    public ReadableOptions add(DataTypeHolder holder, Map<String, DataElement> def) {
+    public <E extends DataElement> ReadableOptions add(DataTypeHolder<E> holder, Map<String, E> def) {
         def.forEach((s, t) -> this.add(s, holder, t));
         return this;
     }
 
-    public ReadableOptions add(List<String> values, DataTypeHolder holder, DataElement def) {
+    public <E extends DataElement> ReadableOptions add(List<String> values, DataTypeHolder<E> holder, E def) {
         values.forEach(s -> add(s, holder, def));
         return this;
     }
 
-    public ReadableOptions add(List<String> values, DataTypeHolder holder) {
+    public ReadableOptions add(List<String> values, DataTypeHolder<?> holder) {
         values.forEach(s -> this.add(s, holder));
         return this;
     }
 
-    protected ReadableOptions add(OptionEntry entry) {
+    protected ReadableOptions add(OptionEntry<?> entry) {
         if (entries == null) entries = new ArrayList<>();
         entries.add(entry);
         return this;
     }
-
-    // -- GET/SET
 
     public ReadableOptions after(String s, Function<DataMap, DataElement> function) {
         if (afterFunctions == null) afterFunctions = new ArrayList<>();
@@ -121,26 +114,28 @@ public class ReadableOptions {
         return this;
     }
 
+    // -- GET/SET
+
     public String displayEntries() {
         final StringBuilder builder = new StringBuilder();
-        for (final OptionEntry entry : entries)
+        for (final OptionEntry<?> entry : entries)
             builder.append(entry.key).append(": ").append(displayEntry(entry)).append("\n");
         return builder.toString();
     }
 
-    public List<OptionEntry> entries() {
+    public List<OptionEntry<?>> entries() {
         return Collections.unmodifiableList(entries);
     }
 
     // -- CLASS
 
-    public record OptionEntry(String key, DataType dataType, DataElement defaultValue,
-                              boolean hasDefault) implements DataTypeHolder {
-        public OptionEntry(String key, DataType dataType, DataElement defaultValue) {
+    public record OptionEntry<E extends DataElement>(String key, DataType<E> dataType, E defaultValue,
+                                                     boolean hasDefault) implements DataTypeHolder<E> {
+        public OptionEntry(String key, DataType<E> dataType, E defaultValue) {
             this(key, dataType, defaultValue, true);
         }
 
-        public OptionEntry(String key, DataType dataType) {
+        public OptionEntry(String key, DataType<E> dataType) {
             this(key, dataType, null, false);
         }
     }
