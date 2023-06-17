@@ -182,8 +182,8 @@ public class Maple {
      * @param value The value to be contained in the element.
      * @return A new DataValue containing the specified object.
      */
-    public static DataValue value(Object value) {
-        return new DataValue.Static(Objects.requireNonNull(value));
+    public static <T> DataValue<T> value(T value) {
+        return new DataValue.Static<>(Objects.requireNonNull(value));
     }
 
     /**
@@ -192,7 +192,7 @@ public class Maple {
      * @param valueSupplier The supplier for the value.
      * @return A new DataValue producing values of the specified type using the specified supplier.
      */
-    public static <T> DataValue value(Class<T> type, Supplier<T> valueSupplier) {
+    public static <T> DataValue<T> value(Class<T> type, Supplier<T> valueSupplier) {
         return new DataValue.Dynamic<>(Objects.requireNonNull(type), Objects.requireNonNull(valueSupplier));
     }
 

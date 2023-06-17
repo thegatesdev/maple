@@ -25,21 +25,21 @@ Copyright (C) 2022  Timar Karels
 /**
  * An element for holding a single value that may change.
  */
-public abstract class DataValue extends DataElement {
+public abstract class DataValue<Value> extends DataElement {
 
-    private final Class<?> valueType;
+    private final Class<Value> valueType;
 
     /**
      * @param valueType The type of the value contained in this DataValue.
      */
-    private DataValue(Class<?> valueType) {
+    private DataValue(Class<Value> valueType) {
         this.valueType = valueType;
     }
 
     /**
      * @return The type of the value contained in this DataValue.
      */
-    public Class<?> valueType() {
+    public Class<Value> valueType() {
         return valueType;
     }
 
@@ -79,9 +79,10 @@ public abstract class DataValue extends DataElement {
     /**
      * Throws if this element does not contain a value of the specified type.
      */
-    public <T> DataValue requireType(Class<T> clazz) throws ElementException {
+    @SuppressWarnings("unchecked")
+    public <T> DataValue<T> requireType(Class<T> clazz) throws ElementException {
         if (!valueOf(clazz)) throw ElementException.requireType(this, clazz);
-        return this;
+        return (DataValue<T>) this;
     }
 
     /**
@@ -93,7 +94,7 @@ public abstract class DataValue extends DataElement {
     }
 
     /**
-     * Unsafely casts the value to {@code T}.
+     * Unsafely casts the value to {@code Value}.
      *
      * @param <T> The type to cast the value to.
      * @return The cast value.
@@ -113,7 +114,7 @@ public abstract class DataValue extends DataElement {
      * @param <T>       The type of the new DataValue.
      * @return A new DataValue.
      */
-    public abstract <T> DataValue andThen(Class<T> valueType, Supplier<T> supplier);
+    public abstract <T> DataValue<T> andThen(Class<T> valueType, Supplier<T> supplier);
 
     // PRIMITIVE GETTERS
 
@@ -174,12 +175,12 @@ public abstract class DataValue extends DataElement {
     }
 
     @Override
-    public DataValue asValue() throws UnsupportedOperationException {
+    public DataValue<Value> asValue() throws UnsupportedOperationException {
         return this;
     }
 
     @Override
-    public void ifValue(Consumer<DataValue> valueConsumer, Runnable elseAction) {
+    public void ifValue(Consumer<DataValue<?>> valueConsumer, Runnable elseAction) {
         valueConsumer.accept(this);
     }
 
@@ -193,23 +194,37 @@ public abstract class DataValue extends DataElement {
         return "value<" + valueType.getSimpleName() + ">";
     }
 
+    @Override
+    public abstract DataValue<Value> shallowCopy();
+
+    @Override
+    public abstract DataValue<Value> deepCopy();
+
+    @Override
+    public int hashCode() {
+        int result = friendlyName().hashCode();
+        result = 31 * result + (valueType().hashCode());
+        return result;
+    }
+
     /**
      * A static value holder.
      */
-    public static class Static extends DataValue {
-        private final Object value;
+    public static class Static<Value> extends DataValue<Value> {
+        private final Value value;
 
         /**
          * Construct a new static DataValue containing the specified value.
          */
-        public Static(Object value) {
-            super(value.getClass());
+        @SuppressWarnings("unchecked")
+        public Static(Value value) {
+            super((Class<Value>) value.getClass());
             this.value = value;
         }
 
         @Override
-        public <T> DataValue andThen(Class<T> valueType, Supplier<T> supplier) {
-            return new Static(supplier.get());
+        public <T> DataValue<T> andThen(Class<T> valueType, Supplier<T> supplier) {
+            return new Static<>(supplier.get());
         }
 
         @Override
@@ -223,12 +238,12 @@ public abstract class DataValue extends DataElement {
         }
 
         @Override
-        public DataElement shallowCopy() {
-            return new Static(value);
+        public DataValue<Value> shallowCopy() {
+            return new Static<>(value);
         }
 
         @Override
-        public DataElement deepCopy() {
+        public DataValue<Value> deepCopy() {
             return shallowCopy();
         }
     }
@@ -236,19 +251,19 @@ public abstract class DataValue extends DataElement {
     /**
      * A changing value holder.
      */
-    public static class Dynamic<T> extends DataValue {
-        private final Supplier<T> valueSupplier;
+    public static class Dynamic<Value> extends DataValue<Value> {
+        private final Supplier<Value> valueSupplier;
 
         /**
          * Construct a new static DataValue of the specified type using the specified supplier.
          */
-        public Dynamic(Class<T> valueType, Supplier<T> valueSupplier) {
+        public Dynamic(Class<Value> valueType, Supplier<Value> valueSupplier) {
             super(valueType);
             this.valueSupplier = valueSupplier;
         }
 
         @Override
-        public <D> DataValue andThen(Class<D> valueType, Supplier<D> supplier) {
+        public <D> DataValue<D> andThen(Class<D> valueType, Supplier<D> supplier) {
             return new Dynamic<>(valueType, supplier);
         }
 
@@ -262,23 +277,14 @@ public abstract class DataValue extends DataElement {
             return false;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
-        public DataElement shallowCopy() {
-            return new Dynamic<>((Class<T>) valueType(), valueSupplier);
+        public DataValue<Value> shallowCopy() {
+            return new Dynamic<>(valueType(), valueSupplier);
         }
 
         @Override
-        public DataElement deepCopy() {
+        public DataValue<Value> deepCopy() {
             return shallowCopy();
-        }
-
-        @Override
-        public int hashCode() {
-            int result = friendlyName().hashCode();
-            result = 31 * result + (valueType().hashCode());
-            result = 31 * result + (valueSupplier.hashCode());
-            return result;
         }
     }
 }

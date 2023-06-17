@@ -287,7 +287,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @return This element as a DataValue.
      * @throws UnsupportedOperationException If this element is not a DataValue.
      */
-    public DataValue asValue() throws UnsupportedOperationException {
+    public DataValue<?> asValue() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a value!");
     }
 
@@ -296,7 +296,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      *
      * @param valueConsumer The if action.
      */
-    public final void ifValue(Consumer<DataValue> valueConsumer) {
+    public final void ifValue(Consumer<DataValue<?>> valueConsumer) {
         ifValue(valueConsumer, null);
     }
 
@@ -306,7 +306,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @param valueConsumer The if action.
      * @param elseAction    The else action.
      */
-    public void ifValue(Consumer<DataValue> valueConsumer, Runnable elseAction) {
+    public void ifValue(Consumer<DataValue<?>> valueConsumer, Runnable elseAction) {
         if (elseAction != null) elseAction.run();
     }
 

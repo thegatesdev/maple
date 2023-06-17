@@ -82,7 +82,7 @@ public interface MappedElements<Key> {
      * @return The found DataValue.
      * @throws ElementException If the element was not found, or the element was not a value element.
      */
-    default DataValue getValue(Key key) throws ElementException {
+    default DataValue<?> getValue(Key key) throws ElementException {
         return get(key).requireOf(DataValue.class);
     }
 
@@ -93,7 +93,7 @@ public interface MappedElements<Key> {
      * @param def The value to return if the element is not a value element, or is not present.
      * @return The found DataValue, or the default value.
      */
-    default DataValue getValue(Key key, DataValue def) {
+    default DataValue<?> getValue(Key key, DataValue<?> def) {
         return get(key, DataValue.class, def);
     }
 
@@ -104,7 +104,7 @@ public interface MappedElements<Key> {
      * @param action The consumer to run when the element is found.
      * @return This DataMap.
      */
-    default MappedElements<Key> ifValue(Key key, Consumer<DataValue> action) {
+    default MappedElements<Key> ifValue(Key key, Consumer<DataValue<?>> action) {
         return ifValue(key, action, null);
     }
 
@@ -116,7 +116,7 @@ public interface MappedElements<Key> {
      * @param elseAction The runnable to run when the element is not present or not a DataValue.
      * @return This DataMap.
      */
-    default MappedElements<Key> ifValue(Key key, Consumer<DataValue> action, Runnable elseAction) {
+    default MappedElements<Key> ifValue(Key key, Consumer<DataValue<?>> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
         if (el != null && el.isValue()) action.accept(el.asValue());
         else if (elseAction != null) elseAction.run();
