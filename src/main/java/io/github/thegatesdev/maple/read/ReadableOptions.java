@@ -8,7 +8,6 @@ import io.github.thegatesdev.maple.read.struct.DataType;
 import io.github.thegatesdev.maple.read.struct.DataTypeHolder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -123,14 +122,10 @@ public class ReadableOptions {
         return builder.toString();
     }
 
-    public List<OptionEntry<?>> entries() {
-        return Collections.unmodifiableList(entries);
-    }
-
     // -- CLASS
 
-    public record OptionEntry<E extends DataElement>(String key, DataType<E> dataType, E defaultValue,
-                                                     boolean hasDefault) implements DataTypeHolder<E> {
+    private record OptionEntry<E extends DataElement>(String key, DataType<E> dataType, E defaultValue,
+                                                      boolean hasDefault) implements DataTypeHolder<E> {
         public OptionEntry(String key, DataType<E> dataType, E defaultValue) {
             this(key, dataType, defaultValue, true);
         }
@@ -140,6 +135,6 @@ public class ReadableOptions {
         }
     }
 
-    public record AfterEntry(String key, Function<DataMap, DataElement> modifier) {
+    private record AfterEntry(String key, Function<DataMap, DataElement> modifier) {
     }
 }
