@@ -32,7 +32,6 @@ Copyright (C) 2022  Timar Karels
 
 public class ReadableOptions {
 
-    private final Object MUT_ENTRIES = new Object(), MUT_AFTER = new Object();
     protected List<OptionEntry<?>> entries;
     protected List<AfterEntry> afterFunctions;
 
@@ -42,7 +41,7 @@ public class ReadableOptions {
         // Create output
         final DataMap output = Maple.map();
         try {
-            if (entries != null) synchronized (MUT_ENTRIES) {
+            if (entries != null) {
                 for (OptionEntry<?> entry : entries) {
                     final DataElement read = readEntry(entry, data.getOrNull(entry.key));
                     if (read == null) throw ElementException.requireField(data, entry.key);
@@ -50,7 +49,7 @@ public class ReadableOptions {
                 }
             }
             // afterFunctions allow for some calculations ( e.g. generate a predicate for multiple conditions )
-            if (afterFunctions != null) synchronized (MUT_AFTER) {
+            if (afterFunctions != null) {
                 afterFunctions.forEach((value) -> output.set(value.key, value.modifier.apply(output)));
             }
         } catch (ElementException e) {
@@ -59,15 +58,6 @@ public class ReadableOptions {
             throw new ElementException(data, "readableData error; %s".formatted(e.getMessage()), e);
         }
         return output;
-    }
-
-    private static StringBuilder displayEntry(OptionEntry<?> entry) {
-        final StringBuilder builder = new StringBuilder("A " + entry.dataType().id() + "; ");
-        if (entry.hasDefault) {
-            if (entry.defaultValue == null) builder.append("optional");
-            else builder.append("default value: ").append(entry.defaultValue);
-        } else builder.append("required");
-        return builder;
     }
 
     private static <E extends DataElement> E readEntry(OptionEntry<E> value, DataElement element) {
@@ -126,6 +116,15 @@ public class ReadableOptions {
         for (final OptionEntry<?> entry : entries)
             builder.append(entry.key).append(": ").append(displayEntry(entry)).append("\n");
         return builder.toString();
+    }
+
+    private static StringBuilder displayEntry(OptionEntry<?> entry) {
+        final StringBuilder builder = new StringBuilder("A " + entry.dataType().id() + "; ");
+        if (entry.hasDefault) {
+            if (entry.defaultValue == null) builder.append("optional");
+            else builder.append("default value: ").append(entry.defaultValue);
+        } else builder.append("required");
+        return builder;
     }
 
     // -- CLASS
