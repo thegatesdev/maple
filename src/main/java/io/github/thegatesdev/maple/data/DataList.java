@@ -31,10 +31,12 @@ public class DataList extends DataElement implements MappedElements<Integer> {
     private final List<DataElement> elements;
 
     /**
-     * Construct a new DataList using the specified list.
+     * Construct a new DataList using the supplied list.
+     * The list must be empty.
      */
-    public DataList(List<DataElement> elements) {
-        this.elements = elements;
+    public DataList(List<DataElement> list) {
+        if (!list.isEmpty()) throw new IllegalArgumentException("The supplied list must be empty");
+        this.elements = list;
     }
 
     // -- BASIC OPERATIONS

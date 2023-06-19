@@ -2,6 +2,7 @@ package io.github.thegatesdev.maple.data;
 
 import io.github.thegatesdev.maple.exception.ElementException;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -33,6 +34,7 @@ public abstract class DataValue<Value> extends DataElement {
      * @param valueType The type of the value contained in this DataValue.
      */
     private DataValue(Class<Value> valueType) {
+        Objects.requireNonNull(valueType);
         this.valueType = valueType;
     }
 

@@ -34,10 +34,12 @@ public class DataMap extends DataElement implements MappedElements<String> {
     private DataElement prevVal;
 
     /**
-     * Construct a new DataMap using the specified map.
+     * Constructs a new DataMap using the supplied map.
+     * The supplied map must be empty.
      */
-    public DataMap(Map<String, DataElement> map) {
-        elements = map;
+    public DataMap(Map<String, DataElement> elements) {
+        if (!elements.isEmpty()) throw new IllegalArgumentException("The supplied map must be empty");
+        this.elements = elements;
     }
 
     // -- BASIC OPERATIONS

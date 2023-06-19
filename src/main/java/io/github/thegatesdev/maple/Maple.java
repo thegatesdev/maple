@@ -146,7 +146,6 @@ public class Maple {
      * @return A new DataMap using the supplied map.
      */
     public static DataMap map(Map<String, DataElement> map) {
-        if (!map.isEmpty()) throw new IllegalArgumentException("The supplied map must be empty");
         return new DataMap(map);
     }
 
@@ -172,7 +171,6 @@ public class Maple {
      * @return A new DataMap using the supplied map.
      */
     public static DataList list(List<DataElement> list) {
-        if (!list.isEmpty()) throw new IllegalArgumentException("The supplied map must be empty");
         return new DataList(list);
     }
 
