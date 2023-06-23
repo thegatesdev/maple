@@ -1,10 +1,5 @@
 package io.github.thegatesdev.maple.read;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 /*
 Copyright (C) 2022  Timar Karels
 
@@ -25,7 +20,7 @@ Copyright (C) 2022  Timar Karels
 public class DataTypeInfo {
 
     private String description, stringRep, origin;
-    private List<String> possibleValues;
+    private String[] possibleValues;
     private ReadableOptions readableOptions;
 
     // --
@@ -46,14 +41,7 @@ public class DataTypeInfo {
     }
 
     public DataTypeInfo possibleValues(String... possibleValues) {
-        if (this.possibleValues == null) this.possibleValues = new ArrayList<>(possibleValues.length);
-        Collections.addAll(this.possibleValues, possibleValues);
-        return this;
-    }
-
-    public DataTypeInfo possibleValues(Collection<String> possibleValues) {
-        if (this.possibleValues == null) this.possibleValues = new ArrayList<>(possibleValues.size());
-        this.possibleValues.addAll(possibleValues);
+        this.possibleValues = possibleValues;
         return this;
     }
 
@@ -79,7 +67,7 @@ public class DataTypeInfo {
         return stringRep;
     }
 
-    public List<String> possibleValues() {
-        return possibleValues == null ? null : Collections.unmodifiableList(possibleValues);
+    public String[] possibleValues() {
+        return possibleValues;
     }
 }
