@@ -94,7 +94,7 @@ public interface MappedElements<Key> {
      * @return The found DataValue, or the default value.
      */
     default DataValue<?> getValue(Key key, DataValue<?> def) {
-        return get(key, DataValue.class, def);
+        return getElement(key, DataValue.class, def);
     }
 
     /**
@@ -160,7 +160,7 @@ public interface MappedElements<Key> {
      * @return The value of the value element.
      * @throws ElementException If the value element was not found, or the value did not conform to P.
      */
-    default <P> P get(Key key, Class<P> primitiveClass) throws ElementException {
+    default <P> P getObject(Key key, Class<P> primitiveClass) throws ElementException {
         return getValue(key).valueOrThrow(primitiveClass);
     }
 
@@ -173,11 +173,25 @@ public interface MappedElements<Key> {
      * @param def            The default value to return when the element is not present, not a value element, or the type does not match.
      * @return The value of the value element, or the default value.
      */
-    default <P> P get(Key key, Class<P> primitiveClass, P def) {
+    default <P> P getObject(Key key, Class<P> primitiveClass, P def) {
         final DataElement el = getOrNull(key);
         if (el == null || !el.isValue()) return def;
         final P val = el.asValue().valueOrNull(primitiveClass);
         return def == null ? val : (val == null ? def : val);
+    }
+
+    /**
+     * Get the element associated with this key, or a default if not present or the specified class does not match.
+     *
+     * @param key          The key associated with the element.
+     * @param elementClass The class the element should be an instance of.
+     * @param def          The default value.
+     * @return The element or the specified default.
+     */
+    default <E extends DataElement> E getElement(Key key, Class<E> elementClass, E def) {
+        var el = getOrNull(key);
+        if (el == null) return def;
+        return el.isOf(elementClass) ? el.unsafeCast() : def;
     }
 
 
@@ -202,7 +216,7 @@ public interface MappedElements<Key> {
      * @return The found DataMap, or the default value.
      */
     default DataMap getMap(Key key, DataMap def) {
-        return get(key, DataMap.class, def);
+        return getElement(key, DataMap.class, def);
     }
 
     /**
@@ -252,7 +266,7 @@ public interface MappedElements<Key> {
      * @return The found DataList, or the default value.
      */
     default DataList getList(Key key, DataList def) {
-        return get(key, DataList.class, def);
+        return getElement(key, DataList.class, def);
     }
 
     /**
@@ -291,7 +305,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the element was not a value element, or the value was not a boolean.
      */
     default Boolean getBoolean(Key key) throws ElementException {
-        return get(key, Boolean.class);
+        return getObject(key, Boolean.class);
     }
 
     /**
@@ -302,7 +316,7 @@ public interface MappedElements<Key> {
      * @return The boolean value of the value element, or the default value.
      */
     default Boolean getBoolean(Key key, boolean def) {
-        return get(key, Boolean.class, def);
+        return getObject(key, Boolean.class, def);
     }
 
     /**
@@ -313,7 +327,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the element was not a value element, or the value was not an integer.
      */
     default Integer getInt(Key key) throws ElementException {
-        return get(key, Integer.class);
+        return getObject(key, Integer.class);
     }
 
     /**
@@ -324,7 +338,7 @@ public interface MappedElements<Key> {
      * @return The integer value of the value element, or the default value.
      */
     default Integer getInt(Key key, int def) {
-        return get(key, Integer.class, def);
+        return getObject(key, Integer.class, def);
     }
 
     /**
@@ -335,7 +349,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the element was not a value element, or the value was not a double.
      */
     default Double getDouble(Key key) throws ElementException {
-        return get(key, Double.class);
+        return getObject(key, Double.class);
     }
 
     /**
@@ -346,7 +360,7 @@ public interface MappedElements<Key> {
      * @return The double value of the value element, or the default value.
      */
     default Double getDouble(Key key, double def) {
-        return get(key, Double.class, def);
+        return getObject(key, Double.class, def);
     }
 
     /**
@@ -357,7 +371,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the element was not a value element, or the value was not a float.
      */
     default Float getFloat(Key key) throws ElementException {
-        return get(key, Float.class);
+        return getObject(key, Float.class);
     }
 
     /**
@@ -368,7 +382,7 @@ public interface MappedElements<Key> {
      * @return The float value of the value element, or the default value.
      */
     default Float getFloat(Key key, float def) {
-        return get(key, Float.class, def);
+        return getObject(key, Float.class, def);
     }
 
     /**
@@ -379,7 +393,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the element was not a value element, or the value was not a long.
      */
     default Long getLong(Key key) throws ElementException {
-        return get(key, Long.class);
+        return getObject(key, Long.class);
     }
 
     /**
@@ -390,7 +404,7 @@ public interface MappedElements<Key> {
      * @return The long value of the value element, or the default value.
      */
     default Long getLong(Key key, long def) {
-        return get(key, Long.class, def);
+        return getObject(key, Long.class, def);
     }
 
     /**
@@ -401,7 +415,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the element was not a value element, or the value was not a string.
      */
     default String getString(Key key) throws ElementException {
-        return get(key, String.class);
+        return getObject(key, String.class);
     }
 
     /**
@@ -412,6 +426,6 @@ public interface MappedElements<Key> {
      * @return The string value of the value element, or the default value.
      */
     default String getString(Key key, String def) {
-        return get(key, String.class, def);
+        return getObject(key, String.class, def);
     }
 }
