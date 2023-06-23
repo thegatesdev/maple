@@ -200,7 +200,14 @@ public abstract class DataElement implements Comparable<DataElement> {
      */
     @SuppressWarnings("unchecked")
     public final <E extends DataElement> E castOrNull(Class<E> elementClass) {
-        return elementClass.isInstance(this) ? (E) this : null;
+        return isOf(elementClass) ? (E) this : null;
+    }
+
+    /**
+     * @return {@code true} if this element is an instance of the supplied class.
+     */
+    public final <E extends DataElement> boolean isOf(Class<E> elementClass) {
+        return elementClass.isInstance(this);
     }
 
 
@@ -214,7 +221,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      */
     @SuppressWarnings("unchecked")
     public final <E extends DataElement> E requireOf(Class<E> elementClass) throws ElementException {
-        if (!elementClass.isInstance(this)) throw ElementException.requireType(this, elementClass);
+        if (!isOf(elementClass)) throw ElementException.requireType(this, elementClass);
         return ((E) this);
     }
 
