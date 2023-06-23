@@ -52,6 +52,10 @@ public class Readable<E extends DataElement> implements DataType<E> {
 
     // -- CREATE
 
+    public static <E extends DataElement> Readable<E> any(String identifier, Function<DataElement, E> readFunction) {
+        return new Readable<>(identifier, readFunction);
+    }
+
     public static <E extends DataElement> Readable<E> map(String identifier, Function<DataMap, E> readFunction) {
         return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataMap.class)));
     }
