@@ -153,6 +153,22 @@ public abstract class DataValue<Value> extends DataElement {
     }
 
     /**
+     * @return The number value contained in this element.
+     * @throws ElementException If this element does not contain a number value.
+     */
+    public Number numberValue() throws ElementException {
+        return valueOrThrow(Number.class);
+    }
+
+    /**
+     * @param def The value to return if this element does not contain a number value.
+     * @return The number value contained in this element.
+     */
+    public Number numberValue(int def) {
+        return valueOr(Number.class, def);
+    }
+
+    /**
      * @return The string value contained in this element.
      * @throws ElementException If this element does not contain a string value.
      */
