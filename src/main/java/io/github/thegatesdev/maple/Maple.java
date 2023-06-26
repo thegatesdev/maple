@@ -208,4 +208,17 @@ public class Maple {
     public static ReadableOptions options() {
         return new ReadableOptions();
     }
+
+    // -- UTIL
+
+    public static <T> DataValue<T> join(Class<T> valueClass, Supplier<T> supplier, DataValue<?>... values) {
+        boolean foundDynamic = false;
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] instanceof DataValue.Dynamic<?>) {
+                foundDynamic = true;
+                break;
+            }
+        }
+        return foundDynamic ? Maple.value(valueClass, supplier) : Maple.value(supplier.get());
+    }
 }
