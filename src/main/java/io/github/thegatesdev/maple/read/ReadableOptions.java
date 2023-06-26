@@ -11,7 +11,7 @@ import io.github.thegatesdev.maple.read.struct.DataTypeHolder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -33,7 +33,7 @@ Copyright (C) 2022  Timar Karels
 public class ReadableOptions {
 
     protected List<OptionEntry<?>> entries;
-    protected List<AfterEntry> afterFunctions;
+    protected List<Consumer<DataMap>> afterFunctions;
 
     // -- ACTIONS
 
@@ -49,9 +49,7 @@ public class ReadableOptions {
                 }
             }
             // afterFunctions allow for some calculations ( e.g. generate a predicate for multiple conditions )
-            if (afterFunctions != null) {
-                afterFunctions.forEach((value) -> output.set(value.key, value.modifier.apply(output)));
-            }
+            if (afterFunctions != null) for (Consumer<DataMap> consumer : afterFunctions) consumer.accept(output);
         } catch (ElementException e) {
             throw e;
         } catch (Exception e) {
@@ -98,14 +96,14 @@ public class ReadableOptions {
     }
 
     protected ReadableOptions add(OptionEntry<?> entry) {
-        if (entries == null) entries = new ArrayList<>();
+        if (entries == null) entries = new ArrayList<>(1);
         entries.add(entry);
         return this;
     }
 
-    public ReadableOptions after(String s, Function<DataMap, DataElement> function) {
-        if (afterFunctions == null) afterFunctions = new ArrayList<>();
-        afterFunctions.add(new AfterEntry(s, function));
+    public ReadableOptions after(Consumer<DataMap> consumer) {
+        if (afterFunctions == null) afterFunctions = new ArrayList<>(1);
+        afterFunctions.add(consumer);
         return this;
     }
 
@@ -138,8 +136,5 @@ public class ReadableOptions {
         public OptionEntry(String key, DataType<E> dataType) {
             this(key, dataType, null, false);
         }
-    }
-
-    private record AfterEntry(String key, Function<DataMap, DataElement> modifier) {
     }
 }
