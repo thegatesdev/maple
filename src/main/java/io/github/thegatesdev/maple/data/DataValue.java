@@ -106,6 +106,11 @@ public abstract class DataValue<Value> extends DataElement {
         return (T) raw();
     }
 
+    @SuppressWarnings("unchecked")
+    public Value value() {
+        return (Value) raw();
+    }
+
     /**
      * Creates a new dynamic or static DataValue using the supplier.
      * If this element is static, it will create a new static value by applying the specified supplier.
@@ -166,6 +171,54 @@ public abstract class DataValue<Value> extends DataElement {
      */
     public Number numberValue(int def) {
         return valueOr(Number.class, def);
+    }
+
+    /**
+     * @return The double value contained in this element.
+     * @throws ElementException If this element does not contain a number value.
+     */
+    public Double doubleValue() throws ElementException {
+        return valueOrThrow(Number.class).doubleValue();
+    }
+
+    /**
+     * @param def The value to return if this element does not contain a number value.
+     * @return The double value contained in this element.
+     */
+    public Double doubleValue(double def) {
+        return valueOr(Number.class, def).doubleValue();
+    }
+
+    /**
+     * @return The float value contained in this element.
+     * @throws ElementException If this element does not contain a number value.
+     */
+    public Float floatValue() throws ElementException {
+        return valueOrThrow(Number.class).floatValue();
+    }
+
+    /**
+     * @param def The value to return if this element does not contain a number value.
+     * @return The float value contained in this element.
+     */
+    public Float floatValue(double def) {
+        return valueOr(Number.class, def).floatValue();
+    }
+
+    /**
+     * @return The long value contained in this element.
+     * @throws ElementException If this element does not contain a number value.
+     */
+    public Long longValue() throws ElementException {
+        return valueOrThrow(Number.class).longValue();
+    }
+
+    /**
+     * @param def The value to return if this element does not contain a number value.
+     * @return The long value contained in this element.
+     */
+    public Long longValue(double def) {
+        return valueOr(Number.class, def).longValue();
     }
 
     /**
