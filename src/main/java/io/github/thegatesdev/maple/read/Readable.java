@@ -73,6 +73,10 @@ public class Readable<E extends DataElement> implements DataType<E> {
         return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataValue.class)));
     }
 
+    public static <P> Readable<DataValue<P>> valueDynamic(String identifier, Class<P> valueType, Function<DataValue<?>, P> readFunction) {
+        return value(identifier, dataValue -> dataValue.andThen(valueType, () -> readFunction.apply(dataValue)));
+    }
+
 
     private static <P> Readable<DataValue<P>> createPrimitive(Class<P> primitiveClass) {
         return new Readable<>(primitiveClass, el ->
