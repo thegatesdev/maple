@@ -1,7 +1,6 @@
 package io.github.thegatesdev.maple.registry;
 
 import io.github.thegatesdev.maple.data.DataValue;
-import io.github.thegatesdev.maple.read.DataTypeInfo;
 import io.github.thegatesdev.maple.read.struct.DataType;
 import io.github.thegatesdev.maple.read.struct.ReadableOptionsHolder;
 import io.github.thegatesdev.maple.registry.struct.Factory;
@@ -27,7 +26,7 @@ Copyright (C) 2022  Timar Karels
 */
 public abstract class FactoryRegistry<Data, Fac extends Factory<? extends Data> & ReadableOptionsHolder> implements Identifiable, DataType<DataValue<Data>> {
     protected final String id;
-    protected DataTypeInfo info;
+    protected Info info;
 
     protected FactoryRegistry(String id) {
         this.id = id;
@@ -43,8 +42,8 @@ public abstract class FactoryRegistry<Data, Fac extends Factory<? extends Data> 
     }
 
     @Override
-    public DataTypeInfo info() {
-        if (info == null) info = new DataTypeInfo();
+    public Info info() {
+        if (info == null) info = new Info();
         return info;
     }
 }

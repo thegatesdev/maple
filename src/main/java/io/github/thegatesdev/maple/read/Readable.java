@@ -39,7 +39,7 @@ public class Readable<E extends DataElement> implements DataType<E> {
     private final Function<DataElement, E> readFunction;
     private final String identifier;
 
-    private DataTypeInfo info;
+    private Info info;
 
     private Readable(String identifier, Function<DataElement, E> readFunction) {
         this.identifier = identifier;
@@ -118,13 +118,13 @@ public class Readable<E extends DataElement> implements DataType<E> {
     }
 
     @Override
-    public Readable<E> info(Consumer<DataTypeInfo> consumer) {
+    public Readable<E> info(Consumer<Info> consumer) {
         DataType.super.info(consumer);
         return this;
     }
 
     @Override
-    public DataTypeInfo info() {
+    public Info info() {
         return info;
     }
 }
