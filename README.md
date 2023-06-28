@@ -2,8 +2,6 @@
 
 A clean type safe configuration structure.
 
-*v2.1.0*
-
 ## About
 
 I personally created Maple for a couple of my Minecraft plugins as a replacement for the Spigot Configuration API.
@@ -32,7 +30,7 @@ It also has useful methods for checking its type, cloning and getting its value.
 The `Maple` class is used to create all types of elements.
 In addition, it provides methods to 'read' elements from a plain object, Map, array etc;
 
-```java
+```
 DataElement element = Maple.read(/* Anything */);
 
 DataList list = Maple.readList("string_one", "string_two", "string_three"); // Varargs list
@@ -45,14 +43,14 @@ DataMap map = Maple.readMap(toBeRead); // Read map
 
 *A single value*
 
-```java
+```
 // Create a static value
-DataValue stringValue = Maple.value("Test"); // Holds string
-DataValue intValue = Maple.value(2); // Holds integer
+DataValue<String> stringValue = DataValue.of("Test"); // Holds string
+DataValue<Integer> intValue = DataValue.of(2); // Holds integer
 
 // Create a dynamic value
 var random = new Random();
-DataValue randomIntValue = Maple.value(Integer.class, random::nextInt);
+DataValue<Integer> randomIntValue = DataValue.of(Integer.class, random::nextInt);
 // This generates a random integer every time the value is gotten
 ```
 
@@ -60,14 +58,14 @@ DataValue randomIntValue = Maple.value(Integer.class, random::nextInt);
 
 *String key, element value pair structure*
 
-```java
+```
 // Create a map
-DataMap map = Maple.map();
+DataMap map = new DataMap();
 // With initial capacity
-DataMap map = Maple.map(3);
+DataMap map = new DataMap(3);
 
 // Modifying map
-map.set("some_key", Maple.value(3));
+map.set("some_key", DataValue.of(3));
 map.remove("some_key");
 
 // Getting elements
@@ -78,24 +76,23 @@ DataElement nullableElement = map.getOrNull("some_other_key");
 Integer intValue = map.getInt("some_key");
 SomeObject obj = map.getUnsafe("some_other_key");
 
-// Getting value list, ordered by the map order
-// The list is cached and doesn't rebuild until the map is changed
-DataList values = map.valueList();
+// Iterate values
+map.eachValue(value -> System.out.println(value.key()));
 ```
 
 #### DataList
 
 *A list of elements*
 
-```java
+```
 // Create a list
-DataList list = Maple.list();
+DataList list = new DataList();
 // With initial capacity
-DataList map = Maple.list(3);
+DataList map = new DataList(3);
 
 // Modifying list
-list.add(Maple.value(3));
-list.set(0, Maple.value(2));
+list.add(DataValue.of(3));
+list.set(0, DataValue.of(2));
 list.remove(0);
 
 // Getting elements
@@ -106,4 +103,7 @@ DataElement nullableElement = list.getOrNull(1);
 
 Integer intValue = list.getInt(0);
 SomeObject obj = map.getUnsafe(1);
+
+// Iterate values
+list.each(value -> System.out.println(value.key()));
 ```
