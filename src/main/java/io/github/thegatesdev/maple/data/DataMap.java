@@ -51,8 +51,8 @@ public class DataMap extends DataElement implements MappedElements<String> {
      * @return The previous value at this key
      */
     public DataElement set(String key, DataElement element) {
-        var old = elements.put(key, ((DataElement) element).connect(this, key));
-        if (old != null) ((DataElement) old).disconnect();
+        var old = elements.put(key, element.connect(this, key));
+        if (old != null) old.disconnect();
         return old;
     }
 
@@ -72,7 +72,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
      */
     public DataElement remove(String key) {
         var old = elements.remove(key);
-        if (old != null) ((DataElement) old).disconnect();
+        if (old != null) old.disconnect();
         return old;
     }
 
@@ -83,7 +83,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
      */
     public int clear() {
         int size = size();
-        elements.values().forEach(el -> ((DataElement) el).disconnect());
+        elements.values().forEach(DataElement::disconnect);
         elements.clear();
         return size;
     }

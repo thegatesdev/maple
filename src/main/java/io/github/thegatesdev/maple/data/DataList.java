@@ -89,7 +89,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
      */
     public DataElement remove(int index) {
         var old = elements.remove(index);
-        if (old != null) ((DataElement) old).disconnect();
+        if (old != null) old.disconnect();
         return old;
     }
 
@@ -103,7 +103,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
      * @return The amount of elements cleared, or the size before it was cleared
      */
     public int clear() {
-        each(element -> ((DataElement) element).disconnect());
+        each(DataElement::disconnect);
         int size = size();
         elements.clear();
         return size;
