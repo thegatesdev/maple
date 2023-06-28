@@ -9,6 +9,7 @@ import io.github.thegatesdev.maple.read.struct.DataType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -30,11 +31,8 @@ Copyright (C) 2022  Timar Karels
 */
 
 public class Readable<E extends DataElement> implements DataType<E> {
-
-
     private static final Map<Class<?>, Readable<?>> CACHE_PRIMITIVE_TYPES = new HashMap<>();
     private static final Map<DataType<?>, Readable<?>> CACHE_LIST_TYPES = new HashMap<>();
-
 
     private final Function<DataElement, E> readFunction;
     private final String identifier;
@@ -97,6 +95,19 @@ public class Readable<E extends DataElement> implements DataType<E> {
     }
 
 
+    private static Readable<DataList> createList(DataType<?> original) {
+        return list(original.friendlyId() + "_list", list -> {
+            var out = new DataList(list.size());
+            list.each(element -> out.add(original.read(element)));
+            return out;
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Readable<DataList> list(DataType<?> original) {
+        return (Readable<DataList>) CACHE_LIST_TYPES.computeIfAbsent(original, Readable::createList);
+    }
+
     // -- ACTIONS
 
     @Override
@@ -126,5 +137,12 @@ public class Readable<E extends DataElement> implements DataType<E> {
     @Override
     public Info info() {
         return info;
+    }
+
+    // -- META
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(readFunction, identifier, info);
     }
 }

@@ -1,9 +1,13 @@
 package io.github.thegatesdev.maple.read.struct;
 
 import io.github.thegatesdev.maple.data.DataElement;
+import io.github.thegatesdev.maple.data.DataList;
+import io.github.thegatesdev.maple.read.Readable;
 import io.github.thegatesdev.maple.read.ReadableOptions;
 import io.github.thegatesdev.maple.registry.struct.Identifiable;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /*
@@ -35,7 +39,10 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Iden
         return this;
     }
 
-
+    default Readable<DataList> list() {
+        return Readable.list(this);
+    }
+    
     // -- INFO
 
     default DataType<E> info(Consumer<Info> consumer) {
@@ -94,6 +101,11 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Iden
 
         public String[] possibleValues() {
             return possibleValues;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(description, stringRep, origin, Arrays.hashCode(possibleValues), readableOptions);
         }
     }
 }
