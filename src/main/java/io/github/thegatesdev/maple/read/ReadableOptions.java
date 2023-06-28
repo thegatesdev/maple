@@ -1,6 +1,5 @@
 package io.github.thegatesdev.maple.read;
 
-import io.github.thegatesdev.maple.Maple;
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataMap;
 import io.github.thegatesdev.maple.data.DataValue;
@@ -39,7 +38,7 @@ public class ReadableOptions {
 
     public DataMap read(DataMap data) throws ElementException {
         // Create output
-        final DataMap output = Maple.map();
+        final DataMap output = new DataMap();
         try {
             if (entries != null) {
                 for (OptionEntry<?> entry : entries) {
@@ -77,7 +76,7 @@ public class ReadableOptions {
 
     @SuppressWarnings("unchecked")
     public <T, E extends DataValue<T>> ReadableOptions add(String key, DataTypeHolder<E> holder, T def) {
-        return add(key, ((DataTypeHolder<DataValue<T>>) holder), Maple.value(def));
+        return add(key, ((DataTypeHolder<DataValue<T>>) holder), DataValue.of(def));
     }
 
     public <E extends DataElement> ReadableOptions add(DataTypeHolder<E> holder, Map<String, E> def) {

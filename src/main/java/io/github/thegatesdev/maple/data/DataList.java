@@ -1,7 +1,6 @@
 package io.github.thegatesdev.maple.data;
 
-import io.github.thegatesdev.maple.Maple;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,165 +29,125 @@ public class DataList extends DataElement implements MappedElements<Integer> {
 
     private final List<DataElement> elements;
 
-    /**
-     * Construct a new DataList using the supplied list.
-     * The list must be empty.
-     */
-    public DataList(List<DataElement> list) {
-        if (!list.isEmpty()) throw new IllegalArgumentException("The supplied list must be empty");
-        this.elements = list;
+    private DataList(List<DataElement> elements) {
+        this.elements = elements;
     }
 
-    // -- BASIC OPERATIONS
+    public DataList() {
+        this(new ArrayList<>());
+    }
+
+    public DataList(int initialCapacity) {
+        this(new ArrayList<>(initialCapacity));
+    }
+
+    // -- OPERATIONS
 
     /**
-     * Replaces the element at the specified index with the specified element.
-     * Also see {@link List#set(int, Object)}.
+     * Replace the element at the supplied index with the supplied element.
      *
-     * @param index   The index of the element to replace.
-     * @param element The element to be put at the index.
-     * @return The previous element mapped at this index.
+     * @return The previous element at this index
      */
     public DataElement set(int index, DataElement element) {
-        requireNotLocked();
-        var old = elements.set(index, element);
-        connectThis(element, index);
+        var old = elements.set(index, connectThis(element, index));
         if (old != null) old.disconnect();
         return old;
     }
 
     /**
-     * Adds the specified element to the end of the list.
-     * Also see {@link List#add(Object)}.
-     *
-     * @param element The element to add.
+     * Add the supplied element to the end of the list.
      */
     public void add(DataElement element) {
-        requireNotLocked();
+        connectThis(element, size() + 1);
         elements.add(element);
-        connectThis(element, size());
     }
 
     /**
-     * Removed the element at this index, shifting any elements after that to the left.
-     * Also see {@link List#remove(int)}.
+     * Remove the element at the supplied index, shifting any elements after that to the left.
      *
-     * @param index The index of the element to remove.
-     * @return The removed element.
+     * @return The element previously at the index
      */
     public DataElement remove(int index) {
-        requireNotLocked();
         var old = elements.remove(index);
-        if (old != null) old.disconnect();
+        if (old != null) ((DataElement) old).disconnect();
         return old;
-    }
-
-    /**
-     * Get the element at the specified index, or null.
-     *
-     * @param index The index of the element to get.
-     * @return The element at the specified index, or {@code null}.
-     */
-    public DataElement getOrNull(int index) {
-        if (index < 0 || index >= elements.size()) return null;
-        return elements.get(index);
-    }
-
-    /**
-     * Get the element at the specified index.
-     *
-     * @param index The index of the element to get.
-     * @return The element at the specified index, or a new {@link DataNull}.
-     */
-    public DataElement get(int index) {
-        var el = getOrNull(index);
-        return el == null ? connectThis(new DataNull(), index) : el;
-    }
-
-    /**
-     * Get the element at the specified index, or null.
-     *
-     * @param index The index of the element to get.
-     * @return The element at the specified index, or {@code null}.
-     */
-    @Override
-    public DataElement getOrNull(Integer index) {
-        return getOrNull((int) index);
-    }
-
-    /**
-     * Get the element at the specified index.
-     *
-     * @param index The index of the element to get.
-     * @return The element at the specified index, or a new {@link DataNull}.
-     */
-    @Override
-    public DataElement get(Integer index) {
-        return get((int) index);
-    }
-
-    /**
-     * @return The number of elements in this list.
-     */
-    public int size() {
-        return elements.size();
-    }
-
-    /**
-     * Run the specified consumer for every element in this list.
-     *
-     * @param elementConsumer The consumer.
-     */
-    public void forEach(Consumer<DataElement> elementConsumer) {
-        for (int i = 0; i < elements.size(); i++) elementConsumer.accept(elements.get(i));
-    }
-
-    // -- ELEMENT
-
-    @Override
-    public boolean isList() {
-        return true;
-    }
-
-    @Override
-    public DataList asList() throws UnsupportedOperationException {
-        return this;
-    }
-
-    @Override
-    public void ifList(Consumer<DataList> listConsumer, Runnable elseAction) {
-        listConsumer.accept(this);
-    }
-
-    @Override
-    public DataList shallowCopy() {
-        return new DataList(elements);
-    }
-
-    @Override
-    public DataList deepCopy() {
-        var copy = new DataList(Maple.DEFAULT_LIST_IMPL.apply(elements.size()));
-        for (int i = 0; i < elements.size(); i++) copy.set(i, get(i).deepCopy());
-        return copy;
     }
 
     private DataElement connectThis(DataElement element, int index) {
         return element.connect(this, "[" + index + "]");
     }
 
-    @Override
-    protected Object raw() {
-        return elements;
+    /**
+     * Clear the list of all containing elements.
+     *
+     * @return The amount of elements cleared, or the size before it was cleared
+     */
+    public int clear() {
+        each(element -> ((DataElement) element).disconnect());
+        int size = size();
+        elements.clear();
+        return size;
+    }
+
+    // -- GET
+
+    /**
+     * Get the element at the supplied index, or null if out of bounds.
+     */
+    public DataElement getOrNull(int index) {
+        if (index < 0 || index >= elements.size()) return null;
+        return elements.get(index);
     }
 
     @Override
-    public Object view() {
+    public DataElement getOrNull(Integer integer) {
+        return getOrNull(integer.intValue());
+    }
+
+    /**
+     * Get the element at the supplied index, or a new DataNull if out of bounds.
+     */
+    public DataElement get(int index) {
+        var el = getOrNull(index);
+        return el == null ? connectThis(new DataNull(), index) : el;
+    }
+
+    @Override
+    public DataElement get(Integer integer) {
+        return get(integer.intValue());
+    }
+
+    /**
+     * Get the size of this list, or how many elements it contains
+     */
+    public int size() {
+        return elements.size();
+    }
+
+    /**
+     * Run the supplied consumer for every element in this list.
+     */
+    public void each(Consumer<DataElement> elementConsumer) {
+        for (int i = 0; i < elements.size(); i++) elementConsumer.accept(elements.get(i));
+    }
+
+    // -- SELF
+
+    @Override
+    public List<DataElement> view() {
         return Collections.unmodifiableList(elements);
     }
 
     @Override
     public boolean isEmpty() {
         return elements.isEmpty();
+    }
+
+    @Override
+    public DataList copy() {
+        var copy = new DataList(elements.size());
+        for (int i = 0; i < elements.size(); i++) copy.set(i, get(i).copy());
+        return copy;
     }
 
     @Override
@@ -202,5 +161,16 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         }
         stringBuilder.append("]");
         return stringBuilder.toString();
+    }
+
+    /**
+     * @return {@code true}
+     */
+    public boolean isList() {
+        return true;
+    }
+
+    public DataList asList() {
+        return this;
     }
 }

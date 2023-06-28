@@ -1,6 +1,5 @@
 package io.github.thegatesdev.maple.registry;
 
-import io.github.thegatesdev.maple.Maple;
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataMap;
 import io.github.thegatesdev.maple.data.DataValue;
@@ -80,7 +79,7 @@ public class StaticFactoryRegistry<Data, Fac extends Factory<? extends Data> & R
         final Factory<? extends Data> factory = factories.get(s);
         if (factory == null)
             throw new ElementException(data, "specified %s %s does not exist".formatted(id, s));
-        return Maple.value(factory.build(data));
+        return DataValue.of(factory.build(data));
     }
 
     // -- GET/SET

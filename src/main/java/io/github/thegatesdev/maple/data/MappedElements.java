@@ -27,18 +27,12 @@ Copyright (C) 2022  Timar Karels
 public interface MappedElements<Key> {
 
     /**
-     * Get the element associated with this key, or null.
-     *
-     * @param key The key of the element.
-     * @return The element associated with this key, or {@code null}.
+     * Get the element at the supplied key, or null if it isn't present.
      */
     DataElement getOrNull(Key key);
 
     /**
-     * Get the element associated with this key.
-     *
-     * @param key The key of the element.
-     * @return The element associated with this key, or a new {@link DataNull}.
+     * Get the element at the supplied key, or a new DataNull if it isn't present.
      */
     DataElement get(Key key);
 
@@ -48,73 +42,49 @@ public interface MappedElements<Key> {
     // ANY
 
     /**
-     * Runs the action if the specified element is present, or the elseAction if not.
-     *
-     * @param key        The key to find the element at.
-     * @param action     The consumer to run when the element is found.
-     * @param elseAction The runnable to run when the element is not present.
-     * @return This DataMap.
+     * Run the supplied action on the element at the supplied key, or the elseAction if it isn't present.
      */
-    default MappedElements<Key> ifPresent(Key key, Consumer<DataElement> action, Runnable elseAction) {
+    default void ifPresent(Key key, Consumer<DataElement> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
         if (el != null) action.accept(el);
         else if (elseAction != null) elseAction.run();
-        return this;
     }
 
     /**
-     * Runs the action if the specified element is present.
-     *
-     * @param key    The key to find the element at.
-     * @param action The consumer to run when the element is found.
-     * @return This DataMap.
+     * Run the supplied action on the element at the supplied key if it is present.
      */
-    default MappedElements<Key> ifPresent(Key key, Consumer<DataElement> action) {
-        return ifPresent(key, action, null);
+    default void ifPresent(Key key, Consumer<DataElement> action) {
+        ifPresent(key, action, null);
     }
 
     // VALUE
 
     /**
-     * Get the value element associated with this key.
+     * Get the value element at the supplied key.
      *
-     * @param key The key associated with the value element.
-     * @return The found DataValue.
-     * @throws ElementException If the element was not found, or the element was not a value element.
+     * @throws ElementException If the value element was not found
      */
     default DataValue<?> getValue(Key key) throws ElementException {
         return get(key).requireOf(DataValue.class);
     }
 
     /**
-     * Get the value element associated with this key, or a default.
-     *
-     * @param key The key associated with the value element.
-     * @param def The value to return if the element is not a value element, or is not present.
-     * @return The found DataValue, or the default value.
+     * Get the value element at the supplied key.
+     * Returns the supplied default value if the value element was not found.
      */
     default DataValue<?> getValue(Key key, DataValue<?> def) {
         return getElement(key, DataValue.class, def);
     }
 
     /**
-     * Runs the action if the specified element is present and is a DataValue.
-     *
-     * @param key    The key to find the element at.
-     * @param action The consumer to run when the element is found.
-     * @return This DataMap.
+     * Run the supplied action on the value element at the supplied key, or the elseAction if no value element is found.
      */
     default MappedElements<Key> ifValue(Key key, Consumer<DataValue<?>> action) {
         return ifValue(key, action, null);
     }
 
     /**
-     * Runs the action if the specified element is present and is a DataValue, or the elseAction if not.
-     *
-     * @param key        The key to find the element at.
-     * @param action     The consumer to run when the element is found.
-     * @param elseAction The runnable to run when the element is not present or not a DataValue.
-     * @return This DataMap.
+     * Run the supplied action on the value element at the supplied key.
      */
     default MappedElements<Key> ifValue(Key key, Consumer<DataValue<?>> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
@@ -124,25 +94,17 @@ public interface MappedElements<Key> {
     }
 
     /**
-     * Get the value of the value element associated with this key, cast to P.
+     * Get the value of the value element at the supplied key, cast to {@code P}.
      *
-     * @param key The key associated with the value element.
-     * @param <P> The type to cast to.
-     * @return The cast value.
-     * @throws ElementException If the element was not found, or is not a value element.
+     * @throws ElementException If the value element was not found
      */
     default <P> P getUnsafe(Key key) throws ElementException {
         return getValue(key).valueUnsafe();
     }
 
     /**
-     * Get the value of the value element associated with this key, cast to P, or a default value.
-     * This does not return the default value if the cast throws!
-     *
-     * @param key The key associated with the primitive element.
-     * @param <P> The type to cast to.
-     * @param def The default value to return if the element is not a value element or is not present.
-     * @return The cast value.
+     * Get the value of the value element at the supplied key, cast to {@code P}.
+     * Returns the supplied default value if the value element was not found.
      */
     default <P> P getUnsafe(Key key, P def) {
         final DataElement el = getOrNull(key);
@@ -152,26 +114,17 @@ public interface MappedElements<Key> {
     }
 
     /**
-     * Get the value of the value element associated with this key, or throw.
+     * Get the value of type {@code P} of the value element at the supplied key.
      *
-     * @param key            The key of the value element.
-     * @param primitiveClass The class the value should be of.
-     * @param <P>            The type the value should be of.
-     * @return The value of the value element.
-     * @throws ElementException If the value element was not found, or the value did not conform to P.
+     * @throws ElementException If the value element was not found or the type did not match
      */
     default <P> P getObject(Key key, Class<P> primitiveClass) throws ElementException {
         return getValue(key).valueOrThrow(primitiveClass);
     }
 
     /**
-     * Get the value of the value element associated with this key, or a default.
-     *
-     * @param key            The key of the value element.
-     * @param primitiveClass The class the value should be of.
-     * @param <P>            The type the value should be of.
-     * @param def            The default value to return when the element is not present, not a value element, or the type does not match.
-     * @return The value of the value element, or the default value.
+     * Get the value of type {@code P} of the value element at the supplied key.
+     * Returns the supplied default value if the value element was not found or the type did not match.
      */
     default <P> P getObject(Key key, Class<P> primitiveClass, P def) {
         final DataElement el = getOrNull(key);
@@ -181,12 +134,8 @@ public interface MappedElements<Key> {
     }
 
     /**
-     * Get the element associated with this key, or a default if not present or the specified class does not match.
-     *
-     * @param key          The key associated with the element.
-     * @param elementClass The class the element should be an instance of.
-     * @param def          The default value.
-     * @return The element or the specified default.
+     * Get the element of type {@code E} at the supplied key.
+     * Returns the supplied default element if the element was not found or the type did not match.
      */
     default <E extends DataElement> E getElement(Key key, Class<E> elementClass, E def) {
         var el = getOrNull(key);
@@ -198,45 +147,24 @@ public interface MappedElements<Key> {
     // MAP
 
     /**
-     * Get the map element associated with this key.
+     * Get the map element at the supplied key.
      *
-     * @param key The key associated with the map element.
-     * @return The found DataMap.
-     * @throws ElementException If the element was not found, or the element was not a map element.
+     * @throws ElementException If the map element was not found
      */
     default DataMap getMap(Key key) throws ElementException {
         return get(key).requireOf(DataMap.class);
     }
 
     /**
-     * Get the map element associated with this key, or a default.
-     *
-     * @param key The key associated with the map element.
-     * @param def The value to return if the element is not a map element, or is not present.
-     * @return The found DataMap, or the default value.
+     * Get the map element at the supplied key.
+     * Returns the supplied default value if the map element was not found.
      */
     default DataMap getMap(Key key, DataMap def) {
         return getElement(key, DataMap.class, def);
     }
 
     /**
-     * Runs the action if the specified element is present and is a DataMap.
-     *
-     * @param key    The key to find the element at.
-     * @param action The consumer to run when the element is found.
-     * @return This DataMap.
-     */
-    default MappedElements<Key> ifMap(Key key, Consumer<DataMap> action) {
-        return ifMap(key, action, null);
-    }
-
-    /**
-     * Runs the action if the specified element is present and is a DataMap, or the elseAction if not.
-     *
-     * @param key        The key to find the element at.
-     * @param action     The consumer to run when the element is found.
-     * @param elseAction The runnable to run when the element is not present or not a DataMap.
-     * @return This DataMap.
+     * Run the supplied action on the map element at the supplied key, or the elseAction if no map element is found.
      */
     default MappedElements<Key> ifMap(Key key, Consumer<DataMap> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
@@ -245,48 +173,34 @@ public interface MappedElements<Key> {
         return this;
     }
 
+    /**
+     * Run the supplied action on the map element at the supplied key.
+     */
+    default MappedElements<Key> ifMap(Key key, Consumer<DataMap> action) {
+        return ifMap(key, action, null);
+    }
+
     // LIST
 
     /**
-     * Get the list element associated with this key.
+     * Get list map element at the supplied key.
      *
-     * @param key The key associated with the list element.
-     * @return The found DataList.
-     * @throws ElementException If the element was not found, or the element was not a list element.
+     * @throws ElementException If the list element was not found.
      */
     default DataList getList(Key key) throws ElementException {
         return get(key).requireOf(DataList.class);
     }
 
     /**
-     * Get the list element associated with this key, or a default.
-     *
-     * @param key The key associated with the list element.
-     * @param def The value to return if the element is not a list element, or is not present.
-     * @return The found DataList, or the default value.
+     * Get the list element at the supplied key.
+     * Returns the supplied default value if the list element was not found.
      */
     default DataList getList(Key key, DataList def) {
         return getElement(key, DataList.class, def);
     }
 
     /**
-     * Runs the action if the specified element is present and is a DataList.
-     *
-     * @param key    The key to find the element at.
-     * @param action The consumer to run when the element is found.
-     * @return This DataMap.
-     */
-    default MappedElements<Key> ifList(Key key, Consumer<DataList> action) {
-        return ifList(key, action, null);
-    }
-
-    /**
-     * Runs the action if the specified element is present and is a DataList, or the elseAction if not.
-     *
-     * @param key        The key to find the element at.
-     * @param action     The consumer to run when the element is found.
-     * @param elseAction The runnable to run when the element is not present or not a DataList.
-     * @return This DataMap.
+     * Run the supplied action on the list element at the supplied key, or the elseAction if no list element is found.
      */
     default MappedElements<Key> ifList(Key key, Consumer<DataList> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
@@ -295,135 +209,112 @@ public interface MappedElements<Key> {
         return this;
     }
 
+    /**
+     * Run the supplied action on the list element at the supplied key
+     */
+    default MappedElements<Key> ifList(Key key, Consumer<DataList> action) {
+        return ifList(key, action, null);
+    }
+
     // VALUE GETTERS
 
     /**
-     * Get the boolean value from the value element associated with this key.
+     * Get the Boolean value from the value element at the supplied key.
      *
-     * @param key The key associated with the element.
-     * @return The boolean value of the value element.
-     * @throws ElementException If the element was not a value element, or the value was not a boolean.
+     * @throws ElementException If the Boolean value element was not found
      */
     default Boolean getBoolean(Key key) throws ElementException {
         return getObject(key, Boolean.class);
     }
 
     /**
-     * Get the boolean value from the value element associated with this key, or a default if the element is not present or the type does not match.
-     *
-     * @param key The key associated with the element.
-     * @param def The default value.
-     * @return The boolean value of the value element, or the default value.
+     * Get the Boolean value from the value element at the supplied key.
+     * Returns the supplied default if the Boolean value element was not found.
      */
     default Boolean getBoolean(Key key, boolean def) {
         return getObject(key, Boolean.class, def);
     }
 
     /**
-     * Get the integer value from the value element associated with this key.
+     * Get the Integer value from the value element at the supplied key.
      *
-     * @param key The key associated with the element.
-     * @return The integer value of the value element.
-     * @throws ElementException If the element was not a value element, or the value was not an integer.
+     * @throws ElementException If the Integer value element was not found
      */
     default Integer getInt(Key key) throws ElementException {
         return getObject(key, Integer.class);
     }
 
     /**
-     * Get the integer value from the value element associated with this key, or a default if the element is not present or the type does not match.
-     *
-     * @param key The key associated with the element.
-     * @param def The default value.
-     * @return The integer value of the value element, or the default value.
+     * Get the Integer value from the value element at the supplied key.
+     * Returns the supplied default if the Integer value element was not found.
      */
     default Integer getInt(Key key, int def) {
         return getObject(key, Integer.class, def);
     }
 
     /**
-     * Get the double value from the value element associated with this key.
+     * Get the Double value from the value element at the supplied key.
      *
-     * @param key The key associated with the element.
-     * @return The double value of the value element.
-     * @throws ElementException If the element was not a value element, or the value was not a double.
+     * @throws ElementException If the Double value element was not found
      */
     default Double getDouble(Key key) throws ElementException {
         return getObject(key, Double.class);
     }
 
     /**
-     * Get the double value from the value element associated with this key, or a default if the element is not present or the type does not match.
-     *
-     * @param key The key associated with the element.
-     * @param def The default value.
-     * @return The double value of the value element, or the default value.
+     * Get the Double value from the value element at the supplied key.
+     * Returns the supplied default if the Double value element was not found.
      */
     default Double getDouble(Key key, double def) {
         return getObject(key, Double.class, def);
     }
 
     /**
-     * Get the float value from the value element associated with this key.
+     * Get the Float value from the value element at the supplied key.
      *
-     * @param key The key associated with the element.
-     * @return The float value of the value element.
-     * @throws ElementException If the element was not a value element, or the value was not a float.
+     * @throws ElementException If the Float value element was not found
      */
     default Float getFloat(Key key) throws ElementException {
         return getObject(key, Float.class);
     }
 
     /**
-     * Get the float value from the value element associated with this key, or a default if the element is not present or the type does not match.
-     *
-     * @param key The key associated with the element.
-     * @param def The default value.
-     * @return The float value of the value element, or the default value.
+     * Get the Float value from the value element at the supplied key.
+     * Returns the supplied default if the Float value element was not found.
      */
     default Float getFloat(Key key, float def) {
         return getObject(key, Float.class, def);
     }
 
     /**
-     * Get the long value from the value element associated with this key.
+     * Get the Long value from the value element at the supplied key.
      *
-     * @param key The key associated with the element.
-     * @return The long value of the value element.
-     * @throws ElementException If the element was not a value element, or the value was not a long.
+     * @throws ElementException If the Long value element was not found
      */
     default Long getLong(Key key) throws ElementException {
         return getObject(key, Long.class);
     }
 
     /**
-     * Get the long value from the value element associated with this key, or a default if the element is not present or the type does not match.
-     *
-     * @param key The key associated with the element.
-     * @param def The default value.
-     * @return The long value of the value element, or the default value.
+     * Get the Long value from the value element at the supplied key.
+     * Returns the supplied default if the Long value element was not found.
      */
     default Long getLong(Key key, long def) {
         return getObject(key, Long.class, def);
     }
 
     /**
-     * Get the string value from the value element associated with this key.
+     * Get the String value from the value element at the supplied key.
      *
-     * @param key The key associated with the element.
-     * @return The string value of the value element.
-     * @throws ElementException If the element was not a value element, or the value was not a string.
+     * @throws ElementException If the String value element was not found
      */
     default String getString(Key key) throws ElementException {
         return getObject(key, String.class);
     }
 
     /**
-     * Get the string value from the value element associated with this key, or a default if the element is not present or the type does not match.
-     *
-     * @param key The key associated with the element.
-     * @param def The default value.
-     * @return The string value of the value element, or the default value.
+     * Get the String value from the value element at the supplied key.
+     * Returns the supplied default if the String value element was not found.
      */
     default String getString(Key key, String def) {
         return getObject(key, String.class, def);

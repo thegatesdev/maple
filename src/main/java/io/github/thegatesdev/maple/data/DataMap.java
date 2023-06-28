@@ -1,8 +1,8 @@
 package io.github.thegatesdev.maple.data;
 
-import io.github.thegatesdev.maple.Maple;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /*
@@ -28,142 +28,87 @@ Copyright (C) 2022  Timar Karels
 public class DataMap extends DataElement implements MappedElements<String> {
 
     private final Map<String, DataElement> elements;
-    private List<DataElement> cachedElementsList;
 
-    private String prevKey;
-    private DataElement prevVal;
-
-    /**
-     * Constructs a new DataMap using the supplied map.
-     * The supplied map must be empty.
-     */
-    public DataMap(Map<String, DataElement> elements) {
-        if (!elements.isEmpty()) throw new IllegalArgumentException("The supplied map must be empty");
+    private DataMap(Map<String, DataElement> elements) {
         this.elements = elements;
     }
 
-    // -- BASIC OPERATIONS
+    public DataMap() {
+        this(new LinkedHashMap<>());
+    }
+
+    public DataMap(int initialCapacity) {
+        this(new LinkedHashMap<>(initialCapacity));
+    }
+
+    // -- OPERATIONS
 
     /**
-     * Associates the key with the element in the map, optionally replacing the old value.
-     * Also see {@link Map#put(Object, Object)}.
+     * Set the element in the map at the supplied key, optionally replacing the previous value.
      *
-     * @param key     The key to associate the element with.
-     * @param element The element to associate the key with.
-     * @return The previous element mapped to this key, or null if it wasn't present.
+     * @return The previous value at this key
      */
     public DataElement set(String key, DataElement element) {
-        requireNotLocked();
-        resetCache();
-
-        checkPrev(key);
-        var old = elements.put(key, element);
-        connectThis(element, key);
-        if (old != null) old.disconnect();
+        var old = elements.put(key, ((DataElement) element).connect(this, key));
+        if (old != null) ((DataElement) old).disconnect();
         return old;
     }
 
     /**
-     * Removes the mapping for this key.
-     * Also see {@link Map#remove(Object)}.
+     * Remove the element at the supplied key.
      *
-     * @param key The key of the mapping to be removed.
-     * @return The previous element mapped to this key, or null if it wasn't present.
+     * @return The removed value
      */
     public DataElement remove(String key) {
-        requireNotLocked();
-        resetCache();
-
-        checkPrev(key);
         var old = elements.remove(key);
-        if (old != null) old.disconnect();
+        if (old != null) ((DataElement) old).disconnect();
         return old;
     }
 
-    @Override
+    /**
+     * Clear the map of all containing elements.
+     *
+     * @return The amount of elements cleared, or the size before it was cleared
+     */
+    public int clear() {
+        int size = size();
+        elements.values().forEach(el -> ((DataElement) el).disconnect());
+        elements.clear();
+        return size;
+    }
+
+    // -- GET
+
+    /**
+     * Get the element at the supplied key, or {@code null} if it does not exist.
+     */
     public DataElement getOrNull(String key) {
-        if (Objects.equals(prevKey, key)) return prevVal;
         return elements.get(key);
     }
 
-    @Override
+    /**
+     * Get the element at the supplied key, or a new DataNull if it does not exist.
+     */
     public DataElement get(String key) {
         var el = getOrNull(key);
-        if (el == null) return connectThis(new DataNull(), key);
-        return el;
-    }
-
-    private void checkPrev(String key) {
-        if (key.equals(prevKey)) {
-            prevKey = null;
-            prevVal = null;
-        }
+        return el == null ? new DataNull().connect(this, key) : el;
     }
 
     /**
-     * @return The number of mappings in this map.
+     * Get the size of this map, or how many elements it contains
      */
     public int size() {
         return elements.size();
     }
 
-    // -- CACHE
-
-    private void resetCache() {
-        cachedElementsList = null;
-    }
-
-    private List<DataElement> buildValueList() {
-        List<DataElement> values = new ArrayList<>(elements.values());
-        return Collections.unmodifiableList(values);
-    }
-
     /**
-     * @return A list of the values contained in this map, with the same ordering as the map.
+     * Run the supplied consumer for every value in this map.
      */
-    public List<DataElement> valueList() {
-        if (cachedElementsList == null)
-            cachedElementsList = buildValueList();
-        return cachedElementsList;
+    public void eachValue(Consumer<DataElement> elementConsumer) {
+        elements.values().forEach(elementConsumer);
     }
 
-    // -- ELEMENT
-
-    private DataElement connectThis(DataElement element, String key) {
-        return element.connect(this, key);
-    }
-
-    @Override
-    public boolean isMap() {
-        return true;
-    }
-
-    @Override
-    public DataMap asMap() throws UnsupportedOperationException {
-        return this;
-    }
-
-    @Override
-    public void ifMap(Consumer<DataMap> mapConsumer, Runnable elseAction) {
-        mapConsumer.accept(this);
-    }
-
-    @Override
-    public DataMap shallowCopy() {
-        return new DataMap(elements);
-    }
-
-    @Override
-    public DataMap deepCopy() {
-        var copy = new DataMap(Maple.DEFAULT_MAP_IMPL.apply(elements.size()));
-        elements.forEach((s, element) -> copy.set(s, element.deepCopy()));
-        return copy;
-    }
-
-    @Override
-    protected Map<String, DataElement> raw() {
-        return elements;
-    }
+    // -- SELF
 
     @Override
     public Map<String, DataElement> view() {
@@ -173,6 +118,13 @@ public class DataMap extends DataElement implements MappedElements<String> {
     @Override
     public boolean isEmpty() {
         return elements.isEmpty();
+    }
+
+    @Override
+    public DataElement copy() {
+        var copy = new DataMap(elements.size());
+        elements.forEach((s, element) -> copy.set(s, element.copy()));
+        return copy;
     }
 
     @Override
@@ -191,4 +143,16 @@ public class DataMap extends DataElement implements MappedElements<String> {
         return stringBuilder.toString();
     }
 
+    /**
+     * @return {@code true}
+     */
+    @Override
+    public boolean isMap() {
+        return true;
+    }
+
+    @Override
+    public DataMap asMap() throws UnsupportedOperationException {
+        return this;
+    }
 }
