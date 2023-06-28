@@ -1,5 +1,7 @@
 package io.github.thegatesdev.maple.data;
 
+import io.github.thegatesdev.maple.Maple;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -52,6 +54,15 @@ public class DataMap extends DataElement implements MappedElements<String> {
         var old = elements.put(key, ((DataElement) element).connect(this, key));
         if (old != null) ((DataElement) old).disconnect();
         return old;
+    }
+
+    /**
+     * Set the element read from the supplied input in the map at the supplied key, optionally replacing the previous value.
+     *
+     * @return The previous value at this key
+     */
+    public DataElement set(String key, Object input) {
+        return set(key, Maple.read(input));
     }
 
     /**

@@ -1,5 +1,7 @@
 package io.github.thegatesdev.maple.data;
 
+import io.github.thegatesdev.maple.Maple;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,11 +57,29 @@ public class DataList extends DataElement implements MappedElements<Integer> {
     }
 
     /**
+     * Replace the element read from the supplied input at the supplied index with the supplied element.
+     *
+     * @return The previous element at this index
+     */
+    public DataElement set(int index, Object input) {
+        var old = elements.set(index, connectThis(Maple.read(input), index));
+        if (old != null) old.disconnect();
+        return old;
+    }
+
+    /**
      * Add the supplied element to the end of the list.
      */
     public void add(DataElement element) {
         connectThis(element, size() + 1);
         elements.add(element);
+    }
+
+    /**
+     * Add the element read from the supplied input to the end of the list.
+     */
+    public void add(Object input) {
+        elements.add(connectThis(Maple.read(input), size() + 1));
     }
 
     /**
