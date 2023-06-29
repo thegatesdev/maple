@@ -7,6 +7,8 @@ import io.github.thegatesdev.maple.read.ReadableOptions;
 import io.github.thegatesdev.maple.registry.struct.Identifiable;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -42,7 +44,7 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Iden
     default Readable<DataList> list() {
         return Readable.list(this);
     }
-    
+
     // -- INFO
 
     default DataType<E> info(Consumer<Info> consumer) {
@@ -53,9 +55,19 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Iden
     Info info();
 
     class Info {
+        private static final Map<String, Info> mapped = new HashMap<>();
+
+        public static Info of(String dataTypeId) {
+            return mapped.get(dataTypeId);
+        }
+
         private String description, stringRep, origin;
         private String[] possibleValues;
         private ReadableOptions readableOptions;
+
+        public Info(String dataTypeId) {
+            mapped.putIfAbsent(dataTypeId, this);
+        }
 
         public Info description(final String description) {
             this.description = description;
