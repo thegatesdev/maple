@@ -44,8 +44,8 @@ public class Readable<E extends DataElement> implements DataType<E> {
         this.readFunction = readFunction;
     }
 
-    private Readable(Class<?> valueClass, Function<DataElement, E> readFunction) {
-        this(valueClass.getSimpleName().toLowerCase(), readFunction);
+    private static String name(Class<?> anyClass) {
+        return anyClass.getSimpleName().toLowerCase();
     }
 
     // -- CREATE
@@ -73,14 +73,14 @@ public class Readable<E extends DataElement> implements DataType<E> {
 
 
     private static <P> Readable<DataValue<P>> createPrimitive(Class<P> primitiveClass) {
-        return new Readable<>(primitiveClass, el ->
-                ((DataValue<?>) el.requireOf(DataValue.class)).requireType(primitiveClass));
+        return value(name(primitiveClass), value -> value.requireType(primitiveClass));
     }
 
     @SuppressWarnings("unchecked")
-    public static <P> Readable<DataValue<P>> primitive(Class<P> primitiveClass) {
+    private static <P> Readable<DataValue<P>> primitive(Class<P> primitiveClass) {
         return ((Readable<DataValue<P>>) CACHE_PRIMITIVE_TYPES.computeIfAbsent(primitiveClass, Readable::createPrimitive));
     }
+
 
     public static Readable<DataValue<String>> string() {
         return primitive(String.class);
@@ -110,6 +110,19 @@ public class Readable<E extends DataElement> implements DataType<E> {
     @SuppressWarnings("unchecked")
     public static Readable<DataList> list(DataType<?> original) {
         return (Readable<DataList>) CACHE_LIST_TYPES.computeIfAbsent(original, Readable::createList);
+    }
+
+
+    public static <F extends Enum<F>> Readable<DataValue<F>> createEnum(Class<F> enumClass) {
+        return value(name(enumClass), value -> value
+                .requireType(String.class)
+                .then(enumClass, s -> Enum.valueOf(enumClass, s))
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <F extends Enum<F>> Readable<DataValue<F>> enumeration(Class<F> enumClass) {
+        return (Readable<DataValue<F>>) CACHE_PRIMITIVE_TYPES.computeIfAbsent(enumClass, aClass -> createEnum(enumClass));
     }
 
     // -- ACTIONS
