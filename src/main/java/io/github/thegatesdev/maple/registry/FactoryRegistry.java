@@ -43,7 +43,7 @@ public abstract class FactoryRegistry<Data, Fac extends Factory<? extends Data> 
 
     @Override
     public Info info() {
-        if (info == null) info = new Info();
+        if (info == null) info = new Info(id);
         return info;
     }
 }
