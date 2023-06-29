@@ -76,6 +76,10 @@ public interface MappedElements<Key> {
         return getElement(key, DataValue.class, def);
     }
 
+    default <T> DataValue<T> getValueOf(Key key, Class<T> valueType) {
+        return getValue(key).requireType(valueType);
+    }
+
     /**
      * Run the supplied action on the value element at the supplied key, or the elseAction if no value element is found.
      */
