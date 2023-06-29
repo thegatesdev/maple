@@ -236,6 +236,23 @@ public interface MappedElements<Key> {
     }
 
     /**
+     * Get the Number value from the value element at the supplied key.
+     *
+     * @throws ElementException If the Number value element was not found
+     */
+    default Number getNumber(Key key) throws ElementException {
+        return getObject(key, Number.class);
+    }
+
+    /**
+     * Get the Number value from the value element at the supplied key.
+     * Returns the supplied default if the Number value element was not found.
+     */
+    default Number getNumber(Key key, Number def) {
+        return getObject(key, Number.class, def);
+    }
+
+    /**
      * Get the Integer value from the value element at the supplied key.
      *
      * @throws ElementException If the Integer value element was not found
