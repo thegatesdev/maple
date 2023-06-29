@@ -10,6 +10,7 @@ import io.github.thegatesdev.maple.read.struct.DataTypeHolder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /*
@@ -71,7 +72,11 @@ public class ReadableOptions {
     }
 
     public <E extends DataElement> ReadableOptions add(String key, DataTypeHolder<E> holder, E def) {
-        return add(new OptionEntry<>(key, holder.dataType(), def));
+        return add(new OptionEntry<>(key, holder.dataType(), Objects.requireNonNull(def)));
+    }
+
+    public <E extends DataElement> ReadableOptions addOptional(String key, DataTypeHolder<E> holder) {
+        return add(new OptionEntry<>(key, holder.dataType(), null));
     }
 
     @SuppressWarnings("unchecked")
