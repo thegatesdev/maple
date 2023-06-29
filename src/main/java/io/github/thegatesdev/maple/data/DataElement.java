@@ -259,7 +259,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      *
      * @param ifAction The action to run
      */
-    public void ifMap(Consumer<DataElement> ifAction) {
+    public void ifMap(Consumer<DataMap> ifAction) {
         ifMap(ifAction, null);
     }
 
@@ -269,7 +269,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @param ifAction   The if action.
      * @param elseAction The else action.
      */
-    public void ifMap(Consumer<DataElement> ifAction, Runnable elseAction) {
+    public void ifMap(Consumer<DataMap> ifAction, Runnable elseAction) {
         if (isMap()) ifAction.accept(unsafeCast());
         if (elseAction != null) elseAction.run();
     }
@@ -279,7 +279,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      *
      * @param ifAction The action to run
      */
-    public void ifList(Consumer<DataElement> ifAction) {
+    public void ifList(Consumer<DataList> ifAction) {
         ifList(ifAction, null);
     }
 
@@ -289,7 +289,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @param ifAction   The if action.
      * @param elseAction The else action.
      */
-    public void ifList(Consumer<DataElement> ifAction, Runnable elseAction) {
+    public void ifList(Consumer<DataList> ifAction, Runnable elseAction) {
         if (isList()) ifAction.accept(unsafeCast());
         if (elseAction != null) elseAction.run();
     }
@@ -299,7 +299,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      *
      * @param ifAction The action to run
      */
-    public void ifValue(Consumer<DataElement> ifAction) {
+    public void ifValue(Consumer<DataValue<?>> ifAction) {
         ifValue(ifAction, null);
     }
 
@@ -309,7 +309,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      * @param ifAction   The if action.
      * @param elseAction The else action.
      */
-    public void ifValue(Consumer<DataElement> ifAction, Runnable elseAction) {
+    public void ifValue(Consumer<DataValue<?>> ifAction, Runnable elseAction) {
         if (isValue()) ifAction.accept(unsafeCast());
         if (elseAction != null) elseAction.run();
     }
