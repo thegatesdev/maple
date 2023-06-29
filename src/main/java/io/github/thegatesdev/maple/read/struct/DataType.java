@@ -6,10 +6,7 @@ import io.github.thegatesdev.maple.read.Readable;
 import io.github.thegatesdev.maple.read.ReadableOptions;
 import io.github.thegatesdev.maple.registry.struct.Identifiable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 /*
@@ -59,6 +56,10 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Iden
 
         public static Info of(String dataTypeId) {
             return mapped.get(dataTypeId);
+        }
+
+        public static Set<String> keys() {
+            return mapped.keySet();
         }
 
         private String description, stringRep, origin;
