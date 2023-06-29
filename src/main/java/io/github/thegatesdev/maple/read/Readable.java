@@ -153,6 +153,7 @@ public class Readable<E extends DataElement> implements DataType<E> {
 
     @Override
     public Info info() {
+        if (info == null) info = new Info(identifier);
         return info;
     }
 
