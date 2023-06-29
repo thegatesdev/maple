@@ -113,10 +113,14 @@ public class ReadableOptions {
         return builder;
     }
 
+    public List<OptionEntry<?>> entries() {
+        return entries;
+    }
+
     // -- CLASS
 
-    private record OptionEntry<E extends DataElement>(String key, DataType<E> dataType, E defaultValue,
-                                                      boolean hasDefault) implements DataTypeHolder<E> {
+    public record OptionEntry<E extends DataElement>(String key, DataType<E> dataType, E defaultValue,
+                                                     boolean hasDefault) implements DataTypeHolder<E> {
         public OptionEntry(String key, DataType<E> dataType, E defaultValue) {
             this(key, dataType, defaultValue, true);
         }
