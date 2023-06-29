@@ -61,6 +61,11 @@ public abstract class DataValue<Value> extends DataElement {
         public int hashCode() {
             return 31 * value.hashCode();
         }
+
+        @Override
+        public String toString() {
+            return "value<" + value + ">";
+        }
     }
 
     private static class Dynamic<Value> extends DataValue<Value> {
@@ -95,6 +100,11 @@ public abstract class DataValue<Value> extends DataElement {
         @Override
         public int hashCode() {
             return Objects.hash(valueSupplier, valueType);
+        }
+
+        @Override
+        public String toString() {
+            return "value<dynamic " + valueType.getSimpleName() + ">";
         }
     }
 
