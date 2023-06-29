@@ -9,7 +9,6 @@ import io.github.thegatesdev.maple.read.struct.DataTypeHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -82,21 +81,6 @@ public class ReadableOptions {
     @SuppressWarnings("unchecked")
     public <T, E extends DataValue<T>> ReadableOptions add(String key, DataTypeHolder<E> holder, T def) {
         return add(key, ((DataTypeHolder<DataValue<T>>) holder), DataValue.of(def));
-    }
-
-    public <E extends DataElement> ReadableOptions add(DataTypeHolder<E> holder, Map<String, E> def) {
-        def.forEach((s, t) -> this.add(s, holder, t));
-        return this;
-    }
-
-    public <E extends DataElement> ReadableOptions add(List<String> values, DataTypeHolder<E> holder, E def) {
-        values.forEach(s -> add(s, holder, def));
-        return this;
-    }
-
-    public ReadableOptions add(List<String> values, DataTypeHolder<?> holder) {
-        values.forEach(s -> this.add(s, holder));
-        return this;
     }
 
     protected ReadableOptions add(OptionEntry<?> entry) {
