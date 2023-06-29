@@ -3,6 +3,7 @@ package io.github.thegatesdev.maple.data;
 import io.github.thegatesdev.maple.exception.ElementException;
 
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /*
@@ -42,6 +43,11 @@ public abstract class DataValue<Value> extends DataElement {
         }
 
         @Override
+        public <T> DataValue<T> then(Class<T> newType, Function<Value, T> modify) {
+            return new Static<>(modify.apply(value));
+        }
+
+        @Override
         public Class<Value> valueType() {
             return valueType;
         }
@@ -72,6 +78,11 @@ public abstract class DataValue<Value> extends DataElement {
         }
 
         @Override
+        public <T> DataValue<T> then(Class<T> newType, Function<Value, T> modify) {
+            return new Dynamic<>(newType, () -> modify.apply(valueSupplier.get()));
+        }
+
+        @Override
         public Class<Value> valueType() {
             return valueType;
         }
@@ -94,6 +105,10 @@ public abstract class DataValue<Value> extends DataElement {
     public static <T> DataValue<T> of(Class<T> valueType, Supplier<T> valueSupplier) {
         return new Dynamic<>(valueType, valueSupplier);
     }
+
+    // -- UTIL
+
+    public abstract <T> DataValue<T> then(Class<T> newType, Function<Value, T> modify);
 
     // -- TYPE
 
@@ -167,7 +182,6 @@ public abstract class DataValue<Value> extends DataElement {
     }
 
     // -- SELF
-
 
     @Override
     public abstract DataValue<Value> copy();
