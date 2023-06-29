@@ -94,6 +94,10 @@ public class Readable<E extends DataElement> implements DataType<E> {
         return primitive(Number.class);
     }
 
+    public static Readable<DataValue<Boolean>> bool() {
+        return primitive(Boolean.class);
+    }
+
 
     private static Readable<DataList> createList(DataType<?> original) {
         return list(original.friendlyId() + "_list", list -> {
