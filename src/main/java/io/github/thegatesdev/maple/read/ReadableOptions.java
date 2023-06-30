@@ -44,7 +44,7 @@ public class ReadableOptions {
                 for (OptionEntry<?> entry : entries) {
                     final DataElement read = readEntry(entry, data.getOrNull(entry.key));
                     if (read == null) throw ElementException.requireField(data, entry.key);
-                    output.set(entry.key, read);
+                    output.set(entry.key, read.copy());
                 }
             }
             // afterFunctions allow for some calculations ( e.g. generate a predicate for multiple conditions )
