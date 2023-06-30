@@ -151,6 +151,36 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         for (int i = 0; i < elements.size(); i++) elementConsumer.accept(elements.get(i));
     }
 
+    /**
+     * Run the supplied consumer for every value element in this list.
+     */
+    public void eachValue(Consumer<DataValue<?>> valueConsumer) {
+        each(element -> element.ifValue(valueConsumer));
+    }
+
+    /**
+     * Run the supplied consumer for every map element in this list.
+     */
+    public void eachMap(Consumer<DataMap> mapConsumer) {
+        each(element -> element.ifMap(mapConsumer));
+    }
+
+    /**
+     * Run the supplied consumer for every list element in this list.
+     */
+    public void eachList(Consumer<DataList> listConsumer) {
+        each(element -> element.ifList(listConsumer));
+    }
+
+    /**
+     * Run the supplied consumer for every value element with a value of type T in this list.
+     */
+    public <T> void eachValueOf(Class<T> valueType, Consumer<T> valueConsumer) {
+        eachValue(value -> {
+            if (value.valueOf(valueType)) valueConsumer.accept(value.valueUnsafe());
+        });
+    }
+
     // -- SELF
 
     @Override
