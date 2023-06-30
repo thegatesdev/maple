@@ -37,11 +37,12 @@ public class Readable<E extends DataElement> implements DataType<E> {
     private final Function<DataElement, E> readFunction;
     private final String identifier;
 
-    private Info info;
+    private final Info info;
 
     private Readable(String identifier, Function<DataElement, E> readFunction) {
         this.identifier = identifier;
         this.readFunction = readFunction;
+        this.info = new Info(identifier);
     }
 
     private static String name(Class<?> anyClass) {
@@ -153,7 +154,6 @@ public class Readable<E extends DataElement> implements DataType<E> {
 
     @Override
     public Info info() {
-        if (info == null) info = new Info(identifier);
         return info;
     }
 
