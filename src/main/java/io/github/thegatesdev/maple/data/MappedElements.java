@@ -208,7 +208,7 @@ public interface MappedElements<Key> {
      */
     default MappedElements<Key> ifList(Key key, Consumer<DataList> action, Runnable elseAction) {
         final DataElement el = getOrNull(key);
-        if (el != null && el.isMap()) action.accept(el.asList());
+        if (el != null && el.isList()) action.accept(el.asList());
         else if (elseAction != null) elseAction.run();
         return this;
     }
