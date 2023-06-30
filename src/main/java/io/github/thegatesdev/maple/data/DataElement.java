@@ -271,7 +271,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      */
     public void ifMap(Consumer<DataMap> ifAction, Runnable elseAction) {
         if (isMap()) ifAction.accept(unsafeCast());
-        if (elseAction != null) elseAction.run();
+        else if (elseAction != null) elseAction.run();
     }
 
     /**
@@ -291,7 +291,7 @@ public abstract class DataElement implements Comparable<DataElement> {
      */
     public void ifList(Consumer<DataList> ifAction, Runnable elseAction) {
         if (isList()) ifAction.accept(unsafeCast());
-        if (elseAction != null) elseAction.run();
+        else if (elseAction != null) elseAction.run();
     }
 
     /**
@@ -311,6 +311,6 @@ public abstract class DataElement implements Comparable<DataElement> {
      */
     public void ifValue(Consumer<DataValue<?>> ifAction, Runnable elseAction) {
         if (isValue()) ifAction.accept(unsafeCast());
-        if (elseAction != null) elseAction.run();
+        else if (elseAction != null) elseAction.run();
     }
 }
