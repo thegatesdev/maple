@@ -194,6 +194,13 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         return out;
     }
 
+    /**
+     * Get a list of values gotten from every value element in this list unsafely cast to T.
+     */
+    public <T> List<T> valueListUnsafe() {
+        return valueList((Function<DataValue<?>, T>) DataValue::valueUnsafe);
+    }
+
     // -- SELF
 
     @Override
