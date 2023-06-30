@@ -177,7 +177,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         stringBuilder.append("dataList[");
         for (int i = 0, elementsSize = elements.size(); i < elementsSize; i++) {
             stringBuilder.append(elements.get(i).toString());
-            if (i == elementsSize - 1) stringBuilder.append(", ");
+            if (i != elementsSize - 1) stringBuilder.append(", ");
         }
         stringBuilder.append("]");
         return stringBuilder.toString();

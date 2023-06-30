@@ -146,8 +146,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
         int len = elements.size();
         for (Map.Entry<String, DataElement> entry : elements.entrySet()) {
             stringBuilder
-                    .append("'").append(entry.getKey()).append("'")
-                    .append(": ").append(entry.getValue());
+                    .append(entry.getKey()).append(": ").append(entry.getValue());
             if (--len > 0) stringBuilder.append(", ");
         }
         stringBuilder.append("}");
