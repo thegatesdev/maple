@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -179,6 +180,18 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         eachValue(value -> {
             if (value.valueOf(valueType)) valueConsumer.accept(value.valueUnsafe());
         });
+    }
+
+    /**
+     * Get a list of values gotten from every value element in this list using the supplied transformer.
+     */
+    public <T> List<T> valueList(Function<DataValue<?>, T> valueTransformer) {
+        var out = new ArrayList<T>(size());
+        eachValue(value -> {
+            var result = valueTransformer.apply(value);
+            if (result != null) out.add(result);
+        });
+        return out;
     }
 
     // -- SELF
