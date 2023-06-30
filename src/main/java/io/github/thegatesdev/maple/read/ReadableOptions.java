@@ -2,6 +2,7 @@ package io.github.thegatesdev.maple.read;
 
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataMap;
+import io.github.thegatesdev.maple.data.DataNull;
 import io.github.thegatesdev.maple.data.DataValue;
 import io.github.thegatesdev.maple.exception.ElementException;
 import io.github.thegatesdev.maple.read.struct.DataType;
@@ -42,9 +43,11 @@ public class ReadableOptions {
         try {
             if (entries != null) {
                 for (OptionEntry<?> entry : entries) {
-                    final DataElement read = readEntry(entry, data.getOrNull(entry.key));
-                    if (read == null) throw ElementException.requireField(data, entry.key);
-                    output.set(entry.key, read.copy());
+                    var el = data.getOrNull(entry.key);
+                    if (el == null) { // Not present
+                        if (entry.hasDefault) output.set(entry.key, Objects.requireNonNullElse(entry.defaultValue, new DataNull())); // Has default value
+                        else throw ElementException.requireField(data, entry.key); // Has no default value, required!
+                    } else output.set(entry.key, entry.dataType.read(el).copy()); // Present
                 }
             }
             // afterFunctions allow for some calculations ( e.g. generate a predicate for multiple conditions )
