@@ -117,7 +117,7 @@ public class Readable<E extends DataElement> implements DataType<E> {
     public static <F extends Enum<F>> Readable<DataValue<F>> createEnum(Class<F> enumClass) {
         return value(name(enumClass), value -> value
                 .requireType(String.class)
-                .then(enumClass, s -> Enum.valueOf(enumClass, s))
+                .then(enumClass, s -> Enum.valueOf(enumClass, s.toUpperCase().replaceAll(" ", "_")))
         );
     }
 
