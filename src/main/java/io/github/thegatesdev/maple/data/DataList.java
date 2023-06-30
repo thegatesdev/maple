@@ -216,7 +216,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
     @Override
     public DataList copy() {
         var copy = new DataList(elements.size());
-        for (int i = 0; i < elements.size(); i++) copy.set(i, get(i).copy());
+        for (int i = 0; i < elements.size(); i++) copy.add(get(i).copy());
         return copy;
     }
 
