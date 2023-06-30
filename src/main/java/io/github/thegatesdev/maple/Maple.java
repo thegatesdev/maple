@@ -67,7 +67,7 @@ public class Maple {
     public static DataList readList(Object... objects) {
         final DataList output = new DataList(objects.length);
         for (int i = 0; i < objects.length; i++)
-            output.set(i, Maple.read(objects[i]));
+            output.add(Maple.read(objects[i]));
         return output;
     }
 
@@ -80,7 +80,7 @@ public class Maple {
     public static DataList readList(List<?> list) {
         final DataList output = new DataList(list.size());
         for (int i = 0; i < list.size(); i++)
-            output.set(i, Maple.read(list.get(i)));
+            output.add(Maple.read(list.get(i)));
         return output;
     }
 
@@ -91,7 +91,7 @@ public class Maple {
      * @return A new DataList containing the values of the input iterable read using {@link Maple#read(Object)}
      */
     public static DataList readList(Iterable<?> iterable) {
-        final DataList output = new DataList(2);
+        final DataList output = new DataList();
         for (Object o : iterable) output.add(read(o));
         return output;
     }
