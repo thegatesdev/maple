@@ -26,15 +26,18 @@ import java.util.function.Consumer;
  * The base class for any data element.
  * A data element is an element in a data structure.
  */
-public abstract class DataElement implements Comparable<DataElement> {
+public abstract class DataElement implements Comparable<DataElement>, Keyed {
 
     private DataElement parent;
     private String key;
 
     protected DataElement connect(DataElement newParent, String newKey) {
         if (parent != null) throw new RuntimeException("Parent already set");
-        parent = Objects.requireNonNull(newParent, "Parent cannot be null");
-        key = Objects.requireNonNull(newKey, "Name cannot be null");
+        if (newParent == null) key = newKey;
+        else {
+            key = Objects.requireNonNull(newKey, "Name cannot be null");
+            parent = newParent;
+        }
         return this;
     }
 
@@ -42,6 +45,10 @@ public abstract class DataElement implements Comparable<DataElement> {
         parent = null;
         key = null;
         return this;
+    }
+
+    public void rootKey(String newKey) {
+        connect(null, key);
     }
 
 
@@ -76,6 +83,7 @@ public abstract class DataElement implements Comparable<DataElement> {
     /**
      * @return The key of this element. Can be {@code null}
      */
+    @Override
     public String key() {
         return key;
     }
@@ -83,9 +91,10 @@ public abstract class DataElement implements Comparable<DataElement> {
     /**
      * @return The friendly name for this element. Will never be null
      */
+    @Override
     public String friendlyKey() {
         var key = key();
-        return key == null ? "root" : key;
+        return key == null ? (parent == null ? "root" : "invalid") : key;
     }
 
     /**

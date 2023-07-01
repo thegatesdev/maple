@@ -2,9 +2,9 @@ package io.github.thegatesdev.maple.read.struct;
 
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataList;
+import io.github.thegatesdev.maple.data.Keyed;
 import io.github.thegatesdev.maple.read.Readable;
 import io.github.thegatesdev.maple.read.ReadableOptions;
-import io.github.thegatesdev.maple.registry.struct.Identifiable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -26,10 +26,10 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Identifiable {
+public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Keyed {
 
     /**
-     * Returns an element representing the Value gotten from the specified element.
+     * Returns an element holding the value read from the specified element.
      */
     E read(DataElement element);
 

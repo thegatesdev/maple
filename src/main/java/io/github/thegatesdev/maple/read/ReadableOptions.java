@@ -108,7 +108,7 @@ public class ReadableOptions {
     }
 
     private static StringBuilder displayEntry(OptionEntry<?> entry) {
-        final StringBuilder builder = new StringBuilder("A " + entry.dataType().id() + "; ");
+        final StringBuilder builder = new StringBuilder("A " + entry.dataType().key() + "; ");
         if (entry.hasDefault) {
             if (entry.defaultValue == null) builder.append("optional");
             else builder.append("default value: ").append(entry.defaultValue);

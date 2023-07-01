@@ -1,6 +1,4 @@
-package io.github.thegatesdev.maple.registry.struct;
-
-import io.github.thegatesdev.maple.data.DataMap;
+package io.github.thegatesdev.maple.data;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -19,8 +17,11 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-@FunctionalInterface
-public interface Factory<G> {
+public interface Keyed {
+    String key();
 
-    G build(DataMap data);
+    default String friendlyKey() {
+        final String key = key();
+        return key == null ? "unknown" : key;
+    }
 }

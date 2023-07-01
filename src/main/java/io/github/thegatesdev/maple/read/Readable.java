@@ -101,7 +101,7 @@ public class Readable<E extends DataElement> implements DataType<E> {
 
 
     private static Readable<DataList> createList(DataType<?> original) {
-        return list(original.friendlyId() + "_list", list -> {
+        return list(original.friendlyKey() + "_list", list -> {
             var out = new DataList(list.size());
             list.each(element -> out.add(original.read(element)));
             return out;
@@ -135,14 +135,14 @@ public class Readable<E extends DataElement> implements DataType<E> {
         } catch (ElementException e) {
             throw e;
         } catch (Throwable throwable) {
-            throw new ElementException(element, "error happened while reading dataType " + friendlyId(), throwable);
+            throw new ElementException(element, "error happened while reading dataType " + friendlyKey(), throwable);
         }
     }
 
     // -- GET / SET
 
     @Override
-    public String id() {
+    public String key() {
         return identifier;
     }
 
