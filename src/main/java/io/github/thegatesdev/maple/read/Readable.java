@@ -5,6 +5,7 @@ import io.github.thegatesdev.maple.data.DataList;
 import io.github.thegatesdev.maple.data.DataMap;
 import io.github.thegatesdev.maple.data.DataValue;
 import io.github.thegatesdev.maple.exception.ElementException;
+import io.github.thegatesdev.maple.read.struct.AbstractDataType;
 import io.github.thegatesdev.maple.read.struct.DataType;
 
 import java.util.HashMap;
@@ -30,19 +31,15 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public class Readable<E extends DataElement> implements DataType<E> {
+public class Readable<E extends DataElement> extends AbstractDataType<E> {
     private static final Map<Class<?>, Readable<?>> CACHE_PRIMITIVE_TYPES = new HashMap<>();
     private static final Map<DataType<?>, Readable<?>> CACHE_LIST_TYPES = new HashMap<>();
 
     private final Function<DataElement, E> readFunction;
-    private final String identifier;
 
-    private final Info info;
-
-    private Readable(String identifier, Function<DataElement, E> readFunction) {
-        this.identifier = identifier;
+    private Readable(String key, Function<DataElement, E> readFunction) {
+        super(key);
         this.readFunction = readFunction;
-        this.info = new Info(identifier);
     }
 
     private static String name(Class<?> anyClass) {
@@ -61,7 +58,7 @@ public class Readable<E extends DataElement> implements DataType<E> {
 
     public static <E extends DataElement> Readable<E> map(String identifier, Function<DataMap, E> readFunction, ReadableOptions options) {
         return new Readable<>(identifier, element -> readFunction.apply(options.read(element.requireOf(DataMap.class))))
-                .info(info -> info.readableOptions(options));
+            .info(info -> info.readableOptions(options));
     }
 
     public static <E extends DataElement> Readable<E> list(String identifier, Function<DataList, E> readFunction) {
@@ -116,8 +113,8 @@ public class Readable<E extends DataElement> implements DataType<E> {
 
     public static <F extends Enum<F>> Readable<DataValue<F>> createEnum(Class<F> enumClass) {
         return value(name(enumClass), value -> value
-                .requireType(String.class)
-                .then(enumClass, s -> Enum.valueOf(enumClass, s.toUpperCase().replaceAll(" ", "_")))
+            .requireType(String.class)
+            .then(enumClass, s -> Enum.valueOf(enumClass, s.toUpperCase().replaceAll(" ", "_")))
         );
     }
 
@@ -142,25 +139,15 @@ public class Readable<E extends DataElement> implements DataType<E> {
     // -- GET / SET
 
     @Override
-    public String key() {
-        return identifier;
-    }
-
-    @Override
     public Readable<E> info(Consumer<Info> consumer) {
-        DataType.super.info(consumer);
+        consumer.accept(info());
         return this;
-    }
-
-    @Override
-    public Info info() {
-        return info;
     }
 
     // -- META
 
     @Override
     public int hashCode() {
-        return Objects.hash(readFunction, identifier, info);
+        return Objects.hash(readFunction, key, info);
     }
 }
