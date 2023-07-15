@@ -2,108 +2,169 @@
 
 A clean type safe configuration structure.
 
-## About
+For *v3.0.0*
 
-I personally created Maple for a couple of my Minecraft plugins as a replacement for the Spigot Configuration API.
-The API is a bit clunky and doesn't have the features I need to read big amounts of complex configuration data, so I
-decided it would be fun to try to create my own.
+- [Usage](#usage)
+  - [Creating elements](#creating-elements)
+  - [Reading elements](#reading-elements)
+  - [Checking elements](#checking-elements)
+  - [Getting from elements](#getting-from-elements)
+  - [The element itself](#the-element-itself)
 
 ## Usage
 
-- [Elements](#elements)
-    - [DataElement](#elements)
-    - [The Maple class](#maple-class)
-    - [DataValue](#datavalue)
-    - [DataMap](#datamap)
-    - [DataList](#datalist)
+### Creating elements
 
-### Elements
+*How to make the stuffs*
 
-#### DataElement
+Creation is mostly done through a basic constructor.
+DataValue is an exception because it is abstract.
 
-The base class for any element in Maple is `DataElement`.
-It stores its position in the structure, allowing you to get the root element, the path to this element and more.
-It also has useful methods for checking its type, cloning and getting its value.
+```java
+// Map element
+var map = new DataMap();
+map = new DataMap(6); // With initial capacity
 
-#### Maple class
+// List element
+var list = new DataList();
+list = new DataList(9); // With initial capacity
 
-The `Maple` class is used to create all types of elements.
-In addition, it provides methods to 'read' elements from a plain object, Map, array etc;
+// Value element
+var value = DataValue.of("hello world"); // String type
+value = DataValue.of(3) // Integer type etc.
 
+// Dynamic value element
+Random random = new Random();
+var dynValue = DataValue.of(Integer.class, random::nextInt); // Gives a random integer when accessed
+
+// Null element
+var nothing = new DataNull();
 ```
-DataElement element = Maple.read(/* Anything */);
 
-DataList list = Maple.readList("string_one", "string_two", "string_three"); // Varargs list
+### Reading elements
 
-Map<String, List<?>> toBeRead = //...
-DataMap map = Maple.readMap(toBeRead); // Read map
+*How to generate the stuffs*
+
+Reading is done through the Maple class.
+
+```java
+DataElement el = Maple.read(...); // Read anything, see the javadocs
+        
+// Read from array
+list = Maple.readList("a", "b", "c");
+// Read from a Java List
+list = Maple.readList(List.of("a", "b", "c"));
+// Read from any iterable
+list = Maple.readList(Set.of("a", "b", "c")); // For example a set
+
+// Read from a Java Map (ignores non String keys)
+map = Maple.readMap(Map.of("a", 1, "b", 2));
 ```
 
-#### DataValue
+### Checking elements
 
-*A single value*
+*How to know the stuffs*
 
+```java
+// Checking type
+element.isList();
+element.isMap();
+// Using the class        
+element.isOf(DataValue.class)
+        
+element.ifMap(map -> print("this is a map"), () -> print("this is not a map"));
+
+// Checking value element type
+value.valueOf(Integer.class);
 ```
-// Create a static value
-DataValue<String> stringValue = DataValue.of("Test"); // Holds string
-DataValue<Integer> intValue = DataValue.of(2); // Holds integer
 
-// Create a dynamic value
-var random = new Random();
-DataValue<Integer> randomIntValue = DataValue.of(Integer.class, random::nextInt);
-// This generates a random integer every time the value is gotten
-```
+### Modifying elements
+
+*How to change the stuffs*
 
 #### DataMap
 
-*String key, element value pair structure*
+```java
+// Setting
+map.set("key", DataValue.of("hello world")); // Using an element as input
+map.set("key", "hello world"); // Or using a plain object (uses Maple.read() under the hood)
 
-```
-// Create a map
-DataMap map = new DataMap();
-// With initial capacity
-DataMap map = new DataMap(3);
+// Removing
+var removed = map.remove("key");
+removed.isValue(); // True
 
-// Modifying map
-map.set("some_key", DataValue.of(3));
-map.remove("some_key");
-
-// Getting elements
-DataElement element = map.get("some_key");
-DataElement nullableElement = map.getOrNull("some_other_key");
-
-// Getting values
-Integer intValue = map.getInt("some_key");
-SomeObject obj = map.getUnsafe("some_other_key");
-
-// Iterate values
-map.eachValue(value -> System.out.println(value.key()));
+// Clearing
+map.clear();
 ```
 
 #### DataList
 
-*A list of elements*
+```java
+// Adding
+list.add(DataValue.of("hello world")); // Using an element as input
+list.add("hello world"); // Or using a plain object (uses Maple.read() under the hood)
 
+// Setting
+list.set(0, DataValue.of("hello universe")); // Same story
+list.set(0, "hello universe");
+
+// Removing
+var removed = list.remove(0);
+removed.isValue(); // True
+  
+  // Clearing
+list.clear();
 ```
-// Create a list
-DataList list = new DataList();
-// With initial capacity
-DataList map = new DataList(3);
 
-// Modifying list
-list.add(DataValue.of(3));
-list.set(0, DataValue.of(2));
-list.remove(0);
+### Getting from elements
 
-// Getting elements
-DataElement element = list.get(0);
-DataElement nullableElement = list.getOrNull(1);
+*How to obtain the stuffs*
 
-// Getting values
+Since DataList and DataMap both implement MappedElements,
+they share the easy ways of getting values, be it by String or Integer.
 
-Integer intValue = list.getInt(0);
-SomeObject obj = map.getUnsafe(1);
+```java
+var el = map.getOrNull("key");
+DataValue<?> value = map.getValue("key"); // Throws if not found
+value = map.getValue("key", DataValue.of("hello world")); // Default if not found
+map.ifValue("key", value -> print("valueWasFound"));
+// ... same for other element types (getMap, ifList etc.)
 
-// Iterate values
-list.each(value -> System.out.println(value.key()));
+// Getting the actual Objects
+String s = map.getObject("key", String.class);
+s = map.getObject("key", String.class, "your fault");
+// .. unsafely
+s = map.getUnsafe("key");
+s = map.getUnsafe("key", "de fault");
+// HOLD ON, I spent more time than you thought:
+s = map.getString("key");
+
+// Getting from the dataValue itself
+s = value.valueOr(String.class, "bye world");
+s = value.valueOrThrow(String.class);
+// .. and more!
+
+// Crawling through descendants
+map.crawl(element -> print(element + " is a descendant of this map"));
+// Crawl and replace
+map.crawl(element -> {
+    if (element.isValue()) return DataValue.of("your data has been compromised");
+    else return null; // Null
+});
+
+// Viewing the items manually (the returned views are unmodifyable)
+Map<String, DataElement> view = map.view();
+List<DataElement> view = list.view();
 ```
+
+### The element itself
+
+An element, next to its value, also stores its key and parent (`key()`, `parent()`).
+Any element can also be copied (deep copy) using `copy()`.
+The `toString()` method is useful for laying out the structure of the children of the element.
+
+Some other funny methods to check out (or more that I didn't feel like writing more):
+- `isDescendant`
+- `rootKey`
+- `path`
+- `nested`
