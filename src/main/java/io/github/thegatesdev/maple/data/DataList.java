@@ -240,7 +240,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
     public String toString() {
         if (elements.isEmpty()) return "emptyList";
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("dataList[");
+        stringBuilder.append("list[");
         for (int i = 0, elementsSize = elements.size(); i < elementsSize; i++) {
             stringBuilder.append(elements.get(i).toString());
             if (i != elementsSize - 1) stringBuilder.append(", ");
