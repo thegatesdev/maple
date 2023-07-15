@@ -1,5 +1,4 @@
 plugins {
-    `java-library`
     java
     idea
 }
@@ -14,7 +13,7 @@ dependencies {
 }
 
 group = "io.github.thegatesdev"
-version = "2.1.0"
+version = "3.0.0"
 description = "A clean type safe configuration structure."
 java.sourceCompatibility = JavaVersion.VERSION_17
 

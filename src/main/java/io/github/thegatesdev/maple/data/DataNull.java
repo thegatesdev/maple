@@ -1,4 +1,4 @@
-package io.github.thegatesdev.maple;
+package io.github.thegatesdev.maple.data;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -17,26 +17,16 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-/**
- * An element without any value.
- */
-public class DataNull extends DataElement {
-
-    DataNull() {
-    }
-
-    // -- ELEMENT
-
-    @Override
-    protected Object raw() {
-        return null;
-    }
+public final class DataNull extends DataElement {
 
     @Override
     public Object view() {
         return null;
     }
 
+    /**
+     * @return {@code true}
+     */
     @Override
     public boolean isEmpty() {
         return true;
@@ -48,13 +38,8 @@ public class DataNull extends DataElement {
     }
 
     @Override
-    public DataNull shallowCopy() {
+    public DataElement copy() {
         return new DataNull();
-    }
-
-    @Override
-    public DataNull deepCopy() {
-        return shallowCopy();
     }
 
     @Override

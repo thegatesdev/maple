@@ -1,7 +1,5 @@
 package io.github.thegatesdev.maple.exception;
 
-import io.github.thegatesdev.maple.DataElement;
-
 /*
 Copyright (C) 2022  Timar Karels
 
@@ -18,6 +16,9 @@ Copyright (C) 2022  Timar Karels
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+
+import io.github.thegatesdev.maple.data.DataElement;
 
 /**
  * An exception thrown by an element. Used to describe errors to the end user.
