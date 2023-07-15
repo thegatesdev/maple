@@ -63,9 +63,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
      * @return The previous element at this index
      */
     public DataElement set(int index, Object input) {
-        var old = elements.set(index, connectThis(Maple.read(input), index));
-        if (old != null) old.disconnect();
-        return old;
+        return set(index, Maple.read(input));
     }
 
     /**
