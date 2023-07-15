@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /*
 Copyright (C) 2022  Timar Karels
@@ -115,8 +116,26 @@ public class DataMap extends DataElement implements MappedElements<String> {
     /**
      * Run the supplied consumer for every value in this map.
      */
-    public void eachValue(Consumer<DataElement> elementConsumer) {
+    public void each(Consumer<DataElement> elementConsumer) {
         elements.values().forEach(elementConsumer);
+    }
+
+    @Override
+    public void crawl(Consumer<DataElement> consumer) {
+        each(element -> {
+            consumer.accept(element);
+            element.crawl(consumer);
+        });
+    }
+
+    @Override
+    public void crawl(Function<DataElement, DataElement> function) {
+        for (var entry : elements.entrySet()) {
+            var original = entry.getValue();
+            DataElement replacement = function.apply(original);
+            if (replacement != null) entry.setValue(replacement);
+            else original.crawl(function);
+        }
     }
 
     // -- SELF

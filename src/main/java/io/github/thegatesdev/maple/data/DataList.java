@@ -201,6 +201,24 @@ public class DataList extends DataElement implements MappedElements<Integer> {
         return valueList((Function<DataValue<?>, T>) DataValue::valueUnsafe);
     }
 
+    @Override
+    public void crawl(Consumer<DataElement> consumer) {
+        each(element -> {
+            consumer.accept(element);
+            element.crawl(consumer);
+        });
+    }
+
+    @Override
+    public void crawl(Function<DataElement, DataElement> function) {
+        for (int i = 0; i < elements.size(); i++) {
+            var original = elements.get(i);
+            DataElement replacement = function.apply(original);
+            if (replacement != null) set(i, replacement);
+            else original.crawl(function);
+        }
+    }
+
     // -- SELF
 
     @Override

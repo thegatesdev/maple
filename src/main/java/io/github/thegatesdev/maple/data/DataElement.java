@@ -21,6 +21,7 @@ import io.github.thegatesdev.maple.exception.ElementException;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * The base class for any data element.
@@ -143,6 +144,34 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
      */
     public boolean isPresent() {
         return !isEmpty();
+    }
+
+    /**
+     * Run the supplied consumer for every element that is a descendant of this element.
+     * This is a recursive operation.
+     * The consumer is not run if no descendants are present, for example when calling this on a value or null element.
+     */
+    public void crawl(Consumer<DataElement> consumer) {
+    }
+
+    /**
+     * Apply the supplied function for every element that is a descendant of this element,
+     * replacing the original value element if the result of the function is not {@code null}.
+     * This is a recursive operation.
+     * This function is not applied if no descendants are present, for example when calling this on value or null element.
+     */
+    public void crawl(Function<DataElement, DataElement> function) {
+    }
+
+    /**
+     * Apply the supplied function to every value element that is a descendant of this element,
+     * replacing the original value element if the result of the function is not {@code null}.
+     * This is a recursive operation.
+     * The function is not applied if no descendants are present, for example when calling this on a value or null element.
+     */
+    public void crawlValues(Function<DataValue<?>, DataElement> function) {
+        crawl(element ->
+                element.isValue() ? function.apply(element.asValue()) : null);
     }
 
     // -- SELF
