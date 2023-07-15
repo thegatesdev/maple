@@ -10,6 +10,9 @@ For *v3.0.0*
   - [Checking elements](#checking-elements)
   - [Getting from elements](#getting-from-elements)
   - [The element itself](#the-element-itself)
+  - [The 'read' package](#the-read-package)
+- [Why](#why)
+- [Help me](#help-me)
 
 ## Usage
 
@@ -168,3 +171,29 @@ Some other funny methods to check out (or more that I didn't feel like writing m
 - `rootKey`
 - `path`
 - `nested`
+
+### The 'read' package
+
+The classes in the 'read' package are merged to maple from readables.
+The most important ones are DataType, Readable and ReadableOptions.
+
+- A DataType defines a way to 'read' an element to another.
+- A Readable is a DataType implementation using a supplied Function.
+- ReadableOptions allow you to define options for and read those from a map.
+
+I'll add documentation on these parts asap.
+
+## Why
+
+For me, Maple is a replacement / improvement to the SpigotMC Configuration API,
+commonly used in Minecraft plugins. It is quite broken and slow, and does not at all fit my needs.
+
+## Help me
+
+Feel free to contribute to this project by submitting a pull request.
+
+## The bottom
+
+You've reached the bottom of this readme. This means I can freely plug anything I want now.
+
+- *I don't actually have anything to plug*
