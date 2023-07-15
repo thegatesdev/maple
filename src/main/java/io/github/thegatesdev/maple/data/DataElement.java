@@ -48,6 +48,11 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
         return this;
     }
 
+    /**
+     * Sets the key of this element if it is a root element, meaning it has no parent.
+     *
+     * @throws RuntimeException if the element already has a parent
+     */
     public void rootKey(String newKey) {
         connect(null, key);
     }
@@ -101,7 +106,7 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
     /**
      * Gets the path of element keys from the root to this element, with the first element being the name of the root, and the last the name of this element.
      *
-     * @return The path to this element.
+     * @return The path to this element
      */
     public final String[] path() {
         int nested = nested();
@@ -147,9 +152,9 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
     }
 
     /**
-     * Run the supplied consumer for every element that is a descendant of this element.
+     * Accept the supplied consumer for every element that is a descendant of this element.
      * This is a recursive operation.
-     * The consumer is not run if no descendants are present, for example when calling this on a value or null element.
+     * The consumer is not accepted if no descendants are present, for example when calling this on a value or null element.
      */
     public void crawl(Consumer<DataElement> consumer) {
     }
@@ -214,7 +219,7 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
     /**
      * Cast this element to {@code E}, or return {@code null}.
      *
-     * @return The cast element, or {@code null} if it could not be cast.
+     * @return The cast element, or {@code null} if it could not be cast
      */
     public <E extends DataElement> E castOrNull(Class<E> elementClass) {
         return isOf(elementClass) ? unsafeCast() : null;
@@ -264,8 +269,8 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
     /**
      * Get this element as a DataMap, or throw.
      *
-     * @return This element as a DataMap.
-     * @throws UnsupportedOperationException If this element is not a DataMap.
+     * @return This element as a DataMap
+     * @throws UnsupportedOperationException If this element is not a DataMap
      */
     public DataMap asMap() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a DataMap!");
@@ -274,8 +279,8 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
     /**
      * Get this element as a DataList, or throw.
      *
-     * @return This element as a DataList.
-     * @throws UnsupportedOperationException If this element is not a DataList.
+     * @return This element as a DataList
+     * @throws UnsupportedOperationException If this element is not a DataList
      */
     public DataList asList() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a DataList!");
@@ -284,8 +289,8 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
     /**
      * Get this element as a DataValue, or throw.
      *
-     * @return This element as a DataValue.
-     * @throws UnsupportedOperationException If this element is not a DataValue.
+     * @return This element as a DataValue
+     * @throws UnsupportedOperationException If this element is not a DataValue
      */
     public DataValue<?> asValue() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not a DataValue!");
@@ -293,19 +298,14 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
 
 
     /**
-     * Run the ifAction if this element is a DataMap.
-     *
-     * @param ifAction The action to run
+     * Accept the supplied ifAction if this element is a map element.
      */
     public void ifMap(Consumer<DataMap> ifAction) {
         ifMap(ifAction, null);
     }
 
     /**
-     * Run the ifAction if this element is a DataMap, if not run the elseAction.
-     *
-     * @param ifAction   The if action.
-     * @param elseAction The else action.
+     * Accept the supplied ifAction if this element is a map element, if not accept the supplied elseAction.
      */
     public void ifMap(Consumer<DataMap> ifAction, Runnable elseAction) {
         if (isMap()) ifAction.accept(unsafeCast());
@@ -313,19 +313,14 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
     }
 
     /**
-     * Run the ifAction if this element is a DataList.
-     *
-     * @param ifAction The action to run
+     * Accept the supplied ifAction if this element is a list element.
      */
     public void ifList(Consumer<DataList> ifAction) {
         ifList(ifAction, null);
     }
 
     /**
-     * Run the ifAction if this element is a DataList, if not run the elseAction.
-     *
-     * @param ifAction   The if action.
-     * @param elseAction The else action.
+     * Accept the supplied ifAction if this element is a list element, if not accept the supplied elseAction.
      */
     public void ifList(Consumer<DataList> ifAction, Runnable elseAction) {
         if (isList()) ifAction.accept(unsafeCast());
@@ -333,19 +328,14 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
     }
 
     /**
-     * Run the ifAction if this element is a DataValue.
-     *
-     * @param ifAction The action to run
+     * Accept the supplied ifAction if this element is a value element.
      */
     public void ifValue(Consumer<DataValue<?>> ifAction) {
         ifValue(ifAction, null);
     }
 
     /**
-     * Run the ifAction if this element is a DataValue, if not run the elseAction.
-     *
-     * @param ifAction   The if action.
-     * @param elseAction The else action.
+     * Accept the supplied ifAction if this element is a value element, if not accept the supplied elseAction.
      */
     public void ifValue(Consumer<DataValue<?>> ifAction, Runnable elseAction) {
         if (isValue()) ifAction.accept(unsafeCast());

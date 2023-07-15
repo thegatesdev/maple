@@ -227,112 +227,112 @@ public abstract class DataValue<Value> extends DataElement {
     // -- GETTERS
 
     /**
-     * @return The boolean value contained in this element.
-     * @throws ElementException If this element does not contain a boolean value.
+     * @return The boolean value contained in this element
+     * @throws ElementException If this element does not contain a boolean value
      */
     public Boolean booleanValue() throws ElementException {
         return valueOrThrow(Boolean.class);
     }
 
     /**
-     * @param def The value to return if this element does not contain a boolean value.
-     * @return The boolean value contained in this element.
+     * @param def The value to return if this element does not contain a boolean value
+     * @return The boolean value contained in this element
      */
     public Boolean booleanValue(boolean def) {
         return valueOr(Boolean.class, def);
     }
 
     /**
-     * @return The integer value contained in this element.
-     * @throws ElementException If this element does not contain a integer value.
+     * @return The integer value contained in this element
+     * @throws ElementException If this element does not contain a integer value
      */
     public Integer intValue() throws ElementException {
         return valueOrThrow(Integer.class);
     }
 
     /**
-     * @param def The value to return if this element does not contain an integer value.
-     * @return The integer value contained in this element.
+     * @param def The value to return if this element does not contain an integer value
+     * @return The integer value contained in this element
      */
     public Integer intValue(int def) {
         return valueOr(Integer.class, def);
     }
 
     /**
-     * @return The number value contained in this element.
-     * @throws ElementException If this element does not contain a number value.
+     * @return The number value contained in this element
+     * @throws ElementException If this element does not contain a number value
      */
     public Number numberValue() throws ElementException {
         return valueOrThrow(Number.class);
     }
 
     /**
-     * @param def The value to return if this element does not contain a number value.
-     * @return The number value contained in this element.
+     * @param def The value to return if this element does not contain a number value
+     * @return The number value contained in this element
      */
     public Number numberValue(int def) {
         return valueOr(Number.class, def);
     }
 
     /**
-     * @return The double value contained in this element.
-     * @throws ElementException If this element does not contain a number value.
+     * @return The double value contained in this element
+     * @throws ElementException If this element does not contain a number value
      */
     public Double doubleValue() throws ElementException {
         return valueOrThrow(Number.class).doubleValue();
     }
 
     /**
-     * @param def The value to return if this element does not contain a number value.
-     * @return The double value contained in this element.
+     * @param def The value to return if this element does not contain a number value
+     * @return The double value contained in this element
      */
     public Double doubleValue(double def) {
         return valueOr(Number.class, def).doubleValue();
     }
 
     /**
-     * @return The float value contained in this element.
-     * @throws ElementException If this element does not contain a number value.
+     * @return The float value contained in this element
+     * @throws ElementException If this element does not contain a number value
      */
     public Float floatValue() throws ElementException {
         return valueOrThrow(Number.class).floatValue();
     }
 
     /**
-     * @param def The value to return if this element does not contain a number value.
-     * @return The float value contained in this element.
+     * @param def The value to return if this element does not contain a number value
+     * @return The float value contained in this element
      */
     public Float floatValue(double def) {
         return valueOr(Number.class, def).floatValue();
     }
 
     /**
-     * @return The long value contained in this element.
-     * @throws ElementException If this element does not contain a number value.
+     * @return The long value contained in this element
+     * @throws ElementException If this element does not contain a number value
      */
     public Long longValue() throws ElementException {
         return valueOrThrow(Number.class).longValue();
     }
 
     /**
-     * @param def The value to return if this element does not contain a number value.
-     * @return The long value contained in this element.
+     * @param def The value to return if this element does not contain a number value
+     * @return The long value contained in this element
      */
     public Long longValue(double def) {
         return valueOr(Number.class, def).longValue();
     }
 
     /**
-     * @return The string value contained in this element.
-     * @throws ElementException If this element does not contain a string value.
+     * @return The string value contained in this element
+     * @throws ElementException If this element does not contain a string value
      */
     public String stringValue() throws ElementException {
         return valueOrThrow(String.class);
     }
 
     /**
-     * @param def The value to return if this element does not contain a string value.
-     * @return The string value contained in this element.
+     * @param def The value to return if this element does not contain a string value
+     * @return The string value contained in this element
      */
     public String stringValue(String def) {
         return valueOr(String.class, def);
