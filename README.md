@@ -2,7 +2,7 @@
 
 A clean type safe configuration structure.
 
-For *v3.0.0*
+For *3.0.0-alpha*.
 
 - [Usage](#usage)
   - [Creating elements](#creating-elements)
@@ -12,7 +12,7 @@ For *v3.0.0*
   - [The element itself](#the-element-itself)
   - [The 'read' package](#the-read-package)
 - [Why](#why)
-- [Help me](#help-me)
+- [Contribute](#contribute)
 
 ## Usage
 
@@ -174,7 +174,7 @@ Some other funny methods to check out (or more that I didn't feel like writing m
 
 ### The 'read' package
 
-The classes in the 'read' package are merged to maple from readables.
+The classes in the 'read' package are merged to Maple from MapleTree.
 The most important ones are DataType, Readable and ReadableOptions.
 
 - A DataType defines a way to 'read' an element to another.
@@ -188,12 +188,10 @@ I'll add documentation on these parts asap.
 For me, Maple is a replacement / improvement to the SpigotMC Configuration API,
 commonly used in Minecraft plugins. It is quite broken and slow, and does not at all fit my needs.
 
-## Help me
+## Contribute
 
-Feel free to contribute to this project by submitting a pull request.
+Please submit a pull request if you feel like it!
 
 ## The bottom
 
-You've reached the bottom of this readme. This means I can freely plug anything I want now.
-
-- *I don't actually have anything to plug*
+Congrats, you've reached the bottom of this tiny documentation. Go buy a flower for someone.
