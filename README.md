@@ -16,6 +16,9 @@ For *3.0.0-alpha*.
 
 ## Usage
 
+Since Maple is public and open source, you can easily get it from Jitpack.
+To include Maple into your project, head to https://jitpack.io/#thegatesdev/maple, pick a version and follow the instructions for your build system.
+
 ### Creating elements
 
 *How to make the stuffs*
