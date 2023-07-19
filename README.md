@@ -155,7 +155,7 @@ map.crawl(element -> print(element + " is a descendant of this map"));
 // Crawl and replace
 map.crawl(element -> {
     if (element.isValue()) return DataValue.of("your data has been compromised");
-    else return null; // Null
+    else return null; // Null keeps the original value in place
 });
 
 // Viewing the items manually (the returned views are unmodifyable)
@@ -165,13 +165,19 @@ List<DataElement> view = list.view();
 
 ### The element itself
 
-An element, next to its value, also stores its key and parent (`key()`, `parent()`).
+#### Parent and key
+
+An element also stores its key and parent (`key()`, `parent()`).
+These are set by the parent when inserted into the structure. 
+You can use `rootKey()` to set the key of an element without parent.
+
+#### Utilities
+
 Any element can also be copied (deep copy) using `copy()`.
 The `toString()` method is useful for laying out the structure of the children of the element.
 
 Some other funny methods to check out (or more that I didn't feel like writing more):
 - `isDescendant`
-- `rootKey`
 - `path`
 - `nested`
 
