@@ -11,6 +11,7 @@ import io.github.thegatesdev.maple.read.struct.DataType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -67,6 +68,11 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
 
     public static <E extends DataElement> Readable<E> value(String identifier, Function<DataValue<?>, E> readFunction) {
         return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataValue.class)));
+    }
+
+    public static <O extends DataElement, E extends DataElement> Readable<E> wrap(String identifier, DataType<O> original, BiFunction<DataElement, O, E> readFunction) {
+        return any(identifier, element -> readFunction.apply(element, original.read(element)))
+            .info(info -> info.description("A '" + original.key() + "' with extra options"));
     }
 
 
