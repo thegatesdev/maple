@@ -102,7 +102,7 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
             var out = new DataList(list.size());
             list.each(element -> out.add(original.read(element)));
             return out;
-        });
+        }).info(info -> info.description("A list of '" + original.key() + "'"));
     }
 
     @SuppressWarnings("unchecked")
@@ -115,7 +115,15 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
         return value(name(enumClass), value -> value
             .requireType(String.class)
             .then(enumClass, s -> Enum.valueOf(enumClass, s.toUpperCase().replaceAll(" ", "_")))
-        );
+        ).info(info -> info.possibleValues(enumNames(enumClass)));
+    }
+
+    private static <E extends Enum<E>> String[] enumNames(Class<E> enumClass) {
+        final E[] constants = enumClass.getEnumConstants();
+        final int len = constants.length;
+        final String[] out = new String[len];
+        for (int i = 0; i < len; i++) out[i] = constants[i].name();
+        return out;
     }
 
     @SuppressWarnings("unchecked")
