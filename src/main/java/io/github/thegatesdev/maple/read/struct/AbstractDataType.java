@@ -3,7 +3,7 @@ package io.github.thegatesdev.maple.read.struct;
 import io.github.thegatesdev.maple.data.DataElement;
 
 public abstract class AbstractDataType<E extends DataElement> implements DataType<E> {
-    protected final Info info;
+    private final Info info;
     protected final String key;
 
     protected AbstractDataType(String key) {
