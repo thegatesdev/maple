@@ -57,11 +57,6 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
         return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataMap.class)));
     }
 
-    public static <E extends DataElement> Readable<E> map(String identifier, Function<DataMap, E> readFunction, ReadableOptions options) {
-        return new Readable<>(identifier, element -> readFunction.apply(options.read(element.requireOf(DataMap.class))))
-            .info(info -> info.readableOptions(options));
-    }
-
     public static <E extends DataElement> Readable<E> list(String identifier, Function<DataList, E> readFunction) {
         return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataList.class)));
     }
@@ -162,6 +157,6 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(readFunction, key, info);
+        return Objects.hash(readFunction, key, info());
     }
 }

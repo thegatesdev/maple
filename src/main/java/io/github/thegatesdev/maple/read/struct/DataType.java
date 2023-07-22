@@ -4,7 +4,6 @@ import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataList;
 import io.github.thegatesdev.maple.data.Keyed;
 import io.github.thegatesdev.maple.read.Readable;
-import io.github.thegatesdev.maple.read.ReadableOptions;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -64,7 +63,6 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Keye
 
         private String description, stringRep, origin;
         private String[] possibleValues;
-        private ReadableOptions readableOptions;
 
         public Info(String dataTypeId) {
             mapped.putIfAbsent(dataTypeId, this);
@@ -90,15 +88,6 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Keye
             return this;
         }
 
-        public Info readableOptions(ReadableOptions readableOptions) {
-            this.readableOptions = readableOptions;
-            return this;
-        }
-
-
-        public ReadableOptions readableOptions() {
-            return readableOptions;
-        }
 
         public String description() {
             return description;
@@ -118,7 +107,7 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Keye
 
         @Override
         public int hashCode() {
-            return Objects.hash(description, stringRep, origin, Arrays.hashCode(possibleValues), readableOptions);
+            return Objects.hash(description, stringRep, origin, Arrays.hashCode(possibleValues));
         }
     }
 }
