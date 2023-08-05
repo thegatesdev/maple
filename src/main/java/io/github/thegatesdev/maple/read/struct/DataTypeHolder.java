@@ -17,9 +17,7 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import io.github.thegatesdev.maple.data.DataElement;
-
 @FunctionalInterface
-public interface DataTypeHolder<E extends DataElement> {
+public interface DataTypeHolder<E> {
     DataType<E> dataType();
 }

@@ -25,7 +25,7 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Keyed {
+public interface DataType<E> extends DataTypeHolder<E>, Keyed {
 
     /**
      * Returns an element holding the value read from the specified element.

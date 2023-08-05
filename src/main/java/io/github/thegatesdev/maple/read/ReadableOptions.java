@@ -69,7 +69,7 @@ public class ReadableOptions {
 
     // -- MUTATE
 
-    public ReadableOptions add(String key, DataTypeHolder<?> holder) {
+    public ReadableOptions add(String key, DataTypeHolder<? extends DataElement> holder) {
         return add(new OptionEntry<>(key, holder.dataType()));
     }
 
