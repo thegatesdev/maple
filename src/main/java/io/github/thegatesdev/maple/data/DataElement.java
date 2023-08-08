@@ -176,7 +176,7 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
      */
     public void crawlValues(Function<DataValue<?>, DataElement> function) {
         crawl(element ->
-                element.isValue() ? function.apply(element.asValue()) : null);
+            element.isValue() ? function.apply(element.asValue()) : null);
     }
 
     // -- SELF
@@ -187,6 +187,15 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
      * @return The copied element
      */
     public abstract DataElement copy();
+
+    /**
+     * Copy this element if it is connected to a parent.
+     *
+     * @return The copied element, or this same element.
+     */
+    public DataElement copyIfConnected() {
+        return hasParent() ? copy() : this;
+    }
 
     /**
      * Compares elements by name.
