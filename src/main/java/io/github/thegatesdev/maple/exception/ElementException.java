@@ -19,6 +19,7 @@ Copyright (C) 2022  Timar Karels
 
 
 import io.github.thegatesdev.maple.data.DataElement;
+import io.github.thegatesdev.maple.data.MappedElements;
 
 /**
  * An exception thrown by an element. Used to describe errors to the end user.
@@ -59,7 +60,7 @@ public class ElementException extends RuntimeException {
      * @param field The field that is required.
      * @return A new ElementException.
      */
-    public static ElementException requireField(DataElement data, String field) {
+    public static <Key, El extends DataElement & MappedElements<Key>> ElementException requireField(El data, Key field) {
         return new ElementException(data, "missing required field '" + field + "'");
     }
 
