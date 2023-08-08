@@ -63,11 +63,6 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
         return new Readable<>(identifier, element -> readFunction.apply(element.requireOf(DataValue.class)));
     }
 
-    public static <O extends DataElement, E extends DataElement> Readable<E> wrap(String identifier, DataType<O> original, BiFunction<DataElement, O, E> readFunction) {
-        return any(identifier, element -> readFunction.apply(element, original.read(element)))
-            .info(info -> info.description("A '" + original.key() + "' with extra options"));
-    }
-
 
     private static <P> Readable<DataValue<P>> createPrimitive(Class<P> primitiveClass) {
         return value(name(primitiveClass), value -> value.requireType(primitiveClass));
