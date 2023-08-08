@@ -25,7 +25,8 @@ Copyright (C) 2022  Timar Karels
 public interface DataType<E> extends DataTypeHolder<E>, Keyed {
 
     /**
-     * Returns an element holding the value read from the specified element.
+     * Returns the value read from the specified element.
+     * The returned value should always be new and unique.
      */
     E read(DataElement element);
 

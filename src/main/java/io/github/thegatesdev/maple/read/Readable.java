@@ -65,7 +65,7 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
 
 
     private static <P> Readable<DataValue<P>> createPrimitive(Class<P> primitiveClass) {
-        return value(name(primitiveClass), value -> value.requireType(primitiveClass));
+        return value(name(primitiveClass), value -> value.requireType(primitiveClass).copy());
     }
 
     @SuppressWarnings("unchecked")
@@ -110,14 +110,6 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
             .requireType(String.class)
             .then(enumClass, s -> Enum.valueOf(enumClass, s.toUpperCase().replaceAll(" ", "_")))
         );
-    }
-
-    private static <E extends Enum<E>> String[] enumNames(Class<E> enumClass) {
-        final E[] constants = enumClass.getEnumConstants();
-        final int len = constants.length;
-        final String[] out = new String[len];
-        for (int i = 0; i < len; i++) out[i] = constants[i].name();
-        return out;
     }
 
     @SuppressWarnings("unchecked")
