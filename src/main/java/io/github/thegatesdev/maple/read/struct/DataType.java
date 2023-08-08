@@ -5,9 +5,6 @@ import io.github.thegatesdev.maple.data.DataList;
 import io.github.thegatesdev.maple.data.Keyed;
 import io.github.thegatesdev.maple.read.Readable;
 
-import java.util.*;
-import java.util.function.Consumer;
-
 /*
 Copyright (C) 2022  Timar Karels
 
@@ -39,75 +36,5 @@ public interface DataType<E> extends DataTypeHolder<E>, Keyed {
 
     default Readable<DataList> list() {
         return Readable.list(this);
-    }
-
-    // -- INFO
-
-    default DataType<E> info(Consumer<Info> consumer) {
-        consumer.accept(info());
-        return this;
-    }
-
-    Info info();
-
-    class Info {
-        private static final Map<String, Info> mapped = new HashMap<>();
-
-        public static Info of(String dataTypeId) {
-            return mapped.get(dataTypeId);
-        }
-
-        public static Set<String> keys() {
-            return mapped.keySet();
-        }
-
-        private String description, stringRep, origin;
-        private String[] possibleValues;
-
-        public Info(String dataTypeId) {
-            mapped.putIfAbsent(dataTypeId, this);
-        }
-
-        public Info description(final String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Info origin(final String origin) {
-            this.origin = origin;
-            return this;
-        }
-
-        public Info representation(final String stringRep) {
-            this.stringRep = stringRep;
-            return this;
-        }
-
-        public Info possibleValues(String... possibleValues) {
-            this.possibleValues = possibleValues;
-            return this;
-        }
-
-
-        public String description() {
-            return description;
-        }
-
-        public String origin() {
-            return origin;
-        }
-
-        public String representation() {
-            return stringRep;
-        }
-
-        public String[] possibleValues() {
-            return possibleValues;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(description, stringRep, origin, Arrays.hashCode(possibleValues));
-        }
     }
 }

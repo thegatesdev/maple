@@ -11,8 +11,6 @@ import io.github.thegatesdev.maple.read.struct.DataType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /*
@@ -103,7 +101,7 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
             var out = new DataList(list.size());
             list.each(element -> out.add(original.read(element)));
             return out;
-        }).info(info -> info.description("A list of '" + original.key() + "'"));
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -116,7 +114,7 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
         return value(name(enumClass), value -> value
             .requireType(String.class)
             .then(enumClass, s -> Enum.valueOf(enumClass, s.toUpperCase().replaceAll(" ", "_")))
-        ).info(info -> info.possibleValues(enumNames(enumClass)));
+        );
     }
 
     private static <E extends Enum<E>> String[] enumNames(Class<E> enumClass) {
@@ -147,16 +145,10 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
 
     // -- GET / SET
 
-    @Override
-    public Readable<E> info(Consumer<Info> consumer) {
-        consumer.accept(info());
-        return this;
-    }
-
     // -- META
 
     @Override
     public int hashCode() {
-        return Objects.hash(readFunction, key, info());
+        return Objects.hash(readFunction, key);
     }
 }
