@@ -58,7 +58,7 @@ public class DataList extends DataElement implements MappedElements<Integer> {
     }
 
     /**
-     * Replace the element read from the supplied input at the supplied index with the supplied element.
+     * Replace the element supplied index with the element read from the supplied input.
      *
      * @return The previous element at this index
      */
