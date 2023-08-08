@@ -63,9 +63,8 @@ public class Options {
         return add(new Option<>(key, holder.dataType(), Objects.requireNonNull(def)));
     }
 
-    @SuppressWarnings("unchecked")
-    public <Val, Type extends DataValue<Val>> Options addVal(String key, DataTypeHolder<Type> holder, Val def) {
-        return add(key, ((DataType<DataValue<Val>>) holder.dataType()), DataValue.of(def));
+    public <Val> Options addVal(String key, DataTypeHolder<DataValue<Val>> holder, Val def) {
+        return add(key, holder.dataType(), DataValue.of(def));
     }
 
 
