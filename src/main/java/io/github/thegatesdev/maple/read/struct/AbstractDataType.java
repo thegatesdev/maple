@@ -17,6 +17,9 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * Ease of use DataType implementation for storing the key.
+ */
 public abstract class AbstractDataType<E> implements DataType<E> {
     protected final String key;
 
@@ -24,6 +27,9 @@ public abstract class AbstractDataType<E> implements DataType<E> {
         this.key = key;
     }
 
+    /**
+     * Gets the key of this dataType.
+     */
     @Override
     public String key() {
         return key;

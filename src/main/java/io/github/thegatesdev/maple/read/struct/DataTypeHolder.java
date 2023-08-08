@@ -17,7 +17,13 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * Represents some object that holds a dataType.
+ */
 @FunctionalInterface
 public interface DataTypeHolder<E> {
+    /**
+     * Get the dataType this holds.
+     */
     DataType<E> dataType();
 }

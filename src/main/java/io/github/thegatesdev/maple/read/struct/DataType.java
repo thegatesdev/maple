@@ -22,19 +22,29 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * A DataType reads an element to a value of type {@code <E>}.
+ */
 public interface DataType<E> extends DataTypeHolder<E>, Keyed {
 
     /**
-     * Returns the value read from the specified element.
+     * Reads the value from the element.
      * The returned value should always be new and unique.
      */
     E read(DataElement element);
 
+    /**
+     * Returns this same dataType.
+     */
     @Override
     default DataType<E> dataType() {
         return this;
     }
 
+    /**
+     * Returns a Readable that reads a list of elements using this dataType.
+     * This method uses {@link Readable#list(DataType)}
+     */
     default Readable<DataList> list() {
         return Readable.list(this);
     }
