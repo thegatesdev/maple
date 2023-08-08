@@ -66,6 +66,17 @@ public class DataMap extends DataElement implements MappedElements<String> {
         return set(key, Maple.read(input));
     }
 
+    public void change(String key, Function<DataElement, DataElement> mutator) {
+        elements.compute(key, (s, oldValue) -> {
+            var newValue = mutator.apply(oldValue);
+            if (newValue != null) {
+                newValue.connect(this, s);
+                if (oldValue != null) oldValue.disconnect();
+            }
+            return newValue;
+        });
+    }
+
     /**
      * Remove the element at the supplied key.
      *
@@ -165,7 +176,7 @@ public class DataMap extends DataElement implements MappedElements<String> {
         int len = elements.size();
         for (Map.Entry<String, DataElement> entry : elements.entrySet()) {
             stringBuilder
-                    .append(entry.getKey()).append(": ").append(entry.getValue());
+                .append(entry.getKey()).append(": ").append(entry.getValue());
             if (--len > 0) stringBuilder.append(", ");
         }
         stringBuilder.append("}");
