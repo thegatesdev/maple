@@ -109,20 +109,20 @@ public class Options {
     }
 
 
-    public record Option<Type>(String key,
-                               DataType<Type> dataType,
-                               Type defaultValue,
-                               boolean hasDefault) {
-        public Option {
+    private record Option<Type>(String key,
+                                DataType<Type> dataType,
+                                Type defaultValue,
+                                boolean hasDefault) {
+        private Option {
             Objects.requireNonNull(key);
             Objects.requireNonNull(dataType);
         }
 
-        public Option(String key, DataType<Type> dataType, Type defaultValue) {
+        private Option(String key, DataType<Type> dataType, Type defaultValue) {
             this(key, dataType, defaultValue, true);
         }
 
-        public Option(String key, DataType<Type> dataType) {
+        private Option(String key, DataType<Type> dataType) {
             this(key, dataType, null, false);
         }
     }
