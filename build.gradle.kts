@@ -13,7 +13,7 @@ dependencies {
 }
 
 group = "io.github.thegatesdev"
-version = "3.1.0-beta"
+version = "3.2.0-beta"
 description = "A clean type safe configuration structure."
 java.sourceCompatibility = JavaVersion.VERSION_17
 
