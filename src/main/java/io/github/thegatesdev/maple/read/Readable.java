@@ -124,7 +124,7 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
     // -- ACTIONS
 
     @Override
-    public E read(DataElement element) {
+    public E read(DataElement element) throws ElementException {
         try {
             return readFunction.apply(element);
         } catch (ElementException e) {

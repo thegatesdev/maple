@@ -3,6 +3,7 @@ package io.github.thegatesdev.maple.read.struct;
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataList;
 import io.github.thegatesdev.maple.data.Keyed;
+import io.github.thegatesdev.maple.exception.ElementException;
 import io.github.thegatesdev.maple.read.Readable;
 
 /*
@@ -31,7 +32,7 @@ public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Keye
      * Reads the value from the element.
      * The returned value should always be new and unique.
      */
-    E read(DataElement element);
+    E read(DataElement element) throws ElementException;
 
     /**
      * Returns this same dataType.

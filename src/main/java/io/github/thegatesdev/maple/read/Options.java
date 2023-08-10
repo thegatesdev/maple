@@ -48,7 +48,7 @@ public class Options {
      *
      * @return The supplied output map with the applied options
      */
-    public static DataMap read(Options options, DataMap input, DataMap output) {
+    public static DataMap read(Options options, DataMap input, DataMap output) throws ElementException {
         try {
             for (var entry : options.entries) output.set(entry.key, readEntry(input, input.getOrNull(entry.key), entry));
         } catch (ElementException e) {
@@ -64,7 +64,7 @@ public class Options {
      *
      * @return The new map with the applied options
      */
-    public static DataMap read(Options options, DataMap input) {
+    public static DataMap read(Options options, DataMap input) throws ElementException {
         return read(options, input, new DataMap(input.size()));
     }
 
