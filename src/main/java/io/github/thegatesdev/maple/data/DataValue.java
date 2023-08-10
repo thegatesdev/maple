@@ -108,16 +108,28 @@ public abstract class DataValue<Value> extends DataElement {
         }
     }
 
+    /**
+     * Creates a new dataValue holding the supplied value.
+     */
     public static <T> DataValue<T> of(T value) {
         return new Static<>(value);
     }
 
+    /**
+     * Creates a new dataValue of the supplied valueType, getting the supplied valueSupplier each time the value is accessed.
+     */
     public static <T> DataValue<T> of(Class<T> valueType, Supplier<T> valueSupplier) {
         return new Dynamic<>(valueType, valueSupplier);
     }
 
     // -- UTIL
 
+    /**
+     * Creates a new dataValue by applying the supplied modify function.<br>
+     * This returns:
+     * <li> A new static dataValue holding the modified value if this dataValue is static. </li>
+     * <li> A new dynamic dataValue holding the combined functions if this dataValue is dynamic. </li>
+     */
     public abstract <T> DataValue<T> then(Class<T> newType, Function<Value, T> modify);
 
     // -- TYPE
