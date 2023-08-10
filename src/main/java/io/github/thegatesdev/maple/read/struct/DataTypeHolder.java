@@ -17,11 +17,13 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import io.github.thegatesdev.maple.data.DataElement;
+
 /**
  * Represents some object that holds a dataType.
  */
 @FunctionalInterface
-public interface DataTypeHolder<E> {
+public interface DataTypeHolder<E extends DataElement> {
     /**
      * Get the dataType this holds.
      */

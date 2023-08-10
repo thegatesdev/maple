@@ -17,10 +17,12 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import io.github.thegatesdev.maple.data.DataElement;
+
 /**
  * Ease of use DataType implementation for storing the key.
  */
-public abstract class AbstractDataType<E> implements DataType<E> {
+public abstract class AbstractDataType<E extends DataElement> implements DataType<E> {
     protected final String key;
 
     protected AbstractDataType(String key) {

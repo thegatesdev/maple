@@ -23,9 +23,9 @@ Copyright (C) 2022  Timar Karels
 */
 
 /**
- * A DataType reads an element to a value of type {@code <E>}.
+ * A DataType reads an element to another element of type {@code <E>}, potentially throwing an ElementException.
  */
-public interface DataType<E> extends DataTypeHolder<E>, Keyed {
+public interface DataType<E extends DataElement> extends DataTypeHolder<E>, Keyed {
 
     /**
      * Reads the value from the element.

@@ -36,7 +36,7 @@ public class Options {
     private final List<Option<?>> entries = new ArrayList<>(1);
 
 
-    private static Object readEntry(DataMap input, DataElement el, Option<?> entry) {
+    private static DataElement readEntry(DataMap input, DataElement el, Option<?> entry) {
         if (el != null) return entry.dataType.read(el); // Present
         if (!entry.hasDefault) throw ElementException.requireField(input, entry.key); // Not present and no default! Error!
         return entry.defaultValue; // We have a default! Phew..
@@ -89,7 +89,7 @@ public class Options {
      * Add an optional option at the supplied key of the supplied dataType.
      * When not present, the supplied default will be used.
      */
-    public <Type> Options add(String key, DataTypeHolder<Type> holder, Type def) {
+    public <Type extends DataElement> Options add(String key, DataTypeHolder<Type> holder, Type def) {
         return add(new Option<>(key, holder.dataType(), Objects.requireNonNull(def)));
     }
 
@@ -98,7 +98,7 @@ public class Options {
      * When not present, the supplied default dataValue value will be used.
      * This is a convenience method to avoid having to call {@link DataValue#of(Object)}.
      */
-    public <Val> Options addVal(String key, DataTypeHolder<DataValue<Val>> holder, Val def) {
+    public <Val> Options add(String key, DataTypeHolder<DataValue<Val>> holder, Val def) {
         return add(key, holder.dataType(), DataValue.of(def));
     }
 
@@ -109,10 +109,10 @@ public class Options {
     }
 
 
-    private record Option<Type>(String key,
-                                DataType<Type> dataType,
-                                Type defaultValue,
-                                boolean hasDefault) {
+    private record Option<Type extends DataElement>(String key,
+                                                    DataType<Type> dataType,
+                                                    Type defaultValue,
+                                                    boolean hasDefault) {
         private Option {
             Objects.requireNonNull(key);
             Objects.requireNonNull(dataType);

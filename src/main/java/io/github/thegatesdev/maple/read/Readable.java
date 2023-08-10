@@ -30,6 +30,10 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * A Readable is an implementation of DataType which reads an element using a supplied function.
+ * This is a convenience class providing many (potentially cached) methods to quickly get a dataType.
+ */
 public class Readable<E extends DataElement> extends AbstractDataType<E> {
     private static final Map<Class<?>, Readable<?>> CACHE_PRIMITIVE_TYPES = new HashMap<>();
     private static final Map<DataType<?>, Readable<?>> CACHE_LIST_TYPES = new HashMap<>();
