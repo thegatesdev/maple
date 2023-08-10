@@ -1,6 +1,5 @@
 package io.github.thegatesdev.maple.read;
 
-import io.github.thegatesdev.maple.Maple;
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataMap;
 import io.github.thegatesdev.maple.data.DataValue;
@@ -29,6 +28,9 @@ Copyright (C) 2022  Timar Karels
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * Represents a set of options that a dataMap must or may optionally fulfill.
+ */
 public class Options {
 
     private final List<Option<?>> entries = new ArrayList<>(1);
@@ -41,6 +43,11 @@ public class Options {
     }
 
 
+    /**
+     * Read the supplied input map to the supplied output map using the supplied options.
+     *
+     * @return The supplied output map with the applied options
+     */
     public static DataMap read(Options options, DataMap input, DataMap output) {
         try {
             for (var entry : options.entries) output.set(entry.key, readEntry(input, input.getOrNull(entry.key), entry));
@@ -52,23 +59,45 @@ public class Options {
         return output;
     }
 
+    /**
+     * Read the supplied input map to a new map using the supplied options.
+     *
+     * @return The new map with the applied options
+     */
     public static DataMap read(Options options, DataMap input) {
         return read(options, input, new DataMap(input.size()));
     }
 
 
+    /**
+     * Add a required option of the supplied dataType at the supplied key.
+     * Results in an elementException being thrown when not present.
+     */
     public Options add(String key, DataTypeHolder<?> holder) {
         return add(new Option<>(key, holder.dataType()));
     }
 
+    /**
+     * Add an optional option of the supplied dataType, at the supplied key.
+     * Results in a dataNull when not present.
+     */
     public Options optional(String key, DataTypeHolder<?> holder) {
         return add(new Option<>(key, holder.dataType(), null));
     }
 
+    /**
+     * Add an optional option at the supplied key of the supplied dataType.
+     * When not present, the supplied default will be used.
+     */
     public <Type> Options add(String key, DataTypeHolder<Type> holder, Type def) {
         return add(new Option<>(key, holder.dataType(), Objects.requireNonNull(def)));
     }
 
+    /**
+     * Add an optional option at the supplied key of the supplied dataType.
+     * When not present, the supplied default dataValue value will be used.
+     * This is a convenience method to avoid having to call {@link DataValue#of(Object)}.
+     */
     public <Val> Options addVal(String key, DataTypeHolder<DataValue<Val>> holder, Val def) {
         return add(key, holder.dataType(), DataValue.of(def));
     }
