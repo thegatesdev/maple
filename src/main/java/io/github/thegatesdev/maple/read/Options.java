@@ -56,17 +56,6 @@ public class Options {
         return read(options, input, new DataMap(input.size()));
     }
 
-    public static DataMap transform(Options options, DataMap data) {
-        try {
-            for (var entry : options.entries) data.change(entry.key, el -> Maple.read(readEntry(data, el, entry)));
-        } catch (ElementException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ElementException(data, "Error while reading options: " + e.getMessage(), e);
-        }
-        return data;
-    }
-
 
     public Options add(String key, DataTypeHolder<?> holder) {
         return add(new Option<>(key, holder.dataType()));
