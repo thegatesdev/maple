@@ -2,6 +2,7 @@ package io.github.thegatesdev.maple.read;
 
 import io.github.thegatesdev.maple.data.DataElement;
 import io.github.thegatesdev.maple.data.DataMap;
+import io.github.thegatesdev.maple.data.DataNull;
 import io.github.thegatesdev.maple.data.DataValue;
 import io.github.thegatesdev.maple.exception.ElementException;
 import io.github.thegatesdev.maple.read.struct.DataType;
@@ -39,7 +40,7 @@ public class Options {
     private static DataElement readEntry(DataMap input, DataElement el, Option<?> entry) {
         if (el != null) return entry.dataType.read(el); // Present
         if (!entry.hasDefault) throw ElementException.requireField(input, entry.key); // Not present and no default! Error!
-        return entry.defaultValue; // We have a default! Phew..
+        return entry.defaultValue == null ? new DataNull() : entry.defaultValue; // We have a default! Phew..
     }
 
 
