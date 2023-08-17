@@ -69,7 +69,7 @@ public class Readable<E extends DataElement> extends AbstractDataType<E> {
 
 
     private static <P> Readable<DataValue<P>> createPrimitive(Class<P> primitiveClass) {
-        return value(name(primitiveClass), value -> value.requireType(primitiveClass).copy());
+        return value(name(primitiveClass), value -> value.requireType(primitiveClass));
     }
 
     @SuppressWarnings("unchecked")
