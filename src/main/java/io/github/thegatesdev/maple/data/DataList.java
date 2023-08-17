@@ -181,22 +181,44 @@ public class DataList extends DataElement implements MappedElements<Integer> {
     }
 
     /**
-     * Get a list of values gotten from every value element in this list using the supplied transformer.
+     * @deprecated Will be removed in future versions. Use {@link #mapValues(Function)} instead.
      */
+    @Deprecated(forRemoval = true)
     public <T> List<T> valueList(Function<DataValue<?>, T> valueTransformer) {
+        return mapValues(valueTransformer);
+    }
+
+    /**
+     * Map each element in this list to {@code <T>} using the supplied transformer.
+     * When the transformer returns {@code null}, it will not be present in the result.
+     */
+    public <T> List<T> map(Function<DataElement, T> transformer) {
         var out = new ArrayList<T>(size());
-        eachValue(value -> {
-            var result = valueTransformer.apply(value);
+        each(element -> {
+            var result = transformer.apply(element);
             if (result != null) out.add(result);
         });
         return out;
     }
 
     /**
-     * Get a list of values gotten from every value element in this list unsafely cast to T.
+     * Map each value element in this list to {@code <T>} using the supplied transformer.
+     * When the transformer returns {@code null}, it will not be present in the result.
      */
+    public <T> List<T> mapValues(Function<DataValue<?>, T> valueTransformer) {
+        return map(element -> element.isValue() ? valueTransformer.apply(element.asValue()) : null);
+    }
+
+    public <T> List<T> mapValuesUnsafe() {
+        return mapValues((Function<DataValue<?>, T>) DataValue::valueUnsafe);
+    }
+
+    /**
+     * @deprecated Will be removed in future versions. Use {@link #mapValuesUnsafe()} instead.
+     */
+    @Deprecated(forRemoval = true)
     public <T> List<T> valueListUnsafe() {
-        return valueList((Function<DataValue<?>, T>) DataValue::valueUnsafe);
+        return mapValuesUnsafe();
     }
 
     @Override
