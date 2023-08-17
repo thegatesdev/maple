@@ -279,7 +279,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the Double value element was not found
      */
     default Double getDouble(Key key) throws ElementException {
-        return getObject(key, Double.class);
+        return getNumber(key).doubleValue();
     }
 
     /**
@@ -287,7 +287,7 @@ public interface MappedElements<Key> {
      * Returns the supplied default if the Double value element was not found.
      */
     default Double getDouble(Key key, double def) {
-        return getObject(key, Double.class, def);
+        return getNumber(key, def).doubleValue();
     }
 
     /**
@@ -296,7 +296,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the Float value element was not found
      */
     default Float getFloat(Key key) throws ElementException {
-        return getObject(key, Float.class);
+        return getNumber(key).floatValue();
     }
 
     /**
@@ -304,7 +304,7 @@ public interface MappedElements<Key> {
      * Returns the supplied default if the Float value element was not found.
      */
     default Float getFloat(Key key, float def) {
-        return getObject(key, Float.class, def);
+        return getNumber(key, def).floatValue();
     }
 
     /**
@@ -313,7 +313,7 @@ public interface MappedElements<Key> {
      * @throws ElementException If the Long value element was not found
      */
     default Long getLong(Key key) throws ElementException {
-        return getObject(key, Long.class);
+        return getNumber(key).longValue();
     }
 
     /**
@@ -321,7 +321,7 @@ public interface MappedElements<Key> {
      * Returns the supplied default if the Long value element was not found.
      */
     default Long getLong(Key key, long def) {
-        return getObject(key, Long.class, def);
+        return getNumber(key, def).longValue();
     }
 
     /**
