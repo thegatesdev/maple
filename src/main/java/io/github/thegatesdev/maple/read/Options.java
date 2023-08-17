@@ -51,7 +51,7 @@ public class Options {
      */
     public static DataMap read(Options options, DataMap input, DataMap output) throws ElementException {
         try {
-            for (var entry : options.entries) output.set(entry.key, readEntry(input, input.getOrNull(entry.key), entry));
+            for (var entry : options.entries) output.set(entry.key, readEntry(input, input.getOrNull(entry.key), entry).copyIfConnected());
         } catch (ElementException e) {
             throw e;
         } catch (Exception e) {
