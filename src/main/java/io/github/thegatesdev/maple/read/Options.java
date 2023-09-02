@@ -9,6 +9,7 @@ import io.github.thegatesdev.maple.read.struct.DataType;
 import io.github.thegatesdev.maple.read.struct.DataTypeHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -110,10 +111,15 @@ public class Options {
     }
 
 
+    public List<ExposedOption<?>> entries() {
+        return Collections.unmodifiableList(entries);
+    }
+
+
     private record Option<Type extends DataElement>(String key,
                                                     DataType<Type> dataType,
                                                     Type defaultValue,
-                                                    boolean hasDefault) {
+                                                    boolean hasDefault) implements ExposedOption<Type> {
         private Option {
             Objects.requireNonNull(key);
             Objects.requireNonNull(dataType);
@@ -126,5 +132,15 @@ public class Options {
         private Option(String key, DataType<Type> dataType) {
             this(key, dataType, null, false);
         }
+    }
+
+    public interface ExposedOption<Type extends DataElement> {
+        String key();
+
+        DataType<Type> dataType();
+
+        Type defaultValue();
+
+        boolean hasDefault();
     }
 }
