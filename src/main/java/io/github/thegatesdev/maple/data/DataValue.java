@@ -63,8 +63,8 @@ public abstract class DataValue<Value> extends DataElement {
         }
 
         @Override
-        public String toString() {
-            return "value<" + value + ">";
+        public String valueString() {
+            return value.toString();
         }
     }
 
@@ -103,8 +103,8 @@ public abstract class DataValue<Value> extends DataElement {
         }
 
         @Override
-        public String toString() {
-            return "value<dynamic " + valueType.getSimpleName() + ">";
+        public String valueString() {
+            return "dynamic" + valueType.getSimpleName();
         }
     }
 
@@ -231,8 +231,10 @@ public abstract class DataValue<Value> extends DataElement {
 
     @Override
     public String toString() {
-        return "value<" + valueType().getSimpleName() + ">";
+        return "value<" + valueString() + ">";
     }
+
+    public abstract String valueString();
 
     public abstract int hashCode();
 
