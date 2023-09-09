@@ -31,6 +31,8 @@ Copyright (C) 2022  Timar Karels
  * Represents a set of options that a dataMap must or may optionally fulfill.
  */
 public class Options {
+    public static Options EMPTY = new Options(new Option[0]);
+
     private final Option<?>[] entries;
 
     private Options(Option<?>[] entries) {
