@@ -10,14 +10,15 @@ For *3.0.0-alpha*.
   - [Checking elements](#checking-elements)
   - [Getting from elements](#getting-from-elements)
   - [The element itself](#the-element-itself)
-  - [The 'read' package](#the-read-package)
+  - [The "read" package](#the-read-package)
 - [Why](#why)
 - [Contribute](#contribute)
 
 ## Usage
 
 Since Maple is public and open source, you can easily get it from Jitpack.
-To include Maple into your project, head to https://jitpack.io/#thegatesdev/maple, pick a version and follow the instructions for your build system.
+To include Maple in your project, head to https://jitpack.io/#thegatesdev/maple,
+pick a version and follow the instructions for your build system.
 
 ### Creating elements
 
@@ -168,13 +169,13 @@ List<DataElement> view = list.view();
 #### Parent and key
 
 An element also stores its key and parent (`key()`, `parent()`).
-These are set by the parent when inserted into the structure. 
-You can use `rootKey()` to set the key of an element without parent.
+The parent sets these when inserted into the structure. 
+You can use `rootKey()` to set the key of an element without a parent.
 
 #### Utilities
 
 Any element can also be copied (deep copy) using `copy()`.
-The `toString()` method is useful for laying out the structure of the children of the element.
+The `toString()` method is useful for laying out the structure of the element's children.
 
 Some other funny methods to check out (or more that I didn't feel like writing more):
 - `isDescendant`
