@@ -69,20 +69,19 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
      * @return {@code true} if this element has a parent set
      */
     public boolean hasParent() {
-        return parent() != null;
+        return parent != null;
     }
 
     /**
      * Check if this element is a descendant of the provided parent.
      *
-     * @param parent The parent to look for
+     * @param otherParent The parent to look for
      * @return {@code true} if the parent was found
      */
-    public boolean isDescendant(DataElement parent) {
-        var ourParent = parent();
-        if (ourParent == null) return false;
-        if (ourParent == parent) return true;
-        return ourParent.isDescendant(parent);
+    public boolean isDescendant(DataElement otherParent) {
+        if (parent == null) return false;
+        if (parent == otherParent) return true;
+        return parent.isDescendant(otherParent);
     }
 
 
@@ -99,7 +98,6 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
      */
     @Override
     public String friendlyKey() {
-        var key = key();
         return key == null ? (parent == null ? "root" : "invalid") : key;
     }
 
@@ -127,9 +125,8 @@ public abstract class DataElement implements Comparable<DataElement>, Keyed {
      * A 0 indicates that this element is the root element.
      */
     public int nested() {
-        var ourParent = parent();
-        if (ourParent == null) return 0;
-        return ourParent.nested() + 1;
+        if (parent == null) return 0;
+        return parent.nested() + 1;
     }
 
     // -- VALUE
