@@ -2,12 +2,12 @@ package io.github.thegatesdev.maple.exception;
 
 import io.github.thegatesdev.maple.ElementType;
 
-public class ElementMismatchException extends IllegalArgumentException {
+public class ElementTypeException extends IllegalArgumentException {
 
     private final ElementType expectedType, actualType;
 
-    public ElementMismatchException(ElementType expectedType, ElementType actualType) {
-        super("Invalid element type, expected %s, got %s".formatted(expectedType.getInlineName(), actualType.getInlineName()));
+    public ElementTypeException(String message, ElementType expectedType, ElementType actualType) {
+        super(message);
         this.expectedType = expectedType;
         this.actualType = actualType;
     }

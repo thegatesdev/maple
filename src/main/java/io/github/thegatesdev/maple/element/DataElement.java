@@ -1,7 +1,8 @@
 package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.ElementType;
-import io.github.thegatesdev.maple.exception.ElementMismatchException;
+import io.github.thegatesdev.maple.exception.ExpectedTypeError;
+import io.github.thegatesdev.maple.exception.InvalidTypeException;
 
 import java.util.function.Consumer;
 
@@ -39,16 +40,29 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
     ElementType getType();
 
 
-    default DataMap asMap() throws ElementMismatchException {
-        throw new ElementMismatchException(ElementType.MAP, getType());
+    default DataMap asMap() throws InvalidTypeException {
+        throw new InvalidTypeException(ElementType.MAP, getType());
     }
 
-    default DataList asList() throws ElementMismatchException {
-        throw new ElementMismatchException(ElementType.LIST, getType());
+    default DataList asList() throws InvalidTypeException {
+        throw new InvalidTypeException(ElementType.LIST, getType());
     }
 
-    default DataValue<?> asValue() throws ElementMismatchException {
-        throw new ElementMismatchException(ElementType.VALUE, getType());
+    default DataValue<?> asValue() throws InvalidTypeException {
+        throw new InvalidTypeException(ElementType.VALUE, getType());
+    }
+
+
+    default DataMap requireMap() throws ExpectedTypeError {
+        throw new ExpectedTypeError(ElementType.MAP, getType());
+    }
+
+    default DataList requireList() throws ExpectedTypeError {
+        throw new ExpectedTypeError(ElementType.LIST, getType());
+    }
+
+    default DataValue<?> requireValue() throws ExpectedTypeError {
+        throw new ExpectedTypeError(ElementType.VALUE, getType());
     }
 
 
