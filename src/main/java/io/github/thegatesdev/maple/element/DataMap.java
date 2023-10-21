@@ -45,6 +45,13 @@ public final class DataMap implements DataElement, DataDictionary<String> {
         elementMap.values().forEach(elementConsumer);
     }
 
+    // Information
+
+    @Override
+    public int size() {
+        return elementMap.size();
+    }
+
     // Value
 
     @Override

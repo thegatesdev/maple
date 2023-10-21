@@ -91,4 +91,8 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
     default void eachValue(Consumer<DataValue<?>> mapConsumer) {
         each(element -> element.ifValue(mapConsumer));
     }
+
+    // Information
+
+    int size();
 }

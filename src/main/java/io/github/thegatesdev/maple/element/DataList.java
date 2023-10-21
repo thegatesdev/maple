@@ -58,6 +58,13 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
         elementList.forEach(elementConsumer);
     }
 
+    // Information
+
+    @Override
+    public int size() {
+        return elementList.size();
+    }
+
     // Value
 
     @Override
