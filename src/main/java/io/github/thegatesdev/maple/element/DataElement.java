@@ -7,6 +7,10 @@ import java.util.function.Consumer;
 
 public sealed interface DataElement permits DataList, DataMap, DataValue {
 
+    // Self
+
+    DataElement structureCopy();
+
     // Value
 
     boolean isEmpty();

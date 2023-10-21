@@ -5,6 +5,13 @@ import io.github.thegatesdev.maple.exception.TypeMismatchException;
 
 public sealed interface DataValue<Type> extends DataElement permits DynamicDataValue, StaticDataValue {
 
+    // Self
+
+    @Override
+    default DataValue<Type> structureCopy() {
+        return this;
+    }
+
     // Value type
 
     Class<Type> getValueType();

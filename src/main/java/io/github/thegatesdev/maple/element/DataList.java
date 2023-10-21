@@ -18,6 +18,16 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
         this(new ArrayList<>());
     }
 
+    // Self
+
+    @Override
+    public DataList structureCopy() {
+        var output = new ArrayList<DataElement>(elementList.size());
+        for (int i = 0; i < elementList.size(); i++)
+            output.set(i, elementList.get(i).structureCopy());
+        return new DataList(output);
+    }
+
     // Operations
 
     public DataElement getOrNull(int index) {

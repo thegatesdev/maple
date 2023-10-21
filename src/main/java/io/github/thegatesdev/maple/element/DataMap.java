@@ -18,6 +18,16 @@ public final class DataMap implements DataElement, DataDictionary<String> {
         this(new LinkedHashMap<>());
     }
 
+    // Self
+
+    @Override
+    public DataMap structureCopy() {
+        var output = new LinkedHashMap<String, DataElement>(elementMap.size());
+        elementMap.forEach((key, element) ->
+                output.put(key, element.structureCopy()));
+        return new DataMap(output);
+    }
+
     // Operations
 
     @Override
