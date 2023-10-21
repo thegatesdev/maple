@@ -4,6 +4,7 @@ import io.github.thegatesdev.maple.exception.KeyNotPresentException;
 import io.github.thegatesdev.maple.exception.TypeMismatchException;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public sealed interface DataDictionary<Key> permits DataMap, DataList {
 
@@ -73,5 +74,21 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
 
     default DataValue<?> getValue(Key key) {
         return getOrThrow(key).asValue();
+    }
+
+    // Iteration
+
+    void each(Consumer<DataElement> elementConsumer);
+
+    default void eachMap(Consumer<DataMap> mapConsumer) {
+        each(element -> element.ifMap(mapConsumer));
+    }
+
+    default void eachList(Consumer<DataList> mapConsumer) {
+        each(element -> element.ifList(mapConsumer));
+    }
+
+    default void eachValue(Consumer<DataValue<?>> mapConsumer) {
+        each(element -> element.ifValue(mapConsumer));
     }
 }

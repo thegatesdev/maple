@@ -4,6 +4,7 @@ import io.github.thegatesdev.maple.ElementType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public final class DataMap implements DataElement, DataDictionary<String> {
 
@@ -27,6 +28,11 @@ public final class DataMap implements DataElement, DataDictionary<String> {
     @Override
     public void set(String key, DataElement element) {
         elementMap.put(key, element);
+    }
+
+    @Override
+    public void each(Consumer<DataElement> elementConsumer) {
+        elementMap.values().forEach(elementConsumer);
     }
 
     // Value

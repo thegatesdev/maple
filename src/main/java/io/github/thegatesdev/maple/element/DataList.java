@@ -4,6 +4,7 @@ import io.github.thegatesdev.maple.ElementType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public final class DataList implements DataElement, DataDictionary<Integer> {
 
@@ -40,6 +41,11 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
     @Override
     public void set(Integer index, DataElement element) {
         set((int) index, element);
+    }
+
+    @Override
+    public void each(Consumer<DataElement> elementConsumer) {
+        elementList.forEach(elementConsumer);
     }
 
     // Value
