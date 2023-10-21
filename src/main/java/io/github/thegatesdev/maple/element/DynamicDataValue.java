@@ -12,7 +12,8 @@ public final class DynamicDataValue<Type> implements DataValue<Type> {
         this.valueSupplier = valueSupplier;
     }
 
-    
+    // Value
+
     @Override
     public Class<Type> getValueType() {
         return valueType;

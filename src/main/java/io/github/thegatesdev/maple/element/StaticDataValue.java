@@ -11,6 +11,7 @@ public final class StaticDataValue<Type> implements DataValue<Type> {
         this.value = value;
     }
 
+    // Value
 
     @Override
     public Class<Type> getValueType() {
