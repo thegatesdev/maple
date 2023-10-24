@@ -39,6 +39,12 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
         return value != null ? value : def;
     }
 
+    @SuppressWarnings("unchecked")
+    default <T> DataValue<T> getAsHolding(Class<T> otherType){
+        if (!isValueOf(otherType)) throw new TypeMismatchException(otherType, getValueType());
+        return ((DataValue<T>) this);
+    }
+
     // Self type
 
 
