@@ -1,4 +1,4 @@
-package io.github.thegatesdev.maple.datatype;
+package io.github.thegatesdev.maple.read;
 
 import io.github.thegatesdev.maple.element.DataElement;
 import io.github.thegatesdev.maple.element.DataList;
