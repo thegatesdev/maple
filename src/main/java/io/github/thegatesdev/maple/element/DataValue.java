@@ -3,6 +3,8 @@ package io.github.thegatesdev.maple.element;
 import io.github.thegatesdev.maple.ElementType;
 import io.github.thegatesdev.maple.exception.TypeMismatchException;
 
+import java.util.function.Function;
+
 public sealed interface DataValue<Type> extends DataElement permits DynamicDataValue, StaticDataValue {
 
     // Self
@@ -44,6 +46,9 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
         if (!isValueOf(otherType)) throw new TypeMismatchException(otherType, getValueType());
         return ((DataValue<T>) this);
     }
+
+
+    <O> DataValue<O> transform(Class<O> newType, Function<Type, O> function);
 
     // Self type
 

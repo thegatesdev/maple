@@ -1,5 +1,6 @@
 package io.github.thegatesdev.maple.element;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class DynamicDataValue<Type> implements DataValue<Type> {
@@ -13,6 +14,11 @@ public final class DynamicDataValue<Type> implements DataValue<Type> {
     }
 
     // Value
+
+    @Override
+    public <O> DataValue<O> transform(Class<O> newType, Function<Type, O> function) {
+        return new DynamicDataValue<>(newType, () -> function.apply(valueSupplier.get()));
+    }
 
     @Override
     public Class<Type> getValueType() {
