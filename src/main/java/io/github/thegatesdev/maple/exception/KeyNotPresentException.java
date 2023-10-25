@@ -1,15 +1,16 @@
 package io.github.thegatesdev.maple.exception;
 
-public class KeyNotPresentException extends IllegalArgumentException {
+public class KeyNotPresentException extends RuntimeException {
 
-    private final String keyName;
+    private static final String MESSAGE = "Key '%s' is not present";
+    private final String key;
 
-    public KeyNotPresentException(String keyName) {
-        super("Key '%s' is not present".formatted(keyName));
-        this.keyName = keyName;
+    public KeyNotPresentException(String key) {
+        super(MESSAGE.formatted(key));
+        this.key = key;
     }
 
-    public String getKeyName() {
-        return keyName;
+    public String getKey() {
+        return key;
     }
 }

@@ -1,11 +1,13 @@
 package io.github.thegatesdev.maple.exception;
 
-public class TypeMismatchException extends IllegalArgumentException {
+public class ValueTypeException extends IllegalArgumentException {
+
+    private static final String MESSAGE = "Invalid value type, expected '%s', got '%s'";
 
     private final Class<?> expectedType, actualType;
 
-    public TypeMismatchException(Class<?> expectedType, Class<?> actualType) {
-        super("Expected '%s', got '%s'".formatted(expectedType.getSimpleName(), actualType.getSimpleName()));
+    public ValueTypeException(Class<?> expectedType, Class<?> actualType) {
+        super(MESSAGE.formatted(expectedType.getSimpleName(), actualType.getSimpleName()));
         this.expectedType = expectedType;
         this.actualType = actualType;
     }

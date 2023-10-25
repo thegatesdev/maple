@@ -1,7 +1,7 @@
 package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.ElementType;
-import io.github.thegatesdev.maple.exception.TypeMismatchException;
+import io.github.thegatesdev.maple.exception.ValueTypeException;
 
 import java.util.function.Function;
 
@@ -28,7 +28,7 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
     }
 
     default <T> T getValueOrThrow(Class<T> otherType) {
-        if (!isValueOf(otherType)) throw new TypeMismatchException(otherType, getValueType());
+        if (!isValueOf(otherType)) throw new ValueTypeException(otherType, getValueType());
         return getValueUnsafe();
     }
 
@@ -42,8 +42,8 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
     }
 
     @SuppressWarnings("unchecked")
-    default <T> DataValue<T> getAsHolding(Class<T> otherType){
-        if (!isValueOf(otherType)) throw new TypeMismatchException(otherType, getValueType());
+    default <T> DataValue<T> getAsHolding(Class<T> otherType) {
+        if (!isValueOf(otherType)) throw new ValueTypeException(otherType, getValueType());
         return ((DataValue<T>) this);
     }
 
