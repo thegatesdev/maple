@@ -1,7 +1,6 @@
 package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.exception.KeyNotPresentException;
-import io.github.thegatesdev.maple.exception.TypeMismatchException;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -22,44 +21,55 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
 
     // Typed getters
 
-    default Boolean getBool(Key key) throws KeyNotPresentException, TypeMismatchException {
-        return getValue(key).getValueOrThrow(Boolean.class);
+    default <T> T get(Key key, Class<T> valueType) {
+        return getValue(key).getValueOrThrow(valueType);
     }
 
-    default Boolean getBool(Key key, Boolean def) throws KeyNotPresentException {
-        return getValue(key).getValueOr(Boolean.class, def);
+    default <T> T getOr(Key key, Class<T> valueType, T def) {
+        var element = getOrNull(key);
+        if (element == null || !element.isValue()) return def;
+        return element.asValue().getValueOr(valueType, def);
     }
 
-    default Integer getInt(Key key) throws KeyNotPresentException, TypeMismatchException {
-        return getValue(key).getValueOrThrow(Integer.class);
+
+    default Boolean getBool(Key key) {
+        return get(key, Boolean.class);
     }
 
-    default Integer getInt(Key key, Integer def) throws KeyNotPresentException {
-        return getValue(key).getValueOr(Integer.class, def);
+    default Boolean getBool(Key key, Boolean def) {
+        return getOr(key, Boolean.class, def);
     }
 
-    default Long getLong(Key key) throws KeyNotPresentException, TypeMismatchException {
-        return getValue(key).getValueOrThrow(Long.class);
+    default Integer getInt(Key key) {
+        return get(key, Integer.class);
     }
 
-    default Long getLong(Key key, Long def) throws KeyNotPresentException {
-        return getValue(key).getValueOr(Long.class, def);
+    default Integer getInt(Key key, Integer def) {
+        return getOr(key, Integer.class, def);
     }
 
-    default Number getNum(Key key) throws KeyNotPresentException, TypeMismatchException {
-        return getValue(key).getValueOrThrow(Number.class);
+    default Long getLong(Key key) {
+        return get(key, Long.class);
     }
 
-    default Number getNum(Key key, Number def) throws KeyNotPresentException {
-        return getValue(key).getValueOr(Number.class, def);
+    default Long getLong(Key key, Long def) {
+        return getOr(key, Long.class, def);
     }
 
-    default String getString(Key key) throws KeyNotPresentException, TypeMismatchException {
-        return getValue(key).getValueOrThrow(String.class);
+    default Number getNum(Key key) {
+        return get(key, Number.class);
     }
 
-    default String getString(Key key, String def) throws KeyNotPresentException {
-        return getValue(key).getValueOr(String.class, def);
+    default Number getNum(Key key, Number def) {
+        return getOr(key, Number.class, def);
+    }
+
+    default String getString(Key key) {
+        return get(key, String.class);
+    }
+
+    default String getString(Key key, String def) {
+        return getOr(key, String.class, def);
     }
 
     // Element getters
