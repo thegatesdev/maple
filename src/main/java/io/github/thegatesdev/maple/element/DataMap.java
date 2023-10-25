@@ -74,4 +74,14 @@ public final class DataMap implements DataElement, DataDictionary<String> {
     public ElementType getType() {
         return ElementType.MAP;
     }
+
+    @Override
+    public boolean isMap() {
+        return true;
+    }
+
+    @Override
+    public DataMap asMap() {
+        return this;
+    }
 }

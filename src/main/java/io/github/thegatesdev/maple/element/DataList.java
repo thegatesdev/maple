@@ -87,4 +87,14 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
     public ElementType getType() {
         return ElementType.LIST;
     }
+
+    @Override
+    public boolean isList() {
+        return true;
+    }
+
+    @Override
+    public DataList asList() {
+        return this;
+    }
 }
