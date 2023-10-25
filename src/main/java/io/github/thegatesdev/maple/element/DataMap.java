@@ -10,12 +10,16 @@ public final class DataMap implements DataElement, DataDictionary<String> {
 
     private final Map<String, DataElement> elementMap;
 
-    public DataMap(Map<String, DataElement> elementMap) {
+    private DataMap(Map<String, DataElement> elementMap) {
         this.elementMap = elementMap;
     }
 
     public DataMap() {
         this(new LinkedHashMap<>());
+    }
+
+    public DataMap(int initialCapacity) {
+        this(new LinkedHashMap<>(initialCapacity));
     }
 
     // Self

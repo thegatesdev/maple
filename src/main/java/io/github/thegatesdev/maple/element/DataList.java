@@ -10,12 +10,16 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
 
     private final List<DataElement> elementList;
 
-    public DataList(List<DataElement> elementList) {
+    private DataList(List<DataElement> elementList) {
         this.elementList = elementList;
     }
 
     public DataList() {
         this(new ArrayList<>());
+    }
+
+    public DataList(int initialCapacity) {
+        this(new ArrayList<>(initialCapacity));
     }
 
     // Self
