@@ -253,19 +253,19 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
     /**
      * Run the given action for each list element in this dictionary.
      *
-     * @param mapConsumer the action to run
+     * @param listConsumer the action to run
      */
-    default void eachList(Consumer<DataList> mapConsumer) {
-        each(element -> element.ifList(mapConsumer));
+    default void eachList(Consumer<DataList> listConsumer) {
+        each(element -> element.ifList(listConsumer));
     }
 
     /**
      * Run the given action for each value element in this dictionary.
      *
-     * @param mapConsumer the action to run
+     * @param valueConsumer the action to run
      */
-    default void eachValue(Consumer<DataValue<?>> mapConsumer) {
-        each(element -> element.ifValue(mapConsumer));
+    default void eachValue(Consumer<DataValue<?>> valueConsumer) {
+        each(element -> element.ifValue(valueConsumer));
     }
 
     // Information
