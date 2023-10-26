@@ -16,10 +16,23 @@ Copyright 2023 Timar Karels
 
 package io.github.thegatesdev.maple;
 
+/**
+ * An enum defining the three types of elements found in Maple.
+ */
 public enum ElementType {
+    /**
+     * The map element type, corresponding to the {@link io.github.thegatesdev.maple.element.DataMap} class.
+     */
     MAP("dataMap", "a map element"),
+    /**
+     * The list element type, corresponding to the {@link io.github.thegatesdev.maple.element.DataList} class.
+     */
     LIST("dataList", "a list element"),
+    /**
+     * The value element type, corresponding to the {@link io.github.thegatesdev.maple.element.DataValue} interface.
+     */
     VALUE("dataValue", "a value element");
+
 
     private final String elementName, inlineName;
 
@@ -29,10 +42,16 @@ public enum ElementType {
     }
 
 
+    /**
+     * @return the name of the element type
+     */
     public String getElementName() {
         return elementName;
     }
 
+    /**
+     * @return the name of the element type as used in a sentence
+     */
     public String getInlineName() {
         return inlineName;
     }
