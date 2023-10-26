@@ -79,11 +79,6 @@ public final class DataMap implements DataElement, DataDictionary<String> {
         return elementMap.isEmpty();
     }
 
-    @Override
-    public Map<String, DataElement> getValue() {
-        return elementMap;
-    }
-
     // Type
 
     @Override

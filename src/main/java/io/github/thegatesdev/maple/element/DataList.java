@@ -92,11 +92,6 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
         return elementList.isEmpty();
     }
 
-    @Override
-    public List<DataElement> getValue() {
-        return elementList;
-    }
-
     // Type
 
     @Override

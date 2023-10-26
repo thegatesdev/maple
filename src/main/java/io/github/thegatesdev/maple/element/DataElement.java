@@ -35,8 +35,6 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
         return !isEmpty();
     }
 
-    Object getValue();
-
     // Type
 
     default boolean isMap() {

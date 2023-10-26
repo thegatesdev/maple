@@ -79,7 +79,6 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
         return true;
     }
 
-    @Override
     Type getValue();
 
     @Override
