@@ -22,6 +22,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * An element mapping {@code String} keys to {@code DataValue} values.
+ */
 public final class DataMap implements DataElement, DataDictionary<String> {
 
     private final Map<String, DataElement> elementMap;
@@ -30,10 +33,18 @@ public final class DataMap implements DataElement, DataDictionary<String> {
         this.elementMap = elementMap;
     }
 
+    /**
+     * Construct a new empty {@code DataMap}.
+     */
     public DataMap() {
         this(new LinkedHashMap<>());
     }
 
+    /**
+     * Construct a new empty {@code DataMap} with the given initial capacity.
+     *
+     * @param initialCapacity the initial capacity of the map
+     */
     public DataMap(int initialCapacity) {
         this(new LinkedHashMap<>(initialCapacity));
     }
