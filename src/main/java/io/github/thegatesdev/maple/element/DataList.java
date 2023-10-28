@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * An element holding a list of elements.
+ */
 public final class DataList implements DataElement, DataDictionary<Integer> {
 
     private final List<DataElement> elementList;
@@ -30,10 +33,18 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
         this.elementList = elementList;
     }
 
+    /**
+     * Construct a new empty {@code DataList}.
+     */
     public DataList() {
         this(new ArrayList<>());
     }
 
+    /**
+     * Construct a new empty {@code DataList} with the given initial capacity.
+     *
+     * @param initialCapacity the initial capacity of the list
+     */
     public DataList(int initialCapacity) {
         this(new ArrayList<>(initialCapacity));
     }
@@ -50,15 +61,27 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
 
     // Operations
 
+    /**
+     * @see DataList#getOrNull(Integer)
+     */
     public DataElement getOrNull(int index) {
         if (index < 0 || index >= elementList.size()) return null;
         return elementList.get(index);
     }
 
+    /**
+     * @see DataList#set(Integer, DataElement)
+     */
     public void set(int index, DataElement element) {
         elementList.set(index, element);
     }
 
+
+    /**
+     * Append an element to the list.
+     *
+     * @param element the element to append
+     */
     public void add(DataElement element) {
         elementList.add(element);
     }
