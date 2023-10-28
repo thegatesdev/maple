@@ -19,11 +19,20 @@ package io.github.thegatesdev.maple.element;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * An element supplying values of type {@code Type}.
+ */
 public final class DynamicDataValue<Type> implements DataValue<Type> {
 
     private final Class<Type> valueType;
     private final Supplier<Type> valueSupplier;
 
+    /**
+     * Construct a new {@code DynamicDataValue}.
+     *
+     * @param valueType     the type of the supplied values
+     * @param valueSupplier the supplier of the values
+     */
     public DynamicDataValue(Class<Type> valueType, Supplier<Type> valueSupplier) {
         this.valueType = valueType;
         this.valueSupplier = valueSupplier;

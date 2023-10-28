@@ -18,11 +18,19 @@ package io.github.thegatesdev.maple.element;
 
 import java.util.function.Function;
 
+/**
+ * An element holding a single immutable value of type {@code Type}.
+ */
 public final class StaticDataValue<Type> implements DataValue<Type> {
 
     private final Class<Type> valueType;
     private final Type value;
 
+    /**
+     * Construct a new {@code StaticDataValue}.
+     *
+     * @param value the value to hold
+     */
     @SuppressWarnings("unchecked")
     public StaticDataValue(Type value) {
         this.valueType = ((Class<Type>) value.getClass());
