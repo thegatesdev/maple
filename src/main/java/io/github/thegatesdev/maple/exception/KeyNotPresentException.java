@@ -16,16 +16,25 @@ Copyright 2023 Timar Karels
 
 package io.github.thegatesdev.maple.exception;
 
+/**
+ * Thrown to indicate that an expected key was not present.
+ */
 public class KeyNotPresentException extends RuntimeException {
 
     private static final String MESSAGE = "Key '%s' is not present";
     private final String key;
 
+    /**
+     * @param key the expected key
+     */
     public KeyNotPresentException(String key) {
         super(MESSAGE.formatted(key));
         this.key = key;
     }
 
+    /**
+     * @return the expected key
+     */
     public String getKey() {
         return key;
     }

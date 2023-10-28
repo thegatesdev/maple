@@ -16,22 +16,35 @@ Copyright 2023 Timar Karels
 
 package io.github.thegatesdev.maple.exception;
 
+/**
+ * Thrown to indicate that an element value did not match the expected type.
+ */
 public class ValueTypeException extends IllegalArgumentException {
 
     private static final String MESSAGE = "Invalid value type, expected '%s', got '%s'";
 
     private final Class<?> expectedType, actualType;
 
+    /**
+     * @param expectedType the type of the value that was expected in this location
+     * @param actualType   the actual invalid type of the value that was in this location
+     */
     public ValueTypeException(Class<?> expectedType, Class<?> actualType) {
         super(MESSAGE.formatted(expectedType.getSimpleName(), actualType.getSimpleName()));
         this.expectedType = expectedType;
         this.actualType = actualType;
     }
 
+    /**
+     * @return the type of the value that was expected in this location
+     */
     public Class<?> getExpectedType() {
         return expectedType;
     }
 
+    /**
+     * @return the actual invalid type of the value that was in this location
+     */
     public Class<?> getActualType() {
         return actualType;
     }

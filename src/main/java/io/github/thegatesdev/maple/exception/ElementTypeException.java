@@ -18,21 +18,34 @@ package io.github.thegatesdev.maple.exception;
 
 import io.github.thegatesdev.maple.ElementType;
 
+/**
+ * Thrown to indicate that an element did not match the expected type.
+ */
 public class ElementTypeException extends IllegalArgumentException {
 
     private static final String MESSAGE = "Invalid element type, expected %s, got %s";
     private final ElementType expectedType, actualType;
 
+    /**
+     * @param expectedType the type of the element that was expected in this location
+     * @param actualType   the actual invalid type that was in this location
+     */
     public ElementTypeException(ElementType expectedType, ElementType actualType) {
         super(MESSAGE.formatted(expectedType.getInlineName(), actualType.getInlineName()));
         this.expectedType = expectedType;
         this.actualType = actualType;
     }
 
+    /**
+     * @return the type of the element that was expected in this location
+     */
     public ElementType getExpectedType() {
         return expectedType;
     }
 
+    /**
+     * @return the actual invalid type that was in this location
+     */
     public ElementType getActualType() {
         return actualType;
     }
