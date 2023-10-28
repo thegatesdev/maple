@@ -2,7 +2,7 @@
 
 A clean type safe configuration structure.
 
-For *3.0.0-alpha*.
+For *3.3.0-beta*.
 
 - [Usage](#usage)
   - [Creating elements](#creating-elements)
@@ -10,14 +10,15 @@ For *3.0.0-alpha*.
   - [Checking elements](#checking-elements)
   - [Getting from elements](#getting-from-elements)
   - [The element itself](#the-element-itself)
-  - [The 'read' package](#the-read-package)
+  - [The "read" package](#the-read-package)
 - [Why](#why)
 - [Contribute](#contribute)
 
 ## Usage
 
 Since Maple is public and open source, you can easily get it from Jitpack.
-To include Maple into your project, head to https://jitpack.io/#thegatesdev/maple, pick a version and follow the instructions for your build system.
+To include Maple in your project, head to https://jitpack.io/#thegatesdev/maple,
+pick a version and follow the instructions for your build system.
 
 ### Creating elements
 
@@ -168,13 +169,13 @@ List<DataElement> view = list.view();
 #### Parent and key
 
 An element also stores its key and parent (`key()`, `parent()`).
-These are set by the parent when inserted into the structure. 
-You can use `rootKey()` to set the key of an element without parent.
+The parent sets these when inserted into the structure. 
+You can use `rootKey()` to set the key of an element without a parent.
 
 #### Utilities
 
 Any element can also be copied (deep copy) using `copy()`.
-The `toString()` method is useful for laying out the structure of the children of the element.
+The `toString()` method is useful for laying out the structure of the element's children.
 
 Some other funny methods to check out (or more that I didn't feel like writing more):
 - `isDescendant`
@@ -186,20 +187,21 @@ Some other funny methods to check out (or more that I didn't feel like writing m
 The classes in the 'read' package are merged to Maple from MapleTree.
 The most important ones are DataType, Readable and ReadableOptions.
 
-- A DataType defines a way to 'read' an element to another.
-- A Readable is a DataType implementation using a supplied Function.
-- ReadableOptions allow you to define options for and read those from a map.
+- A `DataType` defines a way to 'read' an element to another.
+- A `Readable` is a DataType implementation using a supplied Function.
+- `Options` and `Options.Builder` allow for defining map parameters, that can then be read from a DataMap.
 
 I'll add documentation on these parts asap.
 
 ## Why
 
 For me, Maple is a replacement / improvement to the SpigotMC Configuration API,
-commonly used in Minecraft plugins. It is quite broken and slow, and does not at all fit my needs.
+commonly used in Minecraft plugins. The Configuration API is quite broken and slow, and does not at all fit my needs.
 
 ## Contribute
 
 Please submit a pull request if you feel like it!
+If something isn't clear in this documentation, please open an issue.
 
 ## The bottom
 
