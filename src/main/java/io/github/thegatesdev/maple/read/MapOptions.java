@@ -25,6 +25,9 @@ import io.github.thegatesdev.maple.exception.KeyNotPresentException;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * Applies options to a {@code DataMap}, throwing on incorrect input.
+ */
 public final class MapOptions<Ret> {
 
     private final Option<?>[] entries;
@@ -35,15 +38,33 @@ public final class MapOptions<Ret> {
         this.conversion = conversion;
     }
 
+    /**
+     * Creates a new map option builder with the given result conversion function.
+     *
+     * @param conversion the result conversion function
+     * @return a new builder
+     */
     public static <Ret> Builder<Ret> builder(Function<DataMap, Ret> conversion) {
         return new Builder<>(conversion);
     }
 
+    /**
+     * Creates a new map option builder, without a result conversion.
+     *
+     * @return a new builder
+     */
     public static Builder<DataMap> builder() {
         return builder(Function.identity());
     }
 
 
+    /**
+     * Apply the options to the given input map.
+     * This creates a new map storing the results of the applied options.
+     *
+     * @param input the input map
+     * @return the value after applying the result conversion to the generated map
+     */
     public Ret apply(DataMap input) {
         var output = new DataMap(entries.length);
         for (final var entry : entries) {
@@ -58,11 +79,24 @@ public final class MapOptions<Ret> {
         return conversion.apply(output);
     }
 
+    /**
+     * Get an immutable view of the option entries.
+     *
+     * @return the option entries
+     */
     public List<Option<?>> getEntries() {
         return List.of(entries);
     }
 
 
+    /**
+     * An option for a map.
+     *
+     * @param key          the unique key in the map
+     * @param dataType     the expected datatype of the value that will be read
+     * @param hasDefault   if the option has a default value
+     * @param defaultValue the default value of the option
+     */
     public record Option<Type extends DataElement>(String key, DataType<Type> dataType, boolean hasDefault,
                                                    Type defaultValue) {
 
@@ -81,6 +115,9 @@ public final class MapOptions<Ret> {
         }
     }
 
+    /**
+     * A map options builder.
+     */
     public static final class Builder<Ret> {
 
         private final List<Option<?>> buildingOptions = new ArrayList<>();
@@ -99,23 +136,55 @@ public final class MapOptions<Ret> {
             return this;
         }
 
+        /**
+         * Build map options from the current state of the builder.
+         *
+         * @return a new {@code MapOptions} containing the current specified options
+         */
         public MapOptions<Ret> build() {
             return new MapOptions<>(buildingOptions.toArray(new Option[0]), conversion);
         }
 
 
+        /**
+         * Add a new required option.
+         *
+         * @param key      the unique key for the option
+         * @param dataType the datatype of the value
+         */
         public Builder<Ret> add(String key, DataType<?> dataType) {
             return add(new Option<>(key, dataType));
         }
 
+        /**
+         * Add a new optional option.
+         *
+         * @param key    the unique key for the option
+         * @param holder the datatype of the value
+         */
         public Builder<Ret> optional(String key, DataType<?> holder) {
             return add(new Option<>(key, holder, null));
         }
 
+        /**
+         * Add a new optional option using the given default value.
+         *
+         * @param key    the unique key for the option
+         * @param holder the datatype of the value
+         * @param def    the default element to insert if the key is not present
+         */
         public <Type extends DataElement> Builder<Ret> add(String key, DataType<Type> holder, Type def) {
             return add(new Option<>(key, holder, Objects.requireNonNull(def)));
         }
 
+        /**
+         * Add a new optional option for a value element type using the given default value.
+         * This is a convenience method to not have to supply a default element like {@code new StaticDataValue<>(yourDefault)}.
+         *
+         * @param key    the unique key for the option
+         * @param holder the value element datatype of the value
+         * @param def    the default value to insert if the key is not present
+         */
         public <Val> Builder<Ret> add(String key, DataType<DataValue<Val>> holder, Val def) {
             return add(key, holder, new StaticDataValue<>(def));
         }
