@@ -159,34 +159,34 @@ public final class MapOptions<Ret> {
         /**
          * Add a new optional option.
          *
-         * @param key    the unique key for the option
-         * @param holder the datatype of the value
+         * @param key      the unique key for the option
+         * @param dataType the datatype of the value
          */
-        public Builder<Ret> optional(String key, DataType<?> holder) {
-            return add(new Option<>(key, holder, null));
+        public Builder<Ret> optional(String key, DataType<?> dataType) {
+            return add(new Option<>(key, dataType, null));
         }
 
         /**
          * Add a new optional option using the given default value.
          *
-         * @param key    the unique key for the option
-         * @param holder the datatype of the value
-         * @param def    the default element to insert if the key is not present
+         * @param key      the unique key for the option
+         * @param dataType the datatype of the value
+         * @param def      the default element to insert if the key is not present
          */
-        public <Type extends DataElement> Builder<Ret> add(String key, DataType<Type> holder, Type def) {
-            return add(new Option<>(key, holder, Objects.requireNonNull(def)));
+        public <Type extends DataElement> Builder<Ret> add(String key, DataType<Type> dataType, Type def) {
+            return add(new Option<>(key, dataType, Objects.requireNonNull(def)));
         }
 
         /**
          * Add a new optional option for a value element type using the given default value.
          * This is a convenience method to not have to supply a default element like {@code new StaticDataValue<>(yourDefault)}.
          *
-         * @param key    the unique key for the option
-         * @param holder the value element datatype of the value
-         * @param def    the default value to insert if the key is not present
+         * @param key      the unique key for the option
+         * @param dataType the value element datatype of the value
+         * @param def      the default value to insert if the key is not present
          */
-        public <Val> Builder<Ret> add(String key, DataType<DataValue<Val>> holder, Val def) {
-            return add(key, holder, new StaticDataValue<>(def));
+        public <Val> Builder<Ret> add(String key, DataType<DataValue<Val>> dataType, Val def) {
+            return add(key, dataType, new StaticDataValue<>(def));
         }
     }
 }
