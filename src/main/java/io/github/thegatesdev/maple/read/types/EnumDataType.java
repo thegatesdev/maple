@@ -23,6 +23,10 @@ import io.github.thegatesdev.maple.read.DataType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * DataType representing an enum.
+ * Caches all types.
+ */
 public class EnumDataType<E extends Enum<E>> implements DataType<DataValue<E>> {
 
     private static final Map<Class<Enum<?>>, EnumDataType<?>> CACHE = new HashMap<>();

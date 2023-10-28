@@ -23,6 +23,10 @@ import io.github.thegatesdev.maple.read.DataType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * DataType representing a value type.
+ * Caches all types.
+ */
 public class ValueDataType<Val> implements DataType<DataValue<Val>> {
 
     private static final Map<Class<?>, ValueDataType<?>> CACHE = new HashMap<>();

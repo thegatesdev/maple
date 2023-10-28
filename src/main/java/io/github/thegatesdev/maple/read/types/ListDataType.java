@@ -23,6 +23,10 @@ import io.github.thegatesdev.maple.read.DataType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * DataType representing a list of a given other datatype.
+ * Caches all types.
+ */
 public class ListDataType implements DataType<DataList> {
 
     private static final Map<DataType<?>, ListDataType> CACHE = new HashMap<>();
