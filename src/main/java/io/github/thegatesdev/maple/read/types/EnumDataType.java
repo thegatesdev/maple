@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class EnumDataType<E extends Enum<E>> implements DataType<DataValue<E>> {
 
-    private static final Map<Class<Enum<?>>, EnumDataType<?>> CACHE = new HashMap<>();
+    private static final Map<Class<?>, EnumDataType<?>> CACHE = new HashMap<>();
 
     private final Class<E> valueType;
     private final String id;
@@ -41,7 +41,7 @@ public class EnumDataType<E extends Enum<E>> implements DataType<DataValue<E>> {
 
     @SuppressWarnings("unchecked")
     public static <E extends Enum<E>> EnumDataType<E> getOrCreate(Class<E> valueType) {
-        return (EnumDataType<E>) CACHE.computeIfAbsent((Class<Enum<?>>) valueType, EnumDataType::new);
+        return (EnumDataType<E>) CACHE.computeIfAbsent(valueType, aClass -> new EnumDataType<>(valueType));
     }
 
     private E enumFromString(String value) {
