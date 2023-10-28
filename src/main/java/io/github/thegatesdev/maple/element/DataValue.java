@@ -38,6 +38,13 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
         return this;
     }
 
+    // Operations
+
+    @Override
+    default int crawl(Crawler crawler) {
+        return 0; // A value does not have descendants
+    }
+
     // Value type
 
     /**

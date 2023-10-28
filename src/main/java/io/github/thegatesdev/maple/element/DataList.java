@@ -101,6 +101,19 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
         elementList.forEach(elementConsumer);
     }
 
+    @Override
+    public int crawl(Crawler crawler) {
+        int processed = 0;
+        for (int i = 0; i < elementList.size(); i++) {
+            var element = elementList.get(i);
+            processed += element.crawl(crawler) + 1; // Crawl containing elements
+
+            var result = crawler.process(element); // Crawl element itself
+            if (result.isPresent()) elementList.set(i, result.get()); // Replace original
+        }
+        return processed;
+    }
+
     // Information
 
     @Override

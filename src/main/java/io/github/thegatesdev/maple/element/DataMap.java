@@ -76,6 +76,19 @@ public final class DataMap implements DataElement, DataDictionary<String> {
         elementMap.values().forEach(elementConsumer);
     }
 
+    @Override
+    public int crawl(Crawler crawler) {
+        int processed = 0;
+        for (final var entry : elementMap.entrySet()) {
+            var element = entry.getValue();
+            processed += element.crawl(crawler) + 1;
+
+            var result = crawler.process(element);
+            result.ifPresent(entry::setValue);
+        }
+        return processed;
+    }
+
     // Information
 
     @Override

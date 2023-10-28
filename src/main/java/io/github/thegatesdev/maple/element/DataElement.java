@@ -36,6 +36,17 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
      */
     DataElement structureCopy();
 
+    // Operations
+
+    /**
+     * Crawl all the descendants of the elements contained in this element.
+     * The children of an element will be processed before the element itself.
+     *
+     * @param crawler the crawler to use
+     * @return the amount of elements processed
+     */
+    int crawl(Crawler crawler);
+
     // Value
 
     /**
