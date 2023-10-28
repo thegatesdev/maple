@@ -21,10 +21,18 @@ import io.github.thegatesdev.maple.exception.ValueTypeException;
 
 import java.util.function.Function;
 
+/**
+ * An element holding a single value type that may change.
+ */
 public sealed interface DataValue<Type> extends DataElement permits DynamicDataValue, StaticDataValue {
 
     // Self
 
+    /**
+     * Since {@code DataValue}'s are immutable, this method does not return a new instance.
+     *
+     * @return this same element
+     */
     @Override
     default DataValue<Type> structureCopy() {
         return this;
@@ -32,31 +40,60 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
 
     // Value type
 
+    /**
+     * @return the type of the contained value
+     */
     Class<Type> getValueType();
 
+    /**
+     * @param otherType the type to check for
+     * @return {@code true} if this element contains a value that can be assigned to the given type
+     */
     default boolean isValueOf(Class<?> otherType) {
         return otherType.isAssignableFrom(getValueType());
     }
 
+    /**
+     * @return the contained value cast to {@code T}
+     */
     @SuppressWarnings("unchecked")
     default <T> T getValueUnsafe() {
         return (T) getValue();
     }
 
+    /**
+     * @param otherType the type to get the value as
+     * @return the contained value as {@code T}
+     * @throws ValueTypeException if the types do not match
+     */
     default <T> T getValueOrThrow(Class<T> otherType) {
         if (!isValueOf(otherType)) throw new ValueTypeException(otherType, getValueType());
         return getValueUnsafe();
     }
 
+    /**
+     * @param otherType the type to get the value as
+     * @return the contained value as {@code T}, or {@code null} if the type does not match
+     */
     default <T> T getValueOrNull(Class<T> otherType) {
         return isValueOf(otherType) ? getValueUnsafe() : null;
     }
 
+    /**
+     * @param otherType the type to get the value as
+     * @param def       the default value
+     * @return the contained value as {@code T}, or the given default value if the type does not match
+     */
     default <T> T getValueOr(Class<T> otherType, T def) {
         var value = getValueOrNull(otherType);
         return value != null ? value : def;
     }
 
+    /**
+     * @param otherType the required type of this element
+     * @return this value element as holding a value of type {@code T}
+     * @throws ValueTypeException if the types do not match
+     */
     @SuppressWarnings("unchecked")
     default <T> DataValue<T> getAsHolding(Class<T> otherType) {
         if (!isValueOf(otherType)) throw new ValueTypeException(otherType, getValueType());
@@ -64,6 +101,18 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
     }
 
 
+    /**
+     * Transform this value element with the given function.
+     * <ul>
+     * <li> If this element is static, a static element is returned holding the result from applying the transformation function.
+     * <li> If this element is dynamic, a dynamic element is returned, that will apply the transformation function each time it is retrieved.
+     * </ul>
+     * This function is used to preserve the dynamic nature of elements.
+     *
+     * @param newType  the value type of the new value element
+     * @param function the transformation function
+     * @return a new value element holding the given value type
+     */
     <O> DataValue<O> transform(Class<O> newType, Function<Type, O> function);
 
     // Self type
@@ -79,6 +128,12 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicDataV
         return true;
     }
 
+    /**
+     * Retrieve a value from this element.
+     * May be different each call.
+     *
+     * @return a value of type {@code Type}
+     */
     Type getValue();
 
     @Override
