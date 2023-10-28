@@ -71,7 +71,7 @@ public final class MapOptions<Ret> {
             var element = input.getOrNull(entry.key);
             if (element != null) output.set(entry.key, entry.dataType.read(element));
             else {
-                if (entry.hasDefault) throw new KeyNotPresentException(entry.key);
+                if (!entry.hasDefault) throw new KeyNotPresentException(entry.key);
                 if (entry.defaultValue == null) continue;
                 output.set(entry.key, entry.defaultValue);
             }
