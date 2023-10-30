@@ -38,10 +38,10 @@ Just head to https://jitpack.io/#thegatesdev/maple, select a version and follow 
 
 Creating list, map and value types is as easy as calling their constructors;
 ```java
-var myMap = new DataMap();
-var myList = new DataList();
-var myImmutableValue = new StaticDataValue<>("hello world");
-var myDynamicValue = new DynamicDataValue<>(String.class, () -> "hello world");
+DataMap myMap = new DataMap();
+DataList myList = new DataList();
+DataValue<String> myImmutableValue = new StaticDataValue<>("hello world");
+DataValue<String> myDynamicValue = new DynamicDataValue<>(String.class, () -> "hello world");
 ```
 
 **Checking types**
@@ -65,13 +65,13 @@ Simple setting and adding operation are currently supported.
 More will be added in future releases, like removing and clearing.
 
 ```java
-var myList = new DataList();
+DataList myList = new DataList();
 
 myList.add(new StaticDataValue<>("Hello"));
 myList.add(new StaticDataValue<>("World"));
 myList.set(1, new StaticDataValue<>("Universe"));
 
-var myMap = new DataMap();
+DataMap myMap = new DataMap();
 myMap.set("Earth", new StaticDataValue<>("Humans"));
 myMap.set("Mars", new StaticDataValue<>("Aliens"));
 ```
@@ -129,7 +129,7 @@ A `DataType` defines a type of data that can be read from an element.
 The `MapOptions` class uses those data types to enforce option types on a map.
 
 ```java
-var options = MapOptions.builder()
+MapOptions options = MapOptions.builder()
     .add("number_option", DataType.number())
     .add("string_options", DataType.string(), "default")
     .optional("optional_enum", DataType.enumeration(PizzaTopping.CHEESE))
