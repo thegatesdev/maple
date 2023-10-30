@@ -1,208 +1,147 @@
 # Maple
 
-A clean type safe configuration structure.
+A simple, type safe configuration structure
 
-For *3.3.0-beta*.
+*Updated for version 4.0.0*
 
+## Contents
+
+- [About](#about)
 - [Usage](#usage)
-  - [Creating elements](#creating-elements)
-  - [Reading elements](#reading-elements)
-  - [Checking elements](#checking-elements)
-  - [Getting from elements](#getting-from-elements)
-  - [The element itself](#the-element-itself)
-  - [The "read" package](#the-read-package)
-- [Why](#why)
-- [Contribute](#contribute)
+  - [Including the library in your project](#including-in-your-project)
+  - [Element basics](#element-basics)
+  - [Element conversion](#conversion)
+  - [Element crawling](#crawling)
+  - [Applying options](#datatype-and-mapoptions)
+
+## About
+
+**Maple** was made as a replacement for the Spigot Configuration API,
+as that API was quite limiting and ugly for my use cases.
+
+My goal with this library is to make it easy to wrap configuration values
+in a clean and understandable structure, providing plenty of utility methods
+for specific scenario's.
+
+Feel free to open an issue, or even a pull request, if you have any concerns or suggestions.
 
 ## Usage
 
-Since Maple is public and open source, you can easily get it from Jitpack.
-To include Maple in your project, head to https://jitpack.io/#thegatesdev/maple,
-pick a version and follow the instructions for your build system.
+### Including in your project
 
-### Creating elements
+Since Maple is public on Github, you can easily include it from JitPack.
+Just head to https://jitpack.io/#thegatesdev/maple, select a version and follow the instructions for your build system.
 
-*How to make the stuffs*
+### Element Basics
 
-Creation is mostly done through a basic constructor.
-DataValue is an exception because it is abstract.
+**Creating elements**
 
+Creating list, map and value types is as easy as calling their constructors;
 ```java
-// Map element
-var map = new DataMap();
-map = new DataMap(6); // With initial capacity
-
-// List element
-var list = new DataList();
-list = new DataList(9); // With initial capacity
-
-// Value element
-var value = DataValue.of("hello world"); // String type
-value = DataValue.of(3) // Integer type etc.
-
-// Dynamic value element
-Random random = new Random();
-var dynValue = DataValue.of(Integer.class, random::nextInt); // Gives a random integer when accessed
-
-// Null element
-var nothing = new DataNull();
+var myMap = new DataMap();
+var myList = new DataList();
+var myImmutableValue = new StaticDataValue<>("hello world");
+var myDynamicValue = new DynamicDataValue<>(String.class, () -> "hello world");
 ```
 
-### Reading elements
+**Checking types**
 
-*How to generate the stuffs*
-
-Reading is done through the Maple class.
+There are multiple methods to check the type of an element itself;
 
 ```java
-DataElement el = Maple.read(...); // Read anything, see the javadocs
-        
-// Read from array
-list = Maple.readList("a", "b", "c");
-// Read from a Java List
-list = Maple.readList(List.of("a", "b", "c"));
-// Read from any iterable
-list = Maple.readList(Set.of("a", "b", "c")); // For example a set
+DataElement myElement = new DataMap();
 
-// Read from a Java Map (ignores non String keys)
-map = Maple.readMap(Map.of("a", 1, "b", 2));
+myElement.isList(); // False
+myElement.isMap(); // True
+
+myElement.getType(); // ElementType.MAP
+
+myElement.ifMap(map -> print("myElement is a map!"), () -> print("myElement is not a map!"));
 ```
 
-### Checking elements
+**Modifying elements**
 
-*How to know the stuffs*
+Simple setting and adding operation are currently supported.
+More will be added in future releases, like removing and clearing.
 
 ```java
-// Checking type
-element.isList();
-element.isMap();
-// Using the class        
-element.isOf(DataValue.class)
-        
-element.ifMap(map -> print("this is a map"), () -> print("this is not a map"));
+var myList = new DataList();
 
-// Checking value element type
-value.valueOf(Integer.class);
+myList.add(new StaticDataValue<>("Hello"));
+myList.add(new StaticDataValue<>("World"));
+myList.set(1, new StaticDataValue<>("Universe"));
+
+var myMap = new DataMap();
+myMap.set("Earth", new StaticDataValue<>("Humans"));
+myMap.set("Mars", new StaticDataValue<>("Aliens"));
 ```
 
-### Modifying elements
-
-*How to change the stuffs*
-
-#### DataMap
+**Getting from elements**
 
 ```java
-// Setting
-map.set("key", DataValue.of("hello world")); // Using an element as input
-map.set("key", "hello world"); // Or using a plain object (uses Maple.read() under the hood)
+DataMap myMap = //.. Map with information
 
-// Removing
-var removed = map.remove("key");
-removed.isValue(); // True
+// Plain elements
+DataElement otherElement = myMap.getOrThrow("somekey");
+DataMap otherMap = myMap.getMap("mapkey");
+DataList otherList = myMap.getList("listkey");
 
-// Clearing
-map.clear();
+// Values
+String stringValue = myMap.get("message", String.class);
+String stringValue = myMap.get("message", String.class, "no message"); // With default
+int intValue = myMap.getInt("count", 0);
+
+myMap.each(element -> print("Found an element"));
 ```
 
-#### DataList
+### Conversion
 
+Maple was meant to be used with data from other sources, e.g. json or yaml configuration files.
+
+To convert plain Java objects to a Maple structure, for example the output from snakeyaml, use the `Conversion` class.
 ```java
-// Adding
-list.add(DataValue.of("hello world")); // Using an element as input
-list.add("hello world"); // Or using a plain object (uses Maple.read() under the hood)
+Conversion conversion = new DefaultConversion();
 
-// Setting
-list.set(0, DataValue.of("hello universe")); // Same story
-list.set(0, "hello universe");
-
-// Removing
-var removed = list.remove(0);
-removed.isValue(); // True
-  
-  // Clearing
-list.clear();
+Map<?,?> output = //.. e.g. load from file
+DataMap data = conversion.convertMap(fileOutput);
 ```
 
-### Getting from elements
+This will convert the entire structure to a Maple representation.
+The `DefaultConversion` implementation should be adequate for most use cases.
 
-*How to obtain the stuffs*
+### Crawling
 
-Since DataList and DataMap both implement MappedElements,
-they share the easy ways of getting values, be it by String or Integer.
+Every Maple element supports the 'crawl' operation. Crawling will visit every descendant of an element, and optionally replace it.
 
+Crawling can be used to replace placeholder values to their actual values.
 ```java
-var el = map.getOrNull("key");
-DataValue<?> value = map.getValue("key"); // Throws if not found
-value = map.getValue("key", DataValue.of("hello world")); // Default if not found
-map.ifValue("key", value -> print("valueWasFound"));
-// ... same for other element types (getMap, ifList etc.)
-
-// Getting the actual Objects
-String s = map.getObject("key", String.class);
-s = map.getObject("key", String.class, "your fault");
-// .. unsafely
-s = map.getUnsafe("key");
-s = map.getUnsafe("key", "de fault");
-// HOLD ON, I spent more time than you thought:
-s = map.getString("key");
-
-// Getting from the dataValue itself
-s = value.valueOr(String.class, "bye world");
-s = value.valueOrThrow(String.class);
-// .. and more!
-
-// Crawling through descendants
-map.crawl(element -> print(element + " is a descendant of this map"));
-// Crawl and replace
+DataMap map = //..
+    
 map.crawl(element -> {
-    if (element.isValue()) return DataValue.of("your data has been compromised");
-    else return null; // Null keeps the original value in place
-});
-
-// Viewing the items manually (the returned views are unmodifyable)
-Map<String, DataElement> view = map.view();
-List<DataElement> view = list.view();
+    if (!element.isValue()) return Optional.empty(); // Don't do anything
+    return Optional.of(new StaticDataValue<>("You have been hacked!"));
+}); // Replaces all value elements with a string value saying "You have been hacked!"
 ```
 
-### The element itself
+### DataType and MapOptions
 
-#### Parent and key
+A `DataType` defines a type of data that can be read from an element.
+The `MapOptions` class uses those data types to enforce option types on a map.
 
-An element also stores its key and parent (`key()`, `parent()`).
-The parent sets these when inserted into the structure. 
-You can use `rootKey()` to set the key of an element without a parent.
+```java
+var options = MapOptions.builder()
+    .add("number_option", DataType.number())
+    .add("string_options", DataType.string(), "default")
+    .optional("optional_enum", DataType.enumeration(PizzaTopping.CHEESE))
+    .build();
+// Apply these options to a map
+DataMap result = options.apply(someMap);
+```
+These operations will throw an exception if any values are invalid. 
+Make sure to catch them, and properly report them to the user.
 
-#### Utilities
+## The end
 
-Any element can also be copied (deep copy) using `copy()`.
-The `toString()` method is useful for laying out the structure of the element's children.
+Thanks for having interest in my creations!
 
-Some other funny methods to check out (or more that I didn't feel like writing more):
-- `isDescendant`
-- `path`
-- `nested`
-
-### The 'read' package
-
-The classes in the 'read' package are merged to Maple from MapleTree.
-The most important ones are DataType, Readable and ReadableOptions.
-
-- A `DataType` defines a way to 'read' an element to another.
-- A `Readable` is a DataType implementation using a supplied Function.
-- `Options` and `Options.Builder` allow for defining map parameters, that can then be read from a DataMap.
-
-I'll add documentation on these parts asap.
-
-## Why
-
-For me, Maple is a replacement / improvement to the SpigotMC Configuration API,
-commonly used in Minecraft plugins. The Configuration API is quite broken and slow, and does not at all fit my needs.
-
-## Contribute
-
-Please submit a pull request if you feel like it!
-If something isn't clear in this documentation, please open an issue.
-
-## The bottom
-
-Congrats, you've reached the bottom of this tiny documentation. Go buy a flower for someone.
+You can find me on Discord under the tag `thegates`.
