@@ -107,7 +107,7 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
     // Type
 
     @Override
-    public ElementType getType() {
+    public ElementType type() {
         return ElementType.LIST;
     }
 

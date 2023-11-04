@@ -35,7 +35,7 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
      */
     @SuppressWarnings("unchecked")
     static <Type> DataValue<Type> of(Type value){
-        return new StaticValue<>(value, ((Class<Type>) value.getClass()));
+        return new StaticValue<>(((Class<Type>) value.getClass()), value);
     }
 
     /**
@@ -46,7 +46,7 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
      * @return the new value element
      */
     static <Type> DataValue<Type> of(Class<Type> valueType, Supplier<Type> valueSupplier){
-        return new DynamicValue<>(valueSupplier, valueType);
+        return new DynamicValue<>(valueType, valueSupplier);
     }
 
     // Operations
@@ -66,22 +66,22 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
     /**
      * @return the type of the contained value
      */
-    Class<Type> getValueType();
+    Class<Type> valueType();
 
     /**
      * @param otherType the type to check for
      * @return {@code true} if this element contains a value that can be assigned to the given type
      */
     default boolean isValueOf(Class<?> otherType) {
-        return otherType.isAssignableFrom(getValueType());
+        return otherType.isAssignableFrom(valueType());
     }
 
     /**
      * @return the contained value cast to {@code T}
      */
     @SuppressWarnings("unchecked")
-    default <T> T getValueUnsafe() {
-        return (T) getValue();
+    default <T> T valueUnsafe() {
+        return (T) value();
     }
 
     /**
@@ -89,17 +89,17 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
      * @return the contained value as {@code T}
      * @throws ValueTypeException if the types do not match
      */
-    default <T> T getValueOrThrow(Class<T> otherType) {
-        if (!isValueOf(otherType)) throw new ValueTypeException(otherType, getValueType());
-        return getValueUnsafe();
+    default <T> T valueOrThrow(Class<T> otherType) {
+        if (!isValueOf(otherType)) throw new ValueTypeException(otherType, valueType());
+        return valueUnsafe();
     }
 
     /**
      * @param otherType the type to get the value as
      * @return the contained value as {@code T}, or {@code null} if the type does not match
      */
-    default <T> T getValueOrNull(Class<T> otherType) {
-        return isValueOf(otherType) ? getValueUnsafe() : null;
+    default <T> T valueOrNull(Class<T> otherType) {
+        return isValueOf(otherType) ? valueUnsafe() : null;
     }
 
     /**
@@ -107,8 +107,8 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
      * @param def       the default value
      * @return the contained value as {@code T}, or the given default value if the type does not match
      */
-    default <T> T getValueOr(Class<T> otherType, T def) {
-        var value = getValueOrNull(otherType);
+    default <T> T valueOr(Class<T> otherType, T def) {
+        var value = valueOrNull(otherType);
         return value != null ? value : def;
     }
 
@@ -118,8 +118,8 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
      * @throws ValueTypeException if the types do not match
      */
     @SuppressWarnings("unchecked")
-    default <T> DataValue<T> getAsHolding(Class<T> otherType) {
-        if (!isValueOf(otherType)) throw new ValueTypeException(otherType, getValueType());
+    default <T> DataValue<T> asHolding(Class<T> otherType) {
+        if (!isValueOf(otherType)) throw new ValueTypeException(otherType, valueType());
         return ((DataValue<T>) this);
     }
 
@@ -142,7 +142,7 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
 
 
     @Override
-    default ElementType getType() {
+    default ElementType type() {
         return ElementType.VALUE;
     }
 
@@ -157,10 +157,15 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
      *
      * @return a value of type {@code Type}
      */
-    Type getValue();
+    Type value();
 
     @Override
     default DataValue<Type> asValue() {
         return this;
+    }
+
+    @Override
+    default boolean isEmpty(){
+        return false;
     }
 }

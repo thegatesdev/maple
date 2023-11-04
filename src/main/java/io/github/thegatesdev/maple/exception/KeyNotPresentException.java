@@ -35,7 +35,7 @@ public class KeyNotPresentException extends RuntimeException {
     /**
      * @return the expected key
      */
-    public String getKey() {
+    public String key() {
         return key;
     }
 }

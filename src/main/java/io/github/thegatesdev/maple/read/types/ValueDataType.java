@@ -47,11 +47,11 @@ public class ValueDataType<Val> implements DataType<DataValue<Val>> {
 
     @Override
     public DataValue<Val> read(DataElement input) {
-        return input.asValue().getAsHolding(valueType);
+        return input.asValue().asHolding(valueType);
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return id;
     }
 

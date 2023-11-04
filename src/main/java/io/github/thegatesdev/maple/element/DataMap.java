@@ -100,7 +100,7 @@ public final class DataMap implements DataElement, DataDictionary<String> {
     // Type
 
     @Override
-    public ElementType getType() {
+    public ElementType type() {
         return ElementType.MAP;
     }
 

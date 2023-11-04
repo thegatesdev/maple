@@ -59,7 +59,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @throws io.github.thegatesdev.maple.exception.ValueTypeException   if the value element did not contain a value of the given type
      */
     default <T> T get(Key key, Class<T> valueType) {
-        return getValue(key).getValueOrThrow(valueType);
+        return getValue(key).valueOrThrow(valueType);
     }
 
     /**
@@ -76,7 +76,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
     default <T> T find(Key key, Class<T> valueType, T def) {
         var element = find(key);
         if (element == null || !element.isValue()) return def;
-        return element.asValue().getValueOr(valueType, def);
+        return element.asValue().valueOr(valueType, def);
     }
 
 

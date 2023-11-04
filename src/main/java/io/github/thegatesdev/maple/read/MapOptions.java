@@ -83,7 +83,7 @@ public final class MapOptions<Ret> {
      *
      * @return the option entries
      */
-    public List<Option<?>> getEntries() {
+    public List<Option<?>> entries() {
         return List.of(entries);
     }
 

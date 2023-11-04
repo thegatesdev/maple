@@ -87,7 +87,7 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
     /**
      * @return the corresponding element type for this element
      */
-    ElementType getType();
+    ElementType type();
 
 
     /**
@@ -95,7 +95,7 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
      * @throws ElementTypeException if this element is not a map
      */
     default DataMap asMap() throws ElementTypeException {
-        throw new ElementTypeException(ElementType.MAP, getType());
+        throw new ElementTypeException(ElementType.MAP, type());
     }
 
     /**
@@ -103,7 +103,7 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
      * @throws ElementTypeException if this element is not a list
      */
     default DataList asList() throws ElementTypeException {
-        throw new ElementTypeException(ElementType.LIST, getType());
+        throw new ElementTypeException(ElementType.LIST, type());
     }
 
     /**
@@ -111,7 +111,7 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
      * @throws ElementTypeException if this element is not a value
      */
     default DataValue<?> asValue() throws ElementTypeException {
-        throw new ElementTypeException(ElementType.VALUE, getType());
+        throw new ElementTypeException(ElementType.VALUE, type());
     }
 
 
