@@ -46,15 +46,6 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
         return el;
     }
 
-    /**
-     * Map the given key to the given element.
-     * This overrides any existing mappings to the same key.
-     *
-     * @param key     the key for the element
-     * @param element the element to be mapped to the key
-     */
-    void set(Key key, DataElement element);
-
     // Typed getters
 
     /**

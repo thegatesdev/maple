@@ -20,29 +20,40 @@ import io.github.thegatesdev.maple.ElementType;
 import io.github.thegatesdev.maple.exception.ValueTypeException;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * An element holding a single value type that may change.
  */
-public sealed interface DataValue<Type> extends DataElement permits DynamicDataValue, StaticDataValue {
-
-    // Self
+public sealed interface DataValue<Type> extends DataElement permits DynamicValue, StaticValue {
 
     /**
-     * Since {@code DataValue}'s are immutable, this method does not return a new instance.
+     * Create a new static value element containing the given value.
      *
-     * @return this same element
+     * @param value the value to wrap
+     * @return the new value element
      */
-    @Override
-    default DataValue<Type> structureCopy() {
-        return this;
+    @SuppressWarnings("unchecked")
+    static <Type> DataValue<Type> of(Type value){
+        return new StaticValue<>(value, ((Class<Type>) value.getClass()));
+    }
+
+    /**
+     * Create a new dynamic value element producing values of the given type.
+     *
+     * @param valueType the type of values produced
+     * @param valueSupplier the supplier producing the values
+     * @return the new value element
+     */
+    static <Type> DataValue<Type> of(Class<Type> valueType, Supplier<Type> valueSupplier){
+        return new DynamicValue<>(valueSupplier, valueType);
     }
 
     // Operations
 
     @Override
-    default int crawl(Crawler crawler) {
-        return 0; // A value does not have descendants
+    default DataElement crawl(Crawler crawler) {
+        return this; // A value does not have descendants
     }
 
     // Value type

@@ -26,26 +26,16 @@ import java.util.function.Consumer;
  */
 public sealed interface DataElement permits DataList, DataMap, DataValue {
 
-    // Self
-
-    /**
-     * Deep copy this element to a new element of the same type.
-     * All descendants will be copied as well, excluding any value elements, as they are immutable.
-     *
-     * @return a new element holding the same structure
-     */
-    DataElement structureCopy();
-
     // Operations
 
     /**
-     * Crawl all the descendants of the elements contained in this element.
-     * The children of an element will be processed before the element itself.
+     * Process all the descendants of this element.
+     * The children of an element will be processed before their parent.
      *
      * @param crawler the crawler to use
-     * @return the amount of elements processed
+     * @return the element with the processed values
      */
-    int crawl(Crawler crawler);
+    DataElement crawl(Crawler crawler);
 
     // Value
 

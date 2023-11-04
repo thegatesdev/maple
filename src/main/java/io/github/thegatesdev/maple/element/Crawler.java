@@ -16,8 +16,6 @@ Copyright 2023 Timar Karels
 
 package io.github.thegatesdev.maple.element;
 
-import java.util.Optional;
-
 /**
  * Processes the contents of an element, including any descendants.
  */
@@ -26,10 +24,9 @@ public interface Crawler {
 
     /**
      * Process a found element.
-     * Returns the element replacement, or an empty {@code Optional} to keep the original.
      *
-     * @param element the element that was found
-     * @return the optional replacement
+     * @param element the element to process
+     * @return the replacement element
      */
-    Optional<DataElement> process(DataElement element);
+    DataElement process(DataElement element);
 }

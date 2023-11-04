@@ -19,7 +19,6 @@ package io.github.thegatesdev.maple.read;
 import io.github.thegatesdev.maple.element.DataElement;
 import io.github.thegatesdev.maple.element.DataMap;
 import io.github.thegatesdev.maple.element.DataValue;
-import io.github.thegatesdev.maple.element.StaticDataValue;
 import io.github.thegatesdev.maple.exception.KeyNotPresentException;
 
 import java.util.*;
@@ -66,17 +65,17 @@ public final class MapOptions<Ret> {
      * @return the value after applying the result conversion to the generated map
      */
     public Ret apply(DataMap input) {
-        var output = new DataMap(entries.length);
+        var output = DataMap.builder(entries.length);
         for (final var entry : entries) {
             var element = input.getOrNull(entry.key);
-            if (element != null) output.set(entry.key, entry.dataType.read(element));
+            if (element != null) output.add(entry.key, entry.dataType.read(element));
             else {
                 if (!entry.hasDefault) throw new KeyNotPresentException(entry.key);
                 if (entry.defaultValue == null) continue;
-                output.set(entry.key, entry.defaultValue);
+                output.add(entry.key, entry.defaultValue);
             }
         }
-        return conversion.apply(output);
+        return conversion.apply(output.build());
     }
 
     /**
@@ -101,9 +100,8 @@ public final class MapOptions<Ret> {
                                                    Type defaultValue) {
 
         public Option {
-            Objects.requireNonNull(key);
-            Objects.requireNonNull(dataType);
-            Objects.requireNonNull(defaultValue);
+            Objects.requireNonNull(key, "key cannot be null");
+            Objects.requireNonNull(dataType, "data type cannot be null");
         }
 
         public Option(String key, DataType<Type> dataType) {
@@ -186,7 +184,7 @@ public final class MapOptions<Ret> {
          * @param def      the default value to insert if the key is not present
          */
         public <Val> Builder<Ret> add(String key, DataType<DataValue<Val>> dataType, Val def) {
-            return add(key, dataType, new StaticDataValue<>(def));
+            return add(key, dataType, DataValue.of(def));
         }
     }
 }
