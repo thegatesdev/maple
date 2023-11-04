@@ -20,6 +20,7 @@ import io.github.thegatesdev.maple.ElementType;
 import io.github.thegatesdev.maple.exception.ElementTypeException;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * An interface defining the base functionality of an element in a Maple structure.
@@ -29,13 +30,21 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
     // Operations
 
     /**
-     * Process all the descendants of this element.
+     * Process all the descendants of this element using the given function.
      * The children of an element will be processed before their parent.
      *
-     * @param crawler the crawler to use
+     * @param crawlFunction the function called on each descendant
      * @return the element with the processed values
      */
-    DataElement crawl(Crawler crawler);
+    DataElement crawl(Function<DataElement, DataElement> crawlFunction);
+
+    /**
+     * Process the children of this element using the given function.
+     *
+     * @param transformFunction the function called on each child
+     * @return the element with the processed values
+     */
+    DataElement transform(Function<DataElement, DataElement> transformFunction);
 
     // Value
 

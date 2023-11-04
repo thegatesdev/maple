@@ -20,6 +20,7 @@ import io.github.thegatesdev.maple.ElementType;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * An element holding a list of elements.
@@ -74,10 +75,18 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
     }
 
     @Override
-    public DataElement crawl(Crawler crawler) {
+    public DataElement crawl(Function<DataElement, DataElement> crawlFunction) {
         var output = new DataElement[elements.length];
         for (int i = 0; i < elements.length; i++)
-            output[i] = crawler.process(elements[i].crawl(crawler));
+            output[i] = crawlFunction.apply(elements[i].crawl(crawlFunction));
+        return new DataList(output);
+    }
+
+    @Override
+    public DataList transform(Function<DataElement, DataElement> transformFunction) {
+        var output = new DataElement[elements.length];
+        for (int i = 0; i < elements.length; i++)
+            output[i] = transformFunction.apply(elements[i]);
         return new DataList(output);
     }
 

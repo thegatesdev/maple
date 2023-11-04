@@ -52,8 +52,13 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
     // Operations
 
     @Override
-    default DataElement crawl(Crawler crawler) {
+    default DataElement crawl(Function<DataElement, DataElement> crawlFunction) {
         return this; // A value does not have descendants
+    }
+
+    @Override
+    default DataValue<Type> transform(Function<DataElement, DataElement> transformFunction){
+        return this;
     }
 
     // Value type

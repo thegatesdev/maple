@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * An element mapping {@code String} keys to {@code DataValue} values.
@@ -67,10 +68,18 @@ public final class DataMap implements DataElement, DataDictionary<String> {
     }
 
     @Override
-    public DataElement crawl(Crawler crawler) {
+    public DataElement crawl(Function<DataElement, DataElement> crawlFunction) {
         var builder = builder(size());
         elements.forEach((key, value) ->
-                builder.add(key, crawler.process(value.crawl(crawler))));
+                builder.add(key, crawlFunction.apply(value.crawl(crawlFunction))));
+        return builder.build();
+    }
+
+    @Override
+    public DataMap transform(Function<DataElement, DataElement> transformFunction) {
+        var builder = builder(size());
+        elements.forEach((key, value) ->
+                builder.add(key, transformFunction.apply(value)));
         return builder.build();
     }
 
