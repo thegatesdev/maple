@@ -58,7 +58,7 @@ public final class DataMap implements DataElement, DataDictionary<String> {
     // Operations
 
     @Override
-    public DataElement getOrNull(String key) {
+    public DataElement find(String key) {
         return elements.get(Objects.requireNonNull(key, "key cannot be null"));
     }
 

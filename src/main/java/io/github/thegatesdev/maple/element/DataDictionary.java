@@ -31,7 +31,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @param key the key for the element
      * @return the element mapped to the key
      */
-    DataElement getOrNull(Key key);
+    DataElement find(Key key);
 
     /**
      * Get the element at the given key.
@@ -40,8 +40,8 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the element mapped to the key
      * @throws KeyNotPresentException if the key was not found
      */
-    default DataElement getOrThrow(Key key) throws KeyNotPresentException {
-        var el = getOrNull(key);
+    default DataElement get(Key key) throws KeyNotPresentException {
+        var el = find(key);
         if (el == null) throw new KeyNotPresentException(Objects.toString(key));
         return el;
     }
@@ -73,8 +73,8 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @param def       the default value to return
      * @return the value of type {@code T}
      */
-    default <T> T getOr(Key key, Class<T> valueType, T def) {
-        var element = getOrNull(key);
+    default <T> T find(Key key, Class<T> valueType, T def) {
+        var element = find(key);
         if (element == null || !element.isValue()) return def;
         return element.asValue().getValueOr(valueType, def);
     }
@@ -99,7 +99,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the value from the element
      */
     default Boolean getBool(Key key, Boolean def) {
-        return getOr(key, Boolean.class, def);
+        return find(key, Boolean.class, def);
     }
 
     /**
@@ -121,7 +121,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the value from the element
      */
     default Integer getInt(Key key, Integer def) {
-        return getOr(key, Integer.class, def);
+        return find(key, Integer.class, def);
     }
 
     /**
@@ -143,7 +143,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the value from the element
      */
     default Long getLong(Key key, Long def) {
-        return getOr(key, Long.class, def);
+        return find(key, Long.class, def);
     }
 
     /**
@@ -165,7 +165,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the value from the element
      */
     default Number getNum(Key key, Number def) {
-        return getOr(key, Number.class, def);
+        return find(key, Number.class, def);
     }
 
     /**
@@ -187,7 +187,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the value from the element
      */
     default String getString(Key key, String def) {
-        return getOr(key, String.class, def);
+        return find(key, String.class, def);
     }
 
     // Element getters
@@ -199,7 +199,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the map element
      */
     default DataMap getMap(Key key) {
-        return getOrThrow(key).asMap();
+        return get(key).asMap();
     }
 
     /**
@@ -209,7 +209,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the list element
      */
     default DataList getList(Key key) {
-        return getOrThrow(key).asList();
+        return get(key).asList();
     }
 
     /**
@@ -219,7 +219,7 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      * @return the value element
      */
     default DataValue<?> getValue(Key key) {
-        return getOrThrow(key).asValue();
+        return get(key).asValue();
     }
 
     // Iteration

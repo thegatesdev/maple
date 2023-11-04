@@ -56,14 +56,14 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
     // Operations
 
     @Override
-    public DataElement getOrNull(Integer index) {
-        return getOrNull((int)index);
+    public DataElement find(Integer index) {
+        return find((int)index);
     }
 
     /**
-     * @see DataList#getOrNull(Integer)
+     * @see DataList#find(Integer)
      */
-    public DataElement getOrNull(int index){
+    public DataElement find(int index){
         if (index < 0 || index >= elements.length) return null;
         return elements[index];
     }

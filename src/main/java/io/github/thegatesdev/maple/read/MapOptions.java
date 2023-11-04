@@ -67,7 +67,7 @@ public final class MapOptions<Ret> {
     public Ret apply(DataMap input) {
         var output = DataMap.builder(entries.length);
         for (final var entry : entries) {
-            var element = input.getOrNull(entry.key);
+            var element = input.find(entry.key);
             if (element != null) output.add(entry.key, entry.dataType.read(element));
             else {
                 if (!entry.hasDefault) throw new KeyNotPresentException(entry.key);
