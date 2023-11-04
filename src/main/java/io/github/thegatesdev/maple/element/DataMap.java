@@ -18,9 +18,7 @@ package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.ElementType;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -28,6 +26,8 @@ import java.util.function.Function;
  * An element mapping {@code String} keys to {@code DataValue} values.
  */
 public final class DataMap implements DataElement, DataDictionary<String> {
+
+    public static final DataMap EMPTY = new DataMap(Collections.emptyMap());
 
     private final Map<String, DataElement> elements;
 

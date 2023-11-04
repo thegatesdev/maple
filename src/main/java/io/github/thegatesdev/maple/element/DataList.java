@@ -27,6 +27,8 @@ import java.util.function.Function;
  */
 public final class DataList implements DataElement, DataDictionary<Integer> {
 
+    public static final DataList EMPTY = new DataList(new DataElement[0]);
+
     private final DataElement[] elements;
 
     private DataList(DataElement[] elements) {
