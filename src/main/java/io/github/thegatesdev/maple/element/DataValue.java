@@ -34,18 +34,18 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
      * @return the new value element
      */
     @SuppressWarnings("unchecked")
-    static <Type> DataValue<Type> of(Type value){
+    static <Type> DataValue<Type> of(Type value) {
         return new StaticValue<>(((Class<Type>) value.getClass()), value);
     }
 
     /**
      * Create a new dynamic value element producing values of the given type.
      *
-     * @param valueType the type of values produced
+     * @param valueType     the type of values produced
      * @param valueSupplier the supplier producing the values
      * @return the new value element
      */
-    static <Type> DataValue<Type> of(Class<Type> valueType, Supplier<Type> valueSupplier){
+    static <Type> DataValue<Type> of(Class<Type> valueType, Supplier<Type> valueSupplier) {
         return new DynamicValue<>(valueType, valueSupplier);
     }
 
@@ -57,7 +57,7 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
     }
 
     @Override
-    default DataValue<Type> transform(Function<DataElement, DataElement> transformFunction){
+    default DataValue<Type> transform(Function<DataElement, DataElement> transformFunction) {
         return this;
     }
 
@@ -165,7 +165,7 @@ public sealed interface DataValue<Type> extends DataElement permits DynamicValue
     }
 
     @Override
-    default boolean isEmpty(){
+    default boolean isEmpty() {
         return false;
     }
 }

@@ -18,7 +18,10 @@ package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.ElementType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -41,7 +44,7 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
      *
      * @return the new builder
      */
-    public static Builder builder(){
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -51,7 +54,7 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
      * @param initialCapacity the initial capacity of the builder
      * @return the new builder
      */
-    public static Builder builder(int initialCapacity){
+    public static Builder builder(int initialCapacity) {
         return new Builder(initialCapacity);
     }
 
@@ -59,13 +62,13 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
 
     @Override
     public DataElement find(Integer index) {
-        return find((int)index);
+        return find((int) index);
     }
 
     /**
      * @see DataList#find(Integer)
      */
-    public DataElement find(int index){
+    public DataElement find(int index) {
         if (index < 0 || index >= elements.length) return null;
         return elements[index];
     }
@@ -127,15 +130,16 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
     /**
      * A builder for {@link DataList}.
      */
-    public static class Builder{
+    public static class Builder {
+
         private final List<DataElement> buildingElements;
 
 
-        private Builder(){
+        private Builder() {
             this(5);
         }
 
-        private Builder(int initialCapacity){
+        private Builder(int initialCapacity) {
             buildingElements = new ArrayList<>(initialCapacity);
         }
 
@@ -145,7 +149,7 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
          *
          * @return the new list element
          */
-        public DataList build(){
+        public DataList build() {
             return new DataList(buildingElements.toArray(new DataElement[0]));
         }
 
@@ -155,7 +159,7 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
          *
          * @param element the element to add
          */
-        public Builder add(DataElement element){
+        public Builder add(DataElement element) {
             buildingElements.add(element);
             return this;
         }
@@ -165,7 +169,7 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
          *
          * @param elements the elements to add
          */
-        public Builder addFrom(Collection<DataElement> elements){
+        public Builder addFrom(Collection<DataElement> elements) {
             buildingElements.addAll(elements);
             return this;
         }
@@ -175,7 +179,7 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
          *
          * @param elements the elements to add
          */
-        public Builder addFrom(Iterable<DataElement> elements){
+        public Builder addFrom(Iterable<DataElement> elements) {
             elements.forEach(buildingElements::add);
             return this;
         }
@@ -185,7 +189,7 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
          *
          * @param dataList the list to add the elements from
          */
-        public Builder addFrom(DataList dataList){
+        public Builder addFrom(DataList dataList) {
             buildingElements.addAll(Arrays.asList(dataList.elements));
             return this;
         }

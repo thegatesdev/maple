@@ -18,7 +18,10 @@ package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.ElementType;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -41,7 +44,7 @@ public final class DataMap implements DataElement, DataDictionary<String> {
      *
      * @return the new builder
      */
-    public static Builder builder(){
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -51,7 +54,7 @@ public final class DataMap implements DataElement, DataDictionary<String> {
      * @param initialCapacity the initial capacity of the builder
      * @return the new builder
      */
-    public static Builder builder(int initialCapacity){
+    public static Builder builder(int initialCapacity) {
         return new Builder(initialCapacity);
     }
 
@@ -118,15 +121,16 @@ public final class DataMap implements DataElement, DataDictionary<String> {
     /**
      * A builder for {@link DataMap}.
      */
-    public static class Builder{
+    public static class Builder {
+
         private final Map<String, DataElement> buildingElements;
 
 
-        private Builder(){
+        private Builder() {
             this(5);
         }
 
-        private Builder(int initialCapacity){
+        private Builder(int initialCapacity) {
             buildingElements = new LinkedHashMap<>(initialCapacity);
         }
 
@@ -136,7 +140,7 @@ public final class DataMap implements DataElement, DataDictionary<String> {
          *
          * @return the new map element
          */
-        public DataMap build(){
+        public DataMap build() {
             return new DataMap(new LinkedHashMap<>(buildingElements));
         }
 
@@ -144,10 +148,10 @@ public final class DataMap implements DataElement, DataDictionary<String> {
         /**
          * Add an element in the builder at the given key, potentially overwriting existing values.
          *
-         * @param key the key for the element
+         * @param key     the key for the element
          * @param element the element to add
          */
-        public Builder add(String key, DataElement element){
+        public Builder add(String key, DataElement element) {
             buildingElements.put(key, element);
             return this;
         }
@@ -157,7 +161,7 @@ public final class DataMap implements DataElement, DataDictionary<String> {
          *
          * @param elements the elements to add
          */
-        public Builder addFrom(Map<String, DataElement> elements){
+        public Builder addFrom(Map<String, DataElement> elements) {
             buildingElements.putAll(elements);
             return this;
         }
@@ -167,7 +171,7 @@ public final class DataMap implements DataElement, DataDictionary<String> {
          *
          * @param dataMap the map to add the elements from
          */
-        public Builder addFrom(DataMap dataMap){
+        public Builder addFrom(DataMap dataMap) {
             buildingElements.putAll(dataMap.elements);
             return this;
         }
