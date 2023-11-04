@@ -46,10 +46,7 @@ public class ListDataType implements DataType<DataList> {
 
     @Override
     public DataList read(DataElement input) {
-        var list = input.asList();
-        var out = new DataList(list.size());
-        list.each(element -> out.add(original.read(element)));
-        return out;
+        return input.asList().transform(original::read);
     }
 
     @Override
