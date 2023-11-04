@@ -79,7 +79,7 @@ public final class MapOptions<Ret> {
     }
 
     /**
-     * Get an immutable view of the option entries.
+     * Get an unmodifiable view of the option entries.
      *
      * @return the option entries
      */
