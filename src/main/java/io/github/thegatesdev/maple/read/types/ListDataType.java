@@ -36,7 +36,7 @@ public class ListDataType implements DataType<DataList> {
 
     private ListDataType(DataType<?> original) {
         this.original = original;
-        this.id = original.getId() + "_list";
+        this.id = original.id() + "_list";
     }
 
     public static ListDataType getOrCreate(DataType<?> original) {
@@ -46,14 +46,11 @@ public class ListDataType implements DataType<DataList> {
 
     @Override
     public DataList read(DataElement input) {
-        var list = input.asList();
-        var out = new DataList(list.size());
-        list.each(element -> out.add(original.read(element)));
-        return out;
+        return input.asList().transform(original::read);
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return id;
     }
 

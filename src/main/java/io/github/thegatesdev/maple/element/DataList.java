@@ -19,119 +19,100 @@ package io.github.thegatesdev.maple.element;
 import io.github.thegatesdev.maple.ElementType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * An element holding a list of elements.
  */
 public final class DataList implements DataElement, DataDictionary<Integer> {
 
-    private final List<DataElement> elementList;
+    public static final DataList EMPTY = new DataList(new DataElement[0]);
 
-    private DataList(List<DataElement> elementList) {
-        this.elementList = elementList;
+    private final DataElement[] elements;
+
+    private DataList(DataElement[] elements) {
+        this.elements = elements;
     }
 
-    /**
-     * Construct a new empty {@code DataList}.
-     */
-    public DataList() {
-        this(new ArrayList<>());
-    }
 
     /**
-     * Construct a new empty {@code DataList} with the given initial capacity.
+     * Create a new list element builder.
      *
-     * @param initialCapacity the initial capacity of the list
+     * @return the new builder
      */
-    public DataList(int initialCapacity) {
-        this(new ArrayList<>(initialCapacity));
+    public static Builder builder() {
+        return new Builder();
     }
 
-    // Self
-
-    @Override
-    public DataList structureCopy() {
-        var output = new ArrayList<DataElement>(elementList.size());
-        for (int i = 0; i < elementList.size(); i++)
-            output.set(i, elementList.get(i).structureCopy());
-        return new DataList(output);
+    /**
+     * Create a new list element builder with the given initial capacity.
+     *
+     * @param initialCapacity the initial capacity of the builder
+     * @return the new builder
+     */
+    public static Builder builder(int initialCapacity) {
+        return new Builder(initialCapacity);
     }
 
     // Operations
 
-    /**
-     * @see DataList#getOrNull(Integer)
-     */
-    public DataElement getOrNull(int index) {
-        if (index < 0 || index >= elementList.size()) return null;
-        return elementList.get(index);
-    }
-
-    /**
-     * @see DataList#set(Integer, DataElement)
-     */
-    public void set(int index, DataElement element) {
-        elementList.set(index, element);
-    }
-
-
-    /**
-     * Append an element to the list.
-     *
-     * @param element the element to append
-     */
-    public void add(DataElement element) {
-        elementList.add(element);
-    }
-
     @Override
-    public DataElement getOrNull(Integer index) {
-        return getOrNull((int) index);
+    public DataElement find(Integer index) {
+        return find((int) index);
     }
 
-    @Override
-    public void set(Integer index, DataElement element) {
-        set((int) index, element);
+    /**
+     * @see DataList#find(Integer)
+     */
+    public DataElement find(int index) {
+        if (index < 0 || index >= elements.length) return null;
+        return elements[index];
     }
 
     @Override
     public void each(Consumer<DataElement> elementConsumer) {
-        elementList.forEach(elementConsumer);
+        for (final var element : elements)
+            elementConsumer.accept(element);
     }
 
     @Override
-    public int crawl(Crawler crawler) {
-        int processed = 0;
-        for (int i = 0; i < elementList.size(); i++) {
-            var element = elementList.get(i);
-            processed += element.crawl(crawler) + 1; // Crawl containing elements
+    public DataElement crawl(Function<DataElement, DataElement> crawlFunction) {
+        var output = new DataElement[elements.length];
+        for (int i = 0; i < elements.length; i++)
+            output[i] = crawlFunction.apply(elements[i].crawl(crawlFunction));
+        return new DataList(output);
+    }
 
-            var result = crawler.process(element); // Crawl element itself
-            if (result.isPresent()) elementList.set(i, result.get()); // Replace original
-        }
-        return processed;
+    @Override
+    public DataList transform(Function<DataElement, DataElement> transformFunction) {
+        var output = new DataElement[elements.length];
+        for (int i = 0; i < elements.length; i++)
+            output[i] = transformFunction.apply(elements[i]);
+        return new DataList(output);
     }
 
     // Information
 
     @Override
     public int size() {
-        return elementList.size();
+        return elements.length;
     }
 
     // Value
 
     @Override
     public boolean isEmpty() {
-        return elementList.isEmpty();
+        return elements.length == 0;
     }
 
     // Type
 
     @Override
-    public ElementType getType() {
+    public ElementType type() {
         return ElementType.LIST;
     }
 
@@ -143,5 +124,74 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
     @Override
     public DataList asList() {
         return this;
+    }
+
+
+    /**
+     * A builder for {@link DataList}.
+     */
+    public static class Builder {
+
+        private final List<DataElement> buildingElements;
+
+
+        private Builder() {
+            this(5);
+        }
+
+        private Builder(int initialCapacity) {
+            buildingElements = new ArrayList<>(initialCapacity);
+        }
+
+
+        /**
+         * Build the elements in the builder to a new list element.
+         *
+         * @return the new list element
+         */
+        public DataList build() {
+            return new DataList(buildingElements.toArray(new DataElement[0]));
+        }
+
+
+        /**
+         * Add an element to the builder.
+         *
+         * @param element the element to add
+         */
+        public Builder add(DataElement element) {
+            buildingElements.add(element);
+            return this;
+        }
+
+        /**
+         * Add all elements from the given collection to the builder.
+         *
+         * @param elements the elements to add
+         */
+        public Builder addFrom(Collection<DataElement> elements) {
+            buildingElements.addAll(elements);
+            return this;
+        }
+
+        /**
+         * Add all elements from the given iterable to the builder.
+         *
+         * @param elements the elements to add
+         */
+        public Builder addFrom(Iterable<DataElement> elements) {
+            elements.forEach(buildingElements::add);
+            return this;
+        }
+
+        /**
+         * Add all elements from the given list element to the builder.
+         *
+         * @param dataList the list to add the elements from
+         */
+        public Builder addFrom(DataList dataList) {
+            buildingElements.addAll(Arrays.asList(dataList.elements));
+            return this;
+        }
     }
 }

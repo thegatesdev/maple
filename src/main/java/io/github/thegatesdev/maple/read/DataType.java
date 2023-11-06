@@ -39,7 +39,7 @@ public interface DataType<R extends DataElement> {
      *
      * @return the identifier of the datatype.
      */
-    String getId();
+    String id();
 
     /**
      * Get a datatype representing a list of elements of this type.

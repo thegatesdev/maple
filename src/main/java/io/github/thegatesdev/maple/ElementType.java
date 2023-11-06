@@ -45,14 +45,14 @@ public enum ElementType {
     /**
      * @return the name of the element type
      */
-    public String getElementName() {
+    public String elementName() {
         return elementName;
     }
 
     /**
      * @return the name of the element type as used in a sentence
      */
-    public String getInlineName() {
+    public String inlineName() {
         return inlineName;
     }
 }

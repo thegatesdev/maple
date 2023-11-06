@@ -18,95 +18,92 @@ package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.ElementType;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * An element mapping {@code String} keys to {@code DataValue} values.
  */
 public final class DataMap implements DataElement, DataDictionary<String> {
 
-    private final Map<String, DataElement> elementMap;
+    public static final DataMap EMPTY = new DataMap(Collections.emptyMap());
 
-    private DataMap(Map<String, DataElement> elementMap) {
-        this.elementMap = elementMap;
+    private final Map<String, DataElement> elements;
+
+    private DataMap(Map<String, DataElement> elements) {
+        this.elements = elements;
     }
 
-    /**
-     * Construct a new empty {@code DataMap}.
-     */
-    public DataMap() {
-        this(new LinkedHashMap<>());
-    }
 
     /**
-     * Construct a new empty {@code DataMap} with the given initial capacity.
+     * Create a new map element builder.
      *
-     * @param initialCapacity the initial capacity of the map
+     * @return the new builder
      */
-    public DataMap(int initialCapacity) {
-        this(new LinkedHashMap<>(initialCapacity));
+    public static Builder builder() {
+        return new Builder();
     }
 
-    // Self
-
-    @Override
-    public DataMap structureCopy() {
-        var output = new LinkedHashMap<String, DataElement>(elementMap.size());
-        elementMap.forEach((key, element) ->
-                output.put(key, element.structureCopy()));
-        return new DataMap(output);
+    /**
+     * Create a new map element builder with the given initial capacity.
+     *
+     * @param initialCapacity the initial capacity of the builder
+     * @return the new builder
+     */
+    public static Builder builder(int initialCapacity) {
+        return new Builder(initialCapacity);
     }
 
     // Operations
 
     @Override
-    public DataElement getOrNull(String key) {
-        return elementMap.get(key);
-    }
-
-    @Override
-    public void set(String key, DataElement element) {
-        elementMap.put(key, element);
+    public DataElement find(String key) {
+        return elements.get(Objects.requireNonNull(key, "key cannot be null"));
     }
 
     @Override
     public void each(Consumer<DataElement> elementConsumer) {
-        elementMap.values().forEach(elementConsumer);
+        elements.values().forEach(elementConsumer);
     }
 
     @Override
-    public int crawl(Crawler crawler) {
-        int processed = 0;
-        for (final var entry : elementMap.entrySet()) {
-            var element = entry.getValue();
-            processed += element.crawl(crawler) + 1;
+    public DataElement crawl(Function<DataElement, DataElement> crawlFunction) {
+        var builder = builder(size());
+        elements.forEach((key, value) ->
+                builder.add(key, crawlFunction.apply(value.crawl(crawlFunction))));
+        return builder.build();
+    }
 
-            var result = crawler.process(element);
-            result.ifPresent(entry::setValue);
-        }
-        return processed;
+    @Override
+    public DataMap transform(Function<DataElement, DataElement> transformFunction) {
+        var builder = builder(size());
+        elements.forEach((key, value) ->
+                builder.add(key, transformFunction.apply(value)));
+        return builder.build();
     }
 
     // Information
 
     @Override
     public int size() {
-        return elementMap.size();
+        return elements.size();
     }
 
     // Value
 
     @Override
     public boolean isEmpty() {
-        return elementMap.isEmpty();
+        return elements.isEmpty();
     }
 
     // Type
 
     @Override
-    public ElementType getType() {
+    public ElementType type() {
         return ElementType.MAP;
     }
 
@@ -118,5 +115,65 @@ public final class DataMap implements DataElement, DataDictionary<String> {
     @Override
     public DataMap asMap() {
         return this;
+    }
+
+
+    /**
+     * A builder for {@link DataMap}.
+     */
+    public static class Builder {
+
+        private final Map<String, DataElement> buildingElements;
+
+
+        private Builder() {
+            this(5);
+        }
+
+        private Builder(int initialCapacity) {
+            buildingElements = new LinkedHashMap<>(initialCapacity);
+        }
+
+
+        /**
+         * Build the elements in the builder to a new map element.
+         *
+         * @return the new map element
+         */
+        public DataMap build() {
+            return new DataMap(new LinkedHashMap<>(buildingElements));
+        }
+
+
+        /**
+         * Add an element in the builder at the given key, potentially overwriting existing values.
+         *
+         * @param key     the key for the element
+         * @param element the element to add
+         */
+        public Builder add(String key, DataElement element) {
+            buildingElements.put(key, element);
+            return this;
+        }
+
+        /**
+         * Add all elements from the given map to the builder.
+         *
+         * @param elements the elements to add
+         */
+        public Builder addFrom(Map<String, DataElement> elements) {
+            buildingElements.putAll(elements);
+            return this;
+        }
+
+        /**
+         * Add all elements from the given map element to the builder.
+         *
+         * @param dataMap the map to add the elements from
+         */
+        public Builder addFrom(DataMap dataMap) {
+            buildingElements.putAll(dataMap.elements);
+            return this;
+        }
     }
 }

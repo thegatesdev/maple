@@ -20,32 +20,31 @@ import io.github.thegatesdev.maple.ElementType;
 import io.github.thegatesdev.maple.exception.ElementTypeException;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * An interface defining the base functionality of an element in a Maple structure.
  */
 public sealed interface DataElement permits DataList, DataMap, DataValue {
 
-    // Self
-
-    /**
-     * Deep copy this element to a new element of the same type.
-     * All descendants will be copied as well, excluding any value elements, as they are immutable.
-     *
-     * @return a new element holding the same structure
-     */
-    DataElement structureCopy();
-
     // Operations
 
     /**
-     * Crawl all the descendants of the elements contained in this element.
-     * The children of an element will be processed before the element itself.
+     * Process all the descendants of this element using the given function.
+     * The children of an element will be processed before their parent.
      *
-     * @param crawler the crawler to use
-     * @return the amount of elements processed
+     * @param crawlFunction the function called on each descendant
+     * @return the element with the processed values
      */
-    int crawl(Crawler crawler);
+    DataElement crawl(Function<DataElement, DataElement> crawlFunction);
+
+    /**
+     * Process the children of this element using the given function.
+     *
+     * @param transformFunction the function called on each child
+     * @return the element with the processed values
+     */
+    DataElement transform(Function<DataElement, DataElement> transformFunction);
 
     // Value
 
@@ -88,7 +87,7 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
     /**
      * @return the corresponding element type for this element
      */
-    ElementType getType();
+    ElementType type();
 
 
     /**
@@ -96,7 +95,7 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
      * @throws ElementTypeException if this element is not a map
      */
     default DataMap asMap() throws ElementTypeException {
-        throw new ElementTypeException(ElementType.MAP, getType());
+        throw new ElementTypeException(ElementType.MAP, type());
     }
 
     /**
@@ -104,7 +103,7 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
      * @throws ElementTypeException if this element is not a list
      */
     default DataList asList() throws ElementTypeException {
-        throw new ElementTypeException(ElementType.LIST, getType());
+        throw new ElementTypeException(ElementType.LIST, type());
     }
 
     /**
@@ -112,7 +111,7 @@ public sealed interface DataElement permits DataList, DataMap, DataValue {
      * @throws ElementTypeException if this element is not a value
      */
     default DataValue<?> asValue() throws ElementTypeException {
-        throw new ElementTypeException(ElementType.VALUE, getType());
+        throw new ElementTypeException(ElementType.VALUE, type());
     }
 
 

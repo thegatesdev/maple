@@ -19,7 +19,7 @@ package io.github.thegatesdev.maple.conversion;
 import io.github.thegatesdev.maple.element.DataElement;
 import io.github.thegatesdev.maple.element.DataList;
 import io.github.thegatesdev.maple.element.DataMap;
-import io.github.thegatesdev.maple.element.StaticDataValue;
+import io.github.thegatesdev.maple.element.DataValue;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,7 @@ import java.util.Objects;
  * This conversion is able to convert most existing Java types to their element equivalent.
  * Arrays, Lists, and optionally Iterables will be converted to {@link DataList}.
  * Maps will be converted to {@link DataMap}.
- * The remaining types will be wrapped in a {@link StaticDataValue}.
+ * The remaining types will be wrapped in a {@link DataValue}.
  */
 public final class DefaultConversion implements Conversion {
 
@@ -45,7 +45,7 @@ public final class DefaultConversion implements Conversion {
     }
 
     /**
-     * Indicate to convert {@link Iterable} entries to their {@link DataList} equivalent, instead of wrapping them in a {@link StaticDataValue}.
+     * Indicate to convert {@link Iterable} entries to their {@link DataList} equivalent, instead of wrapping them in a {@link DataValue}.
      * Default is {@code true}.
      */
     public DefaultConversion convertIterable(boolean convertIterable) {
@@ -63,22 +63,22 @@ public final class DefaultConversion implements Conversion {
         if (object instanceof List<?> someList) return convertList(someList);
         if (convertIterable && object instanceof Iterable<?> someIterable) return convertList(List.of(someIterable));
 
-        return new StaticDataValue<>(object);
+        return DataValue.of(object);
     }
 
     public DataMap convertMap(Map<?, ?> someMap) {
-        var output = new DataMap(someMap.size());
+        var output = DataMap.builder(someMap.size());
         someMap.forEach((key, value) -> {
             var result = apply(value);
-            if (key instanceof String stringKey) output.set(stringKey, result);
-            else if (useToStringKeys) output.set(key.toString(), result);
+            if (key instanceof String stringKey) output.add(stringKey, result);
+            else if (useToStringKeys) output.add(key.toString(), result);
         });
-        return output;
+        return output.build();
     }
 
     public DataList convertList(List<?> someList) {
-        var output = new DataList(someList.size());
+        var output = DataList.builder(someList.size());
         for (Object value : someList) output.add(apply(value));
-        return output;
+        return output.build();
     }
 }

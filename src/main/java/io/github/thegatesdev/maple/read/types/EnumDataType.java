@@ -52,12 +52,12 @@ public class EnumDataType<E extends Enum<E>> implements DataType<DataValue<E>> {
     @Override
     public DataValue<E> read(DataElement input) {
         return input.asValue()
-                .getAsHolding(String.class)
+                .asHolding(String.class)
                 .transform(valueType, this::enumFromString);
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return id;
     }
 

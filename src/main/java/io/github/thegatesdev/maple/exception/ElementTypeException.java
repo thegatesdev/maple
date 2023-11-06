@@ -31,7 +31,7 @@ public class ElementTypeException extends IllegalArgumentException {
      * @param actualType   the actual invalid type that was in this location
      */
     public ElementTypeException(ElementType expectedType, ElementType actualType) {
-        super(MESSAGE.formatted(expectedType.getInlineName(), actualType.getInlineName()));
+        super(MESSAGE.formatted(expectedType.inlineName(), actualType.inlineName()));
         this.expectedType = expectedType;
         this.actualType = actualType;
     }
@@ -39,14 +39,14 @@ public class ElementTypeException extends IllegalArgumentException {
     /**
      * @return the type of the element that was expected in this location
      */
-    public ElementType getExpectedType() {
+    public ElementType expectedType() {
         return expectedType;
     }
 
     /**
      * @return the actual invalid type that was in this location
      */
-    public ElementType getActualType() {
+    public ElementType actualType() {
         return actualType;
     }
 }

@@ -38,14 +38,14 @@ public class ValueTypeException extends IllegalArgumentException {
     /**
      * @return the type of the value that was expected in this location
      */
-    public Class<?> getExpectedType() {
+    public Class<?> expectedType() {
         return expectedType;
     }
 
     /**
      * @return the actual invalid type of the value that was in this location
      */
-    public Class<?> getActualType() {
+    public Class<?> actualType() {
         return actualType;
     }
 }
