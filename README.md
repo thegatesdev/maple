@@ -1,4 +1,4 @@
-# Maple
+![maple-banner-plain](https://github.com/thegatesdev/maple/assets/69715898/16368197-a6e0-4edf-9df4-2576db370412)
 
 A simple, type safe configuration structure
 
