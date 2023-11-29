@@ -10,11 +10,10 @@ description = "A clean, type safe configuration structure."
 
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-
     withJavadocJar()
     withSourcesJar()
+
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 publishing {
