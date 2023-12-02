@@ -18,12 +18,10 @@ package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.ElementType;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * An element mapping {@code String} keys to {@code DataValue} values.
@@ -84,6 +82,23 @@ public final class DataMap implements DataElement, DataDictionary<String> {
         elements.forEach((key, value) ->
                 builder.add(key, transformFunction.apply(value)));
         return builder.build();
+    }
+
+    @Override
+    public Stream<DataElement> stream() {
+        return elements.values().stream();
+    }
+
+    @Override
+    public List<DataElement> collect() {
+        return new ArrayList<>(elements.values());
+    }
+
+    @Override
+    public <T> List<T> collect(Function<DataElement, T> mapper) {
+        var result = new ArrayList<T>(elements.size());
+        elements.forEach((s, element) -> result.add(mapper.apply(element)));
+        return result;
     }
 
     // Information
