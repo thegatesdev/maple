@@ -23,15 +23,15 @@ public enum ElementType {
     /**
      * The map element type, corresponding to the {@link io.github.thegatesdev.maple.element.DataMap} class.
      */
-    MAP("dataMap", "a map element"),
+    MAP("dataMap", "map"),
     /**
      * The list element type, corresponding to the {@link io.github.thegatesdev.maple.element.DataList} class.
      */
-    LIST("dataList", "a list element"),
+    LIST("dataList", "list"),
     /**
      * The value element type, corresponding to the {@link io.github.thegatesdev.maple.element.DataValue} interface.
      */
-    VALUE("dataValue", "a value element");
+    VALUE("dataValue", "value");
 
 
     private final String elementName, inlineName;

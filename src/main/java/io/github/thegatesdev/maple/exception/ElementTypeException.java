@@ -23,7 +23,7 @@ import io.github.thegatesdev.maple.ElementType;
  */
 public class ElementTypeException extends IllegalArgumentException {
 
-    private static final String MESSAGE = "Invalid element type, expected %s, got %s";
+    private static final String MESSAGE = "Invalid element type, expected a %s, got a %s";
     private final ElementType expectedType, actualType;
 
     /**
