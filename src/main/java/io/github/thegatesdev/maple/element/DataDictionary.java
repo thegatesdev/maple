@@ -202,6 +202,20 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
         return get(key).asMap();
     }
 
+
+    /**
+     * Get the map element at the given key. Returns the given default value when it is not present.
+     *
+     * @param key the key for the element
+     * @param def the default value
+     * @return the map element
+     */
+    default DataMap getMap(Key key, DataMap def){
+        DataElement el = find(key);
+        if (el == null || !el.isMap()) return def;
+        return el.asMap();
+    }
+
     /**
      * Get the list element at the given key.
      *
@@ -213,6 +227,19 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
     }
 
     /**
+     * Get the list element at the given key. Returns the given default value when it is not present.
+     *
+     * @param key the key for the element
+     * @param def the default value
+     * @return the list element
+     */
+    default DataList getList(Key key, DataList def){
+        DataElement el = find(key);
+        if (el == null || !el.isList()) return def;
+        return el.asList();
+    }
+
+    /**
      * Get the value element at the given key.
      *
      * @param key the key for the element
@@ -220,6 +247,19 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      */
     default DataValue<?> getValue(Key key) {
         return get(key).asValue();
+    }
+
+    /**
+     * Get the value element at the given key. Returns the given default value when it is not present.
+     *
+     * @param key the key for the element
+     * @param def the default value
+     * @return the value element
+     */
+    default DataValue<?> getValue(Key key, DataValue<?> def){
+        DataElement el = find(key);
+        if (el == null || !el.isValue()) return def;
+        return el.asValue();
     }
 
     // Iteration
