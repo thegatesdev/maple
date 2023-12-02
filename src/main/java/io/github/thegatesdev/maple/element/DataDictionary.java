@@ -18,8 +18,13 @@ package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.exception.KeyNotPresentException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public sealed interface DataDictionary<Key> permits DataMap, DataList {
 
@@ -297,6 +302,32 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      */
     default void eachValue(Consumer<DataValue<?>> valueConsumer) {
         each(element -> element.ifValue(valueConsumer));
+    }
+
+
+    /**
+     * Create a stream from the elements in this dictionary.
+     *
+     * @return the new stream
+     */
+    Stream<DataElement> stream();
+
+    /**
+     * Collect the elements in this dictionary to a new, modifiable list.
+     *
+     * @return the new list
+     */
+    List<DataElement> collect();
+
+    /**
+     * Collect the elements in this dictionary to a new, modifiable list after applying the given function.
+     *
+     * @param mapper the function to apply to each element
+     * @return the new list
+     */
+    default <T> List<T> collect(Function<DataElement, T> mapper){
+        // Highly naive implementation... should be overridden.
+        return stream().map(mapper).collect(Collectors.toCollection(ArrayList::new));
     }
 
     // Information
