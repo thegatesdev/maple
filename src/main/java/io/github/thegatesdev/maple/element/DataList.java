@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * An element holding a list of elements.
@@ -93,6 +94,29 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
         for (int i = 0; i < elements.length; i++)
             output[i] = transformFunction.apply(elements[i]);
         return new DataList(output);
+    }
+
+    @Override
+    public Stream<DataElement> stream() {
+        return Arrays.stream(elements);
+    }
+
+    @Override
+    public List<DataElement> collect() {
+        return new ArrayList<>(Arrays.asList(elements));
+    }
+
+    @Override
+    public <T> List<T> collect(Function<DataElement, T> mapper) {
+        var result = new ArrayList<T>(elements.length);
+        for (final DataElement element : elements)
+            result.add(mapper.apply(element));
+        return result;
+    }
+
+    @Override
+    public DataList valueList() {
+        return this;
     }
 
     // Information

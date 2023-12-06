@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DataType representing a value type.
+ * DataType representing a simple value of the given type.
  * Caches all types.
  */
 public class ValueDataType<Val> implements DataType<DataValue<Val>> {
