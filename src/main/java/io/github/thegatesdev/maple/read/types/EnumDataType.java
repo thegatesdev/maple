@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DataType representing an enum.
+ * DataType representing a string as an enum value.
  * Caches all types.
  */
 public class EnumDataType<E extends Enum<E>> implements DataType<DataValue<E>> {

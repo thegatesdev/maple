@@ -18,8 +18,13 @@ package io.github.thegatesdev.maple.element;
 
 import io.github.thegatesdev.maple.exception.KeyNotPresentException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public sealed interface DataDictionary<Key> permits DataMap, DataList {
 
@@ -202,6 +207,20 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
         return get(key).asMap();
     }
 
+
+    /**
+     * Get the map element at the given key. Returns the given default value when it is not present.
+     *
+     * @param key the key for the element
+     * @param def the default value
+     * @return the map element
+     */
+    default DataMap getMap(Key key, DataMap def){
+        DataElement el = find(key);
+        if (el == null || !el.isMap()) return def;
+        return el.asMap();
+    }
+
     /**
      * Get the list element at the given key.
      *
@@ -213,6 +232,19 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
     }
 
     /**
+     * Get the list element at the given key. Returns the given default value when it is not present.
+     *
+     * @param key the key for the element
+     * @param def the default value
+     * @return the list element
+     */
+    default DataList getList(Key key, DataList def){
+        DataElement el = find(key);
+        if (el == null || !el.isList()) return def;
+        return el.asList();
+    }
+
+    /**
      * Get the value element at the given key.
      *
      * @param key the key for the element
@@ -220,6 +252,19 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      */
     default DataValue<?> getValue(Key key) {
         return get(key).asValue();
+    }
+
+    /**
+     * Get the value element at the given key. Returns the given default value when it is not present.
+     *
+     * @param key the key for the element
+     * @param def the default value
+     * @return the value element
+     */
+    default DataValue<?> getValue(Key key, DataValue<?> def){
+        DataElement el = find(key);
+        if (el == null || !el.isValue()) return def;
+        return el.asValue();
     }
 
     // Iteration
@@ -257,6 +302,40 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
      */
     default void eachValue(Consumer<DataValue<?>> valueConsumer) {
         each(element -> element.ifValue(valueConsumer));
+    }
+
+
+    /**
+     * Create a stream from the elements in this dictionary.
+     *
+     * @return the new stream
+     */
+    Stream<DataElement> stream();
+
+    /**
+     * Collect the elements in this dictionary to a new, modifiable list.
+     *
+     * @return the new list
+     */
+    List<DataElement> collect();
+
+    /**
+     * Obtain a list element holding the values of this dictionary.
+     * May return the same object.
+     *
+     * @return the list with values
+     */
+    DataList valueList();
+
+    /**
+     * Collect the elements in this dictionary to a new, modifiable list after applying the given function.
+     *
+     * @param mapper the function to apply to each element
+     * @return the new list
+     */
+    default <T> List<T> collect(Function<DataElement, T> mapper){
+        // Highly naive implementation... should be overridden.
+        return stream().map(mapper).collect(Collectors.toCollection(ArrayList::new));
     }
 
     // Information

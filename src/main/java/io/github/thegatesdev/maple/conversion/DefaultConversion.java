@@ -24,6 +24,7 @@ import io.github.thegatesdev.maple.element.DataValue;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * This conversion is able to convert most existing Java types to their element equivalent.
@@ -31,7 +32,7 @@ import java.util.Objects;
  * Maps will be converted to {@link DataMap}.
  * The remaining types will be wrapped in a {@link DataValue}.
  */
-public final class DefaultConversion implements Conversion {
+public class DefaultConversion implements Conversion {
 
     private boolean useToStringKeys = false, convertIterable = true;
 
@@ -54,19 +55,26 @@ public final class DefaultConversion implements Conversion {
     }
 
 
-    private DataElement apply(Object object) {
-        Objects.requireNonNull(object, "Cannot convert 'null'");
-        if (object instanceof DataElement) throw new IllegalArgumentException("Cannot convert 'DataElement'");
-
-        if (object instanceof Object[] someArray) return convertList(List.of(someArray));
-        if (object instanceof Map<?, ?> someMap) return convertMap(someMap);
-        if (object instanceof List<?> someList) return convertList(someList);
-        if (convertIterable && object instanceof Iterable<?> someIterable) return convertList(List.of(someIterable));
-
-        return DataValue.of(object);
+    protected Optional<DataElement> tryApply(Object object){
+        if (object instanceof Object[] someArray)
+            return Optional.of(convertList(List.of(someArray)));
+        else if (object instanceof Map<?, ?> someMap)
+            return Optional.of(convertMap(someMap));
+        else if (object instanceof List<?> someList)
+            return Optional.of(convertList(someList));
+        else if (convertIterable && object instanceof Iterable<?> someIterable)
+            return Optional.of(convertList(List.of(someIterable)));
+        else return Optional.empty();
     }
 
-    public DataMap convertMap(Map<?, ?> someMap) {
+
+    protected final DataElement apply(Object object) {
+        Objects.requireNonNull(object, "Cannot convert 'null'");
+        if (object instanceof DataElement) throw new IllegalArgumentException("Cannot convert 'DataElement'");
+        return tryApply(object).orElse(DataValue.of(object));
+    }
+
+    public final DataMap convertMap(Map<?, ?> someMap) {
         var output = DataMap.builder(someMap.size());
         someMap.forEach((key, value) -> {
             var result = apply(value);
@@ -76,7 +84,7 @@ public final class DefaultConversion implements Conversion {
         return output.build();
     }
 
-    public DataList convertList(List<?> someList) {
+    public final DataList convertList(List<?> someList) {
         var output = DataList.builder(someList.size());
         for (Object value : someList) output.add(apply(value));
         return output.build();
