@@ -1,8 +1,8 @@
 ![maple-banner-plain](https://github.com/thegatesdev/maple/assets/69715898/16368197-a6e0-4edf-9df4-2576db370412)
 
-A simple, type safe configuration structure
+A clean, type safe intermediary structure
 
-*Updated for version 4.0.0*
+*Updated for version 4.1.0*
 
 ## Contents
 
@@ -63,7 +63,7 @@ DataElement myElement = DataMap.EMPTY;
 myElement.isList(); // False
 myElement.isMap(); // True
 
-myElement.type(); // ElementType.MAP
+ElementType type = myElement.type(); // ElementType.MAP
 
 myElement.ifMap(map -> print("myElement is a map!"), () -> print("myElement is not a map!"));
 ```
@@ -79,7 +79,7 @@ DataMap myMap;
 DataElement otherElement = myMap.get("somekey");
 
 DataMap otherMap = myMap.getMap("mapkey");
-DataList otherList = myMap.getList("listkey");
+DataList otherList = myMap.getList("listkey", DataList.EMTPY); // With default
 
 DataElement optionalElement = myMap.find("invalid_key"); // Returns 'null' if not found
 
