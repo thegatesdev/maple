@@ -114,6 +114,11 @@ public final class DataList implements DataElement, DataDictionary<Integer> {
         return result;
     }
 
+    @Override
+    public DataList valueList() {
+        return this;
+    }
+
     // Information
 
     @Override

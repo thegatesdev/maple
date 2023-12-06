@@ -101,6 +101,24 @@ public final class DataMap implements DataElement, DataDictionary<String> {
         return result;
     }
 
+    /**
+     * Obtain a list element holding the keys of this map element.
+     *
+     * @return the list with keys
+     */
+    public DataList keyList(){
+        var builder = DataList.builder(size());
+        elements.keySet().forEach(key -> builder.add(DataValue.of(key)));
+        return builder.build();
+    }
+
+    @Override
+    public DataList valueList(){
+        var builder = DataList.builder(size());
+        builder.addFrom(elements.values());
+        return builder.build();
+    }
+
     // Information
 
     @Override
