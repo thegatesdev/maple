@@ -6,7 +6,7 @@ plugins {
 
 group = "io.github.thegatesdev"
 version = "4.1.0"
-description = "A clean, type safe configuration structure."
+description = "A clean, type safe intermediary structure"
 
 repositories {
     mavenCentral()
