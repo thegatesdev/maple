@@ -320,6 +320,14 @@ public sealed interface DataDictionary<Key> permits DataMap, DataList {
     List<DataElement> collect();
 
     /**
+     * Obtain a list element holding the values of this dictionary.
+     * May return the same object.
+     *
+     * @return the list with values
+     */
+    DataList valueList();
+
+    /**
      * Collect the elements in this dictionary to a new, modifiable list after applying the given function.
      *
      * @param mapper the function to apply to each element
