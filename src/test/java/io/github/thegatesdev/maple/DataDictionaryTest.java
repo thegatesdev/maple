@@ -1,6 +1,6 @@
 package io.github.thegatesdev.maple;
 
-import io.github.thegatesdev.maple.element.DataDictionary;
+import io.github.thegatesdev.maple.element.DataElement;
 import io.github.thegatesdev.maple.element.DataList;
 import io.github.thegatesdev.maple.element.DataMap;
 import io.github.thegatesdev.maple.element.DataValue;
@@ -9,7 +9,6 @@ import io.github.thegatesdev.maple.exception.KeyNotPresentException;
 import io.github.thegatesdev.maple.exception.ValueTypeException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,9 +23,7 @@ class DataDictionaryTest {
         testMap = DataMap.builder(3)
                 .add("key_one", DataValue.of("value_one"))
                 .add("key_two", DataList.EMPTY)
-                .add("key_three", DataMap.builder()
-                        .add("key_nested", DataValue.of("value_nested"))
-                        .build())
+                .add("key_three", DataMap.builder().add("key_nested", DataValue.of("value_nested")).build())
                 .build();
     }
 
@@ -35,9 +32,7 @@ class DataDictionaryTest {
         testList = DataList.builder(3)
                 .add(DataValue.of("value_one"))
                 .add(DataList.EMPTY)
-                .add(DataMap.builder()
-                        .add("key_nested", DataValue.of("value_nested"))
-                        .build())
+                .add(DataMap.builder().add("key_nested", DataValue.of("value_nested")).build())
                 .build();
     }
 
@@ -87,20 +82,20 @@ class DataDictionaryTest {
     }
 
 
-    private int crawlCount(DataDictionary<?> dictionary){
+    private static int crawlCount(DataElement element) {
         final AtomicInteger visited = new AtomicInteger();
-        testMap.crawl(element -> {
+        element.crawl(val -> {
             visited.getAndIncrement();
-            return element;
+            return val;
         });
         return visited.get();
     }
 
-    private int transformCount(DataDictionary<?> dictionary){
+    private static int transformCount(DataElement element) {
         final AtomicInteger visited = new AtomicInteger();
-        testMap.transform(element -> {
+        element.transform(val -> {
             visited.getAndIncrement();
-            return element;
+            return val;
         });
         return visited.get();
     }
