@@ -26,36 +26,27 @@ public class MapOptionsTest {
 
     @Test
     void whenCorrectOptions_thenValidate() {
-        Assertions.assertDoesNotThrow(() -> testOptions.apply(
-                DataMap.builder()
-                        .add("option_one", DataValue.of(1))
-                        .add("option_two", DataValue.of(true))
-                        .add("option_three", DataList.builder()
-                                .add(DataValue.of("string_value"))
-                                .build())
-                        .build()
-        ));
+        Assertions.assertDoesNotThrow(() -> testOptions.apply(DataMap.builder()
+                .add("option_one", DataValue.of(1))
+                .add("option_two", DataValue.of(true))
+                .add("option_three", DataList.builder().add(DataValue.of("string_value")).build())
+                .build()));
     }
 
     @Test
     void whenOptionNotPresent_thenThrow() {
-        Assertions.assertThrows(KeyNotPresentException.class, () -> testOptions.apply(
-                DataMap.builder()
+        Assertions.assertThrows(KeyNotPresentException.class,
+                () -> testOptions.apply(DataMap.builder()
                         .add("option_two", DataValue.of(true))
-                        .add("option_three", DataList.builder()
-                                .add(DataValue.of("string_value"))
-                                .build())
-                        .build()
-        ));
+                        .add("option_three", DataList.builder().add(DataValue.of("string_value")).build())
+                        .build()));
     }
 
     @Test
     void whenDefaultedOptionNotPresent_thenDefault() {
         DataMap result = testOptions.apply(DataMap.builder()
                 .add("option_one", DataValue.of(1))
-                .add("option_three", DataList.builder()
-                        .add(DataValue.of("string_value"))
-                        .build())
+                .add("option_three", DataList.builder().add(DataValue.of("string_value")).build())
                 .build());
         Assertions.assertEquals(result.getBool("option_two"), false);
         Assertions.assertEquals(result.get("option_four", ElementType.class), ElementType.MAP);
