@@ -5,21 +5,21 @@ plugins {
 }
 
 group = "io.github.thegatesdev"
-version = "4.0.0"
+version = "4.1.0"
 description = "A clean, type safe configuration structure."
 
-repositories{
+repositories {
     mavenCentral()
 }
 
-dependencies{
+dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 
-tasks{
-    test{
+tasks {
+    test {
         useJUnitPlatform()
     }
 }
