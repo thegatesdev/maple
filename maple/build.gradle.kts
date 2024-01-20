@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-group = "io.github.thegatesdev"
+group = "com.github.thegatesdev"
 version = "5.0.0-SNAPSHOT"
 
 java{
