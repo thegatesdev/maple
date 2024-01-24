@@ -47,7 +47,7 @@ public sealed interface Element permits DictElement, ListElement, BoolElement, D
         throw new ElementTypeException(ElementType.LIST, type());
     }
 
-    default ListElement getDict(ListElement def) {
+    default ListElement getList(ListElement def) {
         return def;
     }
 
