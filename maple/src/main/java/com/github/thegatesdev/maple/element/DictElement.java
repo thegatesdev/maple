@@ -20,11 +20,6 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     DictElement getDict();
 
     @Override
-    default DictElement getDict(DictElement def) {
-        return getDict();
-    }
-
-    @Override
     default Optional<DictElement> grabDict() {
         return Optional.of(getDict());
     }

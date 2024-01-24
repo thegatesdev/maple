@@ -25,11 +25,6 @@ public final class StringElement implements Element {
     }
 
     @Override
-    public String getString(String def) {
-        return getString();
-    }
-
-    @Override
     public Optional<String> grabString() {
         return Optional.of(value);
     }

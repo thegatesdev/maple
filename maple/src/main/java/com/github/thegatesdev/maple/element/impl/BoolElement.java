@@ -25,11 +25,6 @@ public final class BoolElement implements Element {
     }
 
     @Override
-    public boolean getBool(boolean def) {
-        return value;
-    }
-
-    @Override
     public Optional<Boolean> grabBool() {
         return Optional.of(value);
     }

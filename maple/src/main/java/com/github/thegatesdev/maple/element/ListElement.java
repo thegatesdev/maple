@@ -23,11 +23,6 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     ListElement getList();
 
     @Override
-    default ListElement getList(ListElement def) {
-        return getList();
-    }
-
-    @Override
     default Optional<ListElement> grabList() {
         return Optional.of(getList());
     }

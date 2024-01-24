@@ -25,18 +25,8 @@ public final class FloatElement implements Element {
     }
 
     @Override
-    public int getInt(int def) {
-        return getInt();
-    }
-
-    @Override
     public long getLong() {
         return (long) value;
-    }
-
-    @Override
-    public long getLong(long def) {
-        return getLong();
     }
 
     @Override
@@ -45,18 +35,8 @@ public final class FloatElement implements Element {
     }
 
     @Override
-    public float getFloat(float def) {
-        return getFloat();
-    }
-
-    @Override
     public double getDouble() {
         return value;
-    }
-
-    @Override
-    public double getDouble(double def) {
-        return getDouble();
     }
 
     @Override

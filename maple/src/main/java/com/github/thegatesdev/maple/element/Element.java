@@ -39,64 +39,32 @@ public sealed interface Element permits DictElement, ListElement, BoolElement, D
         throw new ElementTypeException(ElementType.DICTIONARY, type());
     }
 
-    default DictElement getDict(DictElement def) {
-        return def;
-    }
-
     default ListElement getList() {
         throw new ElementTypeException(ElementType.LIST, type());
-    }
-
-    default ListElement getList(ListElement def) {
-        return def;
     }
 
     default String getString() {
         throw new ElementTypeException(ElementType.STRING, type());
     }
 
-    default String getString(String def) {
-        return def;
-    }
-
     default boolean getBool() {
         throw new ElementTypeException(ElementType.BOOLEAN, type());
-    }
-
-    default boolean getBool(boolean def) {
-        return def;
     }
 
     default int getInt() {
         throw new ElementTypeException(ElementType.NUMBER, type());
     }
 
-    default int getInt(int def) {
-        return def;
-    }
-
     default long getLong() {
         throw new ElementTypeException(ElementType.NUMBER, type());
-    }
-
-    default long getLong(long def) {
-        return def;
     }
 
     default float getFloat() {
         throw new ElementTypeException(ElementType.NUMBER, type());
     }
 
-    default float getFloat(float def) {
-        return def;
-    }
-
     default double getDouble() {
         throw new ElementTypeException(ElementType.NUMBER, type());
-    }
-
-    default double getDouble(double def) {
-        return def;
     }
 
 
