@@ -15,6 +15,24 @@ public sealed interface ListElement extends Element, ElementCollection permits M
 
 
     @Override
+    default boolean isList() {
+        return true;
+    }
+
+    @Override
+    ListElement getList();
+
+    @Override
+    default ListElement getList(ListElement def) {
+        return getList();
+    }
+
+    @Override
+    default Optional<ListElement> grabList() {
+        return Optional.of(getList());
+    }
+
+    @Override
     default ElementType type() {
         return ElementType.LIST;
     }
