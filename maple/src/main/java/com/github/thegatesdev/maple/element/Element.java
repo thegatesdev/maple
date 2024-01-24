@@ -116,7 +116,7 @@ public sealed interface Element permits DictElement, ListElement, BoolElement, D
         return Optional.empty();
     }
 
-    default Optional<Integer> grabNumber() {
+    default Optional<Number> grabNumber() {
         return Optional.empty();
     }
 }
