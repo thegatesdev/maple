@@ -5,10 +5,18 @@ import com.github.thegatesdev.maple.element.ElementType;
 
 public final class IntElement implements Element {
 
+    private static final IntElement ZERO = new IntElement(0);
+
     private final int value;
 
     private IntElement(int value) {
         this.value = value;
+    }
+
+
+    public static IntElement of(int value) {
+        if (value == 0) return ZERO;
+        return new IntElement(value);
     }
 
 

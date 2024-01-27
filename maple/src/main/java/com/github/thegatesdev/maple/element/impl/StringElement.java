@@ -12,6 +12,11 @@ public final class StringElement implements Element {
     }
 
 
+    public static StringElement of(String value) {
+        return new StringElement(value);
+    }
+
+
     @Override
     public boolean isString() {
         return true;

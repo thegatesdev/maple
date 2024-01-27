@@ -5,10 +5,18 @@ import com.github.thegatesdev.maple.element.ElementType;
 
 public final class LongElement implements Element {
 
+    private static final LongElement ZERO = new LongElement(0L);
+
     private final long value;
 
     private LongElement(long value) {
         this.value = value;
+    }
+
+
+    public static LongElement of(long value) {
+        if (value == 0L) return ZERO;
+        return new LongElement(value);
     }
 
 

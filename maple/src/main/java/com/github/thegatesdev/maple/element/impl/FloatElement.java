@@ -5,10 +5,18 @@ import com.github.thegatesdev.maple.element.ElementType;
 
 public final class FloatElement implements Element {
 
+    private static final FloatElement ZERO = new FloatElement(0f);
+
     private final float value;
 
     private FloatElement(float value) {
         this.value = value;
+    }
+
+
+    public static FloatElement of(float value) {
+        if (value == 0f) return ZERO;
+        return new FloatElement(value);
     }
 
 

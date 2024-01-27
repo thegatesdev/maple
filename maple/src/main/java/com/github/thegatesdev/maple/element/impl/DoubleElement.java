@@ -5,10 +5,18 @@ import com.github.thegatesdev.maple.element.ElementType;
 
 public final class DoubleElement implements Element {
 
+    private static final DoubleElement ZERO = new DoubleElement(0d);
+
     private final double value;
 
     private DoubleElement(double value) {
         this.value = value;
+    }
+
+
+    public static DoubleElement of(double value) {
+        if (value == 0d) return ZERO;
+        return new DoubleElement(value);
     }
 
 
