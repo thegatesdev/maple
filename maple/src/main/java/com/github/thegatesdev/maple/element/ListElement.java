@@ -12,9 +12,6 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     Optional<Element> find(int index);
 
 
-    ListElement merged(ListElement other);
-
-
     @Override
     ListElement each(Function<Element, Element> transformer);
 
