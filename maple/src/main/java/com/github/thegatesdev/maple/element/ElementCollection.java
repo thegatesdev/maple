@@ -32,7 +32,7 @@ public sealed interface ElementCollection extends Element permits DictElement, L
     ElementCollection crawl(Function<Element, Element> transformer);
 
 
-    Stream<Element> toStream();
+    Stream<Element> stream();
 
     ListElement values();
 
