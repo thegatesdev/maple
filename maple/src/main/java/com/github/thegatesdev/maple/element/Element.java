@@ -5,6 +5,35 @@ import com.github.thegatesdev.maple.exception.ElementTypeException;
 
 public sealed interface Element permits DictElement, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
 
+    static Element of(String value) {
+        return StringElement.of(value);
+    }
+
+    static Element of(boolean value) {
+        return BoolElement.of(value);
+    }
+
+    static Element of(int value) {
+        return DoubleElement.of(value);
+    }
+
+    static Element of(long value) {
+        return LongElement.of(value);
+    }
+
+    static Element of(float value) {
+        return FloatElement.of(value);
+    }
+
+    static Element of(double value) {
+        return DoubleElement.of(value);
+    }
+
+    static Element ofUnset() {
+        return UnsetElement.getInstance();
+    }
+
+
     ElementType type();
 
 
