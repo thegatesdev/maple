@@ -3,14 +3,8 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-public final class BoolElement implements Element {
-
-    private final boolean value;
-
-    private BoolElement(boolean value) {
-        this.value = value;
-    }
-
+public enum BoolElement implements Element {
+    TRUE, FALSE;
 
     @Override
     public boolean isBool() {
@@ -19,7 +13,7 @@ public final class BoolElement implements Element {
 
     @Override
     public boolean getBool() {
-        return value;
+        return this == TRUE;
     }
 
     @Override
