@@ -3,7 +3,7 @@ package com.github.thegatesdev.maple.element;
 import com.github.thegatesdev.maple.element.impl.*;
 import com.github.thegatesdev.maple.exception.ElementTypeException;
 
-public sealed interface Element permits DictElement, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
+public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
 
     static Element of(String value) {
         return StringElement.of(value);

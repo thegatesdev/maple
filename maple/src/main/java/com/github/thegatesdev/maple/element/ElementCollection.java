@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public sealed interface ElementCollection permits DictElement, ListElement {
+public sealed interface ElementCollection extends Element permits DictElement, ListElement {
 
     char DEFAULT_DELIMITER = '.';
 
