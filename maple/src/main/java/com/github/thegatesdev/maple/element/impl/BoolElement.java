@@ -3,8 +3,6 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-import java.util.Optional;
-
 public final class BoolElement implements Element {
 
     private final boolean value;
@@ -22,11 +20,6 @@ public final class BoolElement implements Element {
     @Override
     public boolean getBool() {
         return value;
-    }
-
-    @Override
-    public Optional<Boolean> grabBool() {
-        return Optional.of(value);
     }
 
     @Override

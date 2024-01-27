@@ -3,8 +3,6 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-import java.util.Optional;
-
 public final class StringElement implements Element {
 
     private final String value;
@@ -22,11 +20,6 @@ public final class StringElement implements Element {
     @Override
     public String getString() {
         return value;
-    }
-
-    @Override
-    public Optional<String> grabString() {
-        return Optional.of(value);
     }
 
     @Override

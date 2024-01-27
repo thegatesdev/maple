@@ -3,8 +3,6 @@ package com.github.thegatesdev.maple.element;
 import com.github.thegatesdev.maple.element.impl.*;
 import com.github.thegatesdev.maple.exception.ElementTypeException;
 
-import java.util.Optional;
-
 public sealed interface Element permits DictElement, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
 
     ElementType type();
@@ -65,26 +63,5 @@ public sealed interface Element permits DictElement, ListElement, BoolElement, D
 
     default double getDouble() {
         throw new ElementTypeException(ElementType.NUMBER, type());
-    }
-
-
-    default Optional<DictElement> grabDict() {
-        return Optional.empty();
-    }
-
-    default Optional<ListElement> grabList() {
-        return Optional.empty();
-    }
-
-    default Optional<String> grabString() {
-        return Optional.empty();
-    }
-
-    default Optional<Boolean> grabBool() {
-        return Optional.empty();
-    }
-
-    default Optional<Number> grabNumber() {
-        return Optional.empty();
     }
 }

@@ -2,8 +2,6 @@ package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.MemoryDictElement;
 
-import java.util.Optional;
-
 public sealed interface DictElement extends Element, ElementCollection permits MemoryDictElement {
 
     DictElement merged(DictElement other);
@@ -18,11 +16,6 @@ public sealed interface DictElement extends Element, ElementCollection permits M
 
     @Override
     DictElement getDict();
-
-    @Override
-    default Optional<DictElement> grabDict() {
-        return Optional.of(getDict());
-    }
 
     @Override
     default ElementType type() {

@@ -3,8 +3,6 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-import java.util.Optional;
-
 public final class DoubleElement implements Element {
 
     private final double value;
@@ -37,11 +35,6 @@ public final class DoubleElement implements Element {
     @Override
     public double getDouble() {
         return value;
-    }
-
-    @Override
-    public Optional<Number> grabNumber() {
-        return Optional.of(value);
     }
 
     @Override
