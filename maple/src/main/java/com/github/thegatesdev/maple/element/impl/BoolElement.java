@@ -7,7 +7,7 @@ public final class BoolElement implements Element {
 
     private final boolean value;
 
-    public BoolElement(boolean value) {
+    private BoolElement(boolean value) {
         this.value = value;
     }
 

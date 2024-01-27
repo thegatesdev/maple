@@ -7,7 +7,7 @@ public final class LongElement implements Element {
 
     private final long value;
 
-    public LongElement(long value) {
+    private LongElement(long value) {
         this.value = value;
     }
 

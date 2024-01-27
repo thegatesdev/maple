@@ -7,7 +7,7 @@ public final class IntElement implements Element {
 
     private final int value;
 
-    public IntElement(int value) {
+    private IntElement(int value) {
         this.value = value;
     }
 

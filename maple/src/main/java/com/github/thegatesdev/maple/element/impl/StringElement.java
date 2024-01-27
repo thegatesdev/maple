@@ -7,7 +7,7 @@ public final class StringElement implements Element {
 
     private final String value;
 
-    public StringElement(String value) {
+    private StringElement(String value) {
         this.value = value;
     }
 

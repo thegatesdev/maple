@@ -7,7 +7,7 @@ public final class DoubleElement implements Element {
 
     private final double value;
 
-    public DoubleElement(double value) {
+    private DoubleElement(double value) {
         this.value = value;
     }
 

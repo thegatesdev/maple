@@ -7,7 +7,7 @@ public final class FloatElement implements Element {
 
     private final float value;
 
-    public FloatElement(float value) {
+    private FloatElement(float value) {
         this.value = value;
     }
 
