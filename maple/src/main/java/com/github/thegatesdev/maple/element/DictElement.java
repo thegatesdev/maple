@@ -35,4 +35,15 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     default ElementType type() {
         return ElementType.DICTIONARY;
     }
+
+
+    interface Builder {
+        DictElement build();
+
+        Element set(String key, Element element);
+
+        void addFrom(DictElement dictElement);
+
+        Element remove(String key);
+    }
 }

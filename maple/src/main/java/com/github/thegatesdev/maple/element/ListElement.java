@@ -30,4 +30,15 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     default ElementType type() {
         return ElementType.LIST;
     }
+
+
+    interface Builder {
+        ListElement build();
+
+        Element set(int index, Element element);
+
+        void addFrom(ListElement listElement);
+
+        Element remove(int index);
+    }
 }
