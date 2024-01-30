@@ -19,19 +19,6 @@ public final class MemoryListElement implements ListElement {
     }
 
 
-    // TODO Implement some efficient pathing method that only has to split once
-
-
-    @Override
-    public Element get(String path, char delimiter) {
-        return null;
-    }
-
-    @Override
-    public Optional<Element> find(String path, char delimiter) {
-        return Optional.empty();
-    }
-
     @Override
     public void each(Consumer<Element> action) {
         for (Element value : values) action.accept(value);
