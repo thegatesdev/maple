@@ -6,6 +6,8 @@ import com.github.thegatesdev.maple.element.ElementCollection;
 import com.github.thegatesdev.maple.element.ListElement;
 import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -71,5 +73,53 @@ public final class MemoryDictElement implements DictElement {
     @Override
     public DictElement getDict() {
         return this;
+    }
+
+
+    private static final class Builder implements DictElement.Builder {
+
+        private final Map<String, Element> values;
+
+
+        private Builder(int initialCapacity) {
+            this.values = Collections.synchronizedMap(new LinkedHashMap<>(initialCapacity));
+        }
+
+        private Builder() {
+            this(5);
+        }
+
+
+        @Override
+        public DictElement build() {
+            return new MemoryDictElement(new LinkedHashMap<>(values));
+        }
+
+        @Override
+        public DictElement.Builder set(String key, Element element) {
+            values.put(key, element);
+            return this;
+        }
+
+        @Override
+        public DictElement.Builder addFrom(DictElement dictElement) {
+            if (dictElement instanceof MemoryDictElement memoryDictElement)
+                addFrom(memoryDictElement.values);
+            else
+                dictElement.entries(values::put);
+            return this;
+        }
+
+        @Override
+        public DictElement.Builder addFrom(Map<String, Element> values) {
+            this.values.putAll(values);
+            return this;
+        }
+
+        @Override
+        public DictElement.Builder remove(String key) {
+            values.remove(key);
+            return this;
+        }
     }
 }
