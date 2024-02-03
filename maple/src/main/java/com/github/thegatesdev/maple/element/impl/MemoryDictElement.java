@@ -76,7 +76,7 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public ListElement values() {
-        return null; // TODO
+        return Element.listBuilder(values.size()).addFrom(values.values()).build();
     }
 
     @Override
