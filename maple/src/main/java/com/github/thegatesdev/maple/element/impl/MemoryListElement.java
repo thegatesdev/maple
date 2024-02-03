@@ -4,8 +4,7 @@ import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementCollection;
 import com.github.thegatesdev.maple.element.ListElement;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -95,5 +94,60 @@ public final class MemoryListElement implements ListElement {
     @Override
     public ListElement getList() {
         return this;
+    }
+
+
+    private static final class Builder implements ListElement.Builder {
+
+        private static final Element[] EMPTY_EL_ARR = new Element[0];
+        private final List<Element> values;
+
+
+        private Builder(int initialCapacity) {
+            this.values = Collections.synchronizedList(new ArrayList<>(initialCapacity));
+        }
+        
+        private Builder() {
+            this(5);
+        }
+
+
+        @Override
+        public ListElement build() {
+            return new MemoryListElement(values.toArray(EMPTY_EL_ARR));
+        }
+
+        @Override
+        public void add(Element element) {
+            values.add(element);
+        }
+
+        @Override
+        public void addFrom(ListElement listElement) {
+            if (listElement instanceof MemoryListElement memoryListElement)
+                addFrom(memoryListElement.values);
+            else
+                listElement.each((Consumer<Element>) values::add);
+        }
+
+        @Override
+        public void addFrom(Element[] values) {
+            addFrom(Arrays.asList(values));
+        }
+
+        @Override
+        public void addFrom(Collection<Element> values) {
+            this.values.addAll(values);
+        }
+
+        @Override
+        public Element set(int index, Element element) {
+            return values.set(index, element);
+        }
+
+        @Override
+        public Element remove(int index) {
+            return values.remove(index);
+        }
     }
 }
