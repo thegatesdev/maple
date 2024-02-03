@@ -85,13 +85,13 @@ public final class MemoryListElement implements ListElement {
         }
 
         @Override
-        public Builder add(Element element) {
+        public ListElement.Builder add(Element element) {
             values.add(element);
             return this;
         }
 
         @Override
-        public Builder addFrom(ListElement listElement) {
+        public ListElement.Builder addFrom(ListElement listElement) {
             if (listElement instanceof MemoryListElement memoryListElement)
                 addFrom(memoryListElement.values);
             else
@@ -100,24 +100,24 @@ public final class MemoryListElement implements ListElement {
         }
 
         @Override
-        public Builder addFrom(Element[] values) {
+        public ListElement.Builder addFrom(Element[] values) {
             return addFrom(Arrays.asList(values));
         }
 
         @Override
-        public Builder addFrom(Collection<Element> values) {
+        public ListElement.Builder addFrom(Collection<Element> values) {
             this.values.addAll(values);
             return this;
         }
 
         @Override
-        public Builder set(int index, Element element) {
+        public ListElement.Builder set(int index, Element element) {
             values.set(index, element);
             return this;
         }
 
         @Override
-        public Builder remove(int index) {
+        public ListElement.Builder remove(int index) {
             values.remove(index);
             return this;
         }
