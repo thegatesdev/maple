@@ -10,6 +10,8 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     Element get(int index);
 
     Optional<Element> find(int index);
+    
+    Builder modify();
 
 
     @Override

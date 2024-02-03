@@ -12,6 +12,8 @@ public sealed interface DictElement extends Element, ElementCollection permits M
 
     Optional<Element> find(String key);
 
+    Builder modify();
+
 
     @Override
     default boolean isDict() {
