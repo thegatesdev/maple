@@ -6,7 +6,6 @@ import com.github.thegatesdev.maple.element.ListElement;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public final class MemoryListElement implements ListElement {
@@ -34,33 +33,6 @@ public final class MemoryListElement implements ListElement {
     }
 
     @Override
-    public ListElement each(Function<Element, Element> transformer) {
-        final Element[] output = new Element[values.length];
-
-        for (int i = 0; i < values.length; i++) {
-            Element original = values[i];
-            output[i] = transformer.apply(original);
-        }
-
-        return new MemoryListElement(output);
-    }
-
-    @Override
-    public ListElement crawl(Function<Element, Element> transformer) {
-        final Element[] output = new Element[values.length];
-
-        for (int i = 0; i < values.length; i++) {
-            Element value = values[i];
-            if (value instanceof ElementCollection collection) {
-                value = collection.crawl(transformer);
-            }
-            output[i] = transformer.apply(value);
-        }
-
-        return new MemoryListElement(output);
-    }
-
-    @Override
     public Stream<Element> stream() {
         return Arrays.stream(values);
     }
@@ -68,11 +40,6 @@ public final class MemoryListElement implements ListElement {
     @Override
     public ListElement values() {
         return this;
-    }
-
-    @Override
-    public ListElement values(Function<Element, Element> transformer) {
-        return each(transformer);
     }
 
     @Override
@@ -106,7 +73,7 @@ public final class MemoryListElement implements ListElement {
         private Builder(int initialCapacity) {
             this.values = Collections.synchronizedList(new ArrayList<>(initialCapacity));
         }
-        
+
         private Builder() {
             this(5);
         }

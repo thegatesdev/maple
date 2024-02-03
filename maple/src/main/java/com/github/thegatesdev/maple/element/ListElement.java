@@ -4,7 +4,6 @@ import com.github.thegatesdev.maple.element.impl.MemoryListElement;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Function;
 
 public sealed interface ListElement extends Element, ElementCollection permits MemoryListElement {
 
@@ -12,12 +11,6 @@ public sealed interface ListElement extends Element, ElementCollection permits M
 
     Optional<Element> find(int index);
 
-
-    @Override
-    ListElement each(Function<Element, Element> transformer);
-
-    @Override
-    ListElement crawl(Function<Element, Element> transformer);
 
     @Override
     default boolean isList() {
