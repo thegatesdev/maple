@@ -17,6 +17,15 @@ public final class MemoryListElement implements ListElement {
     }
 
 
+    public static ListElement.Builder builder(int initialCapacity) {
+        return new Builder(initialCapacity);
+    }
+
+    public static ListElement.Builder builder() {
+        return new Builder();
+    }
+
+
     @Override
     public void each(Consumer<Element> action) {
         for (Element value : values) action.accept(value);
@@ -59,6 +68,11 @@ public final class MemoryListElement implements ListElement {
     }
 
     @Override
+    public ListElement.Builder modify() {
+        return new Builder(this);
+    }
+
+    @Override
     public ListElement getList() {
         return this;
     }
@@ -69,6 +83,10 @@ public final class MemoryListElement implements ListElement {
         private static final Element[] EMPTY_EL_ARR = new Element[0];
         private final List<Element> values;
 
+
+        private Builder(MemoryListElement listElement) {
+            this.values = Collections.synchronizedList(new ArrayList<>(Arrays.asList(listElement.values)));
+        }
 
         private Builder(int initialCapacity) {
             this.values = Collections.synchronizedList(new ArrayList<>(initialCapacity));

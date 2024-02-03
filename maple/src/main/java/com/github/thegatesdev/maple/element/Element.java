@@ -33,6 +33,22 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
         return UnsetElement.getInstance();
     }
 
+    static DictElement.Builder dictBuilder(int initialCapacity) {
+        return MemoryDictElement.builder(initialCapacity);
+    }
+
+    static DictElement.Builder dictBuilder() {
+        return MemoryDictElement.builder();
+    }
+
+    static ListElement.Builder listBuilder(int initialCapacity) {
+        return MemoryListElement.builder(initialCapacity);
+    }
+
+    static ListElement.Builder listBuilder() {
+        return MemoryListElement.builder();
+    }
+
 
     ElementType type();
 

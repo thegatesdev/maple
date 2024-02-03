@@ -23,6 +23,15 @@ public final class MemoryDictElement implements DictElement {
     }
 
 
+    public static DictElement.Builder builder(int initialCapacity) {
+        return new Builder(initialCapacity);
+    }
+
+    public static DictElement.Builder builder() {
+        return new Builder();
+    }
+
+
     @Override
     public Element get(String key) {
         Element value = values.get(key);
@@ -33,6 +42,11 @@ public final class MemoryDictElement implements DictElement {
     @Override
     public Optional<Element> find(String key) {
         return Optional.ofNullable(values.get(key));
+    }
+
+    @Override
+    public DictElement.Builder modify() {
+        return new Builder(this);
     }
 
     @Override
@@ -80,6 +94,10 @@ public final class MemoryDictElement implements DictElement {
 
         private final Map<String, Element> values;
 
+
+        private Builder(MemoryDictElement element) {
+            this.values = Collections.synchronizedMap(new LinkedHashMap<>(element.values));
+        }
 
         private Builder(int initialCapacity) {
             this.values = Collections.synchronizedMap(new LinkedHashMap<>(initialCapacity));
