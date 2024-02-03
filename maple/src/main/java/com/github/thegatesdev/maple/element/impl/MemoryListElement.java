@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 public final class MemoryListElement implements ListElement {
 
+    private static final MemoryListElement EMPTY = new MemoryListElement(Builder.EMPTY_EL_ARR);
     private final Element[] values;
 
     private MemoryListElement(Element[] values) {
@@ -99,6 +100,7 @@ public final class MemoryListElement implements ListElement {
 
         @Override
         public ListElement build() {
+            if (values.isEmpty()) return EMPTY;
             return new MemoryListElement(values.toArray(EMPTY_EL_ARR));
         }
 

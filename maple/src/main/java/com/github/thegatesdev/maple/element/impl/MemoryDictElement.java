@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 public final class MemoryDictElement implements DictElement {
 
+    private static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
     private final Map<String, Element> values;
 
     private MemoryDictElement(Map<String, Element> values) {
@@ -110,6 +111,7 @@ public final class MemoryDictElement implements DictElement {
 
         @Override
         public DictElement build() {
+            if (values.isEmpty()) return EMPTY;
             return new MemoryDictElement(new LinkedHashMap<>(values));
         }
 
