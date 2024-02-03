@@ -3,6 +3,8 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
+import java.util.Objects;
+
 public final class StringElement implements Element {
 
     private final String value;
@@ -13,6 +15,7 @@ public final class StringElement implements Element {
 
 
     public static StringElement of(String value) {
+        Objects.requireNonNull(value, "value cannot be null");
         return new StringElement(value);
     }
 
