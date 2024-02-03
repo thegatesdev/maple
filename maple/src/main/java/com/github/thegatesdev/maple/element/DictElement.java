@@ -30,12 +30,12 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     interface Builder {
         DictElement build();
 
-        Element set(String key, Element element);
+        Optional<Element> set(String key, Element element);
 
         void addFrom(DictElement dictElement);
 
         void addFrom(Map<String, Element> values);
 
-        Element remove(String key);
+        Optional<Element> remove(String key);
     }
 }

@@ -37,8 +37,8 @@ public sealed interface ListElement extends Element, ElementCollection permits M
 
         void addFrom(Collection<Element> values);
 
-        Element set(int index, Element element);
+        Optional<Element> set(int index, Element element);
 
-        Element remove(int index);
+        Optional<Element> remove(int index);
     }
 }

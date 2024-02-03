@@ -108,13 +108,13 @@ public final class MemoryListElement implements ListElement {
         }
 
         @Override
-        public Element set(int index, Element element) {
-            return values.set(index, element);
+        public Optional<Element> set(int index, Element element) {
+            return Optional.ofNullable(values.set(index, element));
         }
 
         @Override
-        public Element remove(int index) {
-            return values.remove(index);
+        public Optional<Element> remove(int index) {
+            return Optional.ofNullable(values.remove(index));
         }
     }
 }
