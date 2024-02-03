@@ -35,9 +35,11 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     interface Builder {
         ListElement build();
 
-        Element set(int index, Element element);
+        void add(Element element);
 
         void addFrom(ListElement listElement);
+
+        Element set(int index, Element element);
 
         Element remove(int index);
     }
