@@ -94,7 +94,7 @@ public final class MemoryListElement implements ListElement {
             if (listElement instanceof MemoryListElement memoryListElement)
                 addFrom(memoryListElement.values);
             else
-                listElement.each((Consumer<Element>) values::add);
+                listElement.each(values::add);
         }
 
         @Override
