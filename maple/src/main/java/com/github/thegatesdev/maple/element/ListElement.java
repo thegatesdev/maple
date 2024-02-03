@@ -2,6 +2,7 @@ package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.MemoryListElement;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -38,6 +39,10 @@ public sealed interface ListElement extends Element, ElementCollection permits M
         void add(Element element);
 
         void addFrom(ListElement listElement);
+
+        void addFrom(Element[] values);
+
+        void addFrom(Collection<Element> values);
 
         Element set(int index, Element element);
 

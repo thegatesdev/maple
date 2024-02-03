@@ -2,6 +2,7 @@ package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.MemoryDictElement;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -43,6 +44,8 @@ public sealed interface DictElement extends Element, ElementCollection permits M
         Element set(String key, Element element);
 
         void addFrom(DictElement dictElement);
+
+        void addFrom(Map<String, Element> values);
 
         Element remove(String key);
     }
