@@ -4,6 +4,7 @@ import com.github.thegatesdev.maple.element.impl.MemoryDictElement;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 public sealed interface DictElement extends Element, ElementCollection permits MemoryDictElement {
 
@@ -13,6 +14,8 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     Optional<Element> find(String key);
 
     Builder modify();
+
+    void entries(BiConsumer<String, Element> action);
 
 
     @Override

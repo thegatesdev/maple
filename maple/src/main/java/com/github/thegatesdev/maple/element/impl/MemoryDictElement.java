@@ -8,6 +8,7 @@ import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -30,6 +31,11 @@ public final class MemoryDictElement implements DictElement {
     @Override
     public Optional<Element> find(String key) {
         return Optional.ofNullable(values.get(key));
+    }
+
+    @Override
+    public void entries(BiConsumer<String, Element> action) {
+        values.forEach(action);
     }
 
     @Override
