@@ -10,7 +10,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     Element get(int index);
 
     Optional<Element> find(int index);
-    
+
     Builder modify();
 
 
@@ -31,16 +31,16 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     interface Builder {
         ListElement build();
 
-        void add(Element element);
+        Builder add(Element element);
 
-        void addFrom(ListElement listElement);
+        Builder addFrom(ListElement listElement);
 
-        void addFrom(Element[] values);
+        Builder addFrom(Element[] values);
 
-        void addFrom(Collection<Element> values);
+        Builder addFrom(Collection<Element> values);
 
-        Optional<Element> set(int index, Element element);
+        Builder set(int index, Element element);
 
-        Optional<Element> remove(int index);
+        Builder remove(int index);
     }
 }

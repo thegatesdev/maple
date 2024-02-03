@@ -85,36 +85,41 @@ public final class MemoryListElement implements ListElement {
         }
 
         @Override
-        public void add(Element element) {
+        public Builder add(Element element) {
             values.add(element);
+            return this;
         }
 
         @Override
-        public void addFrom(ListElement listElement) {
+        public Builder addFrom(ListElement listElement) {
             if (listElement instanceof MemoryListElement memoryListElement)
                 addFrom(memoryListElement.values);
             else
                 listElement.each(values::add);
+            return this;
         }
 
         @Override
-        public void addFrom(Element[] values) {
-            addFrom(Arrays.asList(values));
+        public Builder addFrom(Element[] values) {
+            return addFrom(Arrays.asList(values));
         }
 
         @Override
-        public void addFrom(Collection<Element> values) {
+        public Builder addFrom(Collection<Element> values) {
             this.values.addAll(values);
+            return this;
         }
 
         @Override
-        public Optional<Element> set(int index, Element element) {
-            return Optional.ofNullable(values.set(index, element));
+        public Builder set(int index, Element element) {
+            values.set(index, element);
+            return this;
         }
 
         @Override
-        public Optional<Element> remove(int index) {
-            return Optional.ofNullable(values.remove(index));
+        public Builder remove(int index) {
+            values.remove(index);
+            return this;
         }
     }
 }
