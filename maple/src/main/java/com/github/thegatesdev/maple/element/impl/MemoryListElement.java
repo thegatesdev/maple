@@ -4,13 +4,16 @@ import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementCollection;
 import com.github.thegatesdev.maple.element.ListElement;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public final class MemoryListElement implements ListElement {
 
-    private static final MemoryListElement EMPTY = new MemoryListElement(Builder.EMPTY_EL_ARR);
+    private static final Element[] EMPTY_EL_ARR = new Element[0];
+    private static final MemoryListElement EMPTY = new MemoryListElement(EMPTY_EL_ARR);
     private final Element[] values;
 
     private MemoryListElement(Element[] values) {
@@ -18,12 +21,14 @@ public final class MemoryListElement implements ListElement {
     }
 
 
-    public static ListElement.Builder builder(int initialCapacity) {
-        return new Builder(initialCapacity);
+    public static ListElement of(Element[] values) {
+        if (values.length == 0) return EMPTY;
+        return new MemoryListElement(Arrays.copyOf(values, values.length));
     }
 
-    public static ListElement.Builder builder() {
-        return new Builder();
+    public static ListElement of(Collection<Element> values) {
+        if (values.isEmpty()) return EMPTY;
+        return new MemoryListElement(values.toArray(EMPTY_EL_ARR));
     }
 
 
@@ -69,77 +74,7 @@ public final class MemoryListElement implements ListElement {
     }
 
     @Override
-    public ListElement.Builder modify() {
-        return new Builder(this);
-    }
-
-    @Override
     public ListElement getList() {
         return this;
-    }
-
-
-    private static final class Builder implements ListElement.Builder {
-
-        private static final Element[] EMPTY_EL_ARR = new Element[0];
-        private final List<Element> values;
-
-
-        private Builder(MemoryListElement listElement) {
-            this.values = Collections.synchronizedList(new ArrayList<>(Arrays.asList(listElement.values)));
-        }
-
-        private Builder(int initialCapacity) {
-            this.values = Collections.synchronizedList(new ArrayList<>(initialCapacity));
-        }
-
-        private Builder() {
-            this(5);
-        }
-
-
-        @Override
-        public ListElement build() {
-            if (values.isEmpty()) return EMPTY;
-            return new MemoryListElement(values.toArray(EMPTY_EL_ARR));
-        }
-
-        @Override
-        public ListElement.Builder add(Element element) {
-            values.add(element);
-            return this;
-        }
-
-        @Override
-        public ListElement.Builder addFrom(ListElement listElement) {
-            if (listElement instanceof MemoryListElement memoryListElement)
-                addFrom(memoryListElement.values);
-            else
-                listElement.each(values::add);
-            return this;
-        }
-
-        @Override
-        public ListElement.Builder addFrom(Element[] values) {
-            return addFrom(Arrays.asList(values));
-        }
-
-        @Override
-        public ListElement.Builder addFrom(Collection<Element> values) {
-            this.values.addAll(values);
-            return this;
-        }
-
-        @Override
-        public ListElement.Builder set(int index, Element element) {
-            values.set(index, element);
-            return this;
-        }
-
-        @Override
-        public ListElement.Builder remove(int index) {
-            values.remove(index);
-            return this;
-        }
     }
 }

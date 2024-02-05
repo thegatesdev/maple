@@ -2,7 +2,6 @@ package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.MemoryDictElement;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -13,9 +12,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
 
     Optional<Element> find(String key);
 
-    Builder modify();
-
-    void entries(BiConsumer<String, Element> action);
+    void each(BiConsumer<String, Element> action);
 
 
     @Override
@@ -29,18 +26,5 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     @Override
     default ElementType type() {
         return ElementType.DICTIONARY;
-    }
-
-
-    interface Builder {
-        DictElement build();
-
-        Builder set(String key, Element element);
-
-        Builder addFrom(DictElement dictElement);
-
-        Builder addFrom(Map<String, Element> values);
-
-        Builder remove(String key);
     }
 }

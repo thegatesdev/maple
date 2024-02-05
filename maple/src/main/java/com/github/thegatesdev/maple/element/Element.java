@@ -3,7 +3,22 @@ package com.github.thegatesdev.maple.element;
 import com.github.thegatesdev.maple.element.impl.*;
 import com.github.thegatesdev.maple.exception.ElementTypeException;
 
+import java.util.Collection;
+import java.util.Map;
+
 public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
+
+    static ListElement of(Element[] values) {
+        return MemoryListElement.of(values);
+    }
+
+    static ListElement of(Collection<Element> values) {
+        return MemoryListElement.of(values);
+    }
+
+    static DictElement of(Map<String, Element> values) {
+        return MemoryDictElement.of(values);
+    }
 
     static Element of(String value) {
         return StringElement.of(value);
@@ -31,22 +46,6 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
 
     static Element ofUnset() {
         return UnsetElement.getInstance();
-    }
-
-    static DictElement.Builder dictBuilder(int initialCapacity) {
-        return MemoryDictElement.builder(initialCapacity);
-    }
-
-    static DictElement.Builder dictBuilder() {
-        return MemoryDictElement.builder();
-    }
-
-    static ListElement.Builder listBuilder(int initialCapacity) {
-        return MemoryListElement.builder(initialCapacity);
-    }
-
-    static ListElement.Builder listBuilder() {
-        return MemoryListElement.builder();
     }
 
 

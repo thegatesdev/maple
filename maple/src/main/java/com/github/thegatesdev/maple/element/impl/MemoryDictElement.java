@@ -24,12 +24,9 @@ public final class MemoryDictElement implements DictElement {
     }
 
 
-    public static DictElement.Builder builder(int initialCapacity) {
-        return new Builder(initialCapacity);
-    }
-
-    public static DictElement.Builder builder() {
-        return new Builder();
+    public static DictElement of(Map<String, Element> values) {
+        if (values.isEmpty()) return EMPTY;
+        return new MemoryDictElement(new LinkedHashMap<>(values));
     }
 
 
@@ -46,12 +43,7 @@ public final class MemoryDictElement implements DictElement {
     }
 
     @Override
-    public DictElement.Builder modify() {
-        return new Builder(this);
-    }
-
-    @Override
-    public void entries(BiConsumer<String, Element> action) {
+    public void each(BiConsumer<String, Element> action) {
         values.forEach(action);
     }
 
@@ -77,7 +69,7 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public ListElement values() {
-        return Element.listBuilder(values.size()).addFrom(values.values()).build();
+        return Element.of(values.values());
     }
 
     @Override
@@ -88,58 +80,5 @@ public final class MemoryDictElement implements DictElement {
     @Override
     public DictElement getDict() {
         return this;
-    }
-
-
-    private static final class Builder implements DictElement.Builder {
-
-        private final Map<String, Element> values;
-
-
-        private Builder(MemoryDictElement element) {
-            this.values = Collections.synchronizedMap(new LinkedHashMap<>(element.values));
-        }
-
-        private Builder(int initialCapacity) {
-            this.values = Collections.synchronizedMap(new LinkedHashMap<>(initialCapacity));
-        }
-
-        private Builder() {
-            this(5);
-        }
-
-
-        @Override
-        public DictElement build() {
-            if (values.isEmpty()) return EMPTY;
-            return new MemoryDictElement(new LinkedHashMap<>(values));
-        }
-
-        @Override
-        public DictElement.Builder set(String key, Element element) {
-            values.put(key, element);
-            return this;
-        }
-
-        @Override
-        public DictElement.Builder addFrom(DictElement dictElement) {
-            if (dictElement instanceof MemoryDictElement memoryDictElement)
-                addFrom(memoryDictElement.values);
-            else
-                dictElement.entries(values::put);
-            return this;
-        }
-
-        @Override
-        public DictElement.Builder addFrom(Map<String, Element> values) {
-            this.values.putAll(values);
-            return this;
-        }
-
-        @Override
-        public DictElement.Builder remove(String key) {
-            values.remove(key);
-            return this;
-        }
     }
 }
