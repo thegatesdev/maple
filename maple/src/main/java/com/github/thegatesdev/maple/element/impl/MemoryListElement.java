@@ -4,9 +4,7 @@ import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementCollection;
 import com.github.thegatesdev.maple.element.ListElement;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -71,5 +69,10 @@ public final class MemoryListElement implements ListElement {
     public Optional<Element> find(int index) {
         if (index < 0 || index >= values.length) return Optional.empty();
         return Optional.of(get(index));
+    }
+
+    @Override
+    public List<Element> copyBack() {
+        return new ArrayList<>(Arrays.asList(values));
     }
 }

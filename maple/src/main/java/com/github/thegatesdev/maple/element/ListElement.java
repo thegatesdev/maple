@@ -2,6 +2,7 @@ package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.MemoryListElement;
 
+import java.util.List;
 import java.util.Optional;
 
 public sealed interface ListElement extends Element, ElementCollection permits MemoryListElement {
@@ -9,6 +10,8 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     Element get(int index);
 
     Optional<Element> find(int index);
+
+    List<Element> copyBack();
 
 
     @Override

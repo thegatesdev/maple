@@ -48,6 +48,11 @@ public final class MemoryDictElement implements DictElement {
     }
 
     @Override
+    public Map<String, Element> copyBack() {
+        return new LinkedHashMap<>(values);
+    }
+
+    @Override
     public void each(Consumer<Element> action) {
         values.values().forEach(action);
     }
