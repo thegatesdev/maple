@@ -17,7 +17,9 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     }
 
     @Override
-    ListElement getList();
+    default ListElement getList() {
+        return this;
+    }
 
     @Override
     default ElementType type() {

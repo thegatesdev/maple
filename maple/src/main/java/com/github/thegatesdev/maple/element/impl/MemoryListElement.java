@@ -72,9 +72,4 @@ public final class MemoryListElement implements ListElement {
         if (index < 0 || index >= values.length) return Optional.empty();
         return Optional.of(get(index));
     }
-
-    @Override
-    public ListElement getList() {
-        return this;
-    }
 }

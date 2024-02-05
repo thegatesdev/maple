@@ -21,7 +21,9 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     }
 
     @Override
-    DictElement getDict();
+    default DictElement getDict() {
+        return this;
+    }
 
     @Override
     default ElementType type() {

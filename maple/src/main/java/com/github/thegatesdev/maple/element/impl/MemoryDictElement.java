@@ -76,9 +76,4 @@ public final class MemoryDictElement implements DictElement {
     public int count() {
         return values.size();
     }
-
-    @Override
-    public DictElement getDict() {
-        return this;
-    }
 }
