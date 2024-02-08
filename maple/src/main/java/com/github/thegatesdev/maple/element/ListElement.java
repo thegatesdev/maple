@@ -28,7 +28,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     Optional<Element> find(int index);
 
     /**
-     * Move the values of this list element to a new list.
+     * Move the values in this list element to a new list.
      *
      * @return A modifiable list containing the values from this list element
      */

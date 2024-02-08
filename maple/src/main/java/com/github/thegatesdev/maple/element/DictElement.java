@@ -37,7 +37,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     void each(BiConsumer<String, Element> action);
 
     /**
-     * Move the keys and values of this dictionary element to a new map.
+     * Move the keys and values in this dictionary element to a new map.
      *
      * @return A modifiable map containing the mappings from this dictionary element
      */
