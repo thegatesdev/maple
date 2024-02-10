@@ -34,6 +34,13 @@ public sealed interface ListElement extends Element, ElementCollection permits M
      */
     List<Element> copyBack();
 
+    /**
+     * Move the values in this list element to a new array.
+     *
+     * @return An array containing the values from this list element.
+     */
+    Element[] toArray();
+
 
     @Override
     default boolean isList() {
