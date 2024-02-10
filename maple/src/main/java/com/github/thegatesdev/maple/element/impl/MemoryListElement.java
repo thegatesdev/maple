@@ -33,6 +33,28 @@ public final class MemoryListElement implements ListElement {
 
 
     @Override
+    public Element get(int index) {
+        return values[index];
+    }
+
+    @Override
+    public Optional<Element> find(int index) {
+        if (index < 0 || index >= values.length) return Optional.empty();
+        return Optional.of(get(index));
+    }
+
+    @Override
+    public List<Element> copyBack() {
+        return new ArrayList<>(Arrays.asList(values));
+    }
+
+    @Override
+    public Element[] toArray() {
+        return Arrays.copyOf(values, values.length);
+    }
+
+
+    @Override
     public void each(Consumer<Element> action) {
         for (Element value : values) action.accept(value);
     }
@@ -62,26 +84,6 @@ public final class MemoryListElement implements ListElement {
         return values.length;
     }
 
-    @Override
-    public Element get(int index) {
-        return values[index];
-    }
-
-    @Override
-    public Optional<Element> find(int index) {
-        if (index < 0 || index >= values.length) return Optional.empty();
-        return Optional.of(get(index));
-    }
-
-    @Override
-    public List<Element> copyBack() {
-        return new ArrayList<>(Arrays.asList(values));
-    }
-
-    @Override
-    public Element[] toArray() {
-        return Arrays.copyOf(values, values.length);
-    }
 
     @Override
     public String toString() {
