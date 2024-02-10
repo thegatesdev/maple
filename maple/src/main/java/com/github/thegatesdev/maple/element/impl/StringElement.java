@@ -44,4 +44,10 @@ public final class StringElement implements Element {
     public int hashCode() {
         return value.hashCode();
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof StringElement stringElement)) return false;
+        return value.equals(stringElement.value);
+    }
 }
