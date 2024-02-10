@@ -49,4 +49,20 @@ public final class DoubleElement implements Element {
     public ElementType type() {
         return ElementType.NUMBER;
     }
+
+    @Override
+    public String toString() {
+        return "number<" + value + "D>";
+    }
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(value);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof DoubleElement doubleElement)) return false;
+        return value == doubleElement.value;
+    }
 }

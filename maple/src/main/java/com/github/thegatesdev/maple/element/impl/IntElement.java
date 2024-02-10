@@ -49,4 +49,20 @@ public final class IntElement implements Element {
     public ElementType type() {
         return ElementType.NUMBER;
     }
+
+    @Override
+    public String toString() {
+        return "number<" + value + "I>";
+    }
+
+    @Override
+    public int hashCode() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof IntElement doubleElement)) return false;
+        return value == doubleElement.value;
+    }
 }

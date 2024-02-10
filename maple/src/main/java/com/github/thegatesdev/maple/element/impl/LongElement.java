@@ -49,4 +49,20 @@ public final class LongElement implements Element {
     public ElementType type() {
         return ElementType.NUMBER;
     }
+
+    @Override
+    public String toString() {
+        return "number<" + value + "L>";
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(value);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof LongElement doubleElement)) return false;
+        return value == doubleElement.value;
+    }
 }

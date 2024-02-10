@@ -49,4 +49,20 @@ public final class FloatElement implements Element {
     public ElementType type() {
         return ElementType.NUMBER;
     }
+
+    @Override
+    public String toString() {
+        return "number<" + value + "F>";
+    }
+
+    @Override
+    public int hashCode() {
+        return Float.hashCode(value);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof FloatElement doubleElement)) return false;
+        return value == doubleElement.value;
+    }
 }

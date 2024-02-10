@@ -34,4 +34,14 @@ public final class StringElement implements Element {
     public ElementType type() {
         return ElementType.STRING;
     }
+
+    @Override
+    public String toString() {
+        return "string<" + value + ">";
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
 }
