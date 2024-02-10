@@ -13,9 +13,11 @@ public final class MemoryListElement implements ListElement {
     private static final Element[] EMPTY_EL_ARR = new Element[0];
     private static final MemoryListElement EMPTY = new MemoryListElement(EMPTY_EL_ARR);
     private final Element[] values;
+    private final int cachedHash;
 
     private MemoryListElement(Element[] values) {
         this.values = values;
+        this.cachedHash = makeHash();
     }
 
 
@@ -79,5 +81,30 @@ public final class MemoryListElement implements ListElement {
     @Override
     public Element[] toArray() {
         return Arrays.copyOf(values, values.length);
+    }
+
+    @Override
+    public String toString() {
+        return "list[" + values.length + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return cachedHash;
+    }
+
+    private int makeHash() {
+        return Arrays.hashCode(values);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof ListElement listElement)) return false;
+        if (this.cachedHash != listElement.hashCode()) return false;
+
+        if (other instanceof MemoryListElement memoryListElement)
+            return Arrays.equals(this.values, memoryListElement.values);
+        return Arrays.equals(this.values, listElement.toArray());
     }
 }
