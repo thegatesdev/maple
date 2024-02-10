@@ -18,9 +18,11 @@ public final class MemoryDictElement implements DictElement {
 
     private static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
     private final Map<String, Element> values;
+    private final int cachedHash;
 
     private MemoryDictElement(Map<String, Element> values) {
         this.values = values;
+        this.cachedHash = makeHash();
     }
 
 
@@ -81,5 +83,31 @@ public final class MemoryDictElement implements DictElement {
     @Override
     public int count() {
         return values.size();
+    }
+
+
+    @Override
+    public String toString() {
+        return "map{" + values.size() + "}";
+    }
+
+    @Override
+    public int hashCode() {
+        return cachedHash;
+    }
+
+    private int makeHash() {
+        return values.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof DictElement dictElement)) return false;
+        if (this.cachedHash != dictElement.hashCode()) return false;
+
+        if (other instanceof MemoryDictElement memoryDictElement)
+            return this.values.equals(memoryDictElement.values);
+        return this.values.equals(dictElement.copyBack());
     }
 }
