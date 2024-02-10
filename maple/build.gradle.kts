@@ -6,7 +6,7 @@ plugins {
 group = "com.github.thegatesdev"
 version = "5.0.0-SNAPSHOT"
 
-java{
+java {
     withSourcesJar()
     withJavadocJar()
 
