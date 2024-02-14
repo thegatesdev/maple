@@ -2,6 +2,7 @@ package com.github.thegatesdev.maple.layout;
 
 import com.github.thegatesdev.maple.element.DictElement;
 import com.github.thegatesdev.maple.element.Element;
+import com.github.thegatesdev.maple.exception.ElementException;
 import com.github.thegatesdev.maple.exception.LayoutParseException;
 
 import java.util.*;
@@ -29,13 +30,21 @@ public final class DictLayout implements Layout<DictElement> {
         for (Option option : options) {
             Optional<Element> entry = input.find(option.key);
             if (entry.isPresent()) { // Present
-                output.put(option.key, option.layout.parse(entry.get()));
+                output.put(option.key, parseEntryOrThrow(option.key, entry.get(), option.layout));
             } else if (option.defaultValue == null)
                 throw new LayoutParseException("Expected a value at key %s".formatted(option.key)); // Not present, no default
             else output.put(option.key, option.defaultValue); // Not present, default
         }
 
         return Element.of(output);
+    }
+
+    private Element parseEntryOrThrow(String key, Element entry, Layout<? extends Element> layout) throws LayoutParseException {
+        try {
+            return layout.parse(entry);
+        } catch (ElementException ex) {
+            throw new LayoutParseException("Failed to parse entry %s".formatted(key), ex);
+        }
     }
 
 
