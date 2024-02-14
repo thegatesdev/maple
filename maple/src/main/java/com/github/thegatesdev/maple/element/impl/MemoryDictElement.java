@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public final class MemoryDictElement implements DictElement {
 
-    private static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
+    public static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
     private final Map<String, Element> values;
     private final int cachedHash;
 
