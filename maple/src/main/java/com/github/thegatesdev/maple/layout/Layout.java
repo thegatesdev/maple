@@ -8,7 +8,6 @@ import com.github.thegatesdev.maple.exception.LayoutParseException;
  *
  * @param <T> the type to parse to
  */
-@FunctionalInterface
 public interface Layout<T> {
 
     /**
