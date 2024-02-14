@@ -12,17 +12,7 @@
 
 A clean, type safe intermediary structure in Java
 
-## Contents
-
 *Updated for version 5.0.0*
-
-> - [About](#about)
-> - [Usage](#usage)
->   - [Including in your project](#including-in-your-project)
->   - [Reading to Maple](#reading-to-maple)
->   - [Element basics](#element-basics)
->   - [Layouts](#layouts)
-> - [Future](#future)
 
 ## About
 
