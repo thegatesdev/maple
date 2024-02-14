@@ -25,6 +25,7 @@ public interface Layout<T> {
      *
      * @param value the element to parse
      * @return the value conforming to this layout
+     * @throws LayoutParseException if the layout failed to parse for this element
      */
     T parse(Element value) throws LayoutParseException;
 }
