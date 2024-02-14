@@ -13,7 +13,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
 
 
     /**
-     * Get the element mapped to the supplied key.
+     * Get the element mapped to the given key.
      *
      * @param key the key for the element
      * @return the element at the key
@@ -22,7 +22,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     Element get(String key);
 
     /**
-     * Find the element mapped to the supplied key.
+     * Find the element mapped to the given key.
      *
      * @param key the key for the element
      * @return an optional containing the element at the key if it was present

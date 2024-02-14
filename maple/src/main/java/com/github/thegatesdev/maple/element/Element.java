@@ -12,7 +12,7 @@ import java.util.Map;
 public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
 
     /**
-     * Get a list element containing the values from the supplied array.
+     * Get a list element containing the values from the given array.
      *
      * @param values the values for the list
      * @return the list element containing the values
@@ -22,7 +22,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get a list element containing the values from the supplied collection.
+     * Get a list element containing the values from the given collection.
      *
      * @param values the values for the list
      * @return the list element containing the values
@@ -32,7 +32,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get a dictionary element containing the keys and values from the supplied map.
+     * Get a dictionary element containing the keys and values from the given map.
      *
      * @param values the values for the dictionary
      * @return the dictionary element containing the values
@@ -42,9 +42,9 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get an element containing the supplied string value.
+     * Get an element containing the given string value.
      *
-     * @param value the string value for the element
+     * @param value the value to contain
      * @return the element containing the value
      */
     static Element of(String value) {
@@ -52,9 +52,9 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get an element containing the supplied boolean value.
+     * Get an element containing the given boolean value.
      *
-     * @param value the boolean value for the element
+     * @param value the value to contain
      * @return the element containing the value
      */
     static Element of(boolean value) {
@@ -62,9 +62,9 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get an element containing the supplied int value.
+     * Get an element containing the given int value.
      *
-     * @param value the int value for the element
+     * @param value the value to contain
      * @return the element containing the value
      */
     static Element of(int value) {
@@ -72,9 +72,9 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get an element containing the supplied long value.
+     * Get an element containing the given long value.
      *
-     * @param value the long value for the element
+     * @param value the value to contain
      * @return the element containing the value
      */
     static Element of(long value) {
@@ -82,9 +82,9 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get an element containing the supplied float value.
+     * Get an element containing the given float value.
      *
-     * @param value the float value for the element
+     * @param value the value to contain
      * @return the element containing the value
      */
     static Element of(float value) {
@@ -92,9 +92,9 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get an element containing the supplied double value.
+     * Get an element containing the given double value.
      *
-     * @param value the double value for the element
+     * @param value the value to contain
      * @return the element containing the value
      */
     static Element of(double value) {

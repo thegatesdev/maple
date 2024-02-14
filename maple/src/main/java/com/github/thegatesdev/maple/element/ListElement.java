@@ -11,7 +11,7 @@ import java.util.Optional;
 public sealed interface ListElement extends Element, ElementCollection permits MemoryListElement {
 
     /**
-     * Get the element at the supplied index.
+     * Get the element at the given index.
      *
      * @param index the index for the element
      * @return the element at the index
@@ -20,7 +20,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     Element get(int index);
 
     /**
-     * Find the element at the supplied index.
+     * Find the element at the given index.
      *
      * @param index the index for the element
      * @return an optional containing the element at the index if it was present
