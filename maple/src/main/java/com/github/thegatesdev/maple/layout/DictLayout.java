@@ -34,6 +34,8 @@ public final class DictLayout implements Layout<DictElement> {
 
 
     public static final class Builder {
+        private static final Layout<Element> IDENTITY_LAYOUT = value -> value;
+
         private final List<Option> options = new ArrayList<>(5);
         private final Set<String> uniqueKeys = new HashSet<>(5);
 
@@ -50,7 +52,7 @@ public final class DictLayout implements Layout<DictElement> {
         }
 
         public Builder require(String key) {
-            return require(key, value -> value);
+            return require(key, IDENTITY_LAYOUT);
         }
 
         public Builder optional(String key, Element defaultValue, Layout<? extends Element> layout) {
@@ -58,7 +60,7 @@ public final class DictLayout implements Layout<DictElement> {
         }
 
         public Builder optional(String key, Element defaultValue) {
-            return optional(key, defaultValue, value -> value);
+            return optional(key, defaultValue, IDENTITY_LAYOUT);
         }
 
 
