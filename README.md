@@ -1,0 +1,1 @@
+[![maple-banner-plain](doc/maple-banner-plain.svg)](#)
