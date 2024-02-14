@@ -68,7 +68,7 @@ public final class DictLayout implements Layout<DictElement> {
          * @param layout the parsed layout
          * @return this builder
          */
-        public Builder require(String key, Layout<? extends Element> layout) {
+        public Builder required(String key, Layout<? extends Element> layout) {
             return add(key, layout, null);
         }
 
@@ -78,8 +78,8 @@ public final class DictLayout implements Layout<DictElement> {
          * @param key the required key
          * @return this builder
          */
-        public Builder require(String key) {
-            return require(key, IDENTITY_LAYOUT);
+        public Builder required(String key) {
+            return required(key, IDENTITY_LAYOUT);
         }
 
         /**
