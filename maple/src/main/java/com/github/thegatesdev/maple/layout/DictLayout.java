@@ -2,7 +2,6 @@ package com.github.thegatesdev.maple.layout;
 
 import com.github.thegatesdev.maple.element.DictElement;
 import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.element.ElementType;
 import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
 import java.util.*;
@@ -54,20 +53,12 @@ public final class DictLayout implements Layout<DictElement> {
             return require(key, value -> value);
         }
 
-        public Builder require(String key, ElementType elementType) {
-            return require(key, elementType::match);
-        }
-
         public Builder optional(String key, Element defaultValue, Layout<? extends Element> layout) {
             return add(key, layout, Objects.requireNonNull(defaultValue, "defaultValue cannot be null"));
         }
 
         public Builder optional(String key, Element defaultValue) {
             return optional(key, defaultValue, value -> value);
-        }
-
-        public Builder optional(String key, Element defaultValue, ElementType elementType) {
-            return optional(key, defaultValue, elementType::match);
         }
 
 

@@ -1,12 +1,13 @@
 package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.exception.ElementTypeException;
+import com.github.thegatesdev.maple.layout.Layout;
 
 /**
  * The different types of elements that are available.
  * These all represent some value from the JSON specification.
  */
-public enum ElementType {
+public enum ElementType implements Layout<Element> {
     /**
      * A dictionary, or mapping, of string keys to element values.
      * Equivalent of a JSON 'object'.
@@ -41,15 +42,9 @@ public enum ElementType {
      */
     UNSET;
 
-    /**
-     * Return the inputted element if its type matches with this element type.
-     *
-     * @param element the element to match to
-     * @return the same element
-     * @throws ElementTypeException if the type does not match
-     */
-    public Element match(Element element) {
-        if (element.type() != this) throw new ElementTypeException(this, element.type());
-        return element;
+    @Override
+    public Element parse(Element value) {
+        if (this != value.type()) throw new ElementTypeException(this, value.type());
+        return value;
     }
 }
