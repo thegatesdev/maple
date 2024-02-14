@@ -1,3 +1,7 @@
+*This is a **WIP version** of this document for the upcoming v5.0.0 release.*
+
+*Progress being made on the `rework` branch...*
+
 # [![maple-banner-plain](doc/maple-banner-plain.svg)](#)
 
 [![License](https://img.shields.io/github/license/thegatesdev/maple?style=flat-square&labelColor=%230C090D&color=%23EB5600)](#)
@@ -11,8 +15,6 @@ A clean, type safe intermediary structure in Java
 ## Contents
 
 *Updated for version 5.0.0*
-
-**This is a WIP!**
 
 > - [About](#about)
 > - [Usage](#usage)
