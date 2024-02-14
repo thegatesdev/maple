@@ -1,6 +1,6 @@
 package com.github.thegatesdev.maple.element;
 
-import com.github.thegatesdev.maple.exception.ElementTypeException;
+import com.github.thegatesdev.maple.exception.LayoutParseException;
 import com.github.thegatesdev.maple.layout.Layout;
 
 /**
@@ -43,8 +43,9 @@ public enum ElementType implements Layout<Element> {
     UNSET;
 
     @Override
-    public Element parse(Element value) {
-        if (this != value.type()) throw new ElementTypeException(this, value.type());
+    public Element parse(Element value) throws LayoutParseException {
+        if (this != value.type())
+            throw new LayoutParseException("Expected a %s element, got a %s element".formatted(this.name(), value.type().name()));
         return value;
     }
 }

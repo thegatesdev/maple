@@ -1,6 +1,7 @@
 package com.github.thegatesdev.maple.layout;
 
 import com.github.thegatesdev.maple.element.Element;
+import com.github.thegatesdev.maple.exception.LayoutParseException;
 
 /**
  * Defines the layout expected of some element, and parses it to type T.
@@ -25,5 +26,5 @@ public interface Layout<T> {
      * @param value the element to parse
      * @return the value conforming to this layout
      */
-    T parse(Element value);
+    T parse(Element value) throws LayoutParseException;
 }

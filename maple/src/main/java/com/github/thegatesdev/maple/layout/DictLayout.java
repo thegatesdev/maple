@@ -2,7 +2,7 @@ package com.github.thegatesdev.maple.layout;
 
 import com.github.thegatesdev.maple.element.DictElement;
 import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
+import com.github.thegatesdev.maple.exception.LayoutParseException;
 
 import java.util.*;
 
@@ -22,7 +22,7 @@ public final class DictLayout implements Layout<DictElement> {
 
 
     @Override
-    public DictElement parse(Element value) {
+    public DictElement parse(Element value) throws LayoutParseException {
         DictElement input = value.getDict();
         Map<String, Element> output = new LinkedHashMap<>(options.length);
 
@@ -31,7 +31,7 @@ public final class DictLayout implements Layout<DictElement> {
             if (entry.isPresent()) { // Present
                 output.put(option.key, option.layout.parse(entry.get()));
             } else if (option.defaultValue == null)
-                throw new ElementKeyNotPresentException(option.key); // Not present, no default
+                throw new LayoutParseException("Expected a value at key %s".formatted(option.key)); // Not present, no default
             else output.put(option.key, option.defaultValue); // Not present, default
         }
 
