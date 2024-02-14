@@ -111,6 +111,24 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
         return UnsetElement.getInstance();
     }
 
+    /**
+     * Get a list element containing no values.
+     *
+     * @return the empty list element
+     */
+    static ListElement emptyList() {
+        return MemoryListElement.EMPTY;
+    }
+
+    /**
+     * Get a dictionary element containing no values.
+     *
+     * @return the empty dictionary element
+     */
+    static DictElement emptyDict() {
+        return MemoryDictElement.EMPTY;
+    }
+
 
     /**
      * Get the element type of this element.
