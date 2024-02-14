@@ -2,7 +2,7 @@
 
 *Progress being made on the `rework` branch...*
 
-# [![maple-banner-plain](doc/maple-banner-plain.svg)](#)
+[![maple-banner-plain](doc/maple-banner-plain.svg)](#)
 
 [![License](https://img.shields.io/github/license/thegatesdev/maple?style=flat-square&labelColor=%230C090D&color=%23EB5600)](#)
 [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/thegatesdev/maple?style=flat-square&labelColor=%230C090D&color=%23EB5600)](https://www.codefactor.io/repository/github/thegatesdev/maple)
