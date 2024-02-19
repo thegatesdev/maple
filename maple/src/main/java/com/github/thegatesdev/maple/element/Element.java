@@ -238,7 +238,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      * Get the short value contained in this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a short value
+     * @throws ElementTypeException if this element did not contain a number value
      */
     default short getShort() {
         throw new ElementTypeException(ElementType.NUMBER, type());
@@ -248,7 +248,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      * Get the int value contained in this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a int value
+     * @throws ElementTypeException if this element did not contain a number value
      */
     default int getInt() {
         throw new ElementTypeException(ElementType.NUMBER, type());
@@ -258,7 +258,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      * Get the long value contained in this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a long value
+     * @throws ElementTypeException if this element did not contain a number value
      */
     default long getLong() {
         throw new ElementTypeException(ElementType.NUMBER, type());
@@ -268,7 +268,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      * Get the float value contained in this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a float value
+     * @throws ElementTypeException if this element did not contain a number value
      */
     default float getFloat() {
         throw new ElementTypeException(ElementType.NUMBER, type());
@@ -278,7 +278,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      * Get the double value contained in this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a double value
+     * @throws ElementTypeException if this element did not contain a number value
      */
     default double getDouble() {
         throw new ElementTypeException(ElementType.NUMBER, type());
