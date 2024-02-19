@@ -3,18 +3,20 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-public final class FloatElement implements Element {
+public final class ShortElement implements Element {
 
-    private final float value;
+    static final ShortElement ZERO = new ShortElement((short) 0);
 
-    private FloatElement(float value) {
+    private final short value;
+
+    private ShortElement(short value) {
         this.value = value;
     }
 
 
-    public static Element of(float value) {
-        if (value == 0f) return ShortElement.ZERO;
-        return new FloatElement(value);
+    public static Element of(short value) {
+        if (value == 0) return ZERO;
+        return new ShortElement(value);
     }
 
 
@@ -25,17 +27,17 @@ public final class FloatElement implements Element {
 
     @Override
     public short getShort() {
-        return (short) value;
+        return value;
     }
 
     @Override
     public int getInt() {
-        return (int) value;
+        return value;
     }
 
     @Override
     public long getLong() {
-        return (long) value;
+        return value;
     }
 
     @Override
@@ -55,17 +57,17 @@ public final class FloatElement implements Element {
 
     @Override
     public String toString() {
-        return "number<" + value + "F>";
+        return "number<" + value + "S>";
     }
 
     @Override
     public int hashCode() {
-        return Float.hashCode(value);
+        return value;
     }
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof FloatElement doubleElement)) return false;
+        if (!(other instanceof ShortElement doubleElement)) return false;
         return value == doubleElement.value;
     }
 }

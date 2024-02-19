@@ -13,7 +13,7 @@ public final class DoubleElement implements Element {
 
 
     public static Element of(double value) {
-        if (value == 0d) return IntElement.ZERO;
+        if (value == 0d) return ShortElement.ZERO;
         return new DoubleElement(value);
     }
 
@@ -21,6 +21,11 @@ public final class DoubleElement implements Element {
     @Override
     public boolean isNumber() {
         return true;
+    }
+
+    @Override
+    public short getShort() {
+        return (short) value;
     }
 
     @Override

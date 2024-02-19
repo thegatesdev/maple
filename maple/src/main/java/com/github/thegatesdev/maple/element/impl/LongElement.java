@@ -13,7 +13,7 @@ public final class LongElement implements Element {
 
 
     public static Element of(long value) {
-        if (value == 0L) return IntElement.ZERO;
+        if (value == 0L) return ShortElement.ZERO;
         return new LongElement(value);
     }
 
@@ -21,6 +21,11 @@ public final class LongElement implements Element {
     @Override
     public boolean isNumber() {
         return true;
+    }
+
+    @Override
+    public short getShort() {
+        return (short) value;
     }
 
     @Override

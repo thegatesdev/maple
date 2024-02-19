@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * A single element in a structure.
  */
-public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
+public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, ShortElement, StringElement, UnsetElement {
 
     /**
      * Get a list element containing the values from the given array.
@@ -232,6 +232,16 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      */
     default boolean getBool() {
         throw new ElementTypeException(ElementType.BOOLEAN, type());
+    }
+
+    /**
+     * Get the short value contained in this element, if applicable.
+     *
+     * @return the value from this element
+     * @throws ElementTypeException if this element did not contain a short value
+     */
+    default short getShort() {
+        throw new ElementTypeException(ElementType.NUMBER, type());
     }
 
     /**

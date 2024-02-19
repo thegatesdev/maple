@@ -5,8 +5,6 @@ import com.github.thegatesdev.maple.element.ElementType;
 
 public final class IntElement implements Element {
 
-    static final IntElement ZERO = new IntElement(0);
-
     private final int value;
 
     private IntElement(int value) {
@@ -15,7 +13,7 @@ public final class IntElement implements Element {
 
 
     public static Element of(int value) {
-        if (value == 0) return ZERO;
+        if (value == 0) return ShortElement.ZERO;
         return new IntElement(value);
     }
 
@@ -23,6 +21,11 @@ public final class IntElement implements Element {
     @Override
     public boolean isNumber() {
         return true;
+    }
+
+    @Override
+    public short getShort() {
+        return (short) value;
     }
 
     @Override
