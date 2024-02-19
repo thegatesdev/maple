@@ -65,7 +65,7 @@ public final class IntElement implements Element {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof IntElement doubleElement)) return false;
-        return value == doubleElement.value;
+        if (!(other instanceof IntElement intElement)) return false;
+        return value == intElement.value;
     }
 }

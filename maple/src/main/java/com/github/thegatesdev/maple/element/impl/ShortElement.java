@@ -67,7 +67,7 @@ public final class ShortElement implements Element {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof ShortElement doubleElement)) return false;
-        return value == doubleElement.value;
+        if (!(other instanceof ShortElement shortElement)) return false;
+        return value == shortElement.value;
     }
 }

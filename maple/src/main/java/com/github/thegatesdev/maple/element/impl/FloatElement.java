@@ -65,7 +65,7 @@ public final class FloatElement implements Element {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof FloatElement doubleElement)) return false;
-        return value == doubleElement.value;
+        if (!(other instanceof FloatElement floatElement)) return false;
+        return value == floatElement.value;
     }
 }

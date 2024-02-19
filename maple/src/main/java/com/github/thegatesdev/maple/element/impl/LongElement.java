@@ -65,7 +65,7 @@ public final class LongElement implements Element {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof LongElement doubleElement)) return false;
-        return value == doubleElement.value;
+        if (!(other instanceof LongElement longElement)) return false;
+        return value == longElement.value;
     }
 }
