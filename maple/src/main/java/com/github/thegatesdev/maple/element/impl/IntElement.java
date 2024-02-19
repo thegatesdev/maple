@@ -5,7 +5,7 @@ import com.github.thegatesdev.maple.element.ElementType;
 
 public final class IntElement implements Element {
 
-    private static final IntElement ZERO = new IntElement(0);
+    static final IntElement ZERO = new IntElement(0);
 
     private final int value;
 
@@ -14,7 +14,7 @@ public final class IntElement implements Element {
     }
 
 
-    public static IntElement of(int value) {
+    public static Element of(int value) {
         if (value == 0) return ZERO;
         return new IntElement(value);
     }
