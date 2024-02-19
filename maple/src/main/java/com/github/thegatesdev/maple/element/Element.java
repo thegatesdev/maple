@@ -62,6 +62,16 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
+     * Get an element containing the given short value.
+     *
+     * @param value the value to contain
+     * @return the element containing the value
+     */
+    static Element of(short value) {
+        return ShortElement.of(value);
+    }
+
+    /**
      * Get an element containing the given int value.
      *
      * @param value the value to contain
