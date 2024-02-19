@@ -108,7 +108,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      * @return the element containing no value
      */
     static Element unset() {
-        return UnsetElement.getInstance();
+        return UnsetElement.INSTANCE;
     }
 
     /**

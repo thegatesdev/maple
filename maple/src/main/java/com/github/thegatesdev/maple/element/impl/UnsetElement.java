@@ -6,10 +6,6 @@ import com.github.thegatesdev.maple.element.ElementType;
 public enum UnsetElement implements Element {
     INSTANCE;
 
-    public static UnsetElement getInstance() {
-        return INSTANCE;
-    }
-
 
     @Override
     public boolean isUnset() {

@@ -10,14 +10,6 @@ public enum BoolElement implements Element {
         return value ? TRUE : FALSE;
     }
 
-    public static BoolElement getTrue() {
-        return TRUE;
-    }
-
-    public static BoolElement getFalse() {
-        return FALSE;
-    }
-
 
     @Override
     public boolean isBool() {
