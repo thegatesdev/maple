@@ -3,7 +3,7 @@ package com.github.thegatesdev.maple.exception;
 /**
  * This exception is raised when a key is used to access a value, but the key is not present.
  */
-public class ElementKeyNotPresentException extends ElementException {
+public final class ElementKeyNotPresentException extends ElementException {
 
     private static final String MESSAGE = "This key is not present; %s";
     private final String key;
