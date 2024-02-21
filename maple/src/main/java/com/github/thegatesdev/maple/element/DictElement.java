@@ -13,7 +13,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
 
 
     /**
-     * Get the element mapped to the given key.
+     * Get the element at the given key.
      *
      * @param key the key for the element
      * @return the element at the key
@@ -22,7 +22,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     Element get(String key);
 
     /**
-     * Find the element mapped to the given key.
+     * Find the element at the given key.
      *
      * @param key the key for the element
      * @return an optional containing the element at the key if it was present
@@ -30,21 +30,21 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     Optional<Element> find(String key);
 
     /**
-     * Iterate the key-value mappings in this dictionary element using the given action.
+     * Iterate the entries in this dictionary element using the given action.
      *
      * @param action the action to run for each mapping
      */
     void each(BiConsumer<String, Element> action);
 
     /**
-     * Get an unmodifiable view of the elements in this dictionary.
+     * Get an unmodifiable view of the entries in this dictionary.
      *
      * @return the view of the dictionary elements
      */
     Map<String, Element> view();
 
     /**
-     * Get a dictionary builder containing the values of this dictionary.
+     * Get a dictionary builder containing the entries of this dictionary.
      *
      * @return the new builder
      */
@@ -73,7 +73,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     sealed interface Builder permits MemoryDictElement.Builder {
 
         /**
-         * Create a new dictionary element with the values in this builder.
+         * Create a new dictionary element with the entries in this builder.
          *
          * @return the new dictionary element
          */
