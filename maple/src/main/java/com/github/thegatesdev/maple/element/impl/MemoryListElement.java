@@ -44,8 +44,8 @@ public final class MemoryListElement implements ListElement {
     }
 
     @Override
-    public List<Element> copyBack() {
-        return new ArrayList<>(Arrays.asList(values));
+    public List<Element> view() {
+        return List.of(values);
     }
 
     @Override
