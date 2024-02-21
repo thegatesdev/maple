@@ -11,6 +11,15 @@ import java.util.function.BiConsumer;
  */
 public sealed interface DictElement extends Element, ElementCollection permits MemoryDictElement {
 
+    /**
+     * Get a dictionary element containing no values.
+     *
+     * @return the empty dictionary element
+     */
+    static DictElement empty() {
+        return MemoryDictElement.EMPTY;
+    }
+
 
     /**
      * Get the element at the given key.

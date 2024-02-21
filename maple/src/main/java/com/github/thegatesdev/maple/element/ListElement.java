@@ -11,6 +11,16 @@ import java.util.Optional;
 public sealed interface ListElement extends Element, ElementCollection permits MemoryListElement {
 
     /**
+     * Get a list element containing no values.
+     *
+     * @return the empty list element
+     */
+    static ListElement empty() {
+        return MemoryListElement.EMPTY;
+    }
+
+
+    /**
      * Get the element at the given index.
      *
      * @param index the index for the element
