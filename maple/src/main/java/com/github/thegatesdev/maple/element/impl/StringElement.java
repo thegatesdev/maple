@@ -14,7 +14,7 @@ public final class StringElement implements Element {
     }
 
 
-    public static StringElement of(String value) {
+    public static Element of(String value) {
         Objects.requireNonNull(value, "value cannot be null");
         return new StringElement(value);
     }

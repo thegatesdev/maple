@@ -6,7 +6,7 @@ import com.github.thegatesdev.maple.element.ElementType;
 public enum BoolElement implements Element {
     TRUE, FALSE;
 
-    public static BoolElement of(boolean value) {
+    public static Element of(boolean value) {
         return value ? TRUE : FALSE;
     }
 
