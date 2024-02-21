@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
- * Common methods for dictionary and list elements.
+ * An element containing a collection of child elements.
  */
 public sealed interface ElementCollection extends Element permits DictElement, ListElement {
 
