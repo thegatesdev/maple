@@ -50,8 +50,8 @@ public final class MemoryDictElement implements DictElement {
     }
 
     @Override
-    public Map<String, Element> copyBack() {
-        return new LinkedHashMap<>(values);
+    public Map<String, Element> view() {
+        return Collections.unmodifiableMap(values);
     }
 
 
@@ -108,6 +108,6 @@ public final class MemoryDictElement implements DictElement {
 
         if (other instanceof MemoryDictElement memoryDictElement)
             return this.values.equals(memoryDictElement.values);
-        return this.values.equals(dictElement.copyBack());
+        return this.values.equals(dictElement.view());
     }
 }
