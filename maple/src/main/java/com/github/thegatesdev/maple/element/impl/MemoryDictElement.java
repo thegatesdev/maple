@@ -148,6 +148,9 @@ public final class MemoryDictElement implements DictElement {
         @Override
         public DictElement build() {
             needsCopy = true;
+            // Don't defensively copy the builder values map.
+            // Often, a builder is only used once and then discarded.
+            // If that is not the case, we copy the map when a modification is made.
             return new MemoryDictElement(values);
         }
 

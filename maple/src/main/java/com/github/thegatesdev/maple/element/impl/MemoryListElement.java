@@ -4,7 +4,10 @@ import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementCollection;
 import com.github.thegatesdev.maple.element.ListElement;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -28,7 +31,7 @@ public final class MemoryListElement implements ListElement {
 
     public static ListElement of(Collection<Element> values) {
         if (values.isEmpty()) return EMPTY;
-        return new MemoryListElement(values.toArray(EMPTY_EL_ARR));
+        return new MemoryListElement(values.toArray(EMPTY_EL_ARR)); // Look mom! I'm reusing the empty array! Memory efficiency!
     }
 
 
@@ -104,6 +107,9 @@ public final class MemoryListElement implements ListElement {
         if (this == other) return true;
         if (!(other instanceof ListElement listElement)) return false;
         if (this.cachedHash != listElement.hashCode()) return false;
+        // If this element is used as a key in some hash based structure (e.g. HashSet or HashMap) this is a duplicate check.
+        // It is however more likely that the equals method is used as-is,
+        // in which case it's reasonable to check it here, and prevent iterating all values.
 
         if (other instanceof MemoryListElement memoryListElement)
             return Arrays.equals(this.values, memoryListElement.values);

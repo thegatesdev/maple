@@ -4,7 +4,7 @@ import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
 public enum UnsetElement implements Element {
-    INSTANCE;
+    INSTANCE; // I started to really love enums for its unintended use-cases while making this.
 
 
     @Override

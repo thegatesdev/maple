@@ -3,6 +3,7 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
+// Debating on removing this, the short type is not really relevant in configuration language.
 public final class ShortElement implements Element {
 
     static final ShortElement ZERO = new ShortElement((short) 0);

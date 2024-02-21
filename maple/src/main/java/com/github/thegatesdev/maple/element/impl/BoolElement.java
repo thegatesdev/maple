@@ -18,6 +18,9 @@ public enum BoolElement implements Element {
 
     @Override
     public boolean getBool() {
+        // I wonder what difference this makes to storing a boolean variable and returning that...
+        // This would technically only require an address check vs actually looking up the stored boolean data.
+        // Just a funny thought, the difference won't ever be noticeable.
         return this == TRUE;
     }
 
