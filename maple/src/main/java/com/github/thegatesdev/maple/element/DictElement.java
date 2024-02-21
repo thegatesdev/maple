@@ -12,6 +12,15 @@ import java.util.function.BiConsumer;
 public sealed interface DictElement extends Element, ElementCollection permits MemoryDictElement {
 
     /**
+     * Get a new builder for dictionary elements.
+     *
+     * @return the new builder
+     */
+    static DictElement.Builder builder() {
+        return MemoryDictElement.builder();
+    }
+
+    /**
      * Get a dictionary element containing no values.
      *
      * @return the empty dictionary element
