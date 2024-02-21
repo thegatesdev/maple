@@ -31,6 +31,10 @@ public final class MemoryDictElement implements DictElement {
         return new MemoryDictElement(new LinkedHashMap<>(values));
     }
 
+    public static DictElement.Builder builder() {
+        return new Builder();
+    }
+
 
     @Override
     public Element get(String key) {
@@ -52,6 +56,11 @@ public final class MemoryDictElement implements DictElement {
     @Override
     public Map<String, Element> view() {
         return Collections.unmodifiableMap(values);
+    }
+
+    @Override
+    public DictElement.Builder toBuilder() {
+        return new Builder(values);
     }
 
 
@@ -109,5 +118,66 @@ public final class MemoryDictElement implements DictElement {
         if (other instanceof MemoryDictElement memoryDictElement)
             return this.values.equals(memoryDictElement.values);
         return this.values.equals(dictElement.view());
+    }
+
+
+    public static final class Builder implements DictElement.Builder {
+
+        private boolean needsCopy;
+        private Map<String, Element> values;
+
+        private Builder(Map<String, Element> values) {
+            this.values = values;
+            this.needsCopy = true;
+        }
+
+        private Builder() {
+            this.values = new LinkedHashMap<>();
+            this.needsCopy = false;
+        }
+
+
+        private void checkEdit() {
+            if (needsCopy) {
+                values = new LinkedHashMap<>(values);
+                needsCopy = false;
+            }
+        }
+
+
+        @Override
+        public DictElement build() {
+            needsCopy = true;
+            return new MemoryDictElement(values);
+        }
+
+
+        @Override
+        public DictElement.Builder put(String key, Element element) {
+            checkEdit();
+            values.put(key, element);
+            return this;
+        }
+
+        @Override
+        public DictElement.Builder putAll(DictElement other) {
+            checkEdit();
+            if (other instanceof MemoryDictElement memoryDictElement)
+                values.putAll(memoryDictElement.values);
+            else values.putAll(other.view());
+            return this;
+        }
+
+        @Override
+        public DictElement.Builder remove(String key) {
+            checkEdit();
+            values.remove(key);
+            return this;
+        }
+
+        @Override
+        public Map<String, Element> view() {
+            return Collections.unmodifiableMap(values);
+        }
     }
 }
