@@ -33,15 +33,70 @@ Feel free to open an issue, or even to submit a pull request if you have any con
 **Maple** is public on GitHub, meaning you can easily get it from JitPack.
 
 Head to https://jitpack.io/#thegatesdev/maple,
-select a version and follow the instructions for your build system!
+select a version and follow the instructions for your build system.
+Now you are ready to dive in!
 
-### Reading to Maple
+### *Setting some rules*
+
+Here are some rules to keep in mind while using **Maple**:
+
+> **`null` is not invited to the party.**
+> 
+> This library does not allow `null` values passed in, and guarantees that no `null` will ever be returned.
+
+> **Non-exported packages are unsafe**
+> 
+> The `module-info.java` defines the packages that are exported.
+> If you are not using the Java module system, it is still not recommended
+> to use the classes in the packages that are not exported. 
+> These packages are outside the public facing API and can change without warning.
+
+### Parsing elements
 
 *TODO*
 
-### Element basics
+### Creating elements
 
-*TODO*
+You can directly create elements of primitive types...
+```java
+Element intElement = Element.of(30);
+Element boolElement = Element.of(true);
+Element stringElement = Element.of("foo");
+```
+For constructing lists and dictionaries, use the corresponding builders...
+```java
+ListElement listElement = ListElement.builder()
+        .add(Element.of(30))
+        .add(Element.of(true))
+        .add(Element.of("foo"))
+        .build();
+
+DictElement dictElement = DictElement.builder()
+        .put("int", Element.of(30))
+        .put("bool", Element.of(true))
+        .put("string", Element.of("foo"))
+        .build();
+```
+Merging dictionaries can also be done using builders...
+```java
+DictElement original;
+DictElement overwrite;
+DictElement merged = original.toBuilder()
+        .putAll(overwrite)
+        .build();
+```
+
+### Getting values from elements
+
+Obtaining values has never looked nicer...
+```java
+DictElement dictElement; // assuming the dictionary from the above example
+
+dictElement.get("int").isNumber(); // true
+boolean boolValue = dictElement.get("bool").getBool();
+boolean invalidBoolValue = dictElement.get("string").getBool(); // throws ElementTypeException
+Optional<Element> notPresent = dictElement.find("not_present"); // empty optional
+```
 
 ### Layouts
 
