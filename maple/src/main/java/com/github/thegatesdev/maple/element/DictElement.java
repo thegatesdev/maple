@@ -16,7 +16,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
      *
      * @return the new builder
      */
-    static DictElement.Builder builder() {
+    static Builder builder() {
         return MemoryDictElement.builder();
     }
 
