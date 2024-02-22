@@ -25,7 +25,7 @@ public final class DictLayout implements Layout<DictElement> {
     @Override
     public DictElement parse(Element value) throws LayoutParseException {
         DictElement input = value.getDict();
-        Map<String, Element> output = new LinkedHashMap<>(options.length);
+        DictElement.Builder output = DictElement.builder(options.length);
 
         for (Option option : options) {
             Optional<Element> entry = input.find(option.key);
@@ -36,7 +36,7 @@ public final class DictLayout implements Layout<DictElement> {
             else output.put(option.key, option.defaultValue); // Not present, default
         }
 
-        return Element.of(output);
+        return output.build();
     }
 
     private Element parseEntryOrThrow(String key, Element entry, Layout<?> layout) throws LayoutParseException {
