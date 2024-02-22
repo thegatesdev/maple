@@ -164,10 +164,13 @@ public final class MemoryDictElement implements DictElement {
 
         @Override
         public DictElement.Builder putAll(DictElement other) {
+            return putAll(other instanceof MemoryDictElement memoryDictElement ? memoryDictElement.values : other.view());
+        }
+
+        @Override
+        public DictElement.Builder putAll(Map<String, Element> values) {
             checkEdit();
-            if (other instanceof MemoryDictElement memoryDictElement)
-                values.putAll(memoryDictElement.values);
-            else values.putAll(other.view());
+            this.values.putAll(values);
             return this;
         }
 

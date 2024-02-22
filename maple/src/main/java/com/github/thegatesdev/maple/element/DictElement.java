@@ -116,6 +116,14 @@ public sealed interface DictElement extends Element, ElementCollection permits M
         Builder putAll(DictElement other);
 
         /**
+         * Put all the entries from the given map, optionally replacing the values already present.
+         *
+         * @param values the map to merge
+         * @return this builder
+         */
+        Builder putAll(Map<String, Element> values);
+
+        /**
          * Remove the entry at the given key if present.
          *
          * @param key the key for the entry to remove
