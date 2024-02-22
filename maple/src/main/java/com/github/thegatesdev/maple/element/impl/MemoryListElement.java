@@ -74,6 +74,8 @@ public final class MemoryListElement implements ListElement {
 
     @Override
     public void crawl(Consumer<Element> action) {
+        Objects.requireNonNull(action, "action cannot be null");
+
         for (Element value : values) {
             if (value instanceof ElementCollection collection) {
                 collection.crawl(action);

@@ -6,10 +6,7 @@ import com.github.thegatesdev.maple.element.ElementCollection;
 import com.github.thegatesdev.maple.element.ListElement;
 import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -42,6 +39,8 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public Element get(String key) {
+        Objects.requireNonNull(key, "key cannot be null");
+
         Element value = values.get(key);
         if (value == null) throw new ElementKeyNotPresentException(key);
         return value;
@@ -49,6 +48,8 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public Optional<Element> find(String key) {
+        Objects.requireNonNull(key, "key cannot be null");
+
         return Optional.ofNullable(values.get(key));
     }
 
@@ -75,6 +76,8 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public void crawl(Consumer<Element> action) {
+        Objects.requireNonNull(action, "key cannot be null");
+
         values.values().forEach(element -> {
             if (element instanceof ElementCollection collection) {
                 collection.crawl(action);
