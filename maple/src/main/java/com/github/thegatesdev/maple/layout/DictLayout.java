@@ -91,7 +91,7 @@ public final class DictLayout implements Layout<DictElement> {
         }
 
         /**
-         * Parse the value at the given key with the given layout, if it is present.
+         * Parse the value at the given key parsed with the given layout, if it is present.
          * Otherwise, place the given default value at that key.
          *
          * @param key          the key
