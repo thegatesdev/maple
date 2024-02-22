@@ -62,7 +62,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     Map<String, Element> view();
 
     /**
-     * Get a dictionary builder containing the entries of this dictionary.
+     * Get a dictionary builder containing the entries in this dictionary.
      *
      * @return the new builder
      */
