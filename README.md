@@ -96,10 +96,8 @@ Optional<Element> notPresent = dictElement.find("not_present"); // empty optiona
 
 ## Layouts
 
-Layouts serve a similar purpose as schema's in the JSON world, 
-however they are also meant to be used in code directly.
-
-The following snippet shows an example use of the `DictLayout`:
+Layouts define and enforce a ... *layout* on some element.
+You could compare them to *schema's* in the JSON world, but directly in the code!
 ```java
 DictLayout layout = Layout.dictionary()
                 .required("name", ElementType.STRING)
