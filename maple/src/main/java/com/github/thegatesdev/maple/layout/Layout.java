@@ -4,11 +4,11 @@ import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.exception.LayoutParseException;
 
 /**
- * Defines the layout expected of some element, and parses it to type T.
+ * Defines and enforces a layout on some element.
  *
- * @param <T> the type to parse to
+ * @param <E> the resulting type
  */
-public interface Layout<T> {
+public interface Layout<E extends Element> {
 
     /**
      * Get a new builder for constructing dictionary layouts.
@@ -20,11 +20,20 @@ public interface Layout<T> {
     }
 
     /**
+     * Get a layout on a plain element that returns the same element.
+     *
+     * @return the identity layout
+     */
+    static Layout<Element> identity() {
+        return value -> value;
+    }
+
+    /**
      * Parse the given value according to this layout.
      *
      * @param value the element to parse
-     * @return the value conforming to this layout
+     * @return the element conforming to this layout
      * @throws LayoutParseException if the layout failed to parse for this element
      */
-    T parse(Element value) throws LayoutParseException;
+    E parse(Element value) throws LayoutParseException;
 }

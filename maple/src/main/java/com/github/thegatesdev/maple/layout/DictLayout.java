@@ -39,7 +39,7 @@ public final class DictLayout implements Layout<DictElement> {
         return Element.of(output);
     }
 
-    private Element parseEntryOrThrow(String key, Element entry, Layout<? extends Element> layout) throws LayoutParseException {
+    private Element parseEntryOrThrow(String key, Element entry, Layout<?> layout) throws LayoutParseException {
         try {
             return layout.parse(entry);
         } catch (ElementException ex) {
@@ -52,7 +52,6 @@ public final class DictLayout implements Layout<DictElement> {
      * Builder for creating a dictionary layout.
      */
     public static final class Builder {
-        private static final Layout<Element> IDENTITY_LAYOUT = value -> value;
 
         private final List<Option> options = new ArrayList<>(5);
         private final Set<String> uniqueKeys = new HashSet<>(5);
@@ -77,7 +76,7 @@ public final class DictLayout implements Layout<DictElement> {
          * @param layout the parsed layout
          * @return this builder
          */
-        public Builder required(String key, Layout<? extends Element> layout) {
+        public Builder required(String key, Layout<?> layout) {
             return add(key, layout, null);
         }
 
@@ -88,7 +87,7 @@ public final class DictLayout implements Layout<DictElement> {
          * @return this builder
          */
         public Builder required(String key) {
-            return required(key, IDENTITY_LAYOUT);
+            return required(key, Layout.identity());
         }
 
         /**
@@ -100,7 +99,7 @@ public final class DictLayout implements Layout<DictElement> {
          * @param layout       the layout to parse
          * @return this builder
          */
-        public Builder optional(String key, Element defaultValue, Layout<? extends Element> layout) {
+        public Builder optional(String key, Element defaultValue, Layout<?> layout) {
             return add(key, layout, Objects.requireNonNull(defaultValue, "defaultValue cannot be null"));
         }
 
@@ -113,17 +112,17 @@ public final class DictLayout implements Layout<DictElement> {
          * @return this builder
          */
         public Builder optional(String key, Element defaultValue) {
-            return optional(key, defaultValue, IDENTITY_LAYOUT);
+            return optional(key, defaultValue, Layout.identity());
         }
 
 
-        private Builder add(String key, Layout<? extends Element> layout, Element defaultValue) {
+        private Builder add(String key, Layout<?> layout, Element defaultValue) {
             if (!uniqueKeys.add(key)) throw new IllegalArgumentException("Duplicate option key '%s'".formatted(key));
             options.add(new Option(key, layout, defaultValue));
             return this;
         }
     }
 
-    private record Option(String key, Layout<? extends Element> layout, Element defaultValue) {
+    private record Option(String key, Layout<?> layout, Element defaultValue) {
     }
 }
