@@ -32,7 +32,11 @@ public final class MemoryListElement implements ListElement {
     }
 
     public static Builder builder() {
-        return new Builder();
+        return builder(5);
+    }
+
+    public static Builder builder(int initialCapacity) {
+        return new Builder(initialCapacity);
     }
 
 
@@ -131,8 +135,8 @@ public final class MemoryListElement implements ListElement {
             this.values = values;
         }
 
-        private Builder() {
-            this(new ArrayList<>());
+        private Builder(int initialCapacity) {
+            this(new ArrayList<>(initialCapacity));
         }
 
 

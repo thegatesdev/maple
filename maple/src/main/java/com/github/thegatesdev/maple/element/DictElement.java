@@ -21,6 +21,16 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     }
 
     /**
+     * Get a new builder for dictionary elements.
+     *
+     * @param initialCapacity the initial capacity of the dictionary
+     * @return the new builder
+     */
+    static Builder builder(int initialCapacity) {
+        return MemoryDictElement.builder(initialCapacity);
+    }
+
+    /**
      * Get a dictionary element containing no values.
      *
      * @return the empty dictionary element

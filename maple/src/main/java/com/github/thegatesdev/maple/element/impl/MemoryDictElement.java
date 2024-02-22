@@ -32,7 +32,11 @@ public final class MemoryDictElement implements DictElement {
     }
 
     public static DictElement.Builder builder() {
-        return new Builder();
+        return builder(5);
+    }
+
+    public static DictElement.Builder builder(int initialCapacity) {
+        return new Builder(initialCapacity);
     }
 
 
@@ -131,8 +135,8 @@ public final class MemoryDictElement implements DictElement {
             this.needsCopy = true;
         }
 
-        private Builder() {
-            this.values = new LinkedHashMap<>();
+        private Builder(int initialCapacity) {
+            this.values = new LinkedHashMap<>(initialCapacity);
             this.needsCopy = false;
         }
 

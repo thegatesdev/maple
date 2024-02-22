@@ -20,6 +20,16 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     }
 
     /**
+     * Get a new builder for list elements.
+     *
+     * @param initialCapacity the initial capacity of the list
+     * @return the new builder
+     */
+    static Builder builder(int initialCapacity) {
+        return MemoryListElement.builder(initialCapacity);
+    }
+
+    /**
      * Get a list element containing no values.
      *
      * @return the empty list element
