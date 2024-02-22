@@ -26,9 +26,7 @@ while taking inspiration from (and possibly improving upon) existing libraries.
 
 Feel free to open an issue, or even to submit a pull request if you have any concerns or suggestions.
 
-## Usage
-
-### Including in your project
+## Including in your project
 
 **Maple** is public on GitHub, meaning you can easily get it from JitPack.
 
@@ -36,7 +34,7 @@ Head to https://jitpack.io/#thegatesdev/maple,
 select a version and follow the instructions for your build system.
 Now you are ready to dive in!
 
-### *Setting some rules*
+## Setting some rules
 
 Here are some rules to keep in mind while using **Maple**:
 
@@ -49,11 +47,11 @@ If you are not using the Java module system, it is still not recommended
 to use the classes in the packages that are not exported. 
 These packages are outside the public facing API and can change without warning.
 
-### Parsing elements
+## Parsing elements
 
 *TODO*
 
-### Creating elements
+## Creating elements
 
 You can directly create elements of primitive types...
 ```java
@@ -84,7 +82,7 @@ DictElement merged = original.toBuilder()
         .build();
 ```
 
-### Getting values from elements
+## Getting values from elements
 
 Obtaining values has never looked nicer...
 ```java
@@ -96,7 +94,7 @@ boolean invalidBoolValue = dictElement.get("string").getBool(); // throws Elemen
 Optional<Element> notPresent = dictElement.find("not_present"); // empty optional
 ```
 
-### Layouts
+## Layouts
 
 Layouts serve a similar purpose as schema's in the JSON world, 
 however they are also meant to be used in code directly.
