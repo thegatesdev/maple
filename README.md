@@ -108,7 +108,7 @@ DictLayout layout = Layout.dictionary()
                         .build())
                 .optional("occupation", Element.of("none"), ElementType.STRING)
                 .build();
-layout.parse(/*Some element*/);
+DictElement parsedElement = layout.parse(/*Some element*/);
 ```
 
 ## Future
