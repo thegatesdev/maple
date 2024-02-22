@@ -4,10 +4,7 @@ import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementCollection;
 import com.github.thegatesdev.maple.element.ListElement;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -34,6 +31,10 @@ public final class MemoryListElement implements ListElement {
         return new MemoryListElement(values.toArray(EMPTY_EL_ARR)); // Look mom! I'm reusing the empty array! Memory efficiency!
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
 
     @Override
     public Element get(int index) {
@@ -49,6 +50,11 @@ public final class MemoryListElement implements ListElement {
     @Override
     public List<Element> view() {
         return List.of(values);
+    }
+
+    @Override
+    public ListElement.Builder toBuilder() {
+        return new Builder(Arrays.asList(values));
     }
 
     @Override
@@ -114,5 +120,67 @@ public final class MemoryListElement implements ListElement {
         if (other instanceof MemoryListElement memoryListElement)
             return Arrays.equals(this.values, memoryListElement.values);
         return Arrays.equals(this.values, listElement.toArray());
+    }
+
+
+    public static final class Builder implements ListElement.Builder {
+
+        private final List<Element> values;
+
+        private Builder(List<Element> values) {
+            this.values = values;
+        }
+
+        private Builder() {
+            this(new ArrayList<>());
+        }
+
+
+        @Override
+        public ListElement build() {
+            return new MemoryListElement(values.toArray(EMPTY_EL_ARR));
+        }
+
+
+        @Override
+        public ListElement.Builder add(Element element) {
+            values.add(element);
+            return this;
+        }
+
+        @Override
+        public ListElement.Builder addAll(ListElement element) {
+            if (element instanceof MemoryListElement memoryListElement)
+                return addAll(memoryListElement.values); // Using the immutable view may be more expensive.
+            return addAll(element.view());
+        }
+
+        @Override
+        public ListElement.Builder addAll(List<Element> elements) {
+            values.addAll(elements);
+            return this;
+        }
+
+        @Override
+        public ListElement.Builder addAll(Element[] elements) {
+            return addAll(Arrays.asList(elements));
+        }
+
+        @Override
+        public ListElement.Builder remove(int index) {
+            values.remove(index);
+            return this;
+        }
+
+        @Override
+        public ListElement.Builder remove(Element element) {
+            values.remove(element);
+            return this;
+        }
+
+        @Override
+        public List<Element> view() {
+            return Collections.unmodifiableList(values);
+        }
     }
 }
