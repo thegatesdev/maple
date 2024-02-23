@@ -90,9 +90,9 @@ DictElement dictElement = DictElement.builder()
 Merging dictionaries can also be done using builders...
 ```java
 DictElement original;
-DictElement overwrite;
+DictElement other;
 DictElement merged = original.toBuilder()
-        .putAll(overwrite)
+        .putAll(other)
         .build();
 ```
 
