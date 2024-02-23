@@ -15,4 +15,21 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
+repositories{
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.snakeyaml:snakeyaml-engine:2.7")
+}
+
+tasks{
+    test{
+        useJUnitPlatform()
+    }
+}
+
 publishing.publications.create<MavenPublication>("mavenJava").from(components["java"])
