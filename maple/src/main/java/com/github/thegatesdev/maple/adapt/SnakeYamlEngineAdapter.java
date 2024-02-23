@@ -1,7 +1,5 @@
-package com.github.thegatesdev.maple.adapt.impl;
+package com.github.thegatesdev.maple.adapt;
 
-import com.github.thegatesdev.maple.adapt.Adapter;
-import com.github.thegatesdev.maple.adapt.OutputType;
 import com.github.thegatesdev.maple.element.DictElement;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ListElement;
@@ -9,22 +7,16 @@ import com.github.thegatesdev.maple.element.ListElement;
 import java.math.BigInteger;
 import java.util.*;
 
-public enum SnakeYamlEngineAdapter implements Adapter {
-    INSTANCE;
-
-    @Override
-    public DictElement adapt(Map<?, ?> values) {
-        DictElement.Builder output = DictElement.builder(values.size());
-        values.forEach((key, value) -> output.put(key.toString(), adapt(value)));
-        return output.build();
-    }
-
-    @Override
-    public ListElement adapt(Collection<?> values) {
-        ListElement.Builder output = ListElement.builder(values.size());
-        for (Object value : values) output.add(adapt(value));
-        return output.build();
-    }
+/**
+ * Adapter for SnakeYAML and SnakeYAML-Engine outputs.
+ * <ul>
+ * <li>{@code !!binary} tags will be converted to a Base64 string value</li>
+ * <li>{@code !!timestamp} tags are not supported</li>
+ * <li>{@code !!omap} or {@code !!pairs} tags will be adapted to a dictionary element</li>
+ * <li>{@code !!set} will be adapted to a list element</li>
+ * </ul>
+ */
+public final class SnakeYamlEngineAdapter implements Adapter {
 
     @Override
     public Element adapt(Object input) {
@@ -37,18 +29,25 @@ public enum SnakeYamlEngineAdapter implements Adapter {
         // SnakeYAML-Engine does not parse to the Float type
         if (input instanceof String val) return Element.of(val); // !!str
         if (input instanceof byte[] val) return Element.of(Base64.getEncoder().encodeToString(val)); // !!binary
-        if (input instanceof Set<?> val) return adapt(val); // !!set
-        if (input instanceof List<?> val) return tryParseOMAP(val).orElse(adapt(val)); // !!omap/pairs or !!seq
-        if (input instanceof Map<?, ?> val) return adapt(val);
+        if (input instanceof Set<?> val) return parseCollection(val); // !!set
+        if (input instanceof List<?> val)
+            return tryParseOMAP(val).orElse(parseCollection(val)); // !!omap/pairs or !!seq
+        if (input instanceof Map<?, ?> val) return parseMap(val);
         // No Java 21 misery... Type pattern matching switch would've been nice...
         throw new IllegalArgumentException("Input of type %s could not be adapted to an element, is this really SnakeYaml-Engine output?".formatted(input.getClass().getSimpleName()));
     }
 
-    @Override
-    public OutputType outputType() {
-        return OutputType.SNAKEYAML_ENGINE;
+    private DictElement parseMap(Map<?, ?> values) {
+        DictElement.Builder output = DictElement.builder(values.size());
+        values.forEach((key, value) -> output.put(key.toString(), adapt(value)));
+        return output.build();
     }
 
+    private ListElement parseCollection(Collection<?> values) {
+        ListElement.Builder output = ListElement.builder(values.size());
+        for (Object value : values) output.add(adapt(value));
+        return output.build();
+    }
 
     private Optional<Element> tryParseOMAP(List<?> values) {
         // Parse a list of pairs aka an ordered map (why does this exist? Aren't YAML maps already ordered?).
