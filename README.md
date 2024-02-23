@@ -18,7 +18,7 @@ A clean, type safe intermediary structure in Java
 
 **Maple** was originally intended as a replacement to the Spigot Configuration API,
 which allows Minecraft plugins to read data from configuration files.
-This is still my use-case for this library, but it is of course not limited to Minecraft.
+This is still my use-case for this library, but the goals have grown way past that.
 
 My goal with this library is to represent JSON like configuration values
 in a clean and understandable structure, with plenty of utilities for different scenario's,
@@ -45,7 +45,7 @@ This library does not allow `null` values passed in, and guarantees that no `nul
 The `module-info.java` defines the packages that are exported.
 If you are not using the Java module system, it is still not recommended
 to use the classes in the packages that are not exported. 
-These packages are outside the public facing API and can change without warning.
+These packages are considered outside the public facing API and can change without warning.
 
 ## Parsing elements
 
@@ -89,7 +89,7 @@ Obtaining values has never looked nicer...
 DictElement dictElement; // assuming the dictionary from the above example
 
 dictElement.get("int").isNumber(); // true
-boolean boolValue = dictElement.get("bool").getBool();
+boolean boolValue = dictElement.get("bool").getBool(); // true
 boolean invalidBoolValue = dictElement.get("string").getBool(); // throws ElementTypeException
 Optional<Element> notPresent = dictElement.find("not_present"); // empty optional
 ```
@@ -97,7 +97,7 @@ Optional<Element> notPresent = dictElement.find("not_present"); // empty optiona
 ## Layouts
 
 Layouts define and enforce a ... *layout* on some element.
-You could compare them to *schema's* in the JSON world, but directly in the code!
+You could compare them to *schema's* in the JSON world, but directly in the code...
 ```java
 DictLayout layout = Layout.dictionary()
                 .required("name", ElementType.STRING)
@@ -111,12 +111,13 @@ DictLayout layout = Layout.dictionary()
 DictElement parsedElement = layout.parse(/*Some element*/);
 ```
 
-## Future
+## Goals
 
 **Maple** is definitely not finished. Here are some of the features I'd like to implement in the future:
 
-- Better pathing and error message support using some wrapping storing its location.
+- Better pathing and error message support using some element wrapper.
 - Create my own JSON, YAML and maybe TOML parser, instead of relying on outside parsers.
+- Serialize and deserialize Layouts so they can be defined in files.
 - Serialize and deserialize dictionaries to and from Java objects (and to proxy objects).
 - Saving values back to the configuration.
 
