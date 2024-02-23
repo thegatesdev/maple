@@ -41,7 +41,7 @@ public enum SnakeYamlEngineAdapter implements Adapter {
         if (input instanceof List<?> val) return tryParseOMAP(val).orElse(adapt(val)); // !!omap/pairs or !!seq
         if (input instanceof Map<?, ?> val) return adapt(val);
         // No Java 21 misery... Type pattern matching switch would've been nice...
-        throw new IllegalArgumentException("Input of type %s could not be adapted to an element, is this really SnakeYaml-Engine output?".formatted(input.getClass()));
+        throw new IllegalArgumentException("Input of type %s could not be adapted to an element, is this really SnakeYaml-Engine output?".formatted(input.getClass().getSimpleName()));
     }
 
     @Override
