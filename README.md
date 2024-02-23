@@ -24,7 +24,7 @@ My goal with this library is to represent JSON like configuration values
 in a clean and understandable structure, with plenty of utilities for different scenario's,
 while taking inspiration from (and possibly improving upon) existing libraries.
 
-Feel free to open an issue, or even to submit a pull request if you have any concerns or suggestions.
+Feel free to open an issue or submit a pull request if you have any concerns or suggestions.
 
 ## Including in your project
 
