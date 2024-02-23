@@ -16,7 +16,7 @@ import java.util.*;
  * <li>{@code !!set} will be adapted to a list element</li>
  * </ul>
  */
-public final class SnakeYamlEngineAdapter implements Adapter {
+public final class SnakeYamlAdapter implements Adapter {
 
     @Override
     public Element adapt(Object input) {
