@@ -49,7 +49,21 @@ These packages are considered outside the public facing API and can change witho
 
 ## Parsing elements
 
-*TODO*
+**Maple** does not have its own file parser yet.
+
+Parsing an element structure can be done by adapting output from other parser implementations.
+Currently, only *SnakeYAML* (or *SnakeYAML-Engine*) output is supported...
+```java
+// Load some YAML data...
+String document = "hello: 25";
+Object yamlData = new Yaml().load(document);
+// ...adapt to Maple structure...
+Adapter snakeYamlAdapter = new SnakeYamlAdapter();
+Element element = snakeYamlAdapter.adapt(yamlData);
+// ...and obtain the data!
+element.isDict(); // true
+element.asDict().get("hello").getInt(); // 25
+```
 
 ## Creating elements
 
