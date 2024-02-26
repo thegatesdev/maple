@@ -144,6 +144,7 @@ public final class MemoryListElement implements ListElement {
 
         @Override
         public ListElement build() {
+            if (values.isEmpty()) return ListElement.empty();
             return new MemoryListElement(values.toArray(EMPTY_EL_ARR));
         }
 

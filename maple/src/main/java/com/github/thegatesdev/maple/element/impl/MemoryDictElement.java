@@ -154,6 +154,7 @@ public final class MemoryDictElement implements DictElement {
 
         @Override
         public DictElement build() {
+            if (values.isEmpty()) return DictElement.empty();
             needsCopy = true;
             // Don't defensively copy the builder values map.
             // Often, a builder is only used once and then discarded.
