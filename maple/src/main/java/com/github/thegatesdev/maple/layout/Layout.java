@@ -24,7 +24,7 @@ public interface Layout<E extends Element> {
      *
      * @return the identity layout
      */
-    static Layout<Element> identity() {
+    static Layout<? extends Element> identity() {
         return value -> value;
     }
 
