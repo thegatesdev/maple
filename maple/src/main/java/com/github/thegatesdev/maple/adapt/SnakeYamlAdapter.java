@@ -56,12 +56,11 @@ public final class SnakeYamlAdapter implements Adapter {
             return Optional.empty(); // Early return so we avoid allocating a dictionary builder.
         DictElement.Builder output = DictElement.builder(values.size());
         for (Object value : values) {
-            if (!(value instanceof Object[] array) || array.length != 2) {
-                // This basically already means invalid data has been passed in
-                // as there is no other YAML type that converts to an Object[] using SnakeYAML-Engine.
-                return Optional.empty();
-            }
-            output.put(array[0].toString(), adapt(array[1]));
+            if (value instanceof Object[] array && array.length == 2)
+                output.put(array[0].toString(), adapt(array[1]));
+            // This basically already means invalid data has been passed in
+            // as there is no other YAML type that converts to an Object[] using SnakeYAML-Engine.
+            return Optional.empty();
         }
         return Optional.of(output.build());
     }
