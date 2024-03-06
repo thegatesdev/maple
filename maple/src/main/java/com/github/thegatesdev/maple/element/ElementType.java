@@ -1,7 +1,9 @@
 package com.github.thegatesdev.maple.element;
 
-import com.github.thegatesdev.maple.exception.LayoutParseException;
+import com.github.thegatesdev.maple.exception.ElementTypeException;
 import com.github.thegatesdev.maple.layout.Layout;
+
+import java.util.Optional;
 
 /**
  * The different types of elements that are available.
@@ -43,9 +45,8 @@ public enum ElementType implements Layout<Element> {
     UNSET;
 
     @Override
-    public Element parse(Element value) throws LayoutParseException {
-        if (this != value.type())
-            throw new LayoutParseException("Expected a %s element, got a %s element".formatted(this.name(), value.type().name()));
-        return value;
+    public Optional<Element> apply(Element element) {
+        if (this != element.type()) throw new ElementTypeException(this, element.type());
+        return Optional.empty();
     }
 }

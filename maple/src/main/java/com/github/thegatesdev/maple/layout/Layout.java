@@ -1,17 +1,14 @@
 package com.github.thegatesdev.maple.layout;
 
 import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.exception.LayoutParseException;
+import com.github.thegatesdev.maple.exception.ElementException;
 
-/**
- * Defines and enforces a layout on some element.
- *
- * @param <E> the resulting type
- */
+import java.util.Optional;
+
 public interface Layout<E extends Element> {
 
     /**
-     * Get a new builder for constructing dictionary layouts.
+     * Get a builder for creating dictionary layouts.
      *
      * @return the new builder
      */
@@ -20,20 +17,15 @@ public interface Layout<E extends Element> {
     }
 
     /**
-     * Get a layout on a plain element that returns the same element.
+     * Apply the layout on the given element, optionally returning a new element.
+     * Example of applying a layout:
+     * <pre>{@code
+     * Element applied = layout.apply(element).orElse(element);
+     * }</pre>
      *
-     * @return the identity layout
+     * @param element the element to apply to
+     * @return optionally a new element
+     * @throws ElementException if the layout failed to apply to the element
      */
-    static Layout<? extends Element> identity() {
-        return value -> value;
-    }
-
-    /**
-     * Parse the given value according to this layout.
-     *
-     * @param value the element to parse
-     * @return the element conforming to this layout
-     * @throws LayoutParseException if the layout failed to parse for this element
-     */
-    E parse(Element value) throws LayoutParseException;
+    Optional<E> apply(Element element) throws ElementException;
 }
