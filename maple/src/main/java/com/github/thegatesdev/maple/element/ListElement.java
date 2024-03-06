@@ -26,6 +26,8 @@ public sealed interface ListElement extends Element, ElementCollection permits M
      * @return the new builder
      */
     static Builder builder(int initialCapacity) {
+        if (initialCapacity < 0)
+            throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
         return MemoryListElement.builder(initialCapacity);
     }
 
