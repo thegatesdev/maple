@@ -27,5 +27,5 @@ public interface Layout<E extends Element> {
      * @return optionally a new element
      * @throws ElementException if the layout failed to apply to the element
      */
-    Optional<E> apply(Element element) throws ElementException;
+    Optional<E> apply(Element element);
 }

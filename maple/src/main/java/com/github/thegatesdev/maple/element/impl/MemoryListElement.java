@@ -22,11 +22,15 @@ public final class MemoryListElement implements ListElement {
 
 
     public static ListElement of(Element[] values) {
+        Objects.requireNonNull(values, "given array is null");
+
         if (values.length == 0) return EMPTY;
         return new MemoryListElement(Arrays.copyOf(values, values.length));
     }
 
     public static ListElement of(Collection<Element> values) {
+        Objects.requireNonNull(values, "given collection is null");
+
         if (values.isEmpty()) return EMPTY;
         return new MemoryListElement(values.toArray(EMPTY_EL_ARR)); // Look mom! I'm reusing the empty array! Memory efficiency!
     }
@@ -36,6 +40,8 @@ public final class MemoryListElement implements ListElement {
     }
 
     public static Builder builder(int initialCapacity) {
+        if (initialCapacity < 0)
+            throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
         return new Builder(initialCapacity);
     }
 
@@ -69,12 +75,14 @@ public final class MemoryListElement implements ListElement {
 
     @Override
     public void each(Consumer<Element> action) {
+        Objects.requireNonNull(action, "given action is null");
+
         for (Element value : values) action.accept(value);
     }
 
     @Override
     public void crawl(Consumer<Element> action) {
-        Objects.requireNonNull(action, "action cannot be null");
+        Objects.requireNonNull(action, "given action is null");
 
         for (Element value : values) {
             if (value instanceof ElementCollection collection) {
@@ -151,12 +159,16 @@ public final class MemoryListElement implements ListElement {
 
         @Override
         public ListElement.Builder add(Element element) {
+            Objects.requireNonNull(element, "given element is null");
+
             values.add(element);
             return this;
         }
 
         @Override
         public ListElement.Builder addAll(ListElement element) {
+            Objects.requireNonNull(element, "given list element is null");
+
             if (element instanceof MemoryListElement memoryListElement)
                 return addAll(memoryListElement.values); // Using the immutable view may be more expensive.
             return addAll(element.view());
@@ -164,12 +176,16 @@ public final class MemoryListElement implements ListElement {
 
         @Override
         public ListElement.Builder addAll(List<Element> elements) {
+            Objects.requireNonNull(elements, "given element list is null");
+
             values.addAll(elements);
             return this;
         }
 
         @Override
         public ListElement.Builder addAll(Element[] elements) {
+            Objects.requireNonNull(elements, "given array is null");
+
             return addAll(Arrays.asList(elements));
         }
 
@@ -181,6 +197,8 @@ public final class MemoryListElement implements ListElement {
 
         @Override
         public ListElement.Builder remove(Element element) {
+            Objects.requireNonNull(element, "given element is null");
+
             values.remove(element);
             return this;
         }

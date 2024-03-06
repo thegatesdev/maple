@@ -2,7 +2,6 @@ package com.github.thegatesdev.maple.layout;
 
 import com.github.thegatesdev.maple.element.DictElement;
 import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.exception.ElementException;
 import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
 import java.util.*;
@@ -26,7 +25,7 @@ public final class DictLayout implements Layout<DictElement> {
      * @throws ElementKeyNotPresentException if an entry is not present and does not have a default value specified
      */
     @Override
-    public Optional<DictElement> apply(Element element) throws ElementException {
+    public Optional<DictElement> apply(Element element) {
         DictElement input = element.getDict();
         DictElement.Builder output = input.toBuilder();
 

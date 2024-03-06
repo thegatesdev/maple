@@ -26,10 +26,9 @@ public sealed interface DictElement extends Element, ElementCollection permits M
      *
      * @param initialCapacity the initial capacity of the dictionary
      * @return the new builder
+     * @throws IllegalArgumentException if the initial capacity is negative
      */
     static Builder builder(int initialCapacity) {
-        if (initialCapacity < 0)
-            throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
         return MemoryDictElement.builder(initialCapacity);
     }
 
@@ -48,15 +47,17 @@ public sealed interface DictElement extends Element, ElementCollection permits M
      *
      * @param key the key for the element
      * @return the element at the key
-     * @throws ElementKeyNotPresentException if the key was not present
+     * @throws NullPointerException          if the given key is null
+     * @throws ElementKeyNotPresentException if the key is not present
      */
-    Element get(String key) throws ElementKeyNotPresentException;
+    Element get(String key);
 
     /**
      * Find the element at the given key.
      *
      * @param key the key for the element
-     * @return an optional containing the element at the key if it was present
+     * @return an optional containing the element at the key if it is present
+     * @throws NullPointerException if the given key is null
      */
     Optional<Element> find(String key);
 
@@ -64,6 +65,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
      * Iterate the entries in this dictionary element using the given action.
      *
      * @param action the action to run for each mapping
+     * @throws NullPointerException if the given action is null
      */
     void each(BiConsumer<String, Element> action);
 
@@ -117,22 +119,25 @@ public sealed interface DictElement extends Element, ElementCollection permits M
          * @param key     the key to put the element at
          * @param element the element to put
          * @return this builder
+         * @throws NullPointerException if the given key or element is null
          */
         Builder put(String key, Element element);
 
         /**
          * Put all the entries from the given dictionary element, optionally replacing the values already present.
          *
-         * @param other the dictionary to merge
+         * @param values the dictionary to merge
          * @return this builder
+         * @throws NullPointerException if the given dictionary element is null
          */
-        Builder putAll(DictElement other);
+        Builder putAll(DictElement values);
 
         /**
          * Put all the entries from the given map, optionally replacing the values already present.
          *
          * @param values the map to merge
          * @return this builder
+         * @throws NullPointerException if the given map is null
          */
         Builder putAll(Map<String, Element> values);
 
@@ -141,6 +146,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
          *
          * @param key the key for the entry to remove
          * @return this builder
+         * @throws NullPointerException if the given key is null
          */
         Builder remove(String key);
 

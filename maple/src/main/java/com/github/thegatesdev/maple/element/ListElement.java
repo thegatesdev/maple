@@ -24,10 +24,9 @@ public sealed interface ListElement extends Element, ElementCollection permits M
      *
      * @param initialCapacity the initial capacity of the list
      * @return the new builder
+     * @throws IllegalArgumentException if the initial capacity is negative
      */
     static Builder builder(int initialCapacity) {
-        if (initialCapacity < 0)
-            throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
         return MemoryListElement.builder(initialCapacity);
     }
 
@@ -46,15 +45,16 @@ public sealed interface ListElement extends Element, ElementCollection permits M
      *
      * @param index the index for the element
      * @return the element at the index
-     * @throws IndexOutOfBoundsException when the index is out of bounds
+     * @throws IndexOutOfBoundsException if the index is out of bounds for this list
      */
     Element get(int index);
 
     /**
      * Find the element at the given index.
+     * Invalid indexes will return an empty optional.
      *
      * @param index the index for the element
-     * @return an optional containing the element at the index if it was present
+     * @return an optional containing the element at the index if it is present
      */
     Optional<Element> find(int index);
 
@@ -114,6 +114,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
          *
          * @param element the element to add
          * @return this builder
+         * @throws NullPointerException if the given element is null
          */
         Builder add(Element element);
 
@@ -122,6 +123,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
          *
          * @param element the list element to add the values from
          * @return this builder
+         * @throws NullPointerException if the given list element is null
          */
         Builder addAll(ListElement element);
 
@@ -130,6 +132,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
          *
          * @param elements the elements to add
          * @return this builder
+         * @throws NullPointerException if the given list is null
          */
         Builder addAll(List<Element> elements);
 
@@ -138,6 +141,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
          *
          * @param elements the elements to add
          * @return this builder
+         * @throws NullPointerException if the given array is null
          */
         Builder addAll(Element[] elements);
 
@@ -146,6 +150,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
          *
          * @param index the index for the element to remove
          * @return this builder
+         * @throws IndexOutOfBoundsException if the index is out of bounds
          */
         Builder remove(int index);
 
@@ -154,6 +159,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
          *
          * @param element the element to remove
          * @return this builder
+         * @throws NullPointerException if the given element is null
          */
         Builder remove(Element element);
 

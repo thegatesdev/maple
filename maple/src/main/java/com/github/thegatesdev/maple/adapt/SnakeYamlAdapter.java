@@ -37,25 +37,25 @@ public final class SnakeYamlAdapter implements Adapter {
         throw new IllegalArgumentException("Input of type %s could not be adapted to an element, is this really SnakeYaml-Engine output?".formatted(input.getClass().getSimpleName()));
     }
 
-    private DictElement parseMap(Map<?, ?> values) {
-        DictElement.Builder output = DictElement.builder(values.size());
-        values.forEach((key, value) -> output.put(key.toString(), adapt(value)));
+    private DictElement parseMap(Map<?, ?> input) {
+        DictElement.Builder output = DictElement.builder(input.size());
+        input.forEach((key, value) -> output.put(key.toString(), adapt(value)));
         return output.build();
     }
 
-    private ListElement parseCollection(Collection<?> values) {
-        ListElement.Builder output = ListElement.builder(values.size());
-        for (Object value : values) output.add(adapt(value));
+    private ListElement parseCollection(Collection<?> input) {
+        ListElement.Builder output = ListElement.builder(input.size());
+        for (Object value : input) output.add(adapt(value));
         return output.build();
     }
 
-    private Optional<Element> tryParseOMAP(List<?> values) {
+    private Optional<Element> tryParseOMAP(List<?> input) {
         // Parse a list of pairs aka an ordered map (why does this exist? Aren't YAML maps already ordered?).
         // Comes in a List with values of type Object[].
-        if (!(values.get(0) instanceof Object[]))
+        if (!(input.get(0) instanceof Object[]))
             return Optional.empty(); // Early return so we avoid allocating a dictionary builder.
-        DictElement.Builder output = DictElement.builder(values.size());
-        for (Object value : values) {
+        DictElement.Builder output = DictElement.builder(input.size());
+        for (Object value : input) {
             if (value instanceof Object[] array && array.length == 2)
                 output.put(array[0].toString(), adapt(array[1]));
             // This basically already means invalid data has been passed in

@@ -24,6 +24,8 @@ public final class MemoryDictElement implements DictElement {
 
 
     public static DictElement of(Map<String, Element> values) {
+        Objects.requireNonNull(values, "given map is null");
+
         if (values.isEmpty()) return EMPTY;
         return new MemoryDictElement(new LinkedHashMap<>(values));
     }
@@ -33,13 +35,15 @@ public final class MemoryDictElement implements DictElement {
     }
 
     public static DictElement.Builder builder(int initialCapacity) {
+        if (initialCapacity < 0)
+            throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
         return new Builder(initialCapacity);
     }
 
 
     @Override
     public Element get(String key) {
-        Objects.requireNonNull(key, "key cannot be null");
+        Objects.requireNonNull(key, "given key is null");
 
         Element value = values.get(key);
         if (value == null) throw new ElementKeyNotPresentException(key);
@@ -48,7 +52,7 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public Optional<Element> find(String key) {
-        Objects.requireNonNull(key, "key cannot be null");
+        Objects.requireNonNull(key, "given key is null");
 
         return Optional.ofNullable(values.get(key));
     }
@@ -71,12 +75,14 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public void each(Consumer<Element> action) {
+        Objects.requireNonNull(action, "given action is null");
+
         values.values().forEach(action);
     }
 
     @Override
     public void crawl(Consumer<Element> action) {
-        Objects.requireNonNull(action, "key cannot be null");
+        Objects.requireNonNull(action, "given action is null");
 
         values.values().forEach(element -> {
             if (element instanceof ElementCollection collection) {
@@ -165,18 +171,25 @@ public final class MemoryDictElement implements DictElement {
 
         @Override
         public DictElement.Builder put(String key, Element element) {
+            Objects.requireNonNull(key, "given key is null");
+            Objects.requireNonNull(key, "given element is null");
+
             checkEdit();
             values.put(key, element);
             return this;
         }
 
         @Override
-        public DictElement.Builder putAll(DictElement other) {
-            return putAll(other instanceof MemoryDictElement memoryDictElement ? memoryDictElement.values : other.view());
+        public DictElement.Builder putAll(DictElement values) {
+            Objects.requireNonNull(values, "given dictionary element is null");
+
+            return putAll(values instanceof MemoryDictElement memoryDictElement ? memoryDictElement.values : values.view());
         }
 
         @Override
         public DictElement.Builder putAll(Map<String, Element> values) {
+            Objects.requireNonNull(values, "given map is null");
+
             checkEdit();
             this.values.putAll(values);
             return this;
@@ -184,6 +197,8 @@ public final class MemoryDictElement implements DictElement {
 
         @Override
         public DictElement.Builder remove(String key) {
+            Objects.requireNonNull(key, "given key is null");
+
             checkEdit();
             values.remove(key);
             return this;

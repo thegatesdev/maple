@@ -12,6 +12,7 @@ public sealed interface ElementCollection extends Element permits DictElement, L
      * Iterate the values in this collection using the given action.
      *
      * @param action the action to run for each value
+     * @throws NullPointerException if the given action is null
      */
     void each(Consumer<Element> action);
 
@@ -20,6 +21,7 @@ public sealed interface ElementCollection extends Element permits DictElement, L
      * When an element collection is encountered, its values are crawled first.
      *
      * @param action the action to run for each descendant
+     * @throws NullPointerException if the given action is null
      */
     void crawl(Consumer<Element> action);
 

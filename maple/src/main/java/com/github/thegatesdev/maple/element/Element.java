@@ -16,6 +16,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      *
      * @param values the values for the list
      * @return the list element containing the values
+     * @throws NullPointerException if the given array is null
      */
     static ListElement of(Element[] values) {
         return MemoryListElement.of(values);
@@ -26,6 +27,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      *
      * @param values the values for the list
      * @return the list element containing the values
+     * @throws NullPointerException if the given collection is null
      */
     static ListElement of(Collection<Element> values) {
         return MemoryListElement.of(values);
@@ -36,6 +38,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      *
      * @param values the values for the dictionary
      * @return the dictionary element containing the values
+     * @throws NullPointerException if the given map is null
      */
     static DictElement of(Map<String, Element> values) {
         return MemoryDictElement.of(values);
@@ -46,6 +49,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      *
      * @param value the value to contain
      * @return the element containing the value
+     * @throws NullPointerException if the given string is null
      */
     static Element of(String value) {
         return StringElement.of(value);
