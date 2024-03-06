@@ -1,6 +1,7 @@
 package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.MemoryDictElement;
+import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
 import java.util.Map;
 import java.util.Optional;
@@ -47,9 +48,9 @@ public sealed interface DictElement extends Element, ElementCollection permits M
      *
      * @param key the key for the element
      * @return the element at the key
-     * @throws com.github.thegatesdev.maple.exception.ElementKeyNotPresentException if the key was not present
+     * @throws ElementKeyNotPresentException if the key was not present
      */
-    Element get(String key);
+    Element get(String key) throws ElementKeyNotPresentException;
 
     /**
      * Find the element at the given key.
