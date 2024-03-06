@@ -31,7 +31,7 @@ public final class SnakeYamlAdapter implements Adapter {
         if (input instanceof byte[] val) return Element.of(Base64.getEncoder().encodeToString(val)); // !!binary
         if (input instanceof Set<?> val) return parseCollection(val); // !!set
         if (input instanceof List<?> val)
-            return tryParseOMAP(val).orElse(parseCollection(val)); // !!omap/pairs or !!seq
+            return tryParseOMAP(val).orElseGet(() -> parseCollection(val)); // !!omap/pairs or !!seq
         if (input instanceof Map<?, ?> val) return parseMap(val);
         // No Java 21 misery... Type pattern matching switch would've been nice...
         throw new IllegalArgumentException("Input of type %s could not be adapted to an element, is this really SnakeYaml-Engine output?".formatted(input.getClass().getSimpleName()));
