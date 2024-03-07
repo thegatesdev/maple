@@ -13,6 +13,17 @@ import java.util.function.BiConsumer;
 public sealed interface DictElement extends Element, ElementCollection permits MemoryDictElement {
 
     /**
+     * Get a dictionary element containing the keys and values from the given map.
+     *
+     * @param values the values for the dictionary
+     * @return the dictionary element containing the values
+     * @throws NullPointerException if the given map is null
+     */
+    static DictElement of(Map<String, Element> values) {
+        return MemoryDictElement.of(values);
+    }
+
+    /**
      * Get a new builder for dictionary elements.
      *
      * @return the new builder

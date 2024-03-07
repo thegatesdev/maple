@@ -2,6 +2,7 @@ package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.MemoryListElement;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,28 @@ import java.util.Optional;
  * An element representing a list of values.
  */
 public sealed interface ListElement extends Element, ElementCollection permits MemoryListElement {
+
+    /**
+     * Get a list element containing the values from the given array.
+     *
+     * @param values the values for the list
+     * @return the list element containing the values
+     * @throws NullPointerException if the given array is null
+     */
+    static ListElement of(Element[] values) {
+        return MemoryListElement.of(values);
+    }
+
+    /**
+     * Get a list element containing the values from the given collection.
+     *
+     * @param values the values for the list
+     * @return the list element containing the values
+     * @throws NullPointerException if the given collection is null
+     */
+    static ListElement of(Collection<Element> values) {
+        return MemoryListElement.of(values);
+    }
 
     /**
      * Get a new builder for list elements.

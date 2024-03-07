@@ -3,46 +3,10 @@ package com.github.thegatesdev.maple.element;
 import com.github.thegatesdev.maple.element.impl.*;
 import com.github.thegatesdev.maple.exception.ElementTypeException;
 
-import java.util.Collection;
-import java.util.Map;
-
 /**
  * A single element in a structure.
  */
 public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, ShortElement, StringElement, UnsetElement {
-
-    /**
-     * Get a list element containing the values from the given array.
-     *
-     * @param values the values for the list
-     * @return the list element containing the values
-     * @throws NullPointerException if the given array is null
-     */
-    static ListElement of(Element[] values) {
-        return MemoryListElement.of(values);
-    }
-
-    /**
-     * Get a list element containing the values from the given collection.
-     *
-     * @param values the values for the list
-     * @return the list element containing the values
-     * @throws NullPointerException if the given collection is null
-     */
-    static ListElement of(Collection<Element> values) {
-        return MemoryListElement.of(values);
-    }
-
-    /**
-     * Get a dictionary element containing the keys and values from the given map.
-     *
-     * @param values the values for the dictionary
-     * @return the dictionary element containing the values
-     * @throws NullPointerException if the given map is null
-     */
-    static DictElement of(Map<String, Element> values) {
-        return MemoryDictElement.of(values);
-    }
 
     /**
      * Get an element containing the given string value.
