@@ -3,6 +3,7 @@ package com.github.thegatesdev.maple.adapt;
 import com.github.thegatesdev.maple.element.DictElement;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ListElement;
+import com.github.thegatesdev.maple.exception.AdaptException;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -19,7 +20,7 @@ import java.util.*;
 public final class SnakeYamlAdapter implements Adapter {
 
     @Override
-    public Element adapt(Object input) {
+    public Element adapt(Object input) throws AdaptException {
         if (input == null) return Element.unset(); // !!null
         if (input instanceof Boolean val) return Element.of(val); // !!bool
         if (input instanceof Integer val) return Element.of(val); // !!int
@@ -30,26 +31,30 @@ public final class SnakeYamlAdapter implements Adapter {
         if (input instanceof String val) return Element.of(val); // !!str
         if (input instanceof byte[] val) return Element.of(Base64.getEncoder().encodeToString(val)); // !!binary
         if (input instanceof Set<?> val) return parseCollection(val); // !!set
-        if (input instanceof List<?> val)
-            return tryParseOMAP(val).orElseGet(() -> parseCollection(val)); // !!omap/pairs or !!seq
+        if (input instanceof List<?> val) {
+            Optional<Element> omapResult = tryParseOMAP(val);
+            if (omapResult.isPresent()) return omapResult.get();// !!omap/pairs
+            else return parseCollection(val); // !!seq
+        }
         if (input instanceof Map<?, ?> val) return parseMap(val);
         // No Java 21 misery... Type pattern matching switch would've been nice...
-        throw new IllegalArgumentException("Input of type %s could not be adapted to an element, is this really SnakeYaml-Engine output?".formatted(input.getClass().getSimpleName()));
+        throw new AdaptException("Input of type %s could not be adapted to an element, is this really SnakeYaml-Engine output?".formatted(input.getClass().getSimpleName()));
     }
 
-    private DictElement parseMap(Map<?, ?> input) {
+    private DictElement parseMap(Map<?, ?> input) throws AdaptException {
         DictElement.Builder output = DictElement.builder(input.size());
-        input.forEach((key, value) -> output.put(key.toString(), adapt(value)));
+        for (Map.Entry<?, ?> entry : input.entrySet())
+            output.put(entry.getKey().toString(), adapt(entry.getValue()));
         return output.build();
     }
 
-    private ListElement parseCollection(Collection<?> input) {
+    private ListElement parseCollection(Collection<?> input) throws AdaptException {
         ListElement.Builder output = ListElement.builder(input.size());
         for (Object value : input) output.add(adapt(value));
         return output.build();
     }
 
-    private Optional<Element> tryParseOMAP(List<?> input) {
+    private Optional<Element> tryParseOMAP(List<?> input) throws AdaptException {
         // Parse a list of pairs aka an ordered map (why does this exist? Aren't YAML maps already ordered?).
         // Comes in a List with values of type Object[].
         if (!(input.get(0) instanceof Object[]))

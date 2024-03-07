@@ -1,6 +1,7 @@
 package com.github.thegatesdev.maple.adapt;
 
 import com.github.thegatesdev.maple.element.Element;
+import com.github.thegatesdev.maple.exception.AdaptException;
 
 /**
  * An adapter tries to convert output from a specific parser to a Maple structure.
@@ -12,7 +13,7 @@ public interface Adapter {
      *
      * @param input the value to adapt
      * @return the element representing the value
-     * @throws IllegalArgumentException if the value type does not match any type defined in the specification of the output type
+     * @throws AdaptException if the value type does not match any type defined in the specification of the output type
      */
-    Element adapt(Object input);
+    Element adapt(Object input) throws AdaptException;
 }
