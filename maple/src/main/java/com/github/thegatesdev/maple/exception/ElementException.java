@@ -3,7 +3,7 @@ package com.github.thegatesdev.maple.exception;
 /**
  * This is a generic exception raised when an issue occurs while operating on an element.
  */
-public class ElementException extends RuntimeException {
+public sealed class ElementException extends RuntimeException permits ElementKeyNotPresentException, ElementTypeException {
 
     /**
      * Create the exception with the given message.
