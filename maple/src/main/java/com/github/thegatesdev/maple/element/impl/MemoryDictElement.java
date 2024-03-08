@@ -99,7 +99,7 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public ListElement values() {
-        return Element.of(values.values());
+        return ListElement.of(values.values());
     }
 
     @Override
