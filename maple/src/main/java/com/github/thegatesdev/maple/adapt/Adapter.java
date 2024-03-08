@@ -15,5 +15,5 @@ public interface Adapter {
      * @return the element representing the value
      * @throws AdaptException if the value type does not match any type defined in the specification of the output type
      */
-    Element adapt(Object input) throws AdaptException;
+    Element adapt(Object input);
 }
