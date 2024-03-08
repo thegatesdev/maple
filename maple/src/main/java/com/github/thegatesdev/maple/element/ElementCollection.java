@@ -36,6 +36,9 @@ public sealed interface ElementCollection extends Element permits DictElement, L
     /**
      * Get a list element containing the values in this collection.
      * If this element is already a list element, returns the same element.
+     * <br>
+     * The resulting list element is cached in a thread safe manner,
+     * subsequent calls will return the same object.
      *
      * @return the list element with the values
      */
