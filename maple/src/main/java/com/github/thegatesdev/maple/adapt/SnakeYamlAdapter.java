@@ -11,10 +11,11 @@ import java.util.*;
 /**
  * Adapter for SnakeYAML and SnakeYAML-Engine outputs.
  * <ul>
- * <li>{@code !!binary} tags will be converted to a Base64 string value</li>
- * <li>{@code !!timestamp} tags are not supported</li>
- * <li>{@code !!omap} or {@code !!pairs} tags will be adapted to a dictionary element</li>
- * <li>{@code !!set} will be adapted to a list element</li>
+ * <li>{@code !!binary} types will be converted to a Base64 string value</li>
+ * <li>{@code !!timestamp} types are not supported</li>
+ * <li>{@code !!omap}, {@code !!pairs} types will be adapted to a dictionary element</li>
+ * <li>{@code !!set} types will be adapted to a list element</li>
+ * <li>All other types can be represented directly as an Element</li>
  * </ul>
  */
 public final class SnakeYamlAdapter implements Adapter {
@@ -33,7 +34,7 @@ public final class SnakeYamlAdapter implements Adapter {
         if (input instanceof Set<?> val) return parseCollection(val); // !!set
         if (input instanceof List<?> val)
             return tryParseOMAP(val).orElseGet(() -> parseCollection(val)); // !!omap/pairs or !!seq
-        if (input instanceof Map<?, ?> val) return parseMap(val);
+        if (input instanceof Map<?, ?> val) return parseMap(val); // !!map
         // No Java 21 misery... Type pattern matching switch would've been nice...
         throw new AdaptException("Input of type %s could not be adapted to an element, is this really SnakeYaml-Engine output?".formatted(input.getClass().getSimpleName()));
     }
