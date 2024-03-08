@@ -5,22 +5,13 @@ import com.github.thegatesdev.maple.element.ElementType;
 
 import java.util.Objects;
 
-public final class StringElement implements Element {
+public record StringElement(String value) implements Element {
 
-    private final String value;
-
-    private StringElement(String value) {
-        this.value = value;
-    }
-
-
-    public static Element of(String value) {
+    public StringElement {
         Objects.requireNonNull(value, "given string is null");
-
-        return new StringElement(value);
     }
 
-
+    
     @Override
     public boolean isString() {
         return true;
@@ -39,16 +30,5 @@ public final class StringElement implements Element {
     @Override
     public String toString() {
         return "string<" + value + ">";
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof StringElement stringElement)) return false;
-        return value.equals(stringElement.value);
     }
 }

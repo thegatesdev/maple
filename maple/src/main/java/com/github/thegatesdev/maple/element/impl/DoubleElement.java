@@ -3,17 +3,11 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-public final class DoubleElement implements Element {
 
-    private final double value;
-
-    private DoubleElement(double value) {
-        this.value = value;
-    }
-
+public record DoubleElement(double value) implements Element {
 
     public static Element of(double value) {
-        if (value == 0d) return ShortElement.ZERO;
+        if (value == 0d) return IntElement.ZERO;
         return new DoubleElement(value);
     }
 
@@ -56,16 +50,5 @@ public final class DoubleElement implements Element {
     @Override
     public String toString() {
         return "number<" + value + "D>";
-    }
-
-    @Override
-    public int hashCode() {
-        return Double.hashCode(value);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof DoubleElement doubleElement)) return false;
-        return value == doubleElement.value;
     }
 }

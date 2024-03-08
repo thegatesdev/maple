@@ -3,17 +3,12 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-public final class IntElement implements Element {
+public record IntElement(int value) implements Element {
 
-    private final int value;
-
-    private IntElement(int value) {
-        this.value = value;
-    }
-
+    public static final IntElement ZERO = new IntElement(0);
 
     public static Element of(int value) {
-        if (value == 0) return ShortElement.ZERO;
+        if (value == 0) return ZERO;
         return new IntElement(value);
     }
 
@@ -56,16 +51,5 @@ public final class IntElement implements Element {
     @Override
     public String toString() {
         return "number<" + value + "I>";
-    }
-
-    @Override
-    public int hashCode() {
-        return value;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof IntElement intElement)) return false;
-        return value == intElement.value;
     }
 }

@@ -3,17 +3,10 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-public final class FloatElement implements Element {
-
-    private final float value;
-
-    private FloatElement(float value) {
-        this.value = value;
-    }
-
+public record FloatElement(float value) implements Element {
 
     public static Element of(float value) {
-        if (value == 0f) return ShortElement.ZERO;
+        if (value == 0f) return IntElement.ZERO;
         return new FloatElement(value);
     }
 
@@ -56,16 +49,5 @@ public final class FloatElement implements Element {
     @Override
     public String toString() {
         return "number<" + value + "F>";
-    }
-
-    @Override
-    public int hashCode() {
-        return Float.hashCode(value);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof FloatElement floatElement)) return false;
-        return value == floatElement.value;
     }
 }

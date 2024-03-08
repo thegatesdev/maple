@@ -6,7 +6,7 @@ import com.github.thegatesdev.maple.exception.ElementTypeException;
 /**
  * A single element in a structure.
  */
-public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, ShortElement, StringElement, UnsetElement {
+public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
 
     /**
      * Get an element containing the given string value.
@@ -16,7 +16,7 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      * @throws NullPointerException if the given string is null
      */
     static Element of(String value) {
-        return StringElement.of(value);
+        return new StringElement(value);
     }
 
     /**
@@ -27,16 +27,6 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      */
     static Element of(boolean value) {
         return BoolElement.of(value);
-    }
-
-    /**
-     * Get an element containing the given short value.
-     *
-     * @param value the value to contain
-     * @return the element containing the value
-     */
-    static Element of(short value) {
-        return ShortElement.of(value);
     }
 
     /**

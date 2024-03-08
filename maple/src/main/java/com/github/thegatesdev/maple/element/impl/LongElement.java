@@ -3,17 +3,10 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
-public final class LongElement implements Element {
-
-    private final long value;
-
-    private LongElement(long value) {
-        this.value = value;
-    }
-
+public record LongElement(long value) implements Element {
 
     public static Element of(long value) {
-        if (value == 0L) return ShortElement.ZERO;
+        if (value == 0L) return IntElement.ZERO;
         return new LongElement(value);
     }
 
@@ -56,16 +49,5 @@ public final class LongElement implements Element {
     @Override
     public String toString() {
         return "number<" + value + "L>";
-    }
-
-    @Override
-    public int hashCode() {
-        return Long.hashCode(value);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof LongElement longElement)) return false;
-        return value == longElement.value;
     }
 }
