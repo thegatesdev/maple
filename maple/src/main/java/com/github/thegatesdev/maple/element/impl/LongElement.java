@@ -3,8 +3,19 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
+/**
+ * An element representing a long value.
+ * In most cases, it is recommended to use the {@link Element#of(long)} static construction method
+ * instead of the constructor.
+ *
+ * @param value the contained long value
+ * @see ElementType#NUMBER
+ */
 public record LongElement(long value) implements Element {
 
+    /**
+     * @see Element#of(long)
+     */
     public static Element of(long value) {
         if (value == 0L) return IntElement.ZERO;
         return new LongElement(value);

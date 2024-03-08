@@ -1,0 +1,5 @@
+We want to do validation: is this element a dict?
+We want to do parsing: parse the xyz values of this dict to a Vector
+We want to store parsed values: something.getObject<Vector>("key");
+
+TODO Don't use exceptions for control flow (e.g. validation exceptions)?

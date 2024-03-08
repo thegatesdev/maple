@@ -3,9 +3,18 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
 
+/**
+ * An element representing a boolean value.
+ * This is implemented as an enum to avoid unnecessary instances.
+ *
+ * @see ElementType#BOOLEAN
+ */
 public enum BoolElement implements Element {
     TRUE, FALSE;
 
+    /**
+     * @see Element#of(boolean)
+     */
     public static Element of(boolean value) {
         return value ? TRUE : FALSE;
     }

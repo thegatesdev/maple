@@ -9,6 +9,8 @@ import java.util.function.BiConsumer;
 
 /**
  * An element representing a dictionary of string keys mapped to element values.
+ *
+ * @see ElementType#DICTIONARY
  */
 public sealed interface DictElement extends Element, ElementCollection permits MemoryDictElement {
 
