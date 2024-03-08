@@ -1,6 +1,6 @@
 package com.github.thegatesdev.maple.element;
 
-import com.github.thegatesdev.maple.element.impl.MemoryDictElement;
+import com.github.thegatesdev.maple.element.impl.internal.MemoryDictElement;
 import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
 import java.util.Map;

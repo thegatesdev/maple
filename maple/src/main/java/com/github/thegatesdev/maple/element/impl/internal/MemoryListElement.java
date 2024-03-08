@@ -1,4 +1,4 @@
-package com.github.thegatesdev.maple.element.impl;
+package com.github.thegatesdev.maple.element.impl.internal;
 
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementCollection;

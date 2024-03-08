@@ -1,6 +1,6 @@
 package com.github.thegatesdev.maple.element;
 
-import com.github.thegatesdev.maple.element.impl.MemoryListElement;
+import com.github.thegatesdev.maple.element.impl.internal.MemoryListElement;
 
 import java.util.Collection;
 import java.util.List;
