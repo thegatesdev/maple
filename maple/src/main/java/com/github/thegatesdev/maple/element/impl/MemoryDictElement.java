@@ -14,20 +14,20 @@ import java.util.stream.Stream;
 public final class MemoryDictElement implements DictElement {
 
     public static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
-    private final Map<String, Element> values;
+    private final Map<String, Element> entries;
     private final int cachedHash;
 
-    private MemoryDictElement(Map<String, Element> values) {
-        this.values = values;
+    private MemoryDictElement(Map<String, Element> entries) {
+        this.entries = entries;
         this.cachedHash = makeHash();
     }
 
 
-    public static DictElement of(Map<String, Element> values) {
-        Objects.requireNonNull(values, "given map is null");
+    public static DictElement of(Map<String, Element> entries) {
+        Objects.requireNonNull(entries, "given map is null");
 
-        if (values.isEmpty()) return EMPTY;
-        return new MemoryDictElement(new LinkedHashMap<>(values));
+        if (entries.isEmpty()) return EMPTY;
+        return new MemoryDictElement(new LinkedHashMap<>(entries));
     }
 
     public static DictElement.Builder builder() {
@@ -45,7 +45,7 @@ public final class MemoryDictElement implements DictElement {
     public Element get(String key) {
         Objects.requireNonNull(key, "given key is null");
 
-        Element value = values.get(key);
+        Element value = entries.get(key);
         if (value == null) throw new ElementKeyNotPresentException(key);
         return value;
     }
@@ -54,22 +54,22 @@ public final class MemoryDictElement implements DictElement {
     public Optional<Element> find(String key) {
         Objects.requireNonNull(key, "given key is null");
 
-        return Optional.ofNullable(values.get(key));
+        return Optional.ofNullable(entries.get(key));
     }
 
     @Override
     public void each(BiConsumer<String, Element> action) {
-        values.forEach(action);
+        entries.forEach(action);
     }
 
     @Override
     public Map<String, Element> view() {
-        return Collections.unmodifiableMap(values);
+        return Collections.unmodifiableMap(entries);
     }
 
     @Override
     public DictElement.Builder toBuilder() {
-        return new Builder(values);
+        return new Builder(entries);
     }
 
 
@@ -77,14 +77,14 @@ public final class MemoryDictElement implements DictElement {
     public void each(Consumer<Element> action) {
         Objects.requireNonNull(action, "given action is null");
 
-        values.values().forEach(action);
+        entries.values().forEach(action);
     }
 
     @Override
     public void crawl(Consumer<Element> action) {
         Objects.requireNonNull(action, "given action is null");
 
-        values.values().forEach(element -> {
+        entries.values().forEach(element -> {
             if (element instanceof ElementCollection collection) {
                 collection.crawl(action);
             }
@@ -94,23 +94,23 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public Stream<Element> stream() {
-        return values.values().stream();
+        return entries.values().stream();
     }
 
     @Override
     public ListElement values() {
-        return ListElement.of(values.values());
+        return ListElement.of(entries.values());
     }
 
     @Override
     public int count() {
-        return values.size();
+        return entries.size();
     }
 
 
     @Override
     public String toString() {
-        return "map{" + values.size() + "}";
+        return "map{" + entries.size() + "}";
     }
 
     @Override
@@ -119,7 +119,7 @@ public final class MemoryDictElement implements DictElement {
     }
 
     private int makeHash() {
-        return values.hashCode();
+        return entries.hashCode();
     }
 
     @Override
@@ -129,8 +129,8 @@ public final class MemoryDictElement implements DictElement {
         if (this.cachedHash != dictElement.hashCode()) return false;
 
         if (other instanceof MemoryDictElement memoryDictElement)
-            return this.values.equals(memoryDictElement.values);
-        return this.values.equals(dictElement.view());
+            return this.entries.equals(memoryDictElement.entries);
+        return this.entries.equals(dictElement.view());
     }
 
 
@@ -183,7 +183,7 @@ public final class MemoryDictElement implements DictElement {
         public DictElement.Builder putAll(DictElement values) {
             Objects.requireNonNull(values, "given dictionary element is null");
 
-            return putAll(values instanceof MemoryDictElement memoryDictElement ? memoryDictElement.values : values.view());
+            return putAll(values instanceof MemoryDictElement memoryDictElement ? memoryDictElement.entries : values.view());
         }
 
         @Override
