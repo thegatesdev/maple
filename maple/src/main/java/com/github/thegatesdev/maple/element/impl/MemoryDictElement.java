@@ -7,6 +7,7 @@ import com.github.thegatesdev.maple.element.ListElement;
 import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -16,6 +17,7 @@ public final class MemoryDictElement implements DictElement {
     public static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
     private final Map<String, Element> entries;
     private final int cachedHash;
+    private final AtomicReference<ListElement> valuesRef = new AtomicReference<>();
 
     private MemoryDictElement(Map<String, Element> entries) {
         this.entries = entries;
@@ -99,7 +101,10 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public ListElement values() {
-        return ListElement.of(entries.values());
+        if (valuesRef.get() == null) synchronized (valuesRef) {
+            if (valuesRef.get() == null) valuesRef.set(ListElement.of(entries.values()));
+        }
+        return valuesRef.get();
     }
 
     @Override
