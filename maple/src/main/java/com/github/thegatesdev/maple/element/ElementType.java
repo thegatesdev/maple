@@ -1,15 +1,10 @@
 package com.github.thegatesdev.maple.element;
 
-import com.github.thegatesdev.maple.exception.ElementTypeException;
-import com.github.thegatesdev.maple.layout.Layout;
-
-import java.util.Optional;
-
 /**
  * The different types of elements that are available.
  * These all represent some value from the JSON specification.
  */
-public enum ElementType implements Layout<Element> {
+public enum ElementType {
     /**
      * A dictionary, or mapping, of string keys to element values.
      * Equivalent of a JSON 'object'.
@@ -42,11 +37,5 @@ public enum ElementType implements Layout<Element> {
      * Equivalent of the JSON 'null' value.
      * It is not advised to directly use this element type, it only exists to distinguish between absent and null values.
      */
-    UNSET;
-
-    @Override
-    public Optional<Element> apply(Element element) {
-        if (this != element.type()) throw new ElementTypeException(this, element.type());
-        return Optional.empty();
-    }
+    UNSET
 }
