@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-final class ElementCollectionsTest {
+final class CollectionOperationsTest {
 
     private static final DictElement dictElement = DictElement.builder(3)
             .put("int", Element.of(30))
@@ -53,7 +53,9 @@ final class ElementCollectionsTest {
     @Test
     void whenInvalidListElementGet_thenThrowOrEmpty() {
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> listElement.get(3));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> listElement.get(-1));
         Assertions.assertTrue(listElement.find(3).isEmpty());
+        Assertions.assertTrue(listElement.find(-1).isEmpty());
     }
 
     @Test
