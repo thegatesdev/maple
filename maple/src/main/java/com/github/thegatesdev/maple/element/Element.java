@@ -9,10 +9,10 @@ import com.github.thegatesdev.maple.exception.ElementTypeException;
 public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
 
     /**
-     * Get an element containing the given string value.
+     * Get an element representing the given string value.
      *
-     * @param value the value to contain
-     * @return the element containing the value
+     * @param value the value to represent
+     * @return the element representing the value
      * @throws NullPointerException if the given string is null
      */
     static Element of(String value) {
@@ -20,60 +20,60 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get an element containing the given boolean value.
+     * Get an element representing the given boolean value.
      *
-     * @param value the value to contain
-     * @return the element containing the value
+     * @param value the value to represent
+     * @return the element representing the value
      */
     static Element of(boolean value) {
         return BoolElement.of(value);
     }
 
     /**
-     * Get an element containing the given int value.
+     * Get an element representing the given int value.
      *
-     * @param value the value to contain
-     * @return the element containing the value
+     * @param value the value to represent
+     * @return the element representing the value
      */
     static Element of(int value) {
         return DoubleElement.of(value);
     }
 
     /**
-     * Get an element containing the given long value.
+     * Get an element representing the given long value.
      *
-     * @param value the value to contain
-     * @return the element containing the value
+     * @param value the value to represent
+     * @return the element representing the value
      */
     static Element of(long value) {
         return LongElement.of(value);
     }
 
     /**
-     * Get an element containing the given float value.
+     * Get an element representing the given float value.
      *
-     * @param value the value to contain
-     * @return the element containing the value
+     * @param value the value to represent
+     * @return the element representing the value
      */
     static Element of(float value) {
         return FloatElement.of(value);
     }
 
     /**
-     * Get an element containing the given double value.
+     * Get an element representing the given double value.
      *
-     * @param value the value to contain
-     * @return the element containing the value
+     * @param value the value to represent
+     * @return the element representing the value
      */
     static Element of(double value) {
         return DoubleElement.of(value);
     }
 
     /**
-     * Get an element containing no value.
+     * Get an element representing no value.
      * This is the equivalent of a 'null' value in the JSON specification.
      *
-     * @return the element containing no value
+     * @return the element representing no value
      */
     static Element unset() {
         return UnsetElement.INSTANCE;
@@ -107,37 +107,37 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Check whether this element contains a string value.
+     * Check whether this element represents a string value.
      *
-     * @return true if this element contains a string value
+     * @return true if this element represents a string value
      */
     default boolean isString() {
         return false;
     }
 
     /**
-     * Check whether this element contains a boolean value.
+     * Check whether this element represents a boolean value.
      *
-     * @return true if this element contains a boolean value
+     * @return true if this element represents a boolean value
      */
     default boolean isBool() {
         return false;
     }
 
     /**
-     * Check whether this element contains a number value.
+     * Check whether this element represents a number value.
      *
-     * @return true if this element contains a number value
+     * @return true if this element represents a number value
      */
     default boolean isNumber() {
         return false;
     }
 
     /**
-     * Check whether this element contains no value.
+     * Check whether this element represents no value.
      * This is the equivalent of a 'null' value in the JSON specification.
      *
-     * @return true if this element contains no value
+     * @return true if this element represents no value
      */
     default boolean isUnset() {
         return false;
@@ -165,70 +165,70 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
     }
 
     /**
-     * Get the string value contained in this element, if applicable.
+     * Get the string value represented by this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a string value
+     * @throws ElementTypeException if this element did not represent a string value
      */
     default String getString() {
         throw new ElementTypeException(ElementType.STRING, type());
     }
 
     /**
-     * Get the boolean value contained in this element, if applicable.
+     * Get the boolean value represented by this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a boolean value
+     * @throws ElementTypeException if this element did not represent a boolean value
      */
     default boolean getBool() {
         throw new ElementTypeException(ElementType.BOOLEAN, type());
     }
 
     /**
-     * Get the short value contained in this element, if applicable.
+     * Get the short value represented by this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a number value
+     * @throws ElementTypeException if this element did not represent a number value
      */
     default short getShort() {
         throw new ElementTypeException(ElementType.NUMBER, type());
     }
 
     /**
-     * Get the int value contained in this element, if applicable.
+     * Get the int value represented by this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a number value
+     * @throws ElementTypeException if this element did not represent a number value
      */
     default int getInt() {
         throw new ElementTypeException(ElementType.NUMBER, type());
     }
 
     /**
-     * Get the long value contained in this element, if applicable.
+     * Get the long value represented by this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a number value
+     * @throws ElementTypeException if this element did not represent a number value
      */
     default long getLong() {
         throw new ElementTypeException(ElementType.NUMBER, type());
     }
 
     /**
-     * Get the float value contained in this element, if applicable.
+     * Get the float value represented by this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a number value
+     * @throws ElementTypeException if this element did not represent a number value
      */
     default float getFloat() {
         throw new ElementTypeException(ElementType.NUMBER, type());
     }
 
     /**
-     * Get the double value contained in this element, if applicable.
+     * Get the double value represented by this element, if applicable.
      *
      * @return the value from this element
-     * @throws ElementTypeException if this element did not contain a number value
+     * @throws ElementTypeException if this element did not represent a number value
      */
     default double getDouble() {
         throw new ElementTypeException(ElementType.NUMBER, type());
