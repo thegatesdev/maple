@@ -2,6 +2,8 @@ package com.github.thegatesdev.maple.exception;
 
 /**
  * This is a generic exception raised when an issue occurs while operating on an element.
+ *
+ * @author Timar Karels
  */
 public sealed class ElementException extends RuntimeException permits ElementKeyNotPresentException, ElementTypeException {
 

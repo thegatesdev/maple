@@ -9,6 +9,7 @@ import java.util.Objects;
  * An element representing a String value.
  *
  * @param value the contained String value
+ * @author Timar Karels
  * @see ElementType#STRING
  */
 public record StringElement(String value) implements Element {

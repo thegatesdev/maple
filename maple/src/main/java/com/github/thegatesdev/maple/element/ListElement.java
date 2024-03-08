@@ -9,6 +9,7 @@ import java.util.Optional;
 /**
  * An element representing a list of values.
  *
+ * @author Timar Karels
  * @see ElementType#LIST
  */
 public sealed interface ListElement extends Element, ElementCollection permits MemoryListElement {

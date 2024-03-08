@@ -9,6 +9,7 @@ import com.github.thegatesdev.maple.element.ElementType;
  * instead of the constructor.
  *
  * @param value the contained float value
+ * @author Timar Karels
  * @see ElementType#NUMBER
  */
 public record FloatElement(float value) implements Element {

@@ -9,6 +9,7 @@ import com.github.thegatesdev.maple.element.ElementType;
  * instead of the constructor.
  *
  * @param value the contained long value
+ * @author Timar Karels
  * @see ElementType#NUMBER
  */
 public record LongElement(long value) implements Element {

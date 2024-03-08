@@ -2,6 +2,8 @@ package com.github.thegatesdev.maple.exception;
 
 /**
  * This exception is raised when the input for an adapter is invalid for the specification.
+ *
+ * @author Timar Karels
  */
 public final class AdaptException extends RuntimeException {
     /**

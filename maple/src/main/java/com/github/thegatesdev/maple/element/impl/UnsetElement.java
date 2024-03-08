@@ -6,6 +6,7 @@ import com.github.thegatesdev.maple.element.ElementType;
 /**
  * An element representing an unset or 'null' value.
  *
+ * @author Timar Karels
  * @see ElementType#UNSET
  */
 public enum UnsetElement implements Element {

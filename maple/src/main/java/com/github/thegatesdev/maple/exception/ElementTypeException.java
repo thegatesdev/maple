@@ -4,6 +4,8 @@ import com.github.thegatesdev.maple.element.ElementType;
 
 /**
  * This exception is raised when a method expects an element to be of some type, but it is of some other type.
+ *
+ * @author Timar Karels
  */
 public final class ElementTypeException extends ElementException {
 

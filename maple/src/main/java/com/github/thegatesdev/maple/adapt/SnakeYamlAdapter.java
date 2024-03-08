@@ -17,6 +17,8 @@ import java.util.*;
  * <li>{@code !!set} types will be adapted to a list element</li>
  * <li>All other types can be represented directly as an Element</li>
  * </ul>
+ *
+ * @author Timar Karels
  */
 public final class SnakeYamlAdapter implements Adapter {
 

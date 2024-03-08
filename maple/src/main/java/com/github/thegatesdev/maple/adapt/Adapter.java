@@ -5,6 +5,8 @@ import com.github.thegatesdev.maple.exception.AdaptException;
 
 /**
  * An adapter tries to convert output from a specific parser to a Maple structure.
+ *
+ * @author Timar Karels
  */
 public interface Adapter {
     /**

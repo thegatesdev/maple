@@ -7,6 +7,7 @@ import com.github.thegatesdev.maple.element.ElementType;
  * An element representing a boolean value.
  * This is implemented as an enum to avoid unnecessary instances.
  *
+ * @author Timar Karels
  * @see ElementType#BOOLEAN
  */
 public enum BoolElement implements Element {

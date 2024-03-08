@@ -5,6 +5,8 @@ import com.github.thegatesdev.maple.exception.ElementTypeException;
 
 /**
  * A single element in a structure.
+ *
+ * @author Timar Karels
  */
 public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
 

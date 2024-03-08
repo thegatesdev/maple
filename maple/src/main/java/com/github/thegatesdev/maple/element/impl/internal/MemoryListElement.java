@@ -8,6 +8,9 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+/**
+ * @author Timar Karels
+ */
 public final class MemoryListElement implements ListElement {
 
     private static final Element[] EMPTY_EL_ARR = new Element[0];

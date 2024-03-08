@@ -3,6 +3,8 @@ package com.github.thegatesdev.maple.element;
 /**
  * The different types of elements that are available.
  * These all represent some value from the JSON specification.
+ *
+ * @author Timar Karels
  */
 public enum ElementType {
     /**

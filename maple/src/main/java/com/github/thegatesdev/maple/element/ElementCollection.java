@@ -5,6 +5,8 @@ import java.util.stream.Stream;
 
 /**
  * An element containing a collection of child elements.
+ *
+ * @author Timar Karels
  */
 public sealed interface ElementCollection extends Element permits DictElement, ListElement {
 

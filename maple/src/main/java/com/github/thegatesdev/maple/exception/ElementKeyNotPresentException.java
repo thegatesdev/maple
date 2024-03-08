@@ -2,6 +2,8 @@ package com.github.thegatesdev.maple.exception;
 
 /**
  * This exception is raised when a key is used to access a value, but the key is not present.
+ *
+ * @author Timar Karels
  */
 public final class ElementKeyNotPresentException extends ElementException {
 

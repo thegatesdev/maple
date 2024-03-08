@@ -12,6 +12,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+/**
+ * @author Timar Karels
+ */
 public final class MemoryDictElement implements DictElement {
 
     public static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
