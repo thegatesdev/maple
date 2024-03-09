@@ -10,6 +10,20 @@ import java.math.BigInteger;
 /**
  * A single element in a structure.
  *
+ * <p>
+ * All elements are immutable, and any operations are guaranteed to be thread safe.
+ * This doesn't include the element builders.
+ * </p>
+ * <p>
+ * It is recommended to interact with the methods defined in this interface,
+ * rather than using the specific primitive implementations like {@code IntElement} and {@code StringElement}.
+ * Those are exposed for complex tasks where the actual type matters, like serialization.
+ * </p>
+ * <p>
+ * Elements that represent numbers will always cast to the number type that is asked for, regardless of data loss.
+ * Take great care to enforce the largest possible value on user input, before trying to obtain it.
+ * </p>
+ *
  * @author Timar Karels
  */
 public sealed interface Element permits DictElement,
