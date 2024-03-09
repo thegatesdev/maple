@@ -12,7 +12,7 @@ import java.math.BigInteger;
  *
  * @author Timar Karels
  */
-public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement, NumberElement {
+public sealed interface Element permits DictElement, ElementCollection, ListElement, BigDecimalElement, BigIntegerElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement, NumberElement {
 
     /**
      * Get an element representing the given string value.
@@ -73,6 +73,26 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      */
     static Element of(double value) {
         return DoubleElement.of(value);
+    }
+
+    /**
+     * Get an element representing the given big integer value.
+     *
+     * @param value the value to represent
+     * @return the element representing the value
+     */
+    static Element of(BigInteger value) {
+        return BigIntegerElement.of(value);
+    }
+
+    /**
+     * Get an element representing the given big decimal value.
+     *
+     * @param value the value to represent
+     * @return the element representing the value
+     */
+    static Element of(BigDecimal value) {
+        return BigDecimalElement.of(value);
     }
 
     /**
