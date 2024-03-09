@@ -2,6 +2,7 @@ package com.github.thegatesdev.maple.element.impl;
 
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
+import com.github.thegatesdev.maple.element.impl.internal.NumberElement;
 
 /**
  * An element representing a long value.
@@ -12,7 +13,7 @@ import com.github.thegatesdev.maple.element.ElementType;
  * @author Timar Karels
  * @see ElementType#NUMBER
  */
-public record LongElement(long value) implements Element {
+public record LongElement(long value) implements Element, NumberElement {
 
     /**
      * @see Element#of(long)
@@ -22,11 +23,6 @@ public record LongElement(long value) implements Element {
         return new LongElement(value);
     }
 
-
-    @Override
-    public boolean isNumber() {
-        return true;
-    }
 
     @Override
     public short getShort() {
@@ -51,11 +47,6 @@ public record LongElement(long value) implements Element {
     @Override
     public double getDouble() {
         return value;
-    }
-
-    @Override
-    public ElementType type() {
-        return ElementType.NUMBER;
     }
 
     @Override

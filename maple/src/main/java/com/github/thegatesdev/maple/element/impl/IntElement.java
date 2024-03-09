@@ -2,6 +2,10 @@ package com.github.thegatesdev.maple.element.impl;
 
 import com.github.thegatesdev.maple.element.Element;
 import com.github.thegatesdev.maple.element.ElementType;
+import com.github.thegatesdev.maple.element.impl.internal.NumberElement;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * An element representing an integer value.
@@ -12,7 +16,7 @@ import com.github.thegatesdev.maple.element.ElementType;
  * @author Timar Karels
  * @see ElementType#NUMBER
  */
-public record IntElement(int value) implements Element {
+public record IntElement(int value) implements Element, NumberElement {
 
     /**
      * An integer element representing a 'zero' value.
@@ -28,11 +32,6 @@ public record IntElement(int value) implements Element {
         return new IntElement(value);
     }
 
-
-    @Override
-    public boolean isNumber() {
-        return true;
-    }
 
     @Override
     public short getShort() {
@@ -60,8 +59,15 @@ public record IntElement(int value) implements Element {
     }
 
     @Override
-    public ElementType type() {
-        return ElementType.NUMBER;
+    public BigInteger getBigInteger() {
+        if (this == ZERO) return BigInteger.ZERO;
+        return NumberElement.super.getBigInteger();
+    }
+
+    @Override
+    public BigDecimal getBigDecimal() {
+        if (this == ZERO) return BigDecimal.ZERO;
+        return NumberElement.super.getBigDecimal();
     }
 
     @Override

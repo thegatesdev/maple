@@ -1,14 +1,18 @@
 package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.*;
+import com.github.thegatesdev.maple.element.impl.internal.NumberElement;
 import com.github.thegatesdev.maple.exception.ElementTypeException;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * A single element in a structure.
  *
  * @author Timar Karels
  */
-public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement {
+public sealed interface Element permits DictElement, ElementCollection, ListElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement, NumberElement {
 
     /**
      * Get an element representing the given string value.
@@ -233,6 +237,26 @@ public sealed interface Element permits DictElement, ElementCollection, ListElem
      * @throws ElementTypeException if this element did not represent a number value
      */
     default double getDouble() {
+        throw new ElementTypeException(ElementType.NUMBER, type());
+    }
+
+    /**
+     * Get the big integer value represented by this element, if applicable.
+     *
+     * @return the value from this element
+     * @throws ElementTypeException if this element did not represent a number value
+     */
+    default BigInteger getBigInteger() {
+        throw new ElementTypeException(ElementType.NUMBER, type());
+    }
+
+    /**
+     * Get the big decimal value represented by this element, if applicable.
+     *
+     * @return the value from this element
+     * @throws ElementTypeException if this element did not represent a number value
+     */
+    default BigDecimal getBigDecimal() {
         throw new ElementTypeException(ElementType.NUMBER, type());
     }
 }
