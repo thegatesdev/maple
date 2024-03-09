@@ -10,7 +10,12 @@ import java.math.BigInteger;
 /**
  * Common implementations for number elements.
  */
-public sealed interface NumberElement extends Element permits BigDecimalElement, BigIntegerElement, DoubleElement, FloatElement, IntElement, LongElement {
+public sealed interface NumberElement extends Element permits BigDecimalElement,
+        BigIntegerElement,
+        DoubleElement,
+        FloatElement,
+        IntElement,
+        LongElement {
 
     @Override
     default boolean isNumber() {

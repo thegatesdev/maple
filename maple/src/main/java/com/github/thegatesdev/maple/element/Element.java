@@ -12,7 +12,19 @@ import java.math.BigInteger;
  *
  * @author Timar Karels
  */
-public sealed interface Element permits DictElement, ElementCollection, ListElement, BigDecimalElement, BigIntegerElement, BoolElement, DoubleElement, FloatElement, IntElement, LongElement, StringElement, UnsetElement, NumberElement {
+public sealed interface Element permits DictElement,
+        ElementCollection,
+        ListElement,
+        BigDecimalElement,
+        BigIntegerElement,
+        BoolElement,
+        DoubleElement,
+        FloatElement,
+        IntElement,
+        LongElement,
+        StringElement,
+        UnsetElement,
+        NumberElement {
 
     /**
      * Get an element representing the given string value.
