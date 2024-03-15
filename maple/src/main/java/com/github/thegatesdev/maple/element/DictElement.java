@@ -19,6 +19,7 @@ package com.github.thegatesdev.maple.element;
 import com.github.thegatesdev.maple.element.impl.internal.MemoryDictElement;
 import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -179,6 +180,44 @@ public sealed interface DictElement extends Element, ElementCollection permits M
          * @throws NullPointerException if the given key is null
          */
         Builder remove(String key);
+
+        /**
+         * Remove the entries at the given keys if present.
+         * Ignores 'null' keys.
+         *
+         * @param keys the keys for the entries to remove
+         * @return this builder
+         * @throws NullPointerException if the given array is null
+         */
+        Builder remove(String... keys);
+
+        /**
+         * Remove the entries at the given keys if present.
+         * Ignores 'null' keys.
+         *
+         * @param keys the keys for the entries to remove
+         * @return this builder
+         * @throws NullPointerException if the given array is null
+         */
+        Builder remove(Collection<String> keys);
+
+        /**
+         * Keep only the entries at the given keys.
+         * Ignores 'null' keys.
+         *
+         * @param keys the keys for the entries to keep
+         * @return this builder
+         */
+        Builder keep(String... keys);
+
+        /**
+         * Keep only the entries at the given keys.
+         * Ignores 'null' keys.
+         *
+         * @param keys the keys for the entries to keep
+         * @return this builder
+         */
+        Builder keep(Collection<String> keys);
 
         /**
          * Get an unmodifiable view of the entries in this builder.

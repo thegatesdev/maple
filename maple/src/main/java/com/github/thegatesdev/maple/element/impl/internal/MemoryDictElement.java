@@ -229,6 +229,40 @@ public final class MemoryDictElement implements DictElement {
         }
 
         @Override
+        public DictElement.Builder remove(String... keys) {
+            Objects.requireNonNull(keys, "given array is null");
+            return remove(Arrays.asList(keys));
+        }
+
+        @Override
+        public DictElement.Builder remove(Collection<String> keys) {
+            Objects.requireNonNull(keys, "given collection is null");
+
+            checkEdit();
+            for (String key : keys)
+                if (key != null) values.remove(key);
+            return this;
+        }
+
+        @Override
+        public DictElement.Builder keep(String... keys) {
+            Objects.requireNonNull(keys, "given array is null");
+            return keep(Arrays.asList(keys));
+        }
+
+        @Override
+        public DictElement.Builder keep(Collection<String> keys) {
+            Objects.requireNonNull(keys, "given collection is null");
+
+            Map<String, Element> output = new HashMap<>(keys.size());
+            for (String key : keys)
+                if (key != null) output.put(key, values.get(key));
+            values = output;
+            needsCopy = false;
+            return this;
+        }
+
+        @Override
         public Map<String, Element> view() {
             return Collections.unmodifiableMap(values);
         }
