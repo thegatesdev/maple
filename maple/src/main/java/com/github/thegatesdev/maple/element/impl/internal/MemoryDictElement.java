@@ -48,7 +48,7 @@ public final class MemoryDictElement implements DictElement {
         Objects.requireNonNull(entries, "given map is null");
 
         if (entries.isEmpty()) return EMPTY;
-        return new MemoryDictElement(new LinkedHashMap<>(entries));
+        return new MemoryDictElement(new HashMap<>(entries));
     }
 
     public static DictElement.Builder builder() {
@@ -169,14 +169,14 @@ public final class MemoryDictElement implements DictElement {
         }
 
         private Builder(int initialCapacity) {
-            this.values = new LinkedHashMap<>(initialCapacity);
+            this.values = new HashMap<>(initialCapacity);
             this.needsCopy = false;
         }
 
 
         private void checkEdit() {
             if (needsCopy) {
-                values = new LinkedHashMap<>(values);
+                values = new HashMap<>(values);
                 needsCopy = false;
             }
         }
