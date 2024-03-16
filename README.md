@@ -38,7 +38,11 @@ Here are some rules to keep in mind while using **Maple**:
 
 -  **`null` is not invited to the party.**
 This library does not allow `null` values passed in, and guarantees that no `null` will ever be returned.
-
+- **Immutability is key.**
+All `Element` objects are immutable, and any operation on them is *thread safe*.
+This guarantee is not made for any other classes.
+- **Parsing is not dynamic.**
+An element stores what it represents. No parsing is done when obtaining values.
 - **Non-exported packages are unsafe.**
 The `module-info.java` defines the packages that are exported.
 If you are not using the Java module system, it is still not recommended
