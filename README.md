@@ -115,23 +115,6 @@ boolean invalidBoolValue = dictElement.get("string").getBool(); // throws Elemen
 Optional<Element> notPresent = dictElement.find("not_present"); // empty optional
 ```
 
-## Layouts
-
-Layouts define and enforce a ... *layout* on some element.
-You could compare them to *schema's* in the JSON world, but directly in the code...
-```java
-DictLayout layout = Layout.dictionary()
-                .required("name", ElementType.STRING)
-                .required("age", ElementType.NUMBER)
-                .required("address", Layout.dictionary()
-                        .required("country", ElementType.STRING)
-                        .required("city", ElementType.STRING)
-                        .build())
-                .optional("occupation", Element.of("none"), ElementType.STRING)
-                .build();
-DictElement parsedElement = layout.parse(/*Some element*/);
-```
-
 ## Goals
 
 **Maple** is definitely not finished. Here are some of the features I'd like to implement in the future:
