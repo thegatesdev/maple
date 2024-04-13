@@ -1,4 +1,4 @@
-package com.github.thegatesdev.maple.io.internal;
+package com.github.thegatesdev.maple.io;
 
 import static com.github.thegatesdev.maple.io.internal.TokenId.*;
 
@@ -17,9 +17,9 @@ public enum Token {
     VALUE_FALSE(ID_VALUE_FALSE),
     VALUE_NULL(ID_VALUE_NULL);
 
-    public final int id;
+    public final byte id;
 
-    Token(int id) {
+    Token(byte id) {
         this.id = id;
     }
 }
