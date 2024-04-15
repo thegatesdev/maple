@@ -19,43 +19,25 @@ public final class JsonTokener implements Tokener {
         return reader.read();
     }
 
-    private void skipAfterNewLine() throws IOException {
-        while (true) {
-            switch (nextCharacter()) {
-                case -1, '\n', '\r':
-                    return;
-            }
-        }
-    }
-
-    private boolean skipAfterFind(String toFind) throws IOException {
-        int length = toFind.length();
-        if (length == 0) return true;
-        int first = toFind.charAt(0);
-
-        while (true) {
+    private int nextCleanCharacter() throws IOException {
+        for (; ; ) {
             int next = nextCharacter();
-            if (next == -1) return false;
-            if (next == first) {
-                for (int i = 1; i < length; i++) {
-                    next = nextCharacter();
-                    if (next == -1) return false;
-                    if (next != toFind.charAt(i)) break;
-                }
-                return true;
+            switch (next) {
+                case '\n', ' ', '\r', '\t', '\ufeff':
+                    continue;
+                default:
+                    return next;
             }
         }
     }
 
     public int nextRelevantCharacter() throws IOException {
-        while (true) {
-            int next = nextCharacter();
+        for (; ; ) {
+            int next = nextCleanCharacter();
 
             switch (next) {
                 case -1:
                     return -1;// No more characters left
-                case '\n', ' ', '\r', '\t', '\ufeff': // Skip control characters
-                    break;
                 case '/': // '//' or '/* */' comment
                     next = nextCharacter();
                     switch (next) {
@@ -77,6 +59,34 @@ public final class JsonTokener implements Tokener {
                     break;
                 default:
                     return next;
+            }
+        }
+    }
+
+    private void skipAfterNewLine() throws IOException {
+        for (; ; ) {
+            switch (nextCharacter()) {
+                case -1, '\n', '\r':
+                    return;
+            }
+        }
+    }
+
+    private boolean skipAfterFind(String toFind) throws IOException {
+        int length = toFind.length();
+        if (length == 0) return true;
+        int first = toFind.charAt(0);
+
+        for (; ; ) {
+            int next = nextCharacter();
+            if (next == -1) return false;
+            if (next == first) {
+                for (int i = 1; i < length; i++) {
+                    next = nextCharacter();
+                    if (next == -1) return false;
+                    if (next != toFind.charAt(i)) break;
+                }
+                return true;
             }
         }
     }
