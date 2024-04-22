@@ -11,20 +11,38 @@ public class Main {
         JsonTokener tokener = new JsonTokener(new StringReader("""
                 {
                     "hello": "world",
-                    "test": "me", // test comment
+                    "test": false,
+                    "number": 1234,
                     "oy": [
-                     /* Today is a great day
-                     Because this works! */
                         "one",
                         "two"
-                    ] # Goober
-                } // Hi
+                    ]
+                }
                 """));
-        int next = tokener.nextRelevantCharacter();
-        while (next > -1) {
-            System.out.print((char) next);
-            next = tokener.nextRelevantCharacter();
-        }
-        System.out.println();
+        int next;
+        do {
+            next = tokener.nextTokenId();
+            String print = switch (next) {
+                default -> "Unknown: " + next;
+                case 1 -> "Begin object";
+                case 2 -> "Begin array";
+                case 3 -> "End object";
+                case 4 -> "End array";
+                case 5 -> "Name separator";
+                case 6 -> "Value separator";
+                case 7 -> {
+                    tokener.finishLiteralValue();
+                    yield "True";
+                }
+                case 8 -> {
+                    tokener.finishLiteralValue();
+                    yield "False";
+                }
+                case 9 -> "Null";
+                case 10 -> "Number";
+                case 11 -> "String: " + tokener.finishStringValue('"');
+            };
+            System.out.println(print);
+        } while (next > 0);
     }
 }

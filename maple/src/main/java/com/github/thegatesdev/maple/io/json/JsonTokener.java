@@ -1,149 +1,123 @@
 package com.github.thegatesdev.maple.io.json;
 
-import com.github.thegatesdev.maple.io.Token;
-import com.github.thegatesdev.maple.io.Tokener;
-
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Objects;
 
-public final class JsonTokener implements Tokener {
+import static com.github.thegatesdev.maple.io.internal.TokenId.*;
 
+public final class JsonTokener {
+
+    // Input
     private final Reader reader;
 
+    // Tracking
+    private int lineNumber = 0;
+    private int columnNumber = 0;
+
+    // State
+    private byte currentTokenId = ID_NOT_PRESENT;
+    private final StringBuilder buildingValue = new StringBuilder();
+
+
     public JsonTokener(Reader reader) {
-        this.reader = reader;
+        this.reader = Objects.requireNonNull(reader, "given reader is null");
     }
 
 
-    private int nextCharacter() throws IOException {
-        return reader.read();
+    @SuppressWarnings("UnusedReturnValue") // Should just throw on invalid literal
+    public boolean finishLiteralValue() throws IOException {
+        return switch (currentTokenId) {
+            case ID_VALUE_FALSE -> validateNext("alse");
+            case ID_VALUE_TRUE -> validateNext("rue");
+            case ID_VALUE_NULL -> validateNext("ull");
+            default -> throw new IllegalArgumentException("Not a literal"); // TODO Exceptions
+        };
     }
 
-    private int nextCleanCharacter() throws IOException {
+    public String finishStringValue(char quoteChar) throws IOException {
+        StringBuilder builder = this.buildingValue;
+        builder.setLength(0);
+
         for (; ; ) {
             int next = nextCharacter();
-            switch (next) {
-                case '\n', ' ', '\r', '\t', '\ufeff':
-                    continue;
-                default:
-                    return next;
+
+            if (next == -1) throw new IllegalStateException("Unterminated string value");
+            if (next == quoteChar) break;
+
+            if (next == '\\') {
+                next = nextCharacter();
+                builder.append((char) switch (next) {
+                    default -> next; // Any character can be escaped, insert literal character
+                    case 'b' -> '\b';
+                    case 'f' -> '\f';
+                    case 'n' -> '\n';
+                    case 'r' -> '\r';
+                    case 't' -> '\t';
+                    case 's' -> ' ';
+                    case 'u' -> throw new UnsupportedOperationException("No unicode code point translation");
+                });
+                continue;
             }
+
+            builder.append((char) next);
         }
+
+        return builder.toString();
+    }
+
+    public byte nextTokenId() throws IOException {
+        int next = nextRelevantCharacter();
+        return currentTokenId = switch (next) {
+            case '{' -> ID_BEGIN_OBJECT;
+            case '}' -> ID_END_OBJECT;
+            case '[' -> ID_BEGIN_ARRAY;
+            case ']' -> ID_END_ARRAY;
+            case ':' -> ID_NAME_SEPARATOR;
+            case ',' -> ID_VALUE_SEPARATOR;
+            case '\"' -> ID_VALUE_STRING;
+            case '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> ID_VALUE_NUMBER;
+            case 't' -> ID_VALUE_TRUE;
+            case 'f' -> ID_VALUE_FALSE;
+            case 'n' -> ID_VALUE_NULL;
+            default -> ID_NOT_AVAILABLE;
+        };
+    }
+
+
+    public boolean validateNext(String value) throws IOException {
+        for (int i = 0, l = value.length(); i < l; i++) {
+            if (nextCharacter() != value.charAt(i)) return false;
+        }
+        return true;
     }
 
     public int nextRelevantCharacter() throws IOException {
-        for (; ; ) {
-            int next = nextCleanCharacter();
+        int columnNumber = this.columnNumber;
+        int lineNumber = this.lineNumber;
 
+        for (; ; ) {
+            int next = nextCharacter();
+            if (next == -1) return -1;
+
+            columnNumber++;
             switch (next) {
-                case -1:
-                    return -1;// No more characters left
-                case '/': // '//' or '/* */' comment
-                    next = nextCharacter();
-                    switch (next) {
-                        case -1: // No more characters after single /
-                            return '/';
-                        case '/':
-                            skipAfterNewLine();
-                            continue;
-                        case '*':
-                            if (!skipAfterFind("*/")) {
-                                throw new RuntimeException("Unterminated comment");
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                case '#': // Hash
-                    skipAfterNewLine();
-                    break;
+                case '\n':
+                    lineNumber++;
+                    columnNumber = 0; // Fall through
+                case ' ':
+                case '\r':
+                case '\t':
+                    continue;
                 default:
+                    this.columnNumber = columnNumber;
+                    this.lineNumber = lineNumber;
                     return next;
             }
         }
     }
 
-    private void skipAfterNewLine() throws IOException {
-        for (; ; ) {
-            switch (nextCharacter()) {
-                case -1, '\n', '\r':
-                    return;
-            }
-        }
-    }
-
-    private boolean skipAfterFind(String toFind) throws IOException {
-        int length = toFind.length();
-        if (length == 0) return true;
-        int first = toFind.charAt(0);
-
-        for (; ; ) {
-            int next = nextCharacter();
-            if (next == -1) return false;
-            if (next == first) {
-                for (int i = 1; i < length; i++) {
-                    next = nextCharacter();
-                    if (next == -1) return false;
-                    if (next != toFind.charAt(i)) break;
-                }
-                return true;
-            }
-        }
-    }
-
-
-    @Override
-    public Token next() {
-        return null;
-    }
-
-    @Override
-    public void skipObject() {
-
-    }
-
-    @Override
-    public void skipArray() {
-
-    }
-
-    @Override
-    public void skipField() {
-
-    }
-
-    @Override
-    public String nextName() {
-        return null;
-    }
-
-    @Override
-    public String nextString() {
-        return null;
-    }
-
-    @Override
-    public int nextInt() {
-        return 0;
-    }
-
-    @Override
-    public long nextLong() {
-        return 0;
-    }
-
-    @Override
-    public double nextDouble() {
-        return 0;
-    }
-
-    @Override
-    public boolean nextBoolean() {
-        return false;
-    }
-
-    @Override
-    public void nextNull() {
-
+    public int nextCharacter() throws IOException {
+        return reader.read();
     }
 }
