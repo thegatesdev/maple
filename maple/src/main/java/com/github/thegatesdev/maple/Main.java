@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         JsonTokener tokener = new JsonTokener(new StringReader("""
                 {
-                    "hello": "world",
+                    "hello": "world\\"testesape\\ryeet",
                     "test": false,
                     "number": 1234,
                     "oy": [
