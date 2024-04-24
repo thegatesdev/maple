@@ -16,12 +16,10 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.element.impl.internal;
 
-import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.element.ElementType;
+import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.*;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.*;
 
 /**
  * Common implementations for number elements.

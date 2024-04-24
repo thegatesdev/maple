@@ -16,17 +16,13 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.element.impl.internal;
 
-import com.github.thegatesdev.maple.element.DictElement;
-import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.element.ElementCollection;
-import com.github.thegatesdev.maple.element.ListElement;
-import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
+import com.github.thegatesdev.maple.element.*;
+import com.github.thegatesdev.maple.exception.*;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 /**
  * @author Timar Karels

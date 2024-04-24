@@ -16,8 +16,8 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.element;
 
-import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.function.*;
+import java.util.stream.*;
 
 /**
  * An element containing a collection of child elements.

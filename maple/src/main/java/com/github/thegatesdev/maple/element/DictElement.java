@@ -16,13 +16,11 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.element;
 
-import com.github.thegatesdev.maple.element.impl.internal.MemoryDictElement;
-import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
+import com.github.thegatesdev.maple.element.impl.internal.*;
+import com.github.thegatesdev.maple.exception.*;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.BiConsumer;
+import java.util.*;
+import java.util.function.*;
 
 /**
  * An element representing a dictionary of string keys mapped to element values.

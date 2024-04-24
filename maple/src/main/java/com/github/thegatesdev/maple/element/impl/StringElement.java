@@ -16,10 +16,9 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.element.impl;
 
-import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.element.ElementType;
+import com.github.thegatesdev.maple.element.*;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  * An element representing a String value.

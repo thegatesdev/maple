@@ -16,9 +16,8 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.element.impl;
 
-import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.element.ElementType;
-import com.github.thegatesdev.maple.element.impl.internal.NumberElement;
+import com.github.thegatesdev.maple.element.*;
+import com.github.thegatesdev.maple.element.impl.internal.*;
 
 /**
  * An element representing a float value.

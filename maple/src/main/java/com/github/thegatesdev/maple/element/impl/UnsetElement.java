@@ -16,8 +16,7 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.element.impl;
 
-import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.element.ElementType;
+import com.github.thegatesdev.maple.element.*;
 
 /**
  * An element representing an unset or 'null' value.

@@ -17,11 +17,10 @@ limitations under the License.
 package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.*;
-import com.github.thegatesdev.maple.element.impl.internal.NumberElement;
-import com.github.thegatesdev.maple.exception.ElementTypeException;
+import com.github.thegatesdev.maple.element.impl.internal.*;
+import com.github.thegatesdev.maple.exception.*;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.*;
 
 /**
  * A single element in a structure.

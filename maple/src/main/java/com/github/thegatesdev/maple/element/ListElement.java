@@ -16,11 +16,9 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.element;
 
-import com.github.thegatesdev.maple.element.impl.internal.MemoryListElement;
+import com.github.thegatesdev.maple.element.impl.internal.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * An element representing a list of values.

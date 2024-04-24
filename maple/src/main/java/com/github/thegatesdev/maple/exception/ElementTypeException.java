@@ -16,7 +16,7 @@ limitations under the License.
 
 package com.github.thegatesdev.maple.exception;
 
-import com.github.thegatesdev.maple.element.ElementType;
+import com.github.thegatesdev.maple.element.*;
 
 /**
  * This exception is raised when a method expects an element to be of some type, but it is of some other type.
