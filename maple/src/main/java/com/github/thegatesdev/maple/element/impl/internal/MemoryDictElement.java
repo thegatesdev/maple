@@ -16,7 +16,7 @@ public final class MemoryDictElement implements DictElement {
     public static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
     private final Map<String, Element> entries;
     private final int cachedHash;
-    private final AtomicReference<ListElement> valuesRef = new AtomicReference<>();
+    private final AtomicReference<ListElement> valuesReference = new AtomicReference<>();
 
     private MemoryDictElement(Map<String, Element> entries) {
         this.entries = entries;
@@ -78,14 +78,14 @@ public final class MemoryDictElement implements DictElement {
     public void each(Consumer<Element> action) {
         Objects.requireNonNull(action, "given action is null");
 
-        entries.values().forEach(action);
+        values().each(action);
     }
 
     @Override
     public void crawl(Consumer<Element> action) {
         Objects.requireNonNull(action, "given action is null");
 
-        entries.values().forEach(element -> {
+        values().each(element -> {
             if (element instanceof ElementCollection collection) {
                 collection.crawl(action);
             }
@@ -95,15 +95,19 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public Stream<Element> stream() {
-        return entries.values().stream();
+        return values().stream();
     }
 
     @Override
     public ListElement values() {
-        if (valuesRef.get() == null) synchronized (valuesRef) {
-            if (valuesRef.get() == null) valuesRef.set(ListElement.of(entries.values()));
+        ListElement result = valuesReference.get();
+        if (result == null) {
+            result = ListElement.of(entries.values());
+            if (!valuesReference.compareAndSet(null, result)) {
+                return valuesReference.get(); // Other thread was faster, use that one instead.
+            }
         }
-        return valuesRef.get();
+        return result;
     }
 
     @Override
