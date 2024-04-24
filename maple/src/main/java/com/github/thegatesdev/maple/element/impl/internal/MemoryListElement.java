@@ -13,6 +13,7 @@ public final class MemoryListElement implements ListElement {
 
     private static final Element[] EMPTY_EL_ARR = new Element[0];
     public static final MemoryListElement EMPTY = new MemoryListElement(EMPTY_EL_ARR);
+
     private final Element[] values;
     private final int cachedHash;
 

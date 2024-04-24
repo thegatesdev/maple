@@ -14,6 +14,7 @@ import java.util.stream.*;
 public final class MemoryDictElement implements DictElement {
 
     public static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());
+
     private final Map<String, Element> entries;
     private final int cachedHash;
     private final AtomicReference<ListElement> valuesReference = new AtomicReference<>();
