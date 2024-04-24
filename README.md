@@ -14,6 +14,8 @@ A clean, type safe intermediary structure in Java
 
 ## About
 
+*TODO: get to the point faster, save trivia for some other place*
+
 **Maple** was originally intended as a replacement to the Spigot Configuration API,
 which allows Minecraft plugins to read data from configuration files.
 This is still my use-case for this library, but the goals have grown way past that.
@@ -25,6 +27,8 @@ while taking inspiration from (and possibly improving upon) existing libraries.
 Feel free to open an issue or submit a pull request if you have any concerns or suggestions.
 
 ## Including in your project
+
+*TODO: Show maven and gradle include examples*
 
 **Maple** is public on GitHub, meaning you can easily get it from JitPack.
 
@@ -74,6 +78,8 @@ element.asDict().get("hello").getInt(); // 25
 
 ## Creating elements
 
+*TODO: Look for alternatives to saying 'you can'*
+
 You can directly create elements of primitive types...
 ```java
 Element intElement = Element.of(30);
@@ -104,6 +110,8 @@ DictElement merged = original.toBuilder()
 ```
 
 ## Getting values from elements
+
+*TODO: Needs smaller examples*
 
 Obtaining values has never looked nicer...
 ```java
