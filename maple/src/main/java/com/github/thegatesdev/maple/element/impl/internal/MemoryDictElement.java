@@ -19,7 +19,7 @@ public final class MemoryDictElement implements DictElement {
     private final int cachedHash;
     private final AtomicReference<ListElement> valuesReference = new AtomicReference<>();
 
-    private MemoryDictElement(Map<String, Element> entries) {
+    MemoryDictElement(Map<String, Element> entries) {
         this.entries = entries;
         this.cachedHash = makeHash();
     }

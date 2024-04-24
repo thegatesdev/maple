@@ -17,7 +17,7 @@ public final class MemoryListElement implements ListElement {
     private final Element[] values;
     private final int cachedHash;
 
-    private MemoryListElement(Element[] values) {
+    MemoryListElement(Element[] values) {
         this.values = values;
         this.cachedHash = makeHash();
     }
