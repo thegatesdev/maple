@@ -6,7 +6,10 @@ import com.github.thegatesdev.maple.element.impl.*;
 import java.math.*;
 
 /**
- * Common implementations for number elements.
+ * Default-implements methods common to elements containing a number.
+ * Only used internally to avoid duplicating code.
+ *
+ * @author Timar Karels
  */
 public sealed interface NumberElement extends Element permits BigDecimalElement,
     BigIntegerElement,
