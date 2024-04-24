@@ -22,7 +22,7 @@ package com.github.thegatesdev.maple.exception;
  * @author Timar Karels
  */
 public sealed class ElementException extends RuntimeException permits ElementKeyNotPresentException,
-        ElementTypeException {
+    ElementTypeException {
 
     /**
      * Create the exception with the given message.
