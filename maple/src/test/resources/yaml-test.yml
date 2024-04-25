@@ -1,8 +1,0 @@
-int: 30
-string: foo
-nested:
-  unset: null
-  bool: true
-list:
-  - value_one
-  - value_two
