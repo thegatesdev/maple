@@ -16,6 +16,8 @@ A clean, type safe intermediary structure in Java
 
 *TODO: get to the point faster, save trivia for some other place*
 
+*TODO: Add inspiration section*
+
 **Maple** was originally intended as a replacement to the Spigot Configuration API,
 which allows Minecraft plugins to read data from configuration files.
 This is still my use-case for this library, but the goals have grown way past that.
