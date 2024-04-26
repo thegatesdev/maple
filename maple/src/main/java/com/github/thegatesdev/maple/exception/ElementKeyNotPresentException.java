@@ -5,19 +5,19 @@ package com.github.thegatesdev.maple.exception;
  *
  * @author Timar Karels
  */
-public final class ElementKeyNotPresentException extends ElementException {
+public final class ElementKeyNotPresentException extends RuntimeException {
 
     private static final String MESSAGE = "This key is not present; %s";
-    private final String key;
+    private final String accessedKey;
 
     /**
      * Create the exception with the given key.
      *
-     * @param key the accessed key
+     * @param accessedKey the accessed key
      */
-    public ElementKeyNotPresentException(String key) {
-        super(MESSAGE.formatted(key));
-        this.key = key;
+    public ElementKeyNotPresentException(String accessedKey) {
+        super(MESSAGE.formatted(accessedKey));
+        this.accessedKey = accessedKey;
     }
 
     /**
@@ -25,8 +25,8 @@ public final class ElementKeyNotPresentException extends ElementException {
      *
      * @return the accessed key
      */
-    public String key() {
-        return key;
+    public String accessedKey() {
+        return accessedKey;
     }
 }
 

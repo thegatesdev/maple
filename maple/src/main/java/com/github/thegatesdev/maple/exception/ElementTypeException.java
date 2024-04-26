@@ -7,7 +7,7 @@ import com.github.thegatesdev.maple.element.*;
  *
  * @author Timar Karels
  */
-public final class ElementTypeException extends ElementException {
+public final class ElementTypeException extends RuntimeException {
 
     private static final String MESSAGE = "Invalid element type; expected %s, got %s";
     private final ElementType expectedType, actualType;
