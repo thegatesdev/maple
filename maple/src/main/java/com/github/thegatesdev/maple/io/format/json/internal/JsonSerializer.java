@@ -1,73 +1,114 @@
 package com.github.thegatesdev.maple.io.format.json.internal;
 
 import com.github.thegatesdev.maple.io.*;
+import com.github.thegatesdev.maple.io.format.json.*;
 
+import java.io.*;
 import java.math.*;
 
 public final class JsonSerializer implements Serializer {
-    
-    @Override
-    public void writeValue(String value) {
 
+    private final Writer writer;
+    private final JsonOutputSettings settings;
+
+    public JsonSerializer(Writer writer, JsonOutputSettings settings) {
+        this.writer = writer;
+        this.settings = settings;
     }
 
-    @Override
-    public void writeValue(boolean value) {
 
+    private void openStructure(int openCharacter) {
+        writeOrThrow(openCharacter);
     }
 
-    @Override
-    public void writeValue(int value) {
-
+    private void closeStructure(int closeCharacter) {
+        writeOrThrow(closeCharacter);
     }
 
-    @Override
-    public void writeValue(long value) {
-
+    private void writePlainValue(String value) {
+        writeOrThrow(value);
     }
 
-    @Override
-    public void writeValue(float value) {
-
+    private void writeOrThrow(int value) {
+        try {
+            writer.write(value);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @Override
-    public void writeValue(double value) {
-
+    private void writeOrThrow(String value) {
+        try {
+            writer.write(value);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @Override
-    public void writeValue(BigInteger value) {
-
-    }
-
-    @Override
-    public void writeValue(BigDecimal value) {
-
-    }
 
     @Override
     public void openObject() {
-
+        openStructure('{');
     }
 
     @Override
-    public void writeName(String key) {
-
+    public Serializer name(String name) {
+        writeOrThrow('"' + name + '"' + ':');
+        return this;
     }
 
     @Override
     public void closeObject() {
-
+        closeStructure('}');
     }
 
     @Override
     public void openArray() {
-
+        openStructure('[');
     }
 
     @Override
     public void closeArray() {
+        closeStructure(']');
+    }
 
+    @Override
+    public void value(String value) {
+        writePlainValue('"' + value + '"');
+    }
+
+    @Override
+    public void value(boolean value) {
+        writePlainValue(Boolean.toString(value));
+    }
+
+    @Override
+    public void value(int value) {
+        writePlainValue(Integer.toString(value));
+    }
+
+    @Override
+    public void value(long value) {
+        writePlainValue(Long.toString(value));
+    }
+
+    @Override
+    public void value(float value) {
+        writePlainValue(Float.toString(value));
+    }
+
+    @Override
+    public void value(double value) {
+        writePlainValue(Double.toString(value));
+    }
+
+    @Override
+    public void value(BigInteger value) {
+        writePlainValue(value.toString());
+    }
+
+    @Override
+    public void value(BigDecimal value) {
+        writePlainValue(value.toString());
     }
 }
