@@ -10,7 +10,7 @@ import com.github.thegatesdev.maple.element.impl.internal.*;
  *
  * @param value the contained long value
  * @author Timar Karels
- * @see ElementType#NUMBER
+ * @see ElementType#NUM
  */
 public record LongElement(long value) implements Element, NumberElement {
 

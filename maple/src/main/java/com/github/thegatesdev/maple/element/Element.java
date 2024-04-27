@@ -36,7 +36,7 @@ public sealed interface Element permits DictElement,
     IntElement,
     LongElement,
     StringElement,
-    UnsetElement,
+    NullElement,
     NumberElement {
 
     /**
@@ -127,7 +127,7 @@ public sealed interface Element permits DictElement,
      * @return the element representing no value
      */
     static Element unset() {
-        return UnsetElement.INSTANCE;
+        return NullElement.INSTANCE;
     }
 
 
@@ -202,7 +202,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element is not a dictionary element
      */
     default DictElement getDict() {
-        throw new ElementTypeException(ElementType.DICTIONARY, type());
+        throw new ElementTypeException(ElementType.DICT, type());
     }
 
     /**
@@ -232,7 +232,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element did not represent a boolean value
      */
     default boolean getBool() {
-        throw new ElementTypeException(ElementType.BOOLEAN, type());
+        throw new ElementTypeException(ElementType.BOOL, type());
     }
 
     /**
@@ -242,7 +242,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element did not represent a number value
      */
     default short getShort() {
-        throw new ElementTypeException(ElementType.NUMBER, type());
+        throw new ElementTypeException(ElementType.NUM, type());
     }
 
     /**
@@ -252,7 +252,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element did not represent a number value
      */
     default int getInt() {
-        throw new ElementTypeException(ElementType.NUMBER, type());
+        throw new ElementTypeException(ElementType.NUM, type());
     }
 
     /**
@@ -262,7 +262,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element did not represent a number value
      */
     default long getLong() {
-        throw new ElementTypeException(ElementType.NUMBER, type());
+        throw new ElementTypeException(ElementType.NUM, type());
     }
 
     /**
@@ -272,7 +272,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element did not represent a number value
      */
     default float getFloat() {
-        throw new ElementTypeException(ElementType.NUMBER, type());
+        throw new ElementTypeException(ElementType.NUM, type());
     }
 
     /**
@@ -282,7 +282,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element did not represent a number value
      */
     default double getDouble() {
-        throw new ElementTypeException(ElementType.NUMBER, type());
+        throw new ElementTypeException(ElementType.NUM, type());
     }
 
     /**
@@ -292,7 +292,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element did not represent a number value
      */
     default BigInteger getBigInteger() {
-        throw new ElementTypeException(ElementType.NUMBER, type());
+        throw new ElementTypeException(ElementType.NUM, type());
     }
 
     /**
@@ -302,7 +302,7 @@ public sealed interface Element permits DictElement,
      * @throws ElementTypeException if this element did not represent a number value
      */
     default BigDecimal getBigDecimal() {
-        throw new ElementTypeException(ElementType.NUMBER, type());
+        throw new ElementTypeException(ElementType.NUM, type());
     }
 }
 

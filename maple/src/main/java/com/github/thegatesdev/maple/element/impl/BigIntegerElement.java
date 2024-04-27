@@ -12,7 +12,7 @@ import java.math.*;
  *
  * @param value the contained big integer value
  * @author Timar Karels
- * @see ElementType#NUMBER
+ * @see ElementType#NUM
  */
 public record BigIntegerElement(BigInteger value) implements NumberElement, Element {
 

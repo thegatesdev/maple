@@ -35,7 +35,7 @@ public sealed interface NumberElement extends Element permits BigDecimalElement,
 
     @Override
     default ElementType type() {
-        return ElementType.NUMBER;
+        return ElementType.NUM;
     }
 }
 

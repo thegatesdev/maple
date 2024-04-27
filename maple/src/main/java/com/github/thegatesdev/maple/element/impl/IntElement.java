@@ -12,7 +12,7 @@ import java.math.*;
  *
  * @param value the contained integer value
  * @author Timar Karels
- * @see ElementType#NUMBER
+ * @see ElementType#NUM
  */
 public record IntElement(int value) implements Element, NumberElement {
 

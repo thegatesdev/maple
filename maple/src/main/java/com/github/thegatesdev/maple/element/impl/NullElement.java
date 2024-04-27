@@ -6,9 +6,9 @@ import com.github.thegatesdev.maple.element.*;
  * An element representing an unset or 'null' value.
  *
  * @author Timar Karels
- * @see ElementType#UNSET
+ * @see ElementType#NULL
  */
-public enum UnsetElement implements Element {
+public enum NullElement implements Element {
     INSTANCE; // I started to really love enums for its unintended use-cases while making this.
 
 
@@ -19,7 +19,7 @@ public enum UnsetElement implements Element {
 
     @Override
     public ElementType type() {
-        return ElementType.UNSET;
+        return ElementType.NULL;
     }
 }
 

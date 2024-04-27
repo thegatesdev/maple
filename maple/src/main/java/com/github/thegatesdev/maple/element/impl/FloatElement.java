@@ -10,7 +10,7 @@ import com.github.thegatesdev.maple.element.impl.internal.*;
  *
  * @param value the contained float value
  * @author Timar Karels
- * @see ElementType#NUMBER
+ * @see ElementType#NUM
  */
 public record FloatElement(float value) implements Element, NumberElement {
 
