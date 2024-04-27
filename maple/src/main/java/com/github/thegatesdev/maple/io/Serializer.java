@@ -1,8 +1,10 @@
 package com.github.thegatesdev.maple.io;
 
+import com.github.thegatesdev.maple.io.format.json.internal.*;
+
 import java.math.*;
 
-public interface Serializer {
+public sealed interface Serializer permits JsonSerializer {
 
     void writeValue(String value);
 
