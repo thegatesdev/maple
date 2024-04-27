@@ -23,7 +23,7 @@ public interface Serializer {
 
     void openObject();
 
-    void writeKey(String key);
+    void writeName(String key);
 
     void closeObject();
 
