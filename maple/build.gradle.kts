@@ -11,7 +11,7 @@ description = "A clean, type safe intermediary structure"
 
 java {
     toolchain{
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 
     withSourcesJar()
