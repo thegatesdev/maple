@@ -52,12 +52,6 @@ public final class JsonSerializer implements Serializer {
     }
 
     @Override
-    public Serializer name(String name) {
-        writeOrThrow('"' + name + '"' + ':');
-        return this;
-    }
-
-    @Override
     public void closeObject() {
         closeStructure('}');
     }
@@ -70,6 +64,12 @@ public final class JsonSerializer implements Serializer {
     @Override
     public void closeArray() {
         closeStructure(']');
+    }
+
+    
+    @Override
+    public void name(String name) {
+        writeOrThrow('"' + name + '"' + ':');
     }
 
     @Override

@@ -8,14 +8,14 @@ public sealed interface Serializer permits JsonSerializer {
 
     void openObject();
 
-    Serializer name(String name);
-
     void closeObject();
 
     void openArray();
 
     void closeArray();
 
+
+    void name(String name);
 
     void value(String value);
 
