@@ -6,16 +6,14 @@ public sealed interface Deserializer permits JsonDeserializer {
 
     void next();
 
+    void skip();
+
     Token current();
 
     byte currentID();
 
 
-    void skip();
-
-
     String readName();
-
 
     String readValue();
 
