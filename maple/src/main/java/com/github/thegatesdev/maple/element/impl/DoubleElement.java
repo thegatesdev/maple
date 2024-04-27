@@ -10,7 +10,7 @@ import com.github.thegatesdev.maple.element.impl.internal.*;
  *
  * @param value the contained double value
  * @author Timar Karels
- * @see ElementType#NUMBER
+ * @see ElementType#NUM
  */
 public record DoubleElement(double value) implements NumberElement, Element {
 

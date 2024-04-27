@@ -7,7 +7,7 @@ import com.github.thegatesdev.maple.element.*;
  * This is implemented as an enum to avoid unnecessary instances.
  *
  * @author Timar Karels
- * @see ElementType#BOOLEAN
+ * @see ElementType#BOOL
  */
 public enum BoolElement implements Element {
     TRUE, FALSE;
@@ -35,7 +35,7 @@ public enum BoolElement implements Element {
 
     @Override
     public ElementType type() {
-        return ElementType.BOOLEAN;
+        return ElementType.BOOL;
     }
 }
 

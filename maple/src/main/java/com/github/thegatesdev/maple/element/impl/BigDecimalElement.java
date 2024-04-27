@@ -12,7 +12,7 @@ import java.math.*;
  *
  * @param value the contained big decimal value
  * @author Timar Karels
- * @see ElementType#NUMBER
+ * @see ElementType#NUM
  */
 public record BigDecimalElement(BigDecimal value) implements NumberElement, Element {
 

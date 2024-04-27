@@ -10,7 +10,7 @@ import java.util.function.*;
  * An element representing a dictionary of string keys mapped to element values.
  *
  * @author Timar Karels
- * @see ElementType#DICTIONARY
+ * @see ElementType#DICT
  */
 public sealed interface DictElement extends Element, ElementCollection permits MemoryDictElement {
 
@@ -109,7 +109,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
 
     @Override
     default ElementType type() {
-        return ElementType.DICTIONARY;
+        return ElementType.DICT;
     }
 
 
