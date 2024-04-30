@@ -27,7 +27,7 @@ public final class JsonSerializer implements Serializer {
                 write = ':';
                 break;
             case ScopeStack.STATUS_EXPECT_NAME:
-                throw new IllegalStateException();
+                throw new IllegalStateException("expected name before value");
         }
         output.write(write);
     }
@@ -42,7 +42,7 @@ public final class JsonSerializer implements Serializer {
 
     @Override
     public void closeObject() {
-        if (!scope.popObject()) throw new IllegalStateException(); // TODO figure out errors
+        if (!scope.popObject()) throw new IllegalStateException("scope != object"); // TODO figure out errors
         output.write('}');
     }
 
@@ -55,7 +55,7 @@ public final class JsonSerializer implements Serializer {
 
     @Override
     public void closeArray() {
-        if (!scope.popArray()) throw new IllegalStateException(); // TODO figure out errors
+        if (!scope.popArray()) throw new IllegalStateException("scope != array"); // TODO figure out errors
         output.write(']');
     }
 
@@ -65,7 +65,7 @@ public final class JsonSerializer implements Serializer {
         byte status = scope.checkWriteName();
         switch (status) {
             case ScopeStack.STATUS_EXPECT_VALUE:
-                throw new IllegalStateException();
+                throw new IllegalStateException("expected value");
             case ScopeStack.STATUS_NEEDS_COMMA:
                 output.write(',');
                 break;
