@@ -70,13 +70,17 @@ public final class JsonSerializer implements Serializer {
                 output.write(',');
                 break;
         }
-        output.write('"' + name + '"');
+        output.write('"');
+        output.write(name);
+        output.write('"');
     }
 
     @Override
     public void value(String value) {
         verifyValueWrite();
-        output.write('"' + value + '"');
+        output.write('"');
+        output.write(value);
+        output.write('"');
     }
 
     @Override
