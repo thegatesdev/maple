@@ -8,6 +8,8 @@ public interface Output {
 
     void write(String s);
 
+    void writeEscaped(String s, int[] escapes);
+
 
     default void writeValue(boolean b) {
         write(Boolean.toString(b));
