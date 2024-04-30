@@ -6,7 +6,7 @@ import java.io.*;
 
 public record WriterOutput(Writer writer) implements Output {
     @Override
-    public void push(int c) {
+    public void write(int c) {
         try {
             writer.write(c);
         } catch (IOException e) {
@@ -15,7 +15,7 @@ public record WriterOutput(Writer writer) implements Output {
     }
 
     @Override
-    public void push(String s) {
+    public void write(String s) {
         try {
             writer.write(s);
         } catch (IOException e) {
