@@ -29,7 +29,7 @@ public final class JsonSerializer implements Serializer {
             case ScopeStack.STATUS_EXPECT_NAME:
                 throw new IllegalStateException();
         }
-        output.push(write);
+        output.write(write);
     }
 
 
@@ -37,26 +37,26 @@ public final class JsonSerializer implements Serializer {
     public void openObject() {
         verifyValueWrite();
         scope.pushObject();
-        output.push('{');
+        output.write('{');
     }
 
     @Override
     public void closeObject() {
         if (!scope.popObject()) throw new IllegalStateException(); // TODO figure out errors
-        output.push('}');
+        output.write('}');
     }
 
     @Override
     public void openArray() {
         verifyValueWrite();
         scope.pushArray();
-        output.push('[');
+        output.write('[');
     }
 
     @Override
     public void closeArray() {
         if (!scope.popArray()) throw new IllegalStateException(); // TODO figure out errors
-        output.push(']');
+        output.write(']');
     }
 
 
@@ -67,57 +67,57 @@ public final class JsonSerializer implements Serializer {
             case ScopeStack.STATUS_EXPECT_VALUE:
                 throw new IllegalStateException();
             case ScopeStack.STATUS_NEEDS_COMMA:
-                output.push(',');
+                output.write(',');
                 break;
         }
-        output.push('"' + name + '"');
+        output.write('"' + name + '"');
     }
 
     @Override
     public void value(String value) {
         verifyValueWrite();
-        output.push('"' + value + '"');
+        output.write('"' + value + '"');
     }
 
     @Override
     public void value(boolean value) {
         verifyValueWrite();
-        output.push(Boolean.toString(value));
+        output.writeValue(value);
     }
 
     @Override
     public void value(int value) {
         verifyValueWrite();
-        output.push(Integer.toString(value));
+        output.writeValue(value);
     }
 
     @Override
     public void value(long value) {
         verifyValueWrite();
-        output.push(Long.toString(value));
+        output.writeValue(value);
     }
 
     @Override
     public void value(float value) {
         verifyValueWrite();
-        output.push(Float.toString(value));
+        output.writeValue(value);
     }
 
     @Override
     public void value(double value) {
         verifyValueWrite();
-        output.push(Double.toString(value));
+        output.writeValue(value);
     }
 
     @Override
     public void value(BigInteger value) {
         verifyValueWrite();
-        output.push(value.toString());
+        output.writeValue(value);
     }
 
     @Override
     public void value(BigDecimal value) {
         verifyValueWrite();
-        output.push(value.toString());
+        output.writeValue(value);
     }
 }
