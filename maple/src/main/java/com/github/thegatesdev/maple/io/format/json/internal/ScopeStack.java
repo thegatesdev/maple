@@ -21,12 +21,12 @@ public final class ScopeStack {
 
     private void push(boolean scope) {
         int len = scopes.length;
-        if (++stackIndex == len) {
+        if (++stackIndex == len) { // Full, double the capacity
             len *= 2;
             scopes = Arrays.copyOf(scopes, len);
         }
         scopes[stackIndex] = currentScope = scope;
-        hasEntry = false;
+        hasEntry = false; // New scope, is empty
     }
 
     private void pop() {
@@ -34,8 +34,7 @@ public final class ScopeStack {
             stackIndex--;
             currentScope = scopes[stackIndex];
         }
-        hasEntry = true; // When popping, we always know the parent has had at least one child
-        // Jackson keeps track of the count, but only checks if it's higher than zero...
+        hasEntry = true; // Has at least 1 entry, since we just popped out of that one
     }
 
 
@@ -48,23 +47,31 @@ public final class ScopeStack {
     }
 
     public boolean popArray() {
-        if (currentScope) return false;
+        if (!inArray()) return false;
         pop();
         return true;
     }
 
     public boolean popObject() {
-        if (!currentScope) return false;
+        if (!inObject()) return false;
         pop();
         return true;
     }
 
+    public boolean inArray() {
+        return !currentScope;
+    }
 
-    public byte checkWriteValue() {
+    public boolean inObject() {
+        return currentScope;
+    }
+
+
+    public byte writeValueStatus() {
         if (stackIndex < 0) { // root, we don't handle that yet
-            return STATUS_OK;
+            return STATUS_OK; // Don't throw, this needs to be called in root for the initial root object
         }
-        if (currentScope) { // Object
+        if (inObject()) { // Object
             if (!nameWritten) return STATUS_EXPECT_NAME;
             nameWritten = false;
             hasEntry = true;
@@ -76,11 +83,11 @@ public final class ScopeStack {
         }
     }
 
-    public byte checkWriteName() {
+    public byte writeNameStatus() {
         if (stackIndex < 0) { // root, we don't handle that yet
             throw new IllegalStateException("root");
         }
-        if (!currentScope || nameWritten) return STATUS_EXPECT_VALUE;
+        if (inArray() || nameWritten) return STATUS_EXPECT_VALUE;
         nameWritten = true;
         return hasEntry ? STATUS_NEEDS_COMMA : STATUS_OK;
     }

@@ -16,7 +16,7 @@ public final class JsonSerializer implements Serializer {
 
     private void verifyValueWrite() {
         char write;
-        switch (scope.checkWriteValue()) {
+        switch (scope.writeValueStatus()) {
             case ScopeStack.STATUS_OK:
             default:
                 return;
@@ -62,7 +62,7 @@ public final class JsonSerializer implements Serializer {
 
     @Override
     public void name(String name) {
-        byte status = scope.checkWriteName();
+        byte status = scope.writeNameStatus();
         switch (status) {
             case ScopeStack.STATUS_EXPECT_VALUE:
                 throw new IllegalStateException("expected value");
