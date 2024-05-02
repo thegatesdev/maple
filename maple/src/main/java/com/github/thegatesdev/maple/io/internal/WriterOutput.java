@@ -63,9 +63,11 @@ public final class WriterOutput implements Output {
             while (true) {
                 c = buf[index];
                 if (c < escapeLen && escapes[c] != 0) break;
-                if (++index == len) return;
+                if (++index >= len) {
+                    write(buf, head, index - head);
+                    return;
+                }
             }
-
             write(buf, head, index - head);
             head = ++index;
 
