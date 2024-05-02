@@ -80,6 +80,8 @@ public final class WriterOutput implements Output {
     public void writeEscaped(String s, int[] escapes) {
         char[] buf = stringBuffer();
         int len = s.length();
+        if (len > MAX_STRING_SIZE)
+            throw new IllegalArgumentException("string longer than " + MAX_STRING_SIZE);
         s.getChars(0, len, buf, 0);
         writeEscaped(buf, 0, len, escapes);
     }
