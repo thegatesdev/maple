@@ -1,5 +1,6 @@
 package com.github.thegatesdev.maple.io.format.json.internal;
 
+import com.github.thegatesdev.maple.exception.*;
 import com.github.thegatesdev.maple.io.*;
 
 import java.math.*;
@@ -20,7 +21,7 @@ public final class JsonSerializer implements Serializer {
     }
 
 
-    private void verifyValueWrite() {
+    private void verifyValueWrite() throws OutputException {
         char write;
         switch (scope.writeValueStatus()) {
             case ScopeStack.STATUS_OK:
@@ -40,34 +41,34 @@ public final class JsonSerializer implements Serializer {
 
 
     @Override
-    public void openObject() {
+    public void openObject() throws OutputException {
         verifyValueWrite();
         scope.pushObject();
         output.write('{');
     }
 
     @Override
-    public void closeObject() {
+    public void closeObject() throws OutputException {
         if (!scope.popObject()) throw new IllegalStateException("scope != object"); // TODO figure out errors
         output.write('}');
     }
 
     @Override
-    public void openArray() {
+    public void openArray() throws OutputException {
         verifyValueWrite();
         scope.pushArray();
         output.write('[');
     }
 
     @Override
-    public void closeArray() {
+    public void closeArray() throws OutputException {
         if (!scope.popArray()) throw new IllegalStateException("scope != array"); // TODO figure out errors
         output.write(']');
     }
 
 
     @Override
-    public void name(String name) {
+    public void name(String name) throws OutputException {
         byte status = scope.writeNameStatus();
         switch (status) {
             case ScopeStack.STATUS_EXPECT_VALUE:
@@ -82,7 +83,7 @@ public final class JsonSerializer implements Serializer {
     }
 
     @Override
-    public void value(String value) {
+    public void value(String value) throws OutputException {
         verifyValueWrite();
         output.write('"');
         output.writeEscaped(value, escapes);
@@ -90,43 +91,43 @@ public final class JsonSerializer implements Serializer {
     }
 
     @Override
-    public void value(boolean value) {
+    public void value(boolean value) throws OutputException {
         verifyValueWrite();
         output.writeValue(value);
     }
 
     @Override
-    public void value(int value) {
+    public void value(int value) throws OutputException {
         verifyValueWrite();
         output.writeValue(value);
     }
 
     @Override
-    public void value(long value) {
+    public void value(long value) throws OutputException {
         verifyValueWrite();
         output.writeValue(value);
     }
 
     @Override
-    public void value(float value) {
+    public void value(float value) throws OutputException {
         verifyValueWrite();
         output.writeValue(value);
     }
 
     @Override
-    public void value(double value) {
+    public void value(double value) throws OutputException {
         verifyValueWrite();
         output.writeValue(value);
     }
 
     @Override
-    public void value(BigInteger value) {
+    public void value(BigInteger value) throws OutputException {
         verifyValueWrite();
         output.writeValue(value);
     }
 
     @Override
-    public void value(BigDecimal value) {
+    public void value(BigDecimal value) throws OutputException {
         verifyValueWrite();
         output.writeValue(value);
     }

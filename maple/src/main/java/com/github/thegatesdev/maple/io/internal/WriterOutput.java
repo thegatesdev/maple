@@ -1,5 +1,6 @@
 package com.github.thegatesdev.maple.io.internal;
 
+import com.github.thegatesdev.maple.exception.*;
 import com.github.thegatesdev.maple.io.*;
 
 import java.io.*;
@@ -23,34 +24,34 @@ public final class WriterOutput implements Output {
 
 
     @Override
-    public void write(int c) {
+    public void write(int c) throws OutputException {
         try {
             writer.write(c);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new OutputException(e);
         }
     }
 
     @Override
-    public void write(String s) {
+    public void write(String s) throws OutputException {
         try {
             writer.write(s);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new OutputException(e);
         }
     }
 
     @Override
-    public void write(char[] buf, int off, int len) {
+    public void write(char[] buf, int off, int len) throws OutputException {
         try {
             writer.write(buf, off, len);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new OutputException(e);
         }
     }
 
     @Override
-    public void writeEscaped(char[] buf, int off, int len, int[] escapes) {
+    public void writeEscaped(char[] buf, int off, int len, int[] escapes) throws OutputException {
         if (len > MAX_STRING_SIZE)
             throw new IllegalArgumentException("string longer than " + MAX_STRING_SIZE);
         int escapeLen = escapes.length;
@@ -77,7 +78,7 @@ public final class WriterOutput implements Output {
     }
 
     @Override
-    public void writeEscaped(String s, int[] escapes) {
+    public void writeEscaped(String s, int[] escapes) throws OutputException {
         char[] buf = stringBuffer();
         int len = s.length();
         if (len > MAX_STRING_SIZE)

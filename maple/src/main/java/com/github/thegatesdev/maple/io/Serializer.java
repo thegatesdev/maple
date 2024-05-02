@@ -1,35 +1,36 @@
 package com.github.thegatesdev.maple.io;
 
+import com.github.thegatesdev.maple.exception.*;
 import com.github.thegatesdev.maple.io.format.json.internal.*;
 
 import java.math.*;
 
 public sealed interface Serializer permits JsonSerializer {
 
-    void openObject();
+    void openObject() throws OutputException;
 
-    void closeObject();
+    void closeObject() throws OutputException;
 
-    void openArray();
+    void openArray() throws OutputException;
 
-    void closeArray();
+    void closeArray() throws OutputException;
 
 
-    void name(String name);
+    void name(String name) throws OutputException;
 
-    void value(String value);
+    void value(String value) throws OutputException;
 
-    void value(boolean value);
+    void value(boolean value) throws OutputException;
 
-    void value(int value);
+    void value(int value) throws OutputException;
 
-    void value(long value);
+    void value(long value) throws OutputException;
 
-    void value(float value);
+    void value(float value) throws OutputException;
 
-    void value(double value);
+    void value(double value) throws OutputException;
 
-    void value(BigInteger value);
+    void value(BigInteger value) throws OutputException;
 
-    void value(BigDecimal value);
+    void value(BigDecimal value) throws OutputException;
 }
