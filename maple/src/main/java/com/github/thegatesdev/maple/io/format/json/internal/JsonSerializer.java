@@ -9,6 +9,12 @@ public final class JsonSerializer implements Serializer {
     private final Output output;
     private final ScopeStack scope = new ScopeStack();
 
+    private final int[] escapes = new int[35];
+
+    {
+        escapes[0x22] = 1;
+    }
+
     public JsonSerializer(Output output) {
         this.output = output;
     }
@@ -71,7 +77,7 @@ public final class JsonSerializer implements Serializer {
                 break;
         }
         output.write('"');
-        output.write(name);
+        output.writeEscaped(name, escapes);
         output.write('"');
     }
 
@@ -79,7 +85,7 @@ public final class JsonSerializer implements Serializer {
     public void value(String value) {
         verifyValueWrite();
         output.write('"');
-        output.write(value);
+        output.writeEscaped(value, escapes);
         output.write('"');
     }
 
