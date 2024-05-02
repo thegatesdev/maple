@@ -8,6 +8,10 @@ public interface Output {
 
     void write(String s);
 
+    void write(char[] buf, int off, int len);
+
+    void writeEscaped(char[] buf, int off, int len, int[] escapes);
+
     void writeEscaped(String s, int[] escapes);
 
 

@@ -41,25 +41,44 @@ public final class WriterOutput implements Output {
     }
 
     @Override
-    public void writeEscaped(String s, int[] escapes) {
-        int len = s.length();
+    public void write(char[] buf, int off, int len) {
+        try {
+            writer.write(buf, off, len);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void writeEscaped(char[] buf, int off, int len, int[] escapes) {
         if (len > MAX_STRING_SIZE)
             throw new IllegalArgumentException("string longer than " + MAX_STRING_SIZE);
-        int maxEscapes = escapes.length;
-        char[] buf = stringBuffer();
-        s.getChars(0, len, buf, 0);
+        int escapeLen = escapes.length;
 
         int index = 0;
+        int head = 0;
 
         while (index < len) {
-
             char c;
-            do {
-                c = buf[index++];
-            } while (c >= maxEscapes || escapes[c] == 0);
+            while (true) {
+                c = buf[index];
+                if (c < escapeLen && escapes[c] != 0) break;
+                if (++index == len) return;
+            }
+
+            write(buf, head, index - head);
+            head = ++index;
 
             write('\\');
             write(c);
         }
+    }
+
+    @Override
+    public void writeEscaped(String s, int[] escapes) {
+        char[] buf = stringBuffer();
+        int len = s.length();
+        s.getChars(0, len, buf, 0);
+        writeEscaped(buf, 0, len, escapes);
     }
 }
