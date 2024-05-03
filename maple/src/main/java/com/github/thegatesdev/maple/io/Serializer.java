@@ -33,4 +33,6 @@ public sealed interface Serializer permits JsonSerializer {
     void value(BigInteger value) throws IOException;
 
     void value(BigDecimal value) throws IOException;
+
+    void nullValue() throws IOException;
 }
