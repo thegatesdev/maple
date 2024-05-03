@@ -1,8 +1,6 @@
 package com.github.thegatesdev.maple.io;
 
-import com.github.thegatesdev.maple.io.format.json.internal.*;
-
-public sealed interface Deserializer permits JsonDeserializer {
+public interface Deserializer {
 
     void next();
 
