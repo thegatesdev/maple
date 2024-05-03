@@ -1,6 +1,7 @@
 package com.github.thegatesdev.maple.io.format.json.internal;
 
 import com.github.thegatesdev.maple.io.*;
+import com.github.thegatesdev.maple.io.internal.*;
 
 import java.io.*;
 import java.math.*;
@@ -21,10 +22,10 @@ public final class JsonSerializer implements Serializer, Escapes {
             case ScopeStack.STATUS_OK:
             default:
                 return;
-            case ScopeStack.STATUS_NEEDS_COMMA:
+            case ScopeStack.STATUS_NEEDS_VALUE_SEPARATOR:
                 write = ',';
                 break;
-            case ScopeStack.STATUS_NEEDS_COLON:
+            case ScopeStack.STATUS_NEEDS_NAME_SEPARATOR:
                 write = ':';
                 break;
             case ScopeStack.STATUS_EXPECT_NAME:
@@ -67,7 +68,7 @@ public final class JsonSerializer implements Serializer, Escapes {
         switch (status) {
             case ScopeStack.STATUS_EXPECT_VALUE:
                 throw new IllegalStateException("expected value");
-            case ScopeStack.STATUS_NEEDS_COMMA:
+            case ScopeStack.STATUS_NEEDS_VALUE_SEPARATOR:
                 output.raw(',');
                 break;
         }
