@@ -1,6 +1,7 @@
-package com.github.thegatesdev.maple.io.internal;
+package com.github.thegatesdev.maple.io.impl.internal;
 
 import com.github.thegatesdev.maple.io.*;
+import com.github.thegatesdev.maple.io.util.*;
 
 import java.io.*;
 import java.math.*;

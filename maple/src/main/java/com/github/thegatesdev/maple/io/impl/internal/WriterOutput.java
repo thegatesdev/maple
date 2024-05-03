@@ -1,4 +1,4 @@
-package com.github.thegatesdev.maple.io.internal;
+package com.github.thegatesdev.maple.io.impl.internal;
 
 import com.github.thegatesdev.maple.io.*;
 
