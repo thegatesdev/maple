@@ -1,27 +1,21 @@
 package com.github.thegatesdev.maple.io.format.json.internal;
 
-import com.github.thegatesdev.maple.exception.*;
 import com.github.thegatesdev.maple.io.*;
 
+import java.io.*;
 import java.math.*;
 
-public final class JsonSerializer implements Serializer {
+public final class JsonSerializer implements Serializer, Escapes {
 
     private final Output output;
     private final ScopeStack scope = new ScopeStack();
-
-    private final int[] escapes = new int[35];
-
-    {
-        escapes[0x22] = 1;
-    }
 
     public JsonSerializer(Output output) {
         this.output = output;
     }
 
 
-    private void verifyValueWrite() throws OutputException {
+    private void verifyValueWrite() throws IOException {
         char write;
         switch (scope.writeValueStatus()) {
             case ScopeStack.STATUS_OK:
@@ -36,99 +30,119 @@ public final class JsonSerializer implements Serializer {
             case ScopeStack.STATUS_EXPECT_NAME:
                 throw new IllegalStateException("expected name before value");
         }
-        output.write(write);
+        output.raw(write);
     }
 
 
     @Override
-    public void openObject() throws OutputException {
+    public void openObject() throws IOException {
         verifyValueWrite();
         scope.pushObject();
-        output.write('{');
+        output.raw('{');
     }
 
     @Override
-    public void closeObject() throws OutputException {
+    public void closeObject() throws IOException {
         if (!scope.popObject()) throw new IllegalStateException("scope != object"); // TODO figure out errors
-        output.write('}');
+        output.raw('}');
     }
 
     @Override
-    public void openArray() throws OutputException {
+    public void openArray() throws IOException {
         verifyValueWrite();
         scope.pushArray();
-        output.write('[');
+        output.raw('[');
     }
 
     @Override
-    public void closeArray() throws OutputException {
+    public void closeArray() throws IOException {
         if (!scope.popArray()) throw new IllegalStateException("scope != array"); // TODO figure out errors
-        output.write(']');
+        output.raw(']');
     }
 
 
     @Override
-    public void name(String name) throws OutputException {
+    public void name(String name) throws IOException {
         byte status = scope.writeNameStatus();
         switch (status) {
             case ScopeStack.STATUS_EXPECT_VALUE:
                 throw new IllegalStateException("expected value");
             case ScopeStack.STATUS_NEEDS_COMMA:
-                output.write(',');
+                output.raw(',');
                 break;
         }
-        output.write('"');
-        output.writeEscaped(name, escapes);
-        output.write('"');
+        output.raw('"');
+        output.escaped(name, this);
+        output.raw('"');
     }
 
     @Override
-    public void value(String value) throws OutputException {
+    public void value(String value) throws IOException {
         verifyValueWrite();
-        output.write('"');
-        output.writeEscaped(value, escapes);
-        output.write('"');
+        output.raw('"');
+        output.escaped(value, this);
+        output.raw('"');
     }
 
     @Override
-    public void value(boolean value) throws OutputException {
+    public void value(boolean value) throws IOException {
         verifyValueWrite();
-        output.writeValue(value);
+        output.value(value);
     }
 
     @Override
-    public void value(int value) throws OutputException {
+    public void value(int value) throws IOException {
         verifyValueWrite();
-        output.writeValue(value);
+        output.value(value);
     }
 
     @Override
-    public void value(long value) throws OutputException {
+    public void value(long value) throws IOException {
         verifyValueWrite();
-        output.writeValue(value);
+        output.value(value);
     }
 
     @Override
-    public void value(float value) throws OutputException {
+    public void value(float value) throws IOException {
         verifyValueWrite();
-        output.writeValue(value);
+        output.value(value);
     }
 
     @Override
-    public void value(double value) throws OutputException {
+    public void value(double value) throws IOException {
         verifyValueWrite();
-        output.writeValue(value);
+        output.value(value);
     }
 
     @Override
-    public void value(BigInteger value) throws OutputException {
+    public void value(BigInteger value) throws IOException {
         verifyValueWrite();
-        output.writeValue(value);
+        output.value(value);
     }
 
     @Override
-    public void value(BigDecimal value) throws OutputException {
+    public void value(BigDecimal value) throws IOException {
         verifyValueWrite();
-        output.writeValue(value);
+        output.value(value);
+    }
+
+
+    @Override
+    public int escapeLimit() {
+        return '\\';
+    }
+
+    @Override
+    public void writeEscaped(Output output, char ch) throws IOException {
+        switch (ch) {
+            case '"':
+                output.raw('\\');
+                output.raw(ch);
+                break;
+            case '\\':
+                output.raw('\\');
+                output.raw('\\');
+                break;
+        }
     }
 }
