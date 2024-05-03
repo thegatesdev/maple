@@ -1,12 +1,12 @@
-package com.github.thegatesdev.maple.io.format.json.internal;
+package com.github.thegatesdev.maple.io.internal;
 
 import java.util.*;
 
 public final class ScopeStack {
 
     public static final byte STATUS_OK = 0;
-    public static final byte STATUS_NEEDS_COMMA = 1;
-    public static final byte STATUS_NEEDS_COLON = 2;
+    public static final byte STATUS_NEEDS_VALUE_SEPARATOR = 1;
+    public static final byte STATUS_NEEDS_NAME_SEPARATOR = 2;
     public static final byte STATUS_EXPECT_NAME = 4;
     public static final byte STATUS_EXPECT_VALUE = 5;
 
@@ -75,11 +75,11 @@ public final class ScopeStack {
             if (!nameWritten) return STATUS_EXPECT_NAME;
             nameWritten = false;
             hasEntry = true;
-            return STATUS_NEEDS_COLON;
+            return STATUS_NEEDS_NAME_SEPARATOR;
         } else { // Array
             boolean had = hasEntry;
             hasEntry = true;
-            return had ? STATUS_NEEDS_COMMA : STATUS_OK;
+            return had ? STATUS_NEEDS_VALUE_SEPARATOR : STATUS_OK;
         }
     }
 
@@ -89,6 +89,6 @@ public final class ScopeStack {
         }
         if (inArray() || nameWritten) return STATUS_EXPECT_VALUE;
         nameWritten = true;
-        return hasEntry ? STATUS_NEEDS_COMMA : STATUS_OK;
+        return hasEntry ? STATUS_NEEDS_VALUE_SEPARATOR : STATUS_OK;
     }
 }
