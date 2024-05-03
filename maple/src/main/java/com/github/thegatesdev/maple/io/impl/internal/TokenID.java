@@ -1,4 +1,4 @@
-package com.github.thegatesdev.maple.io.internal;
+package com.github.thegatesdev.maple.io.impl.internal;
 
 public interface TokenID {
     byte NotPresent = 0;

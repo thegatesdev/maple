@@ -1,4 +1,4 @@
-package com.github.thegatesdev.maple.io.internal;
+package com.github.thegatesdev.maple.io.util;
 
 import java.util.*;
 
