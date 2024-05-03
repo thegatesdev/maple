@@ -126,6 +126,12 @@ public final class JsonSerializer implements Serializer, Escapes {
         output.value(value);
     }
 
+    @Override
+    public void nullValue() throws IOException {
+        verifyValueWrite();
+        output.nullValue();
+    }
+
 
     @Override
     public int escapeLimit() {
