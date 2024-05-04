@@ -13,7 +13,7 @@ public enum NullElement implements Element {
 
 
     @Override
-    public boolean isUnset() {
+    public boolean isNull() {
         return true;
     }
 

@@ -212,7 +212,7 @@ public sealed interface Element permits DictElement,
      *
      * @return true if this element represents no value
      */
-    default boolean isUnset() {
+    default boolean isNull() {
         return false;
     }
 
