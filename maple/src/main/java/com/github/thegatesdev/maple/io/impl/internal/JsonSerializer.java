@@ -28,6 +28,9 @@ public final class JsonSerializer implements Serializer, Escapes {
             case ScopeStack.STATUS_NEEDS_NAME_SEPARATOR:
                 write = ':';
                 break;
+            case ScopeStack.STATUS_NEEDS_ROOT_SEPARATOR:
+                write = ' ';
+                break;
             case ScopeStack.STATUS_EXPECT_NAME:
                 throw new IllegalStateException("expected name before value");
         }
