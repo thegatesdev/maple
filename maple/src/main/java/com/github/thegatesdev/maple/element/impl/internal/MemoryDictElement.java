@@ -1,5 +1,6 @@
 package com.github.thegatesdev.maple.element.impl.internal;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.exception.*;
 
@@ -11,6 +12,7 @@ import java.util.stream.*;
 /**
  * @author Timar Karels
  */
+@ValueClassCandidate
 public final class MemoryDictElement implements DictElement {
 
     public static final MemoryDictElement EMPTY = new MemoryDictElement(Collections.emptyMap());

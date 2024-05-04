@@ -1,5 +1,6 @@
 package com.github.thegatesdev.maple.element.impl;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 
@@ -14,6 +15,7 @@ import java.math.*;
  * @author Timar Karels
  * @see ElementType#NUM
  */
+@ValueClassCandidate
 public record BigDecimalElement(BigDecimal value) implements NumberElement, Element {
 
     /**

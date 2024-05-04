@@ -1,5 +1,6 @@
 package com.github.thegatesdev.maple.element.impl.internal;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 
 import java.util.*;
@@ -9,6 +10,7 @@ import java.util.stream.*;
 /**
  * @author Timar Karels
  */
+@ValueClassCandidate
 public final class MemoryListElement implements ListElement {
 
     private static final Element[] EMPTY_EL_ARR = new Element[0];

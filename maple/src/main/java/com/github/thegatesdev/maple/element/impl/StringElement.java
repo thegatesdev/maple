@@ -1,5 +1,6 @@
 package com.github.thegatesdev.maple.element.impl;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 
 import java.util.*;
@@ -11,6 +12,7 @@ import java.util.*;
  * @author Timar Karels
  * @see ElementType#STRING
  */
+@ValueClassCandidate
 public record StringElement(String value) implements Element {
 
     /**

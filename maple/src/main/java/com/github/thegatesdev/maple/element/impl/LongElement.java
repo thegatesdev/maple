@@ -1,5 +1,6 @@
 package com.github.thegatesdev.maple.element.impl;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 
@@ -12,6 +13,7 @@ import com.github.thegatesdev.maple.element.impl.internal.*;
  * @author Timar Karels
  * @see ElementType#NUM
  */
+@ValueClassCandidate
 public record LongElement(long value) implements Element, NumberElement {
 
     /**
