@@ -139,6 +139,23 @@ public sealed interface Element permits DictElement,
     ElementType type();
 
     /**
+     * Get the string representation of this element.
+     * This always includes the type of the element, and additional information.
+     * For elements with a single value, this will be the value in string form.
+     * For dictionary and list elements, this will be the size of the collection.
+     * <p>
+     * Examples:
+     * <ul>
+     *     <li>{@code Element.of(5)} will produce "{@code number<5I>}"</li>
+     *     <li>{@code Element.of("foo")} will produce "{@code string<foo>}"</li>
+     *     <li>{@code DictElement.empty()} will produce "{@code dict{0}}"</li>
+     * </ul>
+     *
+     * @return the string representation of this element
+     */
+    String toString();
+
+    /**
      * Get the value of this element as a string.
      * For dictionary and list elements, this method acts the same as {@link Object#toString()}.
      *
