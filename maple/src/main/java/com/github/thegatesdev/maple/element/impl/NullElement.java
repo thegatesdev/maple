@@ -23,6 +23,11 @@ public enum NullElement implements Element {
     }
 
     @Override
+    public String toString() {
+        return "null";
+    }
+
+    @Override
     public String stringValue() {
         return "null";
     }

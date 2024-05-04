@@ -39,6 +39,11 @@ public enum BoolElement implements Element {
     }
 
     @Override
+    public String toString() {
+        return "bool<" + stringValue() + ">";
+    }
+
+    @Override
     public String stringValue() {
         return Boolean.toString(getBool());
     }
