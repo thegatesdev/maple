@@ -26,11 +26,6 @@ public record BigIntegerElement(BigInteger value) implements NumberElement, Elem
 
 
     @Override
-    public short getShort() {
-        return value.shortValue();
-    }
-
-    @Override
     public int getInt() {
         return value.intValue();
     }
@@ -64,7 +59,7 @@ public record BigIntegerElement(BigInteger value) implements NumberElement, Elem
     public String toString() {
         return "number<" + value + "BI>";
     }
-    
+
     @Override
     public String stringValue() {
         return value.toString();

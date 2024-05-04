@@ -26,11 +26,6 @@ public record BigDecimalElement(BigDecimal value) implements NumberElement, Elem
 
 
     @Override
-    public short getShort() {
-        return value.shortValue();
-    }
-
-    @Override
     public int getInt() {
         return value.intValue();
     }

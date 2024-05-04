@@ -261,16 +261,6 @@ public sealed interface Element permits DictElement,
     }
 
     /**
-     * Get the short value represented by this element, if applicable.
-     *
-     * @return the value from this element
-     * @throws ElementTypeException if this element did not represent a number value
-     */
-    default short getShort() {
-        throw new ElementTypeException(ElementType.NUM, type());
-    }
-
-    /**
      * Get the int value represented by this element, if applicable.
      *
      * @return the value from this element

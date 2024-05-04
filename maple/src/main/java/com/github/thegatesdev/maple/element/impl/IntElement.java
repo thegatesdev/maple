@@ -32,11 +32,6 @@ public record IntElement(int value) implements Element, NumberElement {
 
 
     @Override
-    public short getShort() {
-        return (short) value;
-    }
-
-    @Override
     public int getInt() {
         return value;
     }

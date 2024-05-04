@@ -24,11 +24,6 @@ public record DoubleElement(double value) implements NumberElement, Element {
 
 
     @Override
-    public short getShort() {
-        return (short) value;
-    }
-
-    @Override
     public int getInt() {
         return (int) value;
     }

@@ -24,11 +24,6 @@ public record LongElement(long value) implements Element, NumberElement {
 
 
     @Override
-    public short getShort() {
-        return (short) value;
-    }
-
-    @Override
     public int getInt() {
         return (int) value;
     }
