@@ -119,7 +119,7 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public String toString() {
-        return "map{" + entries.size() + "}";
+        return "dict{" + entries.size() + "}";
     }
 
     @Override
