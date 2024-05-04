@@ -157,7 +157,7 @@ public sealed interface Element permits DictElement,
 
     /**
      * Get the value of this element as a string.
-     * For dictionary and list elements, this method acts the same as {@link Object#toString()}.
+     * For dictionary and list elements, this method acts the same as {@link #toString()}.
      *
      * @return the value of this element as a string
      */
