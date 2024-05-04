@@ -138,6 +138,14 @@ public sealed interface Element permits DictElement,
      */
     ElementType type();
 
+    /**
+     * Get the value of this element as a string.
+     * For dictionary and list elements, this method acts the same as {@link Object#toString()}.
+     *
+     * @return the value of this element as a string
+     */
+    String stringValue();
+
 
     /**
      * Check whether this element is a dictionary element.

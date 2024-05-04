@@ -52,6 +52,11 @@ public record LongElement(long value) implements Element, NumberElement {
     public String toString() {
         return "number<" + value + "L>";
     }
+
+    @Override
+    public String stringValue() {
+        return Long.toString(value, 10);
+    }
 }
 
 /*

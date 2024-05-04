@@ -64,6 +64,11 @@ public record BigIntegerElement(BigInteger value) implements NumberElement, Elem
     public String toString() {
         return "number<" + value + "BI>";
     }
+    
+    @Override
+    public String stringValue() {
+        return value.toString();
+    }
 }
 
 /*

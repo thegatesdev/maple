@@ -53,6 +53,12 @@ public sealed interface ElementCollection extends Element permits DictElement, L
      * @return the item count
      */
     int count();
+
+
+    @Override
+    default String stringValue() {
+        return toString();
+    }
 }
 
 /*

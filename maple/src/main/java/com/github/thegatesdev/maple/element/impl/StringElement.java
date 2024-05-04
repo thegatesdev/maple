@@ -40,6 +40,11 @@ public record StringElement(String value) implements Element {
     public String toString() {
         return "string<" + value + ">";
     }
+
+    @Override
+    public String stringValue() {
+        return value;
+    }
 }
 
 /*

@@ -52,6 +52,11 @@ public record FloatElement(float value) implements Element, NumberElement {
     public String toString() {
         return "number<" + value + "F>";
     }
+
+    @Override
+    public String stringValue() {
+        return Float.toString(value);
+    }
 }
 
 /*

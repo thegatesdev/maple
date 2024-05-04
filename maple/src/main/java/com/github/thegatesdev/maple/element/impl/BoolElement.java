@@ -37,6 +37,11 @@ public enum BoolElement implements Element {
     public ElementType type() {
         return ElementType.BOOL;
     }
+
+    @Override
+    public String stringValue() {
+        return Boolean.toString(getBool());
+    }
 }
 
 /*

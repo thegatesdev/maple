@@ -72,6 +72,11 @@ public record IntElement(int value) implements Element, NumberElement {
     public String toString() {
         return "number<" + value + "I>";
     }
+
+    @Override
+    public String stringValue() {
+        return Integer.toString(value);
+    }
 }
 
 /*

@@ -52,6 +52,11 @@ public record DoubleElement(double value) implements NumberElement, Element {
     public String toString() {
         return "number<" + value + "D>";
     }
+
+    @Override
+    public String stringValue() {
+        return Double.toString(value);
+    }
 }
 
 /*

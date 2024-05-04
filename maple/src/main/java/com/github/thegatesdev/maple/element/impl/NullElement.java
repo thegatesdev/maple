@@ -21,6 +21,11 @@ public enum NullElement implements Element {
     public ElementType type() {
         return ElementType.NULL;
     }
+
+    @Override
+    public String stringValue() {
+        return "null";
+    }
 }
 
 /*

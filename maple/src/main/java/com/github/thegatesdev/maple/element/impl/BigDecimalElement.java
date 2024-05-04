@@ -64,4 +64,9 @@ public record BigDecimalElement(BigDecimal value) implements NumberElement, Elem
     public String toString() {
         return "number<" + value + "BD>";
     }
+
+    @Override
+    public String stringValue() {
+        return value.toString();
+    }
 }
