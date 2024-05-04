@@ -4,7 +4,6 @@ import com.github.thegatesdev.maple.element.*;
 
 /**
  * An element representing a boolean value.
- * This is implemented as an enum to avoid unnecessary instances.
  *
  * @author Timar Karels
  * @see ElementType#BOOL

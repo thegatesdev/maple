@@ -4,6 +4,9 @@ import com.github.thegatesdev.maple.element.*;
 
 /**
  * This exception is raised when a method expects an element to be of some type, but it is of some other type.
+ * <p>
+ * Do not catch this exception to check for invalid types.
+ * Instead, use the dedicated method for checking the type.
  *
  * @author Timar Karels
  */

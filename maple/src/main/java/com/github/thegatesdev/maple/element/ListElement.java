@@ -35,7 +35,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     }
 
     /**
-     * Get a new builder for list elements.
+     * Get a new builder for creating list elements.
      *
      * @return the new builder
      */
@@ -44,7 +44,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     }
 
     /**
-     * Get a new builder for list elements.
+     * Get a new builder for creating list elements.
      *
      * @param initialCapacity the initial capacity of the list
      * @return the new builder
@@ -85,7 +85,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
     /**
      * Get an unmodifiable view of the values in this list.
      *
-     * @return the view of the list elements
+     * @return the view of the values
      */
     List<Element> view();
 
@@ -98,6 +98,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
 
     /**
      * Move the values in this list element to a new array.
+     * Any changes to the array are not reflected in this list.
      *
      * @return An array containing the values from this list element.
      */
@@ -121,14 +122,16 @@ public sealed interface ListElement extends Element, ElementCollection permits M
 
 
     /**
-     * A builder for list elements.
+     * A builder for creating list elements.
+     * <p>
+     * The builder is NOT guaranteed to be thread safe.
      */
     sealed interface Builder permits MemoryListElement.Builder {
 
         /**
-         * Create a new list element with the values in this builder.
+         * Get a list element containing the values in this builder.
          *
-         * @return the new list element
+         * @return the list element
          */
         ListElement build();
 
@@ -190,7 +193,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
         /**
          * Get an unmodifiable view of the values in this builder.
          *
-         * @return the view of the list values
+         * @return the view of the values
          */
         List<Element> view();
     }

@@ -1,19 +1,19 @@
 package com.github.thegatesdev.maple.element;
 
 /**
- * The different types of elements that are available.
- * These all represent some value from the JSON specification.
+ * The types of elements that are available.
+ * These all represent some value in the JSON specification.
  *
  * @author Timar Karels
  */
 public enum ElementType {
     /**
-     * A dictionary, or mapping, of string keys to element values.
+     * A dictionary (also called mapping or object) of string keys to element values.
      * Equivalent of a JSON 'object'.
      */
     DICT,
     /**
-     * A sequential list, or array, of element values.
+     * A sequential list (also called array) of element values.
      * Equivalent of a JSON 'array'.
      */
     LIST,
@@ -30,14 +30,14 @@ public enum ElementType {
     /**
      * A number value.
      * Equivalent of the JSON 'number' value.
-     * Number elements can store different number representations as in the Java language.
-     * Currently present are: int, long, double and float.
+     * Number elements can store different number representations present in the Java language.
+     * Currently present are: int, long, BigInteger, double, float and BigDecimal.
      */
     NUM,
     /**
      * An unset value.
      * Equivalent of the JSON 'null' value.
-     * It is not advised to directly use this element type, it only exists to distinguish between absent and null values.
+     * It is not advised to directly use this element type, it only exists to distinguish between absent entries and null values.
      */
     NULL
 }

@@ -2,6 +2,9 @@ package com.github.thegatesdev.maple.exception;
 
 /**
  * This exception is raised when a key is used to access a value, but the key is not present.
+ * <p>
+ * Do not catch this exception to check for missing entries.
+ * Instead, use the dedicated method returning an optional value.
  *
  * @author Timar Karels
  */

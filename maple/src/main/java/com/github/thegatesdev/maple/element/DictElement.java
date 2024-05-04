@@ -26,7 +26,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     }
 
     /**
-     * Get a new builder for dictionary elements.
+     * Get a new builder for creating dictionary elements.
      *
      * @return the new builder
      */
@@ -35,7 +35,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     }
 
     /**
-     * Get a new builder for dictionary elements.
+     * Get a new builder for creating dictionary elements.
      *
      * @param initialCapacity the initial capacity of the dictionary
      * @return the new builder
@@ -69,15 +69,15 @@ public sealed interface DictElement extends Element, ElementCollection permits M
      * Find the element at the given key.
      *
      * @param key the key for the element
-     * @return an optional containing the element at the key if it is present
+     * @return an optional containing the element if it is present
      * @throws NullPointerException if the given key is null
      */
     Optional<Element> find(String key);
 
     /**
-     * Iterate the entries in this dictionary element using the given action.
+     * Perform the given action for each entry in this dictionary.
      *
-     * @param action the action to run for each mapping
+     * @param action the action to perform
      * @throws NullPointerException if the given action is null
      */
     void each(BiConsumer<String, Element> action);
@@ -85,7 +85,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     /**
      * Get an unmodifiable view of the entries in this dictionary.
      *
-     * @return the view of the dictionary elements
+     * @return the view of the entries
      */
     Map<String, Element> view();
 
@@ -114,7 +114,9 @@ public sealed interface DictElement extends Element, ElementCollection permits M
 
 
     /**
-     * A builder for dictionary elements.
+     * A builder for creating dictionary elements.
+     * <p>
+     * The builder is NOT guaranteed to be thread safe.
      */
     sealed interface Builder permits MemoryDictElement.Builder {
 
@@ -204,7 +206,7 @@ public sealed interface DictElement extends Element, ElementCollection permits M
         /**
          * Get an unmodifiable view of the entries in this builder.
          *
-         * @return the view of the dictionary entries
+         * @return the view of the entries
          */
         Map<String, Element> view();
     }

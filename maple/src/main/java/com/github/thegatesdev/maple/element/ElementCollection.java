@@ -4,25 +4,25 @@ import java.util.function.*;
 import java.util.stream.*;
 
 /**
- * An element containing a collection of child elements.
+ * An element representing a collection of child elements.
  *
  * @author Timar Karels
  */
 public sealed interface ElementCollection extends Element permits DictElement, ListElement {
 
     /**
-     * Iterate the values in this collection using the given action.
+     * Perform the given action for each value in this collection.
      *
-     * @param action the action to run for each value
+     * @param action the action to perform
      * @throws NullPointerException if the given action is null
      */
     void each(Consumer<Element> action);
 
     /**
-     * Iterate the descendants in this collection using the given action.
+     * Perform the given action for each descendant of this collection.
      * When an element collection is encountered, its values are crawled first.
      *
-     * @param action the action to run for each descendant
+     * @param action the action to perform
      * @throws NullPointerException if the given action is null
      */
     void crawl(Consumer<Element> action);
@@ -38,7 +38,7 @@ public sealed interface ElementCollection extends Element permits DictElement, L
     /**
      * Get a list element containing the values in this collection.
      * If this element is already a list element, returns the same element.
-     * <br>
+     * <p>
      * The resulting list element is cached in a thread safe manner,
      * subsequent calls will return the same object.
      *
