@@ -12,11 +12,15 @@ A clean, type safe intermediary structure in Java
 
 *Updated for version 5.0.0*
 
+*TODO: Add inspiration section*
+
+*TODO: Split into 'Usage' and 'About' sections*
+
+## Inspiration
+
 ## About
 
 *TODO: get to the point faster, save trivia for some other place*
-
-*TODO: Add inspiration section*
 
 **Maple** was originally intended as a replacement to the Spigot Configuration API,
 which allows Minecraft plugins to read data from configuration files.
