@@ -7,24 +7,22 @@ import java.math.*;
 
 public final class WriterOutput implements Output {
 
-    private final Writer writer;
-    private final char[] intermediaryBuf;
-    private final int intermediaryLen;
+    private static final int ESCAPED_STRING_BUFFER_SIZE = 200;
 
+    private final Writer writer;
+
+    private char[] escapedStringBuffer;
 
     public WriterOutput(Writer writer) {
         this.writer = writer;
-        this.intermediaryBuf = new char[200];
-        this.intermediaryLen = intermediaryBuf.length;
     }
 
 
-    private int checkAndFillIntermediary(String s) {
-        int len = s.length();
-        if (len > intermediaryLen) throw new IllegalArgumentException("string lenght > " + intermediaryLen);
-
-        s.getChars(0, len, intermediaryBuf, 0);
-        return len;
+    private char[] getEscapedStringBuffer() {
+        if (escapedStringBuffer == null) {
+            escapedStringBuffer = new char[ESCAPED_STRING_BUFFER_SIZE];
+        }
+        return escapedStringBuffer;
     }
 
 
@@ -39,12 +37,9 @@ public final class WriterOutput implements Output {
     }
 
     @Override
-    public void raw(String s) throws IOException {
-        // We do not use Writer#write(String) since that creates a new array every time
-        int len = checkAndFillIntermediary(s);
-        raw(intermediaryBuf, 0, len);
+    public void raw(String string) throws IOException {
+        writer.write(string);
     }
-
 
     @Override
     public void escaped(char[] buf, int offset, int len, Escapes escapes) throws IOException {
@@ -64,9 +59,17 @@ public final class WriterOutput implements Output {
 
     @Override
     public void escaped(String s, Escapes escapes) throws IOException {
-        // We do not use Writer#write(String) since that creates a new array every time
-        int len = checkAndFillIntermediary(s);
-        escaped(intermediaryBuf, 0, len, escapes);
+        char[] buf = getEscapedStringBuffer();
+        int max = buf.length;
+        int len = s.length();
+        int index = 0;
+
+        while (index < len) {
+            int count = Math.min(len - index, max);
+            s.getChars(index, index + count, buf, 0);
+            escaped(buf, 0, count, escapes);
+            index += count;
+        }
     }
 
 
