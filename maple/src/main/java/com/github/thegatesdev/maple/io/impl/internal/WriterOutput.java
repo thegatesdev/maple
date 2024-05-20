@@ -4,6 +4,7 @@ import com.github.thegatesdev.maple.io.*;
 
 import java.io.*;
 import java.math.*;
+import java.util.*;
 
 public final class WriterOutput implements Output {
 
@@ -13,8 +14,14 @@ public final class WriterOutput implements Output {
 
     private char[] escapedStringBuffer;
 
-    public WriterOutput(Writer writer) {
+    WriterOutput(Writer writer) {
         this.writer = writer;
+    }
+
+    public static WriterOutput from(Writer writer) {
+        Objects.requireNonNull(writer, "given writer is null");
+
+        return new WriterOutput(writer);
     }
 
 

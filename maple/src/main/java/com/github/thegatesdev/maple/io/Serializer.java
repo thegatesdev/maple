@@ -7,6 +7,18 @@ import java.math.*;
 
 public sealed interface Serializer permits JsonSerializer {
 
+
+    /**
+     * Get a serializer for json output.
+     *
+     * @param output the output to write to
+     * @return a json serializer with the given parameters
+     */
+    static Serializer json(Output output) {
+        return JsonSerializer.from(output);
+    }
+
+
     void openObject() throws IOException;
 
     void closeObject() throws IOException;
