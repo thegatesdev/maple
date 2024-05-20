@@ -39,8 +39,8 @@ public final class ScopeStack {
     }
 
     private void setScope(int index, boolean scope) {
-        if (scope) scopes.set(stackIndex);
-        else scopes.clear(stackIndex);
+        if (scope) scopes.set(index);
+        else scopes.clear(index);
     }
 
 
