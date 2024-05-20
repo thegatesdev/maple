@@ -1,9 +1,23 @@
 package com.github.thegatesdev.maple.io;
 
+import com.github.thegatesdev.maple.io.impl.internal.*;
+
 import java.io.*;
 import java.math.*;
 
 public interface Output {
+
+
+    /**
+     * Get an output using a writer
+     *
+     * @param writer the writer to use
+     * @return a writer output with the given parameters
+     */
+    static Output writer(Writer writer) {
+        return WriterOutput.from(writer);
+    }
+
 
     void raw(int ch) throws IOException;
 

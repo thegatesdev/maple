@@ -1,18 +1,27 @@
 package com.github.thegatesdev.maple.io.impl.internal;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.io.*;
 import com.github.thegatesdev.maple.io.util.*;
 
 import java.io.*;
 import java.math.*;
+import java.util.*;
 
+@ValueClassCandidate
 public final class JsonSerializer implements Serializer, Escapes {
 
     private final Output output;
     private final ScopeStack scope = new ScopeStack();
 
-    public JsonSerializer(Output output) {
+    JsonSerializer(Output output) {
         this.output = output;
+    }
+
+    public static JsonSerializer from(Output output) {
+        Objects.requireNonNull(output, "given output is null");
+
+        return new JsonSerializer(output);
     }
 
 
