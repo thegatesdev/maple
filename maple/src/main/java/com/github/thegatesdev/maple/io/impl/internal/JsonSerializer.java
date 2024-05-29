@@ -9,19 +9,22 @@ import java.math.*;
 import java.util.*;
 
 @ValueClassCandidate
-public final class JsonSerializer implements Serializer, Escapes {
+public final class JsonSerializer implements Serializer {
 
     private final Output output;
+    private final Escapes escapes;
     private final ScopeStack scope = new ScopeStack();
 
-    JsonSerializer(Output output) {
+    JsonSerializer(Output output, Escapes escapes) {
         this.output = output;
+        this.escapes = escapes;
     }
 
-    public static JsonSerializer from(Output output) {
+    public static JsonSerializer from(Output output, Escapes escapes) {
         Objects.requireNonNull(output, "given output is null");
+        Objects.requireNonNull(output, "given escapes is null");
 
-        return new JsonSerializer(output);
+        return new JsonSerializer(output, escapes);
     }
 
 
@@ -85,7 +88,7 @@ public final class JsonSerializer implements Serializer, Escapes {
                 break;
         }
         output.raw('"');
-        output.escaped(name, this);
+        output.escaped(name, escapes);
         output.raw('"');
     }
 
@@ -93,7 +96,7 @@ public final class JsonSerializer implements Serializer, Escapes {
     public void value(String value) throws IOException {
         verifyValueWrite();
         output.raw('"');
-        output.escaped(value, this);
+        output.escaped(value, escapes);
         output.raw('"');
     }
 
@@ -143,25 +146,5 @@ public final class JsonSerializer implements Serializer, Escapes {
     public void nullValue() throws IOException {
         verifyValueWrite();
         output.nullValue();
-    }
-
-
-    @Override
-    public int escapeLimit() {
-        return '\\';
-    }
-
-    @Override
-    public void writeEscaped(Output output, char ch) throws IOException {
-        switch (ch) {
-            case '"':
-                output.raw('\\');
-                output.raw(ch);
-                break;
-            case '\\':
-                output.raw('\\');
-                output.raw('\\');
-                break;
-        }
     }
 }
