@@ -8,28 +8,18 @@ import java.util.*;
 
 public final class WriterOutput implements Output {
 
-    private static final int ESCAPED_STRING_BUFFER_SIZE = 200;
-
     private final Writer writer;
-
-    private char[] escapedStringBuffer;
+    private final char[] escapedStringBuffer = new char[200];
 
     WriterOutput(Writer writer) {
         this.writer = writer;
     }
 
+
     public static WriterOutput from(Writer writer) {
         Objects.requireNonNull(writer, "given writer is null");
 
         return new WriterOutput(writer);
-    }
-
-
-    private char[] getEscapedStringBuffer() {
-        if (escapedStringBuffer == null) {
-            escapedStringBuffer = new char[ESCAPED_STRING_BUFFER_SIZE];
-        }
-        return escapedStringBuffer;
     }
 
 
@@ -66,15 +56,14 @@ public final class WriterOutput implements Output {
 
     @Override
     public void escaped(String s, Escapes escapes) throws IOException {
-        char[] buf = getEscapedStringBuffer();
-        int max = buf.length;
+        int max = escapedStringBuffer.length;
         int len = s.length();
         int index = 0;
 
         while (index < len) {
             int count = Math.min(len - index, max);
-            s.getChars(index, index + count, buf, 0);
-            escaped(buf, 0, count, escapes);
+            s.getChars(index, index + count, escapedStringBuffer, 0);
+            escaped(escapedStringBuffer, 0, count, escapes);
             index += count;
         }
     }
@@ -82,18 +71,7 @@ public final class WriterOutput implements Output {
 
     @Override
     public void value(boolean b) throws IOException {
-        if (b) {
-            raw('t');
-            raw('r');
-            raw('u');
-            raw('e');
-        } else {
-            raw('f');
-            raw('a');
-            raw('l');
-            raw('s');
-            raw('e');
-        }
+        raw(b ? "true" : "false");
     }
 
     @Override
@@ -133,9 +111,6 @@ public final class WriterOutput implements Output {
 
     @Override
     public void nullValue() throws IOException {
-        raw('n');
-        raw('u');
-        raw('l');
-        raw('l');
+        raw("null");
     }
 }
