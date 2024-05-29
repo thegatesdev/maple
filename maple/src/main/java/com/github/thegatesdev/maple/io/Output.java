@@ -9,7 +9,7 @@ public interface Output {
 
 
     /**
-     * Get an output using a writer
+     * Get an output that uses a writer.
      *
      * @param writer the writer to use
      * @return a writer output with the given parameters
