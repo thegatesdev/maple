@@ -11,11 +11,12 @@ public sealed interface Serializer permits JsonSerializer {
     /**
      * Get a serializer for json output.
      *
-     * @param output the output to write to
+     * @param output  the output to write to
+     * @param escapes the escaping to use
      * @return a json serializer with the given parameters
      */
-    static Serializer json(Output output) {
-        return JsonSerializer.from(output);
+    static Serializer json(Output output, Escapes escapes) {
+        return JsonSerializer.from(output, escapes);
     }
 
 
