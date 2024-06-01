@@ -23,46 +23,45 @@ public final class WriterOutput implements Output {
     }
 
 
-    @Override
-    public void raw(int ch) throws IOException {
-        writer.write(ch);
+    public void raw(char[] buffer, int offset, int lenght) throws IOException {
+        writer.write(buffer, offset, lenght);
     }
 
-    @Override
-    public void raw(char[] buf, int offset, int len) throws IOException {
-        writer.write(buf, offset, len);
-    }
-
-    @Override
-    public void raw(String string) throws IOException {
-        writer.write(string);
-    }
-
-    @Override
-    public void escaped(char[] buf, int offset, int len, Escapes escapes) throws IOException {
+    public void escaped(char[] buffer, int offset, int lenght, Escapes escapes) throws IOException {
         int escapeLimit = escapes.escapeLimit();
         int head = offset;
-        for (int i = head; i < len; i++) {
-            char c = buf[i];
+        for (int i = head; i < lenght; i++) {
+            char c = buffer[i];
             if (c > escapeLimit) continue;
 
-            raw(buf, head, i - head);
+            raw(buffer, head, i - head);
             head = i + 1;
 
             escapes.writeEscaped(this, c);
         }
-        if (head < len) raw(buf, head, len - head);
+        if (head < lenght) raw(buffer, head, lenght - head);
+    }
+
+
+    @Override
+    public void raw(int character) throws IOException {
+        writer.write(character);
     }
 
     @Override
-    public void escaped(String s, Escapes escapes) throws IOException {
+    public void raw(String value) throws IOException {
+        writer.write(value);
+    }
+
+    @Override
+    public void escaped(String value, Escapes escapes) throws IOException {
         int max = escapedStringBuffer.length;
-        int len = s.length();
+        int len = value.length();
         int index = 0;
 
         while (index < len) {
             int count = Math.min(len - index, max);
-            s.getChars(index, index + count, escapedStringBuffer, 0);
+            value.getChars(index, index + count, escapedStringBuffer, 0);
             escaped(escapedStringBuffer, 0, count, escapes);
             index += count;
         }
@@ -70,43 +69,43 @@ public final class WriterOutput implements Output {
 
 
     @Override
-    public void value(boolean b) throws IOException {
-        raw(b ? "true" : "false");
+    public void value(boolean value) throws IOException {
+        raw(value ? "true" : "false");
     }
 
     @Override
-    public void value(short i) throws IOException {
-        raw(Integer.toString(i));
+    public void value(short value) throws IOException {
+        raw(Integer.toString(value));
     }
 
     @Override
-    public void value(int i) throws IOException {
-        raw(Integer.toString(i));
+    public void value(int value) throws IOException {
+        raw(Integer.toString(value));
     }
 
     @Override
-    public void value(long l) throws IOException {
-        raw(Long.toString(l));
+    public void value(long value) throws IOException {
+        raw(Long.toString(value));
     }
 
     @Override
-    public void value(float f) throws IOException {
-        raw(Float.toString(f));
+    public void value(float value) throws IOException {
+        raw(Float.toString(value));
     }
 
     @Override
-    public void value(double d) throws IOException {
-        raw(Double.toString(d));
+    public void value(double value) throws IOException {
+        raw(Double.toString(value));
     }
 
     @Override
-    public void value(BigInteger bI) throws IOException {
-        raw(bI.toString(10));
+    public void value(BigInteger value) throws IOException {
+        raw(value.toString(10));
     }
 
     @Override
-    public void value(BigDecimal bD) throws IOException {
-        raw(bD.toString());
+    public void value(BigDecimal value) throws IOException {
+        raw(value.toString());
     }
 
     @Override
