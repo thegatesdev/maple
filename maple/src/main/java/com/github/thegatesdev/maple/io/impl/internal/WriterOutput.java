@@ -23,23 +23,29 @@ public final class WriterOutput implements Output {
     }
 
 
-    public void raw(char[] buffer, int offset, int lenght) throws IOException {
+    private void raw(char[] buffer, int offset, int lenght) throws IOException {
         writer.write(buffer, offset, lenght);
     }
 
-    public void escaped(char[] buffer, int offset, int lenght, Escapes escapes) throws IOException {
+    private void escaped(char[] buffer, int lenght, Escapes escapes) throws IOException {
         int escapeLimit = escapes.escapeLimit();
-        int head = offset;
+        int head = 0;
         for (int i = head; i < lenght; i++) {
             char c = buffer[i];
-            if (c > escapeLimit) continue;
+            if (c <= escapeLimit) {
+                // Found something we need to escape
+                // First, write out the characters we skipped
+                raw(buffer, head, i - head);
+                // Write the character with proper escaping
+                escapes.writeEscaped(this, c);
 
-            raw(buffer, head, i - head);
-            head = i + 1;
-
-            escapes.writeEscaped(this, c);
+                head = i + 1;
+            }
         }
-        if (head < lenght) raw(buffer, head, lenght - head);
+        if (head < lenght) {
+            // Write the leftover data after the last escaped character
+            raw(buffer, head, lenght - head);
+        }
     }
 
 
@@ -59,10 +65,13 @@ public final class WriterOutput implements Output {
         int len = value.length();
         int index = 0;
 
+        // The string can be any size, copy parts to a buffer and write from that
         while (index < len) {
             int count = Math.min(len - index, max);
+
             value.getChars(index, index + count, escapedStringBuffer, 0);
-            escaped(escapedStringBuffer, 0, count, escapes);
+            escaped(escapedStringBuffer, count, escapes);
+
             index += count;
         }
     }
