@@ -23,28 +23,24 @@ public final class WriterOutput implements Output {
     }
 
 
-    private void raw(char[] buffer, int offset, int lenght) throws IOException {
-        writer.write(buffer, offset, lenght);
-    }
-
     private void escaped(char[] buffer, int lenght, Escapes escapes) throws IOException {
         int escapeLimit = escapes.escapeLimit();
         int head = 0;
         for (int i = head; i < lenght; i++) {
-            char c = buffer[i];
-            if (c <= escapeLimit) {
+            char currentChar = buffer[i];
+            if (currentChar <= escapeLimit) {
                 // Found something we need to escape
                 // First, write out the characters we skipped
-                raw(buffer, head, i - head);
+                writer.write(buffer, head, i - head);
                 // Write the character with proper escaping
-                escapes.writeEscaped(this, c);
+                escapes.writeEscaped(this, currentChar);
 
                 head = i + 1;
             }
         }
         if (head < lenght) {
             // Write the leftover data after the last escaped character
-            raw(buffer, head, lenght - head);
+            writer.write(buffer, head, lenght - head);
         }
     }
 
