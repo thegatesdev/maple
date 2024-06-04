@@ -26,6 +26,11 @@ public interface Output {
     void escaped(String value, Escapes escapes) throws IOException;
 
 
+    void raw(char[] buffer, int offset, int count) throws IOException;
+
+    void escaped(char[] buffer, int offset, int count, Escapes escapes) throws IOException;
+
+
     void value(boolean value) throws IOException;
 
     void value(short value) throws IOException;
