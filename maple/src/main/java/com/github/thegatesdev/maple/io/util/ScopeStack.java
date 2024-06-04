@@ -50,6 +50,7 @@ public final class ScopeStack {
 
         currentScopeID = toId(scope);
         hasEntry = false; // New scope, is empty
+        hasName = false;
     }
 
     private void pop() {
@@ -60,6 +61,7 @@ public final class ScopeStack {
             currentScopeID = SCOPE_ROOT;
         }
         hasEntry = true; // Has at least 1 entry, since we just popped out of that one
+        hasName = false;
     }
 
     private byte toId(boolean scope) {
@@ -111,7 +113,7 @@ public final class ScopeStack {
                 if (!hasName) yield STATUS_EXPECT_NAME;
                 hasName = false; // Wrote value, new entry requires name again
                 hasEntry = true;
-                yield STATUS_NEEDS_VALUE_SEPARATOR;
+                yield STATUS_NEEDS_NAME_SEPARATOR;
             case SCOPE_ARRAY:
                 if (hasEntry) yield STATUS_NEEDS_VALUE_SEPARATOR;
                 hasEntry = true;
