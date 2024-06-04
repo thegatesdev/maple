@@ -6,18 +6,33 @@ import java.io.*;
 
 public final class JsonEscapes implements Escapes {
 
-    private static final String[] HEX_ESCAPES;
+    private static final char HIGHEST_HEX_CHAR = 0x1f;
+    private static final char HIGHEST_ESCAPED_CHAR = '\\';
 
-    static {
-        HEX_ESCAPES = new String[32]; // TODO make method
-        for (int i = 0; i <= 0x1f; i++) {
-            HEX_ESCAPES[i] = String.format("\\u%04x", i);
+    private static final char[] HEX_ESCAPES = buildHexEscapes();
+    private static final char[] HEX_ESCAPE_BUFFER = new char[]{
+        '\\', 'u', '0', '0', 0, 0
+    };
+
+
+    private static char[] buildHexEscapes() {
+        var escapes = new char[(HIGHEST_HEX_CHAR + 1) * 2];
+        for (int i = 0; i < escapes.length; i += 2) {
+            int lo = i & 0xFF;
+            escapes[i] = (char) (lo >> 4);
+            escapes[i + 1] = (char) (lo & 0xF);
         }
+        return escapes;
     }
 
+    private static int hexEscapeIndex(char ch) {
+        return ch * 2;
+    }
+
+
     @Override
-    public int escapeLimit() {
-        return 92; // TODO make magic values named constants
+    public boolean shouldEscape(char ch) {
+        return ch <= HIGHEST_ESCAPED_CHAR;
     }
 
     @Override
@@ -40,8 +55,11 @@ public final class JsonEscapes implements Escapes {
                 output.raw('\u2029');
             }
             default -> {
-                if (ch <= 0x1f) {
-                    output.raw(HEX_ESCAPES[ch]);
+                if (ch <= HIGHEST_HEX_CHAR) {
+                    int index = hexEscapeIndex(ch);
+                    HEX_ESCAPE_BUFFER[4] = HEX_ESCAPES[index];
+                    HEX_ESCAPE_BUFFER[5] = HEX_ESCAPES[index + 1];
+                    output.raw(HEX_ESCAPE_BUFFER, 6, 0);
                 }
             }
         }
