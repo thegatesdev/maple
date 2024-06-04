@@ -23,28 +23,6 @@ public final class WriterOutput implements Output {
     }
 
 
-    private void escaped(char[] buffer, int lenght, Escapes escapes) throws IOException {
-        int escapeLimit = escapes.escapeLimit();
-        int head = 0;
-        for (int i = head; i < lenght; i++) {
-            char currentChar = buffer[i];
-            if (currentChar <= escapeLimit) {
-                // Found something we need to escape
-                // First, write out the characters we skipped
-                writer.write(buffer, head, i - head);
-                // Write the character with proper escaping
-                escapes.writeEscaped(this, currentChar);
-
-                head = i + 1;
-            }
-        }
-        if (head < lenght) {
-            // Write the leftover data after the last escaped character
-            writer.write(buffer, head, lenght - head);
-        }
-    }
-
-
     @Override
     public void raw(int character) throws IOException {
         writer.write(character);
@@ -66,9 +44,35 @@ public final class WriterOutput implements Output {
             int count = Math.min(len - index, max);
 
             value.getChars(index, index + count, escapedStringBuffer, 0);
-            escaped(escapedStringBuffer, count, escapes);
+            escaped(escapedStringBuffer, 0, count, escapes);
 
             index += count;
+        }
+    }
+
+
+    @Override
+    public void raw(char[] buffer, int offset, int length) throws IOException {
+        writer.write(buffer, offset, length);
+    }
+
+    public void escaped(char[] buffer, int offset, int lenght, Escapes escapes) throws IOException {
+        int head = offset;
+        for (int i = head; i < lenght; i++) {
+            char currentChar = buffer[i];
+            if (escapes.shouldEscape(currentChar)) {
+                // Found something we need to escape
+                // First, write out the characters we skipped
+                writer.write(buffer, head, i - head);
+                // Write the character with proper escaping
+                escapes.writeEscaped(this, currentChar);
+
+                head = i + 1;
+            }
+        }
+        if (head < lenght) {
+            // Write the leftover data after the last escaped character
+            writer.write(buffer, head, lenght - head);
         }
     }
 
