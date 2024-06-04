@@ -60,7 +60,7 @@ public final class WriterOutput implements Output {
         int head = offset;
         for (int i = head; i < lenght; i++) {
             char currentChar = buffer[i];
-            if (escapes.shouldEscape(currentChar)) {
+            if (escapes.couldEscape(currentChar)) {
                 // Found something we need to escape
                 // First, write out the characters we skipped
                 writer.write(buffer, head, i - head);
