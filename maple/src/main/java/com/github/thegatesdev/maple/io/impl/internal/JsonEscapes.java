@@ -9,6 +9,7 @@ public final class JsonEscapes implements Escapes {
     private static final char HIGHEST_HEX_CHAR = 0x1f;
     private static final char HIGHEST_ESCAPED_CHAR = '\\';
 
+    private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
     private static final char[] HEX_ESCAPES = buildHexEscapes();
     private static final char[] HEX_ESCAPE_BUFFER = new char[]{
         '\\', 'u', '0', '0', 0, 0
@@ -18,9 +19,8 @@ public final class JsonEscapes implements Escapes {
     private static char[] buildHexEscapes() {
         var escapes = new char[(HIGHEST_HEX_CHAR + 1) * 2];
         for (int i = 0; i < escapes.length; i += 2) {
-            int lo = i & 0xFF;
-            escapes[i] = (char) (lo >> 4);
-            escapes[i + 1] = (char) (lo & 0xF);
+            escapes[i] = HEX_CHARS[i >> 4];
+            escapes[i + 1] = HEX_CHARS[i & 0xF];
         }
         return escapes;
     }
