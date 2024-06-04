@@ -59,7 +59,7 @@ public final class JsonEscapes implements Escapes {
                     int index = hexEscapeIndex(ch);
                     HEX_ESCAPE_BUFFER[4] = HEX_ESCAPES[index];
                     HEX_ESCAPE_BUFFER[5] = HEX_ESCAPES[index + 1];
-                    output.raw(HEX_ESCAPE_BUFFER, 6, 0);
+                    output.raw(HEX_ESCAPE_BUFFER, 0, 6);
                 } else {
                     output.raw(ch);
                 }
