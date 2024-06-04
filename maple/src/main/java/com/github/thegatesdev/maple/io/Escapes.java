@@ -4,7 +4,7 @@ import java.io.*;
 
 public interface Escapes {
 
-    int escapeLimit();
+    boolean shouldEscape(char ch);
 
     void writeEscaped(Output output, char ch) throws IOException;
 }
