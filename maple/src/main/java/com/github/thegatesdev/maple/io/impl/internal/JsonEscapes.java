@@ -31,7 +31,7 @@ public final class JsonEscapes implements Escapes {
 
 
     @Override
-    public boolean shouldEscape(char ch) {
+    public boolean couldEscape(char ch) {
         return ch <= HIGHEST_ESCAPED_CHAR;
     }
 
@@ -60,6 +60,8 @@ public final class JsonEscapes implements Escapes {
                     HEX_ESCAPE_BUFFER[4] = HEX_ESCAPES[index];
                     HEX_ESCAPE_BUFFER[5] = HEX_ESCAPES[index + 1];
                     output.raw(HEX_ESCAPE_BUFFER, 6, 0);
+                } else {
+                    output.raw(ch);
                 }
             }
         }

@@ -12,7 +12,7 @@ public interface Escapes {
     }
 
 
-    boolean shouldEscape(char ch);
+    boolean couldEscape(char ch);
 
     void writeEscaped(Output output, char ch) throws IOException;
 }
