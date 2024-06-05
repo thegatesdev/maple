@@ -8,7 +8,7 @@ public interface Escapes {
 
 
     static Escapes json() {
-        return new JsonEscapes();
+        return JsonEscapes.create();
     }
 
 

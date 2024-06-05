@@ -27,6 +27,14 @@ public final class JsonEscapes implements Escapes {
     };
 
 
+    JsonEscapes() {
+    }
+    
+    public static JsonEscapes create() {
+        return new JsonEscapes();
+    }
+
+
     @Override
     public boolean couldEscape(char ch) {
         return ch <= HIGHEST_ESCAPED_CHAR;
