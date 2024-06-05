@@ -65,7 +65,10 @@ public final class WriterOutput implements Output {
                 // First, write out the characters we skipped
                 writer.write(buffer, head, i - head);
                 // Write the character with proper escaping
-                escapes.writeEscaped(this, currentChar);
+                if (!escapes.writeEscaped(this, currentChar)) {
+                    // Character did not need to be escaped...
+                    writer.write(currentChar);
+                }
 
                 head = i + 1;
             }
