@@ -14,5 +14,5 @@ public interface Escapes {
 
     boolean couldEscape(char ch);
 
-    void writeEscaped(Output output, char ch) throws IOException;
+    boolean writeEscaped(Output output, char ch) throws IOException;
 }

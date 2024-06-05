@@ -6,28 +6,25 @@ import java.io.*;
 
 public final class JsonEscapes implements Escapes {
 
-    private static final char HIGHEST_HEX_CHAR = 0x1f;
     private static final char HIGHEST_ESCAPED_CHAR = '\\';
 
-    private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
+    private static final char HIGHEST_HEX_CHAR = 0x1f;
     private static final char[] HEX_ESCAPES = buildHexEscapes();
-    private static final char[] HEX_ESCAPE_BUFFER = new char[]{
-        '\\', 'u', '0', '0', 0, 0
-    };
-
 
     private static char[] buildHexEscapes() {
-        var escapes = new char[(HIGHEST_HEX_CHAR + 1) * 2];
+        char[] hexChars = "0123456789ABCDEF".toCharArray();
+        char[] escapes = new char[(HIGHEST_HEX_CHAR + 1) * 2];
         for (int i = 0; i < escapes.length; i += 2) {
-            escapes[i] = HEX_CHARS[i >> 4];
-            escapes[i + 1] = HEX_CHARS[i & 0xF];
+            escapes[i] = hexChars[i >> 4];
+            escapes[i + 1] = hexChars[i & 0xF];
         }
         return escapes;
     }
 
-    private static int hexEscapeIndex(char ch) {
-        return ch * 2;
-    }
+
+    private final char[] hexEscapeBuffer = new char[]{
+        '\\', 'u', '0', '0', 0, 0
+    };
 
 
     @Override
@@ -36,34 +33,25 @@ public final class JsonEscapes implements Escapes {
     }
 
     @Override
-    public void writeEscaped(Output output, char ch) throws IOException {
-        switch (ch) {
-            case '\\' -> {
-                output.raw('\\');
-                output.raw('\\');
-            }
-            case '\"' -> {
-                output.raw('\\');
-                output.raw('\"');
-            }
-            case '\u2028' -> { // Javascript failures, TODO make a setting
-                output.raw('\\');
-                output.raw('\u2028');
-            }
-            case '\u2029' -> {
-                output.raw('\\');
-                output.raw('\u2029');
-            }
-            default -> {
-                if (ch <= HIGHEST_HEX_CHAR) {
-                    int index = hexEscapeIndex(ch);
-                    HEX_ESCAPE_BUFFER[4] = HEX_ESCAPES[index];
-                    HEX_ESCAPE_BUFFER[5] = HEX_ESCAPES[index + 1];
-                    output.raw(HEX_ESCAPE_BUFFER, 0, 6);
-                } else {
+    public boolean writeEscaped(Output output, char ch) throws IOException {
+        if (ch <= HIGHEST_HEX_CHAR) {
+            // 6 character escape
+            int index = ch * 2;
+            hexEscapeBuffer[4] = HEX_ESCAPES[index];
+            hexEscapeBuffer[5] = HEX_ESCAPES[index + 1];
+            output.raw(hexEscapeBuffer, 0, 6);
+            return true;
+        } else {
+            // 2 character escape
+            switch (ch) {
+                case '\u2028', '\u2029': // Javascript failures, TODO make a setting
+                case '\\', '\"':
+                    output.raw('\\');
                     output.raw(ch);
-                }
+                    return true;
             }
+            // Character should not be escaped, it just made it through chouldEscape
+            return false;
         }
     }
 }
