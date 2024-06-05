@@ -1,34 +1,14 @@
 package com.github.thegatesdev.maple.io.impl.internal;
 
 import com.github.thegatesdev.maple.io.*;
+import com.github.thegatesdev.maple.io.util.*;
 
 import java.io.*;
 
 public final class JsonEscapes implements Escapes {
 
-    private static final char HIGHEST_HEX_CHAR = 0x1f;
     private static final char HIGHEST_ESCAPED_CHAR = '\\';
-
-    private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
-    private static final char[] HEX_ESCAPES = buildHexEscapes();
-    private static final char[] HEX_ESCAPE_BUFFER = new char[]{
-        '\\', 'u', '0', '0', 0, 0
-    };
-
-
-    private static char[] buildHexEscapes() {
-        var escapes = new char[(HIGHEST_HEX_CHAR + 1) * 2];
-        for (int i = 0; i < escapes.length; i += 2) {
-            escapes[i] = HEX_CHARS[i >> 4];
-            escapes[i + 1] = HEX_CHARS[i & 0xF];
-        }
-        return escapes;
-    }
-
-    private static int hexEscapeIndex(char ch) {
-        return ch * 2;
-    }
-
+    private final char[] hexEscapeBuffer = HexEscaping.copyHexBuffer();
 
     @Override
     public boolean couldEscape(char ch) {
@@ -54,16 +34,7 @@ public final class JsonEscapes implements Escapes {
                 output.raw('\\');
                 output.raw('\u2029');
             }
-            default -> {
-                if (ch <= HIGHEST_HEX_CHAR) {
-                    int index = hexEscapeIndex(ch);
-                    HEX_ESCAPE_BUFFER[4] = HEX_ESCAPES[index];
-                    HEX_ESCAPE_BUFFER[5] = HEX_ESCAPES[index + 1];
-                    output.raw(HEX_ESCAPE_BUFFER, 0, 6);
-                } else {
-                    output.raw(ch);
-                }
-            }
+            default -> HexEscaping.writeHexOrSingle(ch, hexEscapeBuffer, output);
         }
     }
 }
