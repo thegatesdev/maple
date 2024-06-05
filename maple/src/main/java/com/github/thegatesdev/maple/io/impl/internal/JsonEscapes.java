@@ -29,7 +29,7 @@ public final class JsonEscapes implements Escapes {
 
     JsonEscapes() {
     }
-    
+
     public static JsonEscapes create() {
         return new JsonEscapes();
     }

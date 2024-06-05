@@ -20,7 +20,7 @@ public final class JsonSerializer implements Serializer {
         this.escapes = escapes;
     }
 
-    public static JsonSerializer from(Output output, Escapes escapes) {
+    public static JsonSerializer of(Output output, Escapes escapes) {
         Objects.requireNonNull(output, "given output is null");
         Objects.requireNonNull(output, "given escapes is null");
 
