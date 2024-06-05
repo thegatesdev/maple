@@ -15,7 +15,7 @@ public interface Output {
      * @return a writer output with the given parameters
      */
     static Output writer(Writer writer) {
-        return WriterOutput.from(writer);
+        return WriterOutput.of(writer);
     }
 
 

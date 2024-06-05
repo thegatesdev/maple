@@ -15,8 +15,7 @@ public final class WriterOutput implements Output {
         this.writer = writer;
     }
 
-
-    public static WriterOutput from(Writer writer) {
+    public static WriterOutput of(Writer writer) {
         Objects.requireNonNull(writer, "given writer is null");
 
         return new WriterOutput(writer);

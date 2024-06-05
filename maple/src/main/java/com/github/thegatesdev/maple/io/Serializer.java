@@ -16,7 +16,7 @@ public sealed interface Serializer permits JsonSerializer {
      * @return a json serializer with the given parameters
      */
     static Serializer json(Output output, Escapes escapes) {
-        return JsonSerializer.from(output, escapes);
+        return JsonSerializer.of(output, escapes);
     }
 
 
