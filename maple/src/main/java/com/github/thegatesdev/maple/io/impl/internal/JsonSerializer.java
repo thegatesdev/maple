@@ -1,6 +1,7 @@
 package com.github.thegatesdev.maple.io.impl.internal;
 
 import com.github.thegatesdev.maple.annotation.internal.*;
+import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.io.*;
 import com.github.thegatesdev.maple.io.util.*;
 
@@ -90,6 +91,11 @@ public final class JsonSerializer implements Serializer {
         output.raw('"');
         output.escaped(name, escapes);
         output.raw('"');
+    }
+
+    @Override
+    public void value(Element element) throws IOException {
+        element.writeTo(this);
     }
 
     @Override

@@ -3,7 +3,9 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
+import com.github.thegatesdev.maple.io.*;
 
+import java.io.*;
 import java.math.*;
 import java.util.*;
 
@@ -27,6 +29,12 @@ public record BigDecimalElement(BigDecimal value) implements NumberElement, Elem
 
         if (value.signum() == 0) return IntElement.ZERO;
         return new BigDecimalElement(value);
+    }
+
+
+    @Override
+    public void writeTo(Serializer serializer) throws IOException {
+        serializer.value(value);
     }
 
 

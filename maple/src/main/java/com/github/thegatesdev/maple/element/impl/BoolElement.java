@@ -1,6 +1,9 @@
 package com.github.thegatesdev.maple.element.impl;
 
 import com.github.thegatesdev.maple.element.*;
+import com.github.thegatesdev.maple.io.*;
+
+import java.io.*;
 
 /**
  * An element representing a boolean value.
@@ -16,6 +19,12 @@ public enum BoolElement implements Element {
      */
     public static Element of(boolean value) {
         return value ? TRUE : FALSE;
+    }
+
+
+    @Override
+    public void writeTo(Serializer serializer) throws IOException {
+        serializer.value(getBool());
     }
 
 

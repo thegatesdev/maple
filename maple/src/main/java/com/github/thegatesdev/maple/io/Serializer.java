@@ -1,5 +1,6 @@
 package com.github.thegatesdev.maple.io;
 
+import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.io.impl.internal.*;
 
 import java.io.*;
@@ -30,6 +31,8 @@ public sealed interface Serializer permits JsonSerializer {
 
 
     void name(String name) throws IOException;
+
+    void value(Element element) throws IOException;
 
     void value(String value) throws IOException;
 

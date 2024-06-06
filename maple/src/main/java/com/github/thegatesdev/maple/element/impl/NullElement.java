@@ -1,6 +1,9 @@
 package com.github.thegatesdev.maple.element.impl;
 
 import com.github.thegatesdev.maple.element.*;
+import com.github.thegatesdev.maple.io.*;
+
+import java.io.*;
 
 /**
  * An element representing an unset or 'null' value.
@@ -10,6 +13,12 @@ import com.github.thegatesdev.maple.element.*;
  */
 public enum NullElement implements Element {
     INSTANCE; // I started to really love enums for its unintended use-cases while making this.
+
+
+    @Override
+    public void writeTo(Serializer serializer) throws IOException {
+        serializer.nullValue();
+    }
 
 
     @Override
