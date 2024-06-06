@@ -3,6 +3,9 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
+import com.github.thegatesdev.maple.io.*;
+
+import java.io.*;
 
 /**
  * An element representing a long value.
@@ -22,6 +25,12 @@ public record LongElement(long value) implements Element, NumberElement {
     public static Element of(long value) {
         if (value == 0L) return IntElement.ZERO;
         return new LongElement(value);
+    }
+
+
+    @Override
+    public void writeTo(Serializer serializer) throws IOException {
+        serializer.value(value);
     }
 
 

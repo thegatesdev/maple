@@ -3,7 +3,9 @@ package com.github.thegatesdev.maple.element.impl.internal;
 import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.exception.*;
+import com.github.thegatesdev.maple.io.*;
 
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 import java.util.function.*;
@@ -118,6 +120,16 @@ public final class MemoryDictElement implements DictElement {
         return entries.size();
     }
 
+
+    @Override
+    public void writeTo(Serializer serializer) throws IOException {
+        serializer.openObject();
+        for (var entry : entries.entrySet()) {
+            serializer.name(entry.getKey());
+            serializer.value(entry.getValue());
+        }
+        serializer.closeObject();
+    }
 
     @Override
     public String toString() {

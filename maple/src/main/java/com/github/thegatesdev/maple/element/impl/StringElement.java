@@ -2,7 +2,9 @@ package com.github.thegatesdev.maple.element.impl;
 
 import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
+import com.github.thegatesdev.maple.io.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -20,6 +22,12 @@ public record StringElement(String value) implements Element {
      */
     public StringElement {
         Objects.requireNonNull(value, "given string is null");
+    }
+
+
+    @Override
+    public void writeTo(Serializer serializer) throws IOException {
+        serializer.value(value);
     }
 
 

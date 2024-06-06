@@ -3,7 +3,9 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
+import com.github.thegatesdev.maple.io.*;
 
+import java.io.*;
 import java.math.*;
 
 /**
@@ -30,6 +32,12 @@ public record IntElement(int value) implements Element, NumberElement {
     public static Element of(int value) {
         if (value == 0) return ZERO;
         return new IntElement(value);
+    }
+
+
+    @Override
+    public void writeTo(Serializer serializer) throws IOException {
+        serializer.value(value);
     }
 
 
