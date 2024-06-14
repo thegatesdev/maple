@@ -46,6 +46,31 @@ public sealed interface DictElement extends Element, ElementCollection permits M
     }
 
     /**
+     * Build a new dictionary element by applying the given action to a new builder.
+     *
+     * @param action the builder action
+     * @return the built element
+     */
+    static DictElement build(Consumer<DictElement.Builder> action) {
+        DictElement.Builder builder = builder();
+        action.accept(builder);
+        return builder.build();
+    }
+
+    /**
+     * Build a new dictionary element by applying the given action to a new builder.
+     *
+     * @param action          the builder action
+     * @param initialCapacity the initial capacity of the dictionary
+     * @return the built element
+     */
+    static DictElement build(int initialCapacity, Consumer<DictElement.Builder> action) {
+        DictElement.Builder builder = builder(initialCapacity);
+        action.accept(builder);
+        return builder.build();
+    }
+
+    /**
      * Get a dictionary element containing no values.
      *
      * @return the empty dictionary element

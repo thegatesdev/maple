@@ -3,6 +3,7 @@ package com.github.thegatesdev.maple.element;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 
 import java.util.*;
+import java.util.function.*;
 
 /**
  * An element representing a list of values.
@@ -52,6 +53,31 @@ public sealed interface ListElement extends Element, ElementCollection permits M
      */
     static Builder builder(int initialCapacity) {
         return MemoryListElement.builder(initialCapacity);
+    }
+
+    /**
+     * Build a new list element by applying the given action to a new builder.
+     *
+     * @param action the builder action
+     * @return the built element
+     */
+    static ListElement build(Consumer<ListElement.Builder> action) {
+        ListElement.Builder builder = builder();
+        action.accept(builder);
+        return builder.build();
+    }
+
+    /**
+     * Build a new list element by applying the given action to a new builder.
+     *
+     * @param action          the builder action
+     * @param initialCapacity the initial capacity of the list
+     * @return the built element
+     */
+    static ListElement build(int initialCapacity, Consumer<ListElement.Builder> action) {
+        ListElement.Builder builder = builder(initialCapacity);
+        action.accept(builder);
+        return builder.build();
     }
 
     /**
