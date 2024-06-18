@@ -5,6 +5,7 @@ import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 
 import java.math.*;
+import java.util.*;
 
 /**
  * An element representing a big decimal value.
@@ -22,6 +23,8 @@ public record BigDecimalElement(BigDecimal value) implements NumberElement, Elem
      * @see Element#of(BigDecimal)
      */
     public static Element of(BigDecimal value) {
+        Objects.requireNonNull(value, "given value is null");
+
         if (value.signum() == 0) return IntElement.ZERO;
         return new BigDecimalElement(value);
     }

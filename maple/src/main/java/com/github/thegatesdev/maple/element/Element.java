@@ -44,7 +44,7 @@ public sealed interface Element permits DictElement,
      * @throws NullPointerException if the given string is null
      */
     static Element of(String value) {
-        return new StringElement(value);
+        return StringElement.of(value);
     }
 
     /**

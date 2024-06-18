@@ -5,6 +5,7 @@ import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 
 import java.math.*;
+import java.util.*;
 
 /**
  * An element representing a big integer value.
@@ -22,6 +23,8 @@ public record BigIntegerElement(BigInteger value) implements NumberElement, Elem
      * @see Element#of(BigInteger)
      */
     public static Element of(BigInteger value) {
+        Objects.requireNonNull(value, "given value is null");
+
         if (value.signum() == 0) return IntElement.ZERO;
         return new BigIntegerElement(value);
     }

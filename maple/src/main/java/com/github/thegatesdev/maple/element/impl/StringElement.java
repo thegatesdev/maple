@@ -18,8 +18,10 @@ public record StringElement(String value) implements Element {
     /**
      * @see Element#of(String)
      */
-    public StringElement {
-        Objects.requireNonNull(value, "given string is null");
+    public static Element of(String value) {
+        Objects.requireNonNull(value, "given value is null");
+
+        return new StringElement(value);
     }
 
 

@@ -63,6 +63,8 @@ public final class MemoryDictElement implements DictElement {
 
     @Override
     public void each(BiConsumer<String, Element> action) {
+        Objects.requireNonNull(action, "given action is null");
+
         entries.forEach(action);
     }
 
