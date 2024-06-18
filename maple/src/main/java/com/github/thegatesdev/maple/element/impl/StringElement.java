@@ -34,6 +34,12 @@ public record StringElement(String value) implements Element {
 
 
     @Override
+    public void writeTo(Serializer serializer) throws IOException {
+        serializer.value(value);
+    }
+
+
+    @Override
     public boolean isString() {
         return true;
     }
