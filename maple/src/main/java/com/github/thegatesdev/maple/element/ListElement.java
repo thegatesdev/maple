@@ -20,7 +20,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
      * @return the list element containing the values
      * @throws NullPointerException if the given array is null
      */
-    static ListElement of(Element[] values) {
+    static ListElement of(Element... values) {
         return MemoryListElement.of(values);
     }
 
@@ -196,7 +196,7 @@ public sealed interface ListElement extends Element, ElementCollection permits M
          * @return this builder
          * @throws NullPointerException if the given array is null
          */
-        Builder addAll(Element[] elements);
+        Builder addAll(Element... elements);
 
         /**
          * Remove the element at the given index from this list.
