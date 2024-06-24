@@ -65,7 +65,7 @@ public sealed interface Element extends Source permits DictElement,
      * @return the element representing the value
      */
     static Element of(int value) {
-        return DoubleElement.of(value);
+        return IntElement.of(value);
     }
 
     /**
