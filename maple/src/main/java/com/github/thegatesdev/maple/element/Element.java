@@ -5,7 +5,6 @@ import com.github.thegatesdev.maple.element.impl.internal.*;
 import com.github.thegatesdev.maple.exception.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
 import java.math.*;
 
 /**
@@ -24,7 +23,7 @@ import java.math.*;
  *
  * @author Timar Karels
  */
-public sealed interface Element permits DictElement,
+public sealed interface Element extends Source permits DictElement,
     ElementCollection,
     ListElement,
     BigDecimalElement,
@@ -136,16 +135,6 @@ public sealed interface Element permits DictElement,
      * @return the type of this element
      */
     ElementType type();
-
-    /**
-     * Write this element to the given serializer, if the serializer's state allows it.
-     * <br>
-     * This method is recursive.
-     *
-     * @param serializer the serializer to write to
-     * @throws IOException if an I/O error occurs
-     */
-    void writeTo(Serializer serializer) throws IOException;
 
     /**
      * Get the string representation of this element.

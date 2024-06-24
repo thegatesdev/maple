@@ -4,7 +4,6 @@ import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
 import java.util.*;
 
 /**
@@ -28,14 +27,8 @@ public record StringElement(String value) implements Element {
 
 
     @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.value(value);
-    }
-
-
-    @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.value(value);
+    public void writeTo(Destination destination) {
+        destination.value(value);
     }
 
 

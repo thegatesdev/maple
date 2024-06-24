@@ -4,7 +4,6 @@ import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
@@ -115,10 +114,10 @@ public final class MemoryListElement implements ListElement {
 
 
     @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.openArray();
-        for (Element value : values) serializer.value(value);
-        serializer.closeArray();
+    public void writeTo(Destination destination) {
+        destination.openArray();
+        for (Element value : values) destination.value(value);
+        destination.closeArray();
     }
 
     @Override

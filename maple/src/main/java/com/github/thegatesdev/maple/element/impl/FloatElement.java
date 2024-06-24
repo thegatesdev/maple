@@ -5,8 +5,6 @@ import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
-
 /**
  * An element representing a float value.
  * In most cases, it is recommended to use the {@link Element#of(float)} static construction method
@@ -29,8 +27,8 @@ public record FloatElement(float value) implements Element, NumberElement {
 
 
     @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.value(value);
+    public void writeTo(Destination destination) {
+        destination.value(value);
     }
 
 

@@ -5,7 +5,6 @@ import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.exception.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 import java.util.function.*;
@@ -124,13 +123,13 @@ public final class MemoryDictElement implements DictElement {
 
 
     @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.openObject();
+    public void writeTo(Destination destination) {
+        destination.openObject();
         for (var entry : entries.entrySet()) {
-            serializer.name(entry.getKey());
-            serializer.value(entry.getValue());
+            destination.name(entry.getKey());
+            destination.value(entry.getValue());
         }
-        serializer.closeObject();
+        destination.closeObject();
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
 import java.math.*;
 import java.util.*;
 
@@ -33,8 +32,8 @@ public record BigDecimalElement(BigDecimal value) implements NumberElement, Elem
 
 
     @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.value(value);
+    public void writeTo(Destination destination) {
+        destination.value(value);
     }
 
 

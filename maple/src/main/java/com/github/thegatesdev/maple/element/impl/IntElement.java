@@ -5,7 +5,6 @@ import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
 import java.math.*;
 
 /**
@@ -36,8 +35,8 @@ public record IntElement(int value) implements Element, NumberElement {
 
 
     @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.value(value);
+    public void writeTo(Destination destination) {
+        destination.value(value);
     }
 
 

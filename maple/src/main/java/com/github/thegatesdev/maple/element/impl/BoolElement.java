@@ -3,8 +3,6 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
-
 /**
  * An element representing a boolean value.
  *
@@ -23,8 +21,8 @@ public enum BoolElement implements Element {
 
 
     @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.value(getBool());
+    public void writeTo(Destination destination) {
+        destination.value(getBool());
     }
 
 

@@ -3,8 +3,6 @@ package com.github.thegatesdev.maple.element.impl;
 import com.github.thegatesdev.maple.element.*;
 import com.github.thegatesdev.maple.io.*;
 
-import java.io.*;
-
 /**
  * An element representing an unset or 'null' value.
  *
@@ -16,8 +14,8 @@ public enum NullElement implements Element {
 
 
     @Override
-    public void writeTo(Serializer serializer) throws IOException {
-        serializer.nullValue();
+    public void writeTo(Destination destination) {
+        destination.valueNull();
     }
 
 
