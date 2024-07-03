@@ -1,11 +1,13 @@
 package com.github.thegatesdev.maple.io.json.impl;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.io.*;
 import com.github.thegatesdev.maple.io.json.util.*;
 
 import java.math.*;
 import java.util.*;
 
+@ValueClassCandidate
 public class JsonDestination implements Destination {
 
     private final Output output;

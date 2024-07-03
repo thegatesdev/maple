@@ -1,9 +1,11 @@
 package com.github.thegatesdev.maple.io.json.impl;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.io.*;
 
 import java.util.*;
 
+@ValueClassCandidate
 public final class JsonWriteContext {
 
     private static final char[] BUF_TRUE = "true".toCharArray();

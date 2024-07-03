@@ -148,7 +148,7 @@ public final class MemoryListElement implements ListElement {
         return Arrays.equals(this.values, listElement.toArray());
     }
 
-
+    @ValueClassCandidate
     public static final class Builder implements ListElement.Builder {
 
         private final List<Element> values;

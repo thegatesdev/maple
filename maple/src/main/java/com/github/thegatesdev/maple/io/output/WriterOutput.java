@@ -1,11 +1,13 @@
 package com.github.thegatesdev.maple.io.output;
 
+import com.github.thegatesdev.maple.annotation.internal.*;
 import com.github.thegatesdev.maple.exception.*;
 import com.github.thegatesdev.maple.io.*;
 
 import java.io.*;
 import java.util.*;
 
+@ValueClassCandidate
 public final class WriterOutput implements Output {
 
     private final Writer writer;
