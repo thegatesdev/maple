@@ -5,11 +5,15 @@ import com.github.thegatesdev.maple.io.json.impl.*;
 import java.io.*;
 import java.math.*;
 
-public interface Destination extends Closeable {
+public interface Destination {
 
+
+    static Destination json(Output output) {
+        return JsonDestination.create(output);
+    }
 
     static Destination json(Writer writer) {
-        return JsonDestination.of(writer);
+        return json(Output.writer(writer));
     }
 
 

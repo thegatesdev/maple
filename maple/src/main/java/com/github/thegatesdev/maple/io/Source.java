@@ -4,7 +4,6 @@ import java.io.*;
 
 public interface Source {
 
-
     static Source json(Reader reader) {
         throw new UnsupportedOperationException("Not implemented");
     }
