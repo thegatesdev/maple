@@ -2,13 +2,29 @@ package com.github.thegatesdev.maple.io;
 
 import java.io.*;
 
+/**
+ * Represents a source of structured data.
+ *
+ * @author Timar Karels
+ */
 public interface Source {
 
+    /**
+     * Get a data source that reads JSON data from the given Reader input.
+     *
+     * @param reader the reader to read from
+     * @return the new JSON source
+     */
     static Source json(Reader reader) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
 
+    /**
+     * Write this source to the given destination.
+     *
+     * @param handler the destination to write to
+     */
     void writeTo(Destination handler);
 }
 

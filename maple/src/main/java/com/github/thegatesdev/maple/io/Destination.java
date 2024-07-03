@@ -5,47 +5,157 @@ import com.github.thegatesdev.maple.io.json.impl.*;
 import java.io.*;
 import java.math.*;
 
+/**
+ * Represents a destination of structured data.
+ *
+ * @author Timar Karels
+ */
 public interface Destination {
 
 
+    /**
+     * Get a data destination that writes JSON data to the given output.
+     *
+     * @param output the output to write to
+     * @return the new JSON destination
+     */
     static Destination json(Output output) {
         return JsonDestination.create(output);
     }
 
+    /**
+     * Get a data destination that writes JSON data to the given Writer output.
+     *
+     * @param writer the writer to write to
+     * @return the new JSON destination
+     */
     static Destination json(Writer writer) {
         return json(Output.writer(writer));
     }
 
 
+    /**
+     * Create and enter a new object scope.
+     * All following values will be written in this scope, until it is exited.
+     * <br>
+     * The object scope requires pairs of a name and a value,
+     * otherwise an exception is thrown.
+     *
+     * @throws IllegalStateException if a name was expected
+     */
     void openObject();
 
+    /**
+     * Close the current object scope, and enter the previous scope.
+     *
+     * @throws IllegalStateException if the current scope is not an object scope
+     */
     void closeObject();
 
+    /**
+     * Create and enter a new array scope.
+     * All following values will be written in this scope, until it is exited.
+     * <br>
+     * The array scope only takes values,
+     * writing names will cause an exception.
+     *
+     * @throws IllegalStateException if a name was expected
+     */
     void openArray();
 
+    /**
+     * Close the current array scope, and enter the previous scope.
+     *
+     * @throws IllegalStateException if the current scope is not an array scope
+     */
     void closeArray();
 
 
+    /**
+     * Write the name for an object name-value pair.
+     *
+     * @param name the name to write
+     * @throws IllegalStateException if a value was expected
+     */
     void name(String name);
 
+    /**
+     * Write a value, either for an object name-value pair,
+     * or for an array.
+     *
+     * @param value the value to write
+     */
     void value(String value);
 
+    /**
+     * Write a value, either for an object name-value pair,
+     * or for an array.
+     *
+     * @param value the value to write
+     */
     void value(boolean value);
 
+    /**
+     * Write a value, either for an object name-value pair,
+     * or for an array.
+     *
+     * @param value the value to write
+     */
     void value(int value);
 
+    /**
+     * Write a value, either for an object name-value pair,
+     * or for an array.
+     *
+     * @param value the value to write
+     */
     void value(long value);
 
+    /**
+     * Write a value, either for an object name-value pair,
+     * or for an array.
+     *
+     * @param value the value to write
+     */
     void value(float value);
 
+    /**
+     * Write a value, either for an object name-value pair,
+     * or for an array.
+     *
+     * @param value the value to write
+     */
     void value(double value);
 
+    /**
+     * Write a value, either for an object name-value pair,
+     * or for an array.
+     *
+     * @param value the value to write
+     */
     void value(BigInteger value);
 
+    /**
+     * Write a value, either for an object name-value pair,
+     * or for an array.
+     *
+     * @param value the value to write
+     */
     void value(BigDecimal value);
 
+    /**
+     * Write a null value, either for an object name-value pair,
+     * or for an array.
+     */
     void valueNull();
 
+    /**
+     * Write the given source to this destination.
+     * <br>
+     * Shortcut for {@link Source#writeTo(Destination)}
+     *
+     * @param source the source to write
+     */
     default void value(Source source) {
         source.writeTo(this);
     }
