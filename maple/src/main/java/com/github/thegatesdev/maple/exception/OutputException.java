@@ -8,6 +8,7 @@ public final class OutputException extends RuntimeException {
 
     private final String context;
 
+
     public OutputException(Throwable cause, String context) {
         super(MESSAGE, cause);
         this.context = context;

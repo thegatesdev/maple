@@ -15,6 +15,7 @@ public final class ElementTypeException extends RuntimeException {
     private static final String MESSAGE = "Invalid element type; expected %s, got %s";
     private final ElementType expectedType, actualType;
 
+
     /**
      * Create the exception with the expected and actual type of the element.
      *

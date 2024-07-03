@@ -22,11 +22,11 @@ public final class MemoryDictElement implements DictElement {
     private final int cachedHash;
     private final AtomicReference<ListElement> valuesReference = new AtomicReference<>();
 
+
     MemoryDictElement(Map<String, Element> entries) {
         this.entries = entries;
         this.cachedHash = makeHash();
     }
-
 
     public static DictElement of(Map<String, Element> entries) {
         Objects.requireNonNull(entries, "given map is null");
@@ -162,6 +162,7 @@ public final class MemoryDictElement implements DictElement {
 
         private boolean needsCopy;
         private Map<String, Element> values;
+
 
         private Builder(Map<String, Element> values) {
             this.values = values;

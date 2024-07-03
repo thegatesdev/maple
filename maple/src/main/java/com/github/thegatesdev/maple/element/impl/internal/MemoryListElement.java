@@ -20,11 +20,11 @@ public final class MemoryListElement implements ListElement {
     private final Element[] values;
     private final int cachedHash;
 
+
     MemoryListElement(Element[] values) {
         this.values = values;
         this.cachedHash = makeHash();
     }
-
 
     public static ListElement of(Element[] values) {
         Objects.requireNonNull(values, "given array is null");

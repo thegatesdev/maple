@@ -13,6 +13,7 @@ public final class ElementKeyNotPresentException extends RuntimeException {
     private static final String MESSAGE = "This key is not present; %s";
     private final String accessedKey;
 
+
     /**
      * Create the exception with the given key.
      *
