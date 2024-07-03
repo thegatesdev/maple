@@ -3,6 +3,7 @@ package com.github.thegatesdev.maple.element;
 import com.github.thegatesdev.maple.element.impl.internal.*;
 import com.github.thegatesdev.maple.exception.*;
 
+import java.math.*;
 import java.util.*;
 import java.util.function.*;
 
@@ -162,6 +163,103 @@ public sealed interface DictElement extends Element, ElementCollection permits M
          * @throws NullPointerException if the given key or element is null
          */
         Builder put(String key, Element element);
+
+
+        /**
+         * Put the given value at the given key, optionally replacing the value already present.
+         *
+         * @param key   the key to put the value at
+         * @param value the value to put
+         * @return this builder
+         * @throws NullPointerException if the given key or value is null
+         */
+        default Builder put(String key, String value) {
+            return put(key, Element.of(value));
+        }
+
+        /**
+         * Put the given value at the given key, optionally replacing the value already present.
+         *
+         * @param key   the key to put the value at
+         * @param value the value to put
+         * @return this builder
+         * @throws NullPointerException if the given key is null
+         */
+        default Builder put(String key, boolean value) {
+            return put(key, Element.of(value));
+        }
+
+        /**
+         * Put the given value at the given key, optionally replacing the value already present.
+         *
+         * @param key   the key to put the value at
+         * @param value the value to put
+         * @return this builder
+         * @throws NullPointerException if the given key is null
+         */
+        default Builder put(String key, int value) {
+            return put(key, Element.of(value));
+        }
+
+        /**
+         * Put the given value at the given key, optionally replacing the value already present.
+         *
+         * @param key   the key to put the value at
+         * @param value the value to put
+         * @return this builder
+         * @throws NullPointerException if the given key is null
+         */
+        default Builder put(String key, long value) {
+            return put(key, Element.of(value));
+        }
+
+        /**
+         * Put the given value at the given key, optionally replacing the value already present.
+         *
+         * @param key   the key to put the value at
+         * @param value the value to put
+         * @return this builder
+         * @throws NullPointerException if the given key is null
+         */
+        default Builder put(String key, float value) {
+            return put(key, Element.of(value));
+        }
+
+        /**
+         * Put the given value at the given key, optionally replacing the value already present.
+         *
+         * @param key   the key to put the value at
+         * @param value the value to put
+         * @return this builder
+         * @throws NullPointerException if the given key is null
+         */
+        default Builder put(String key, double value) {
+            return put(key, Element.of(value));
+        }
+
+        /**
+         * Put the given value at the given key, optionally replacing the value already present.
+         *
+         * @param key   the key to put the value at
+         * @param value the value to put
+         * @return this builder
+         * @throws NullPointerException if the given key is null
+         */
+        default Builder put(String key, BigInteger value) {
+            return put(key, Element.of(value));
+        }
+
+        /**
+         * Put the given value at the given key, optionally replacing the value already present.
+         *
+         * @param key   the key to put the value at
+         * @param value the value to put
+         * @return this builder
+         * @throws NullPointerException if the given key is null
+         */
+        default Builder put(String key, BigDecimal value) {
+            return put(key, Element.of(value));
+        }
 
         /**
          * Put all the entries from the given dictionary element, optionally replacing the values already present.

@@ -2,6 +2,7 @@ package com.github.thegatesdev.maple.element;
 
 import com.github.thegatesdev.maple.element.impl.internal.*;
 
+import java.math.*;
 import java.util.*;
 import java.util.function.*;
 
@@ -170,6 +171,87 @@ public sealed interface ListElement extends Element, ElementCollection permits M
          * @throws NullPointerException if the given element is null
          */
         Builder add(Element element);
+
+        /**
+         * Add the given value to the end of this list.
+         *
+         * @param value the value to add
+         * @return this builder
+         * @throws NullPointerException if the given value is null
+         */
+        default Builder add(String value) {
+            return add(Element.of(value));
+        }
+
+        /**
+         * Add the given value to the end of this list.
+         *
+         * @param value the value to add
+         * @return this builder
+         */
+        default Builder add(boolean value) {
+            return add(Element.of(value));
+        }
+
+        /**
+         * Add the given value to the end of this list.
+         *
+         * @param value the value to add
+         * @return this builder
+         */
+        default Builder add(int value) {
+            return add(Element.of(value));
+        }
+
+        /**
+         * Add the given value to the end of this list.
+         *
+         * @param value the value to add
+         * @return this builder
+         */
+        default Builder add(long value) {
+            return add(Element.of(value));
+        }
+
+        /**
+         * Add the given value to the end of this list.
+         *
+         * @param value the value to add
+         * @return this builder
+         */
+        default Builder add(float value) {
+            return add(Element.of(value));
+        }
+
+        /**
+         * Add the given value to the end of this list.
+         *
+         * @param value the value to add
+         * @return this builder
+         */
+        default Builder add(double value) {
+            return add(Element.of(value));
+        }
+
+        /**
+         * Add the given value to the end of this list.
+         *
+         * @param value the value to add
+         * @return this builder
+         */
+        default Builder add(BigInteger value) {
+            return add(Element.of(value));
+        }
+
+        /**
+         * Add the given value to the end of this list.
+         *
+         * @param value the value to add
+         * @return this builder
+         */
+        default Builder add(BigDecimal value) {
+            return add(Element.of(value));
+        }
 
         /**
          * Add the elements in the given list element to the end of this list.
