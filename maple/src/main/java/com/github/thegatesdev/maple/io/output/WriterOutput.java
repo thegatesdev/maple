@@ -10,10 +10,10 @@ public final class WriterOutput implements Output {
 
     private final Writer writer;
 
+
     private WriterOutput(Writer writer) {
         this.writer = writer;
     }
-
 
     public static Output create(Writer writer) {
         Objects.requireNonNull(writer, "given writer is null");

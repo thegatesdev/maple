@@ -12,12 +12,12 @@ public class JsonDestination implements Destination {
     private final JsonWriteContext context;
     private final JsonScopes jsonScopes;
 
+
     private JsonDestination(Output output, JsonWriteContext context, JsonScopes jsonScopes) {
         this.context = context;
         this.output = output;
         this.jsonScopes = jsonScopes;
     }
-
 
     public static Destination create(Output output) {
         Objects.requireNonNull(output, "given output is null");
