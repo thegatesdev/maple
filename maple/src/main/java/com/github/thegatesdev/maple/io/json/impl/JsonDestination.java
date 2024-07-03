@@ -46,7 +46,7 @@ public class JsonDestination implements Destination {
     private void verifyWriteName() {
         switch (jsonScopes.beforeWriteName()) {
             case ReadyAfterValueSeparator -> output.raw(',');
-            case ExpectedValue -> throw new IllegalStateException("Expected value before name");
+            case ExpectedValue -> throw new IllegalStateException("Expected value");
         }
     }
 
