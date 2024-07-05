@@ -1,25 +1,18 @@
 package io.github.thegatesdev.maple.exception;
 
-import java.util.*;
-
+/**
+ * This exception is a runtime wrapper for any raised IO exceptions while outputting data.
+ */
 public final class OutputException extends RuntimeException {
 
     private static final String MESSAGE = "Output failed: IO error";
 
-    private final String context;
-
-
-    public OutputException(Throwable cause, String context) {
-        super(MESSAGE, cause);
-        this.context = context;
-    }
-
+    /**
+     * Create the exception with the given cause.
+     *
+     * @param cause the wrapped exception
+     */
     public OutputException(Throwable cause) {
-        this(cause, null);
-    }
-
-
-    public Optional<String> context() {
-        return Optional.ofNullable(context);
+        super(MESSAGE, cause);
     }
 }
