@@ -22,8 +22,13 @@ public class JsonDestination implements Destination {
     }
 
     public static Destination create(Output output) {
+        return create(output, new JsonWriteContext());
+    }
+
+    public static Destination create(Output output, JsonWriteContext context) {
         Objects.requireNonNull(output, "given output is null");
-        return new JsonDestination(output, new JsonWriteContext(), JsonScopes.root());
+        Objects.requireNonNull(context, "given context is null");
+        return new JsonDestination(output, context, JsonScopes.root());
     }
 
 
