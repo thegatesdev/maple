@@ -2,12 +2,10 @@ package com.github.thegatesdev.maple.io.json.util;
 
 import java.util.*;
 
-import static com.github.thegatesdev.maple.io.json.util.JsonScope.*;
-
 public final class JsonScopes {
 
     private final Deque<JsonScope> scopes = new ArrayDeque<>();
-    private JsonScope currentScope = ROOT;
+    private JsonScope currentScope = JsonScope.Root;
 
     private boolean hasEntry = false;
     private boolean hasName = false;
@@ -22,7 +20,7 @@ public final class JsonScopes {
 
 
     public void push(JsonScope scope) {
-        if (scope == ROOT) throw new IllegalArgumentException("Root scope cannot be pushed");
+        if (scope == JsonScope.Root) throw new IllegalArgumentException("Root scope cannot be pushed");
 
         scopes.push(currentScope);
         currentScope = scope;
@@ -32,7 +30,7 @@ public final class JsonScopes {
     }
 
     public boolean pop(JsonScope scope) {
-        if (scope == ROOT) throw new IllegalArgumentException("Root scope cannot be popped");
+        if (scope == JsonScope.Root) throw new IllegalArgumentException("Root scope cannot be popped");
         if (currentScope != scope) return false;
 
         currentScope = scopes.pollFirst();
@@ -45,18 +43,18 @@ public final class JsonScopes {
 
     public ValueStatus beforeWriteValue() {
         return switch (currentScope) {
-            case ROOT -> {
+            case Root -> {
                 if (hasEntry) yield ValueStatus.NeedsRootSeparator;
                 hasEntry = true;
                 yield ValueStatus.Ready;
             }
-            case OBJECT -> {
+            case Object -> {
                 if (!hasName) yield ValueStatus.ExpectedName;
                 hasName = false;
                 hasEntry = true;
                 yield ValueStatus.NeedsNameSeparator;
             }
-            case ARRAY -> {
+            case Array -> {
                 if (hasEntry) yield ValueStatus.NeedsValueSeparator;
                 hasEntry = true;
                 yield ValueStatus.Ready;
@@ -65,7 +63,7 @@ public final class JsonScopes {
     }
 
     public NameStatus beforeWriteName() {
-        if (currentScope != OBJECT || hasName) return NameStatus.ExpectedValue;
+        if (currentScope != JsonScope.Object || hasName) return NameStatus.ExpectedValue;
         hasName = true;
         return hasEntry ? NameStatus.ReadyAfterValueSeparator : NameStatus.Ready;
     }

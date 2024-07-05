@@ -58,26 +58,26 @@ public class JsonDestination implements Destination {
     @Override
     public void openObject() {
         verifyWriteValue();
-        jsonScopes.push(JsonScope.OBJECT);
+        jsonScopes.push(JsonScope.Object);
         output.raw('{');
     }
 
     @Override
     public void closeObject() {
-        verifyCloseScope(JsonScope.OBJECT);
+        verifyCloseScope(JsonScope.Object);
         output.raw('}');
     }
 
     @Override
     public void openArray() {
         verifyWriteValue();
-        jsonScopes.push(JsonScope.ARRAY);
+        jsonScopes.push(JsonScope.Array);
         output.raw('[');
     }
 
     @Override
     public void closeArray() {
-        verifyCloseScope(JsonScope.ARRAY);
+        verifyCloseScope(JsonScope.Array);
         output.raw(']');
     }
 
