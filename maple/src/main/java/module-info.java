@@ -3,9 +3,9 @@
  *
  * @author Timar Karels
  */
-module com.github.thegatesdev.maple {
-    exports com.github.thegatesdev.maple.element;
-    exports com.github.thegatesdev.maple.element.impl;
-    exports com.github.thegatesdev.maple.exception;
-    exports com.github.thegatesdev.maple.io;
+module io.github.thegatesdev.maple {
+    exports io.github.thegatesdev.maple.maple.element;
+    exports io.github.thegatesdev.maple.maple.element.impl;
+    exports io.github.thegatesdev.maple.maple.exception;
+    exports io.github.thegatesdev.maple.maple.io;
 }

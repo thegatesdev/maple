@@ -4,7 +4,7 @@ plugins {
 }
 
 
-group = "com.github.thegatesdev"
+group = "io.github.thegatesdev"
 version = "5.0.0-SNAPSHOT"
 description = "A clean, type safe intermediary structure"
 
