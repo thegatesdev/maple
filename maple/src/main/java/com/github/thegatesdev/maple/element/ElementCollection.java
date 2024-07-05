@@ -54,6 +54,13 @@ public sealed interface ElementCollection extends Element permits DictElement, L
      */
     int count();
 
+    /**
+     * Indicates if this collection is empty.
+     *
+     * @return {@code true} when no values are present
+     */
+    boolean isEmpty();
+
 
     @Override
     default String stringValue() {

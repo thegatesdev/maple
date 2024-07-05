@@ -121,6 +121,11 @@ public final class MemoryDictElement implements DictElement {
         return entries.size();
     }
 
+    @Override
+    public boolean isEmpty() {
+        return this == EMPTY || entries.isEmpty();
+    }
+
 
     @Override
     public void writeTo(Destination destination) {
@@ -146,15 +151,20 @@ public final class MemoryDictElement implements DictElement {
         return entries.hashCode();
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (!(other instanceof DictElement dictElement)) return false;
-        if (this.cachedHash != dictElement.hashCode()) return false;
 
-        if (other instanceof MemoryDictElement memoryDictElement)
-            return this.entries.equals(memoryDictElement.entries);
-        return this.entries.equals(dictElement.view());
+    @Override
+    public boolean contentEquals(DictElement other) {
+        if (equals(other)) return true;
+        return entries.equals(other.view());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MemoryDictElement that = (MemoryDictElement) o;
+        return cachedHash == that.cachedHash && entries.equals(that.entries);
     }
 
 

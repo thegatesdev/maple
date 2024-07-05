@@ -140,6 +140,29 @@ public sealed interface DictElement extends Element, ElementCollection permits M
 
 
     /**
+     * Indicates that the values in this dict element are the same as in the given dict element.
+     *
+     * @param other the dict element to compare
+     * @return {@code true} if the contents match
+     */
+    boolean contentEquals(DictElement other);
+
+    /**
+     * The {@code DictElement} implemetation of {@code equals}, on top of the default semantics,
+     * guarantees that if the result is {@code true}, this dict element can replace the given dict element.
+     * <p>
+     * The contents of two dict elements being equal does not imply replacability.
+     * An example of this would be when the given dict element is backed by a file,
+     * while this one is stored in memory, they cannot be interchanged.
+     * To check if the contents are equal, use the {@link #contentEquals(DictElement)} method.
+     * </p>
+     *
+     * @see Object#equals(Object)
+     */
+    boolean equals(Object other);
+
+
+    /**
      * A builder for creating dictionary elements.
      * <p>
      * The builder is NOT guaranteed to be thread safe.

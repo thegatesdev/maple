@@ -112,6 +112,11 @@ public final class MemoryListElement implements ListElement {
         return values.length;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return this == EMPTY || values.length == 0;
+    }
+
 
     @Override
     public void writeTo(Destination destination) {
@@ -134,19 +139,22 @@ public final class MemoryListElement implements ListElement {
         return Arrays.hashCode(values);
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (!(other instanceof ListElement listElement)) return false;
-        if (this.cachedHash != listElement.hashCode()) return false;
-        // If this element is used as a key in some hash based structure (e.g. HashSet or HashMap) this is a duplicate check.
-        // It is however more likely that the equals method is used as-is,
-        // in which case it's reasonable to check it here, and prevent iterating all values.
 
-        if (other instanceof MemoryListElement memoryListElement)
-            return Arrays.equals(this.values, memoryListElement.values);
-        return Arrays.equals(this.values, listElement.toArray());
+    @Override
+    public boolean contentEquals(ListElement other) {
+        if (equals(other)) return true;
+        return Arrays.equals(values, other.toArray());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MemoryListElement that = (MemoryListElement) o;
+        return cachedHash == that.cachedHash && Arrays.equals(values, that.values);
+    }
+
 
     @ValueClassCandidate
     public static final class Builder implements ListElement.Builder {

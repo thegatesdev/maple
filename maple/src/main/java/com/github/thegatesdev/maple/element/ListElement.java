@@ -149,6 +149,29 @@ public sealed interface ListElement extends Element, ElementCollection permits M
 
 
     /**
+     * Indicates that the values in this list element are the same as in the given list element.
+     *
+     * @param other the list element to compare
+     * @return {@code true} if the contents match
+     */
+    boolean contentEquals(ListElement other);
+
+    /**
+     * The {@code ListElement} implemetation of {@code equals}, on top of the default semantics,
+     * guarantees that if the result is {@code true}, this list element can replace the given list element.
+     * <p>
+     * The contents of two list elements being equal does not imply replacability.
+     * An example of this would be when the given list element is backed by a file,
+     * while this one is stored in memory, they cannot be interchanged.
+     * To check if the contents are equal, use the {@link #contentEquals(ListElement)} method.
+     * </p>
+     *
+     * @see Object#equals(Object)
+     */
+    boolean equals(Object other);
+
+
+    /**
      * A builder for creating list elements.
      * <p>
      * The builder is NOT guaranteed to be thread safe.
