@@ -1,34 +1,31 @@
 package com.github.thegatesdev.maple;
 
-import com.github.thegatesdev.maple.element.DictElement;
-import com.github.thegatesdev.maple.element.Element;
-import com.github.thegatesdev.maple.element.ListElement;
-import com.github.thegatesdev.maple.exception.ElementKeyNotPresentException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.github.thegatesdev.maple.element.*;
+import com.github.thegatesdev.maple.exception.*;
+import org.junit.jupiter.api.*;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.*;
+import java.util.function.*;
 
 final class CollectionOperationsTest {
 
     private static final DictElement dictElement = DictElement.builder(3)
-            .put("int", Element.of(30))
-            .put("string", Element.of("foo"))
-            .put("nested", DictElement.builder(2)
-                    .put("unset", Element.unset())
-                    .put("bool", Element.of(true))
-                    .build())
-            .build();
+        .put("int", Element.of(30))
+        .put("string", Element.of("foo"))
+        .put("nested", DictElement.builder(2)
+            .put("unset", Element.none())
+            .put("bool", Element.of(true))
+            .build())
+        .build();
 
     private static final ListElement listElement = ListElement.builder(3)
-            .add(Element.of(30))
-            .add(Element.of("foo"))
-            .add(DictElement.builder(2)
-                    .put("unset", Element.unset())
-                    .put("bool", Element.of(true))
-                    .build())
-            .build();
+        .add(Element.of(30))
+        .add(Element.of("foo"))
+        .add(DictElement.builder(2)
+            .put("unset", Element.none())
+            .put("bool", Element.of(true))
+            .build())
+        .build();
 
     @Test
     void whenDictElementPresent_thenGet() {
