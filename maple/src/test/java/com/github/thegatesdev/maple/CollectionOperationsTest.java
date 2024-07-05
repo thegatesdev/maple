@@ -1,7 +1,7 @@
 package com.github.thegatesdev.maple;
 
-import io.github.thegatesdev.maple.maple.element.*;
-import io.github.thegatesdev.maple.maple.exception.*;
+import io.github.thegatesdev.maple.element.*;
+import io.github.thegatesdev.maple.exception.*;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.atomic.*;
