@@ -57,50 +57,13 @@ public final class JsonWriteContext {
 
 
     public void writeEscaped(Output output, String value) {
-        char[] buf = largeStringBuffer;
-        int max = buf.length;
-        int len = value.length();
-        int index = 0;
-
-        // The string can be any size, copy parts to a buffer and write from that
-        while (index < len) {
-            int count = Math.min(len - index, max);
-
-            value.getChars(index, index += count, buf, 0);
-            writeEscaped(output, buf, count);
-        }
+        writeEscaped(output, escapeBuffer, largeStringBuffer, value);
     }
 
-    public void writeEscaped(Output output, char[] buffer, int lenght) {
-        int head = 0;
-
-        for (int i = head; i < lenght; i++) {
-            char currentChar = buffer[i];
-            switch (currentChar) {
-                case '\"', '\\', '/':
-                    output.raw(buffer, head, i - head); // Flush
-                    writeTwoChar(output, currentChar);
-                    head = i + 1;
-                    break;
-                case '\b', '\t', '\n', '\f', '\r':
-                    output.raw(buffer, head, i - head); // Flush
-                    writeTwoChar(output, TWO_CHAR_ESCAPES[currentChar]);
-                    head = i + 1;
-                    break;
-                default:
-                    if (currentChar > JsonWriteContext.HIGHEST_HEX_CHAR) continue;
-
-                    output.raw(buffer, head, i - head); // Flush
-                    writeHex(output, currentChar);
-                    head = i + 1;
-            }
-        }
-
-        if (head < lenght) {
-            // Write the leftover data after the last escaped character
-            output.raw(buffer, head, lenght - head);
-        }
+    public void writeEscaped(Output output, char[] inputBuffer, int lenght) {
+        writeEscaped(output, escapeBuffer, inputBuffer, lenght);
     }
+
 
     public void writeLiteralTrue(Output output) {
         output.raw(BUF_TRUE, 0, 4);
@@ -115,12 +78,57 @@ public final class JsonWriteContext {
     }
 
 
-    private void writeTwoChar(Output output, char c) {
+    private static void writeEscaped(Output output, char[] escapeBuf, char[] largeStringBuffer, String value) {
+        int max = largeStringBuffer.length;
+        int len = value.length();
+        int index = 0;
+
+        // The string can be any size, copy parts to a buffer and write from that
+        while (index < len) {
+            int count = Math.min(len - index, max);
+
+            value.getChars(index, index += count, largeStringBuffer, 0);
+            writeEscaped(output, escapeBuf, largeStringBuffer, count);
+        }
+    }
+
+    private static void writeEscaped(Output output, char[] escapeBuf, char[] inputBuffer, int lenght) {
+        int head = 0;
+
+        for (int i = head; i < lenght; i++) {
+            char currentChar = inputBuffer[i];
+            switch (currentChar) {
+                case '\"', '\\', '/':
+                    output.raw(inputBuffer, head, i - head); // Flush
+                    writeTwoChar(output, escapeBuf, currentChar);
+                    head = i + 1;
+                    break;
+                case '\b', '\t', '\n', '\f', '\r':
+                    output.raw(inputBuffer, head, i - head); // Flush
+                    writeTwoChar(output, escapeBuf, TWO_CHAR_ESCAPES[currentChar]);
+                    head = i + 1;
+                    break;
+                default:
+                    if (currentChar > JsonWriteContext.HIGHEST_HEX_CHAR) continue;
+
+                    output.raw(inputBuffer, head, i - head); // Flush
+                    writeHex(output, escapeBuf, currentChar);
+                    head = i + 1;
+            }
+        }
+
+        if (head < lenght) {
+            // Write the leftover data after the last escaped character
+            output.raw(inputBuffer, head, lenght - head);
+        }
+    }
+
+    private static void writeTwoChar(Output output, char[] escapeBuffer, char c) {
         escapeBuffer[1] = c;
         output.raw(escapeBuffer, 0, 2);
     }
 
-    private void writeHex(Output output, char c) {
+    private static void writeHex(Output output, char[] escapeBuffer, char c) {
         int index = c * 2;
         escapeBuffer[6] = HEX_ESCAPES[index];
         escapeBuffer[7] = HEX_ESCAPES[index + 1];
