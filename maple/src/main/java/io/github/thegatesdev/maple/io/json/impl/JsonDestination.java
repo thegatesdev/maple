@@ -1,6 +1,7 @@
 package io.github.thegatesdev.maple.io.json.impl;
 
 import io.github.thegatesdev.maple.annotation.internal.*;
+import io.github.thegatesdev.maple.exception.*;
 import io.github.thegatesdev.maple.io.*;
 import io.github.thegatesdev.maple.io.json.util.*;
 
@@ -44,19 +45,19 @@ public class JsonDestination implements Destination {
             case NeedsNameSeparator -> output.raw(':');
             case NeedsRootSeparator -> output.raw(' ');
             case NeedsValueSeparator -> output.raw(',');
-            case ExpectedName -> throw new IllegalStateException("Expected name before value");
+            case ExpectedName -> throw new InvalidJsonException("Expected name before value");
         }
     }
 
     private void verifyWriteName() {
         switch (jsonScopes.beforeWriteName()) {
             case ReadyAfterValueSeparator -> output.raw(',');
-            case ExpectedValue -> throw new IllegalStateException("Expected value");
+            case ExpectedValue -> throw new InvalidJsonException("Expected value");
         }
     }
 
     private void verifyCloseScope(JsonScope scope) {
-        if (!jsonScopes.pop(scope)) throw new IllegalStateException("Not in " + scope.name() + " scope");
+        if (!jsonScopes.pop(scope)) throw new InvalidJsonException("Not in " + scope.name() + " scope");
     }
 
 

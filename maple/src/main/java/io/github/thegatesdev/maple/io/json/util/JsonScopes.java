@@ -1,5 +1,7 @@
 package io.github.thegatesdev.maple.io.json.util;
 
+import io.github.thegatesdev.maple.exception.*;
+
 import java.util.*;
 
 public final class JsonScopes {
@@ -20,7 +22,7 @@ public final class JsonScopes {
 
 
     public void push(JsonScope scope) {
-        if (scope == JsonScope.Root) throw new IllegalArgumentException("Root scope cannot be pushed");
+        if (scope == JsonScope.Root) throw new InvalidJsonException("Root scope cannot be pushed");
 
         scopes.push(currentScope);
         currentScope = scope;
@@ -30,7 +32,7 @@ public final class JsonScopes {
     }
 
     public boolean pop(JsonScope scope) {
-        if (scope == JsonScope.Root) throw new IllegalArgumentException("Root scope cannot be popped");
+        if (scope == JsonScope.Root) throw new InvalidJsonException("Root scope cannot be popped");
         if (currentScope != scope) return false;
 
         currentScope = scopes.pollFirst();
