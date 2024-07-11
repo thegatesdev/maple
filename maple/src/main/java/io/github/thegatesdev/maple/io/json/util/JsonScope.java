@@ -1,9 +1,24 @@
 package io.github.thegatesdev.maple.io.json.util;
 
 public enum JsonScope {
-    Root,
-    Object,
-    Array
+    Root((char) 0, (char) 0),
+    Object('{', '}'),
+    Array('[', ']');
+
+    private final char openChar, closeChar;
+
+    JsonScope(char openChar, char closeChar) {
+        this.openChar = openChar;
+        this.closeChar = closeChar;
+    }
+
+    public char openChar() {
+        return openChar;
+    }
+
+    public char closeChar() {
+        return closeChar;
+    }
 }
 
 /*

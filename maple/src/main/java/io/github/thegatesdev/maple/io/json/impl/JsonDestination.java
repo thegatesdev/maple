@@ -1,6 +1,5 @@
 package io.github.thegatesdev.maple.io.json.impl;
 
-import io.github.thegatesdev.maple.annotation.internal.*;
 import io.github.thegatesdev.maple.exception.*;
 import io.github.thegatesdev.maple.io.*;
 import io.github.thegatesdev.maple.io.json.util.*;
@@ -8,7 +7,6 @@ import io.github.thegatesdev.maple.io.json.util.*;
 import java.math.*;
 import java.util.*;
 
-@ValueClassCandidate
 public class JsonDestination implements Destination {
 
     private final Output output;
@@ -29,6 +27,7 @@ public class JsonDestination implements Destination {
     public static Destination create(Output output, JsonWriteContext context) {
         Objects.requireNonNull(output, "given output is null");
         Objects.requireNonNull(context, "given context is null");
+
         return new JsonDestination(output, context, JsonScopes.root());
     }
 
@@ -61,30 +60,36 @@ public class JsonDestination implements Destination {
     }
 
 
+    private void openScope(JsonScope scope) {
+        verifyWriteValue();
+        jsonScopes.push(scope);
+        output.raw(scope.openChar());
+    }
+
+    private void closeScope(JsonScope scope) {
+        verifyCloseScope(scope);
+        output.raw(scope.closeChar());
+    }
+
+
     @Override
     public void openObject() {
-        verifyWriteValue();
-        jsonScopes.push(JsonScope.Object);
-        output.raw('{');
+        openScope(JsonScope.Object);
     }
 
     @Override
     public void closeObject() {
-        verifyCloseScope(JsonScope.Object);
-        output.raw('}');
+        closeScope(JsonScope.Object);
     }
 
     @Override
     public void openArray() {
-        verifyWriteValue();
-        jsonScopes.push(JsonScope.Array);
-        output.raw('[');
+        openScope(JsonScope.Array);
     }
 
     @Override
     public void closeArray() {
-        verifyCloseScope(JsonScope.Array);
-        output.raw(']');
+        closeScope(JsonScope.Array);
     }
 
 

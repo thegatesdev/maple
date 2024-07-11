@@ -7,6 +7,7 @@ public final class OutputException extends RuntimeException {
 
     private static final String MESSAGE = "Output failed: IO error";
 
+
     /**
      * Create the exception with the given cause.
      *
@@ -14,5 +15,14 @@ public final class OutputException extends RuntimeException {
      */
     public OutputException(Throwable cause) {
         super(MESSAGE, cause);
+    }
+
+    /**
+     * Create the exception with the given message.
+     *
+     * @param message the message
+     */
+    public OutputException(String message) {
+        super(message);
     }
 }

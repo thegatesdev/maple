@@ -7,7 +7,7 @@ import java.io.*;
 /**
  * Represents a way to output raw characters.
  */
-public interface Output {
+public interface Output extends AutoCloseable {
 
 
     /**
@@ -43,6 +43,9 @@ public interface Output {
      * @param lenght the number of characters to output
      */
     void raw(char[] buffer, int offset, int lenght);
+
+    @Override
+    void close();
 }
 
 /*

@@ -2,7 +2,6 @@ package io.github.thegatesdev.maple.io;
 
 import io.github.thegatesdev.maple.io.json.impl.*;
 
-import java.io.*;
 import java.math.*;
 
 /**
@@ -21,16 +20,6 @@ public interface Destination {
      */
     static Destination json(Output output) {
         return JsonDestination.create(output);
-    }
-
-    /**
-     * Get a data destination that writes JSON data to the given Writer output.
-     *
-     * @param writer the writer to write to
-     * @return the new JSON destination
-     */
-    static Destination json(Writer writer) {
-        return json(Output.writer(writer));
     }
 
 

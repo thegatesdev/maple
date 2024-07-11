@@ -1,13 +1,11 @@
 package io.github.thegatesdev.maple.io.output;
 
-import io.github.thegatesdev.maple.annotation.internal.*;
 import io.github.thegatesdev.maple.exception.*;
 import io.github.thegatesdev.maple.io.*;
 
 import java.io.*;
 import java.util.*;
 
-@ValueClassCandidate
 public final class WriterOutput implements Output {
 
     private final Writer writer;
@@ -46,6 +44,16 @@ public final class WriterOutput implements Output {
     public void raw(char[] buffer, int offset, int lenght) {
         try {
             writer.write(buffer, offset, lenght);
+        } catch (IOException e) {
+            throw new OutputException(e);
+        }
+    }
+
+
+    @Override
+    public void close() {
+        try {
+            writer.close();
         } catch (IOException e) {
             throw new OutputException(e);
         }
