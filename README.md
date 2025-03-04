@@ -1,3 +1,21 @@
+> [!IMPORTANT]
+> **Maple has been archived!**
+> 
+> Maple was a fun side project discovering how to create nice looking libraries and API's. I will no longer work on it, but it's a nice display of my Java skills ;]
+>
+> What I learned:
+> - How to use modern Java features like try-with-resources, records and pattern matching switches.
+> - Pre-mature optimization is a really bad thing.
+> - Defining the scope of a project before starting will save you time.
+> - How to write good documentation, and that things that are clear to you won't necessarily make sense to someone else.
+> - How to publish to JitPack.
+> - How to use the Java module system (❤)
+> - Immutability in Java comes with a cost.
+> - Parsing is easy, parsing the right way is hard, performant parsing with readable code is impossible.
+> - Side projects are fun to look back on.
+
+## Old README content
+
 *This is a **WIP version** of this document for the upcoming v5.0.0 release.*
 
 [![maple-banner-plain](doc/maple-banner-plain.svg)](#)
